@@ -5,12 +5,12 @@
   "main": "src/electron-starter.js",
   "homepage": "./",
   "scripts": {
-    "start": "nf start -p 3000",
+    "start": "concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
+    "start:react": "react-scripts start",
+    "start:electron": "ELECTRON_START_URL=http://localhost:3000 electron .",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "react-start": "react-scripts start",
-    "electron-start": "node src/electron-wait-react"
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "react": "^16.3.2",
@@ -19,6 +19,7 @@
     "react-scripts": "1.1.4"
   },
   "devDependencies": {
+    "concurrently": "^3.5.1",
     "electron": "^2.0.1",
     "foreman": "^2.0.0"
   }
