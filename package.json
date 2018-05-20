@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "main": "src/electron-starter.js",
+  "homepage": "./",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "nf start -p 3000",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "react-start": "react-scripts start",
+    "electron-start": "node src/electron-wait-react"
   },
   "dependencies": {
     "react": "^16.3.2",
@@ -17,6 +19,7 @@
     "react-scripts": "1.1.4"
   },
   "devDependencies": {
-    "electron": "^2.0.1"
+    "electron": "^2.0.1",
+    "foreman": "^2.0.0"
   }
 }
