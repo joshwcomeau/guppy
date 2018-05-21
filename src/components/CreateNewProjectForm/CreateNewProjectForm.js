@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+import { createProject } from '../../actions';
 
 class CreateNewProjectForm extends Component {
   state = {
@@ -11,21 +14,22 @@ class CreateNewProjectForm extends Component {
   generateRandomName = () => null; /* TODO */
 
   handleSubmit = () => {
-    console.log(this.state);
+    const id = this.state.name;
+    this.props.createProject({ ...this.state, id });
   };
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <label>
+        <Label>
           <span>Project Name</span>
           <input type="text" onChange={this.updateName} />
-        </label>
+        </Label>
 
-        <label>
+        <Label>
           <span>Project Type</span>
           <button>React</button>
-        </label>
+        </Label>
 
         <button>Create</button>
       </form>
@@ -37,4 +41,4 @@ const Label = styled.label`
   display: block;
 `;
 
-export default CreateNewProjectForm;
+export default connect(null, { createProject })(CreateNewProjectForm);

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Route, Link } from 'react-router-dom';
 
 import Modal from '../Modal';
 import CreateNewProjectForm from '../CreateNewProjectForm';
