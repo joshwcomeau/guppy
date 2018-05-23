@@ -1,6 +1,6 @@
 // @flow
-import immer from 'immer';
-import { CREATE_PROJECT_START } from '../actions';
+import { produce } from 'immer';
+import { READ_PROJECTS_FROM_DISK } from '../actions';
 
 type Project = {
   id: string,
@@ -14,32 +14,8 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case CREATE_PROJECT_START: {
-      const { id, name, type } = action;
-      // TODO: While the component firing the action should verify that
-      // we aren't "overwriting" an existing project, we should add a
-      // layer of redundancy here, and just throw an error if there's
-      // an overwrite attempt.
-
-      return produce(state, draftState => {
-        draftState[id] = {
-          id,
-          name,
-          type,
-          status: 'creating',
-        };
-      });
-    }
-
-    case CREATE_PROJECT_UPDATE_STATUS: {
-      const { id, metadata } = action;
-
-      return produce(state, draftState => {
-        draftState[id].statusMetadata = metadata;
-      });
-    }
-
-    case CREATE_PROJECT_FINISH: {
+    case READ_PROJECTS_FROM_DISK: {
+      return action.projects;
     }
 
     default:
