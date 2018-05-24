@@ -1,7 +1,6 @@
 import slug from 'slug';
 
 const fs = window.require('fs');
-const path = window.require('path');
 const os = window.require('os');
 const childProcess = window.require('child_process');
 

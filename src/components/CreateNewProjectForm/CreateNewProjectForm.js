@@ -22,12 +22,6 @@ class CreateNewProjectForm extends Component {
     currentBuildStep: null,
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    // console.log('FROM:', prevState.status, prevState.currentBuildStep);
-    // console.log('TO:', this.state.status, this.state.currentBuildStep);
-    // console.log('------------');
-  }
-
   updateName = ev => this.setState({ name: ev.target.value });
   generateRandomName = () => null; /* TODO */
 
@@ -57,8 +51,6 @@ class CreateNewProjectForm extends Component {
     } else if (message.match(/Installing packages/i)) {
       this.setState({ currentBuildStep: buildSteps[3] });
     }
-
-    console.log(output.toString());
   };
 
   handleError = error => {
@@ -80,9 +72,7 @@ class CreateNewProjectForm extends Component {
   };
 
   render() {
-    const { name, type, status, currentBuildStep } = this.state;
-
-    const isLoading = currentBuildStep === 'loading';
+    const { name, status, currentBuildStep } = this.state;
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -99,7 +89,7 @@ class CreateNewProjectForm extends Component {
         <Progress isVisible={true}>
           {buildSteps.map(step => {
             if (step === 'done') {
-              return;
+              return null;
             }
 
             let stepStatus;

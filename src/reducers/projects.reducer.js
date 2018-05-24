@@ -1,14 +1,7 @@
 // @flow
-import { produce } from 'immer';
 import { INITIALIZE, REFRESH_PROJECTS } from '../actions';
 
-type Project = {
-  id: string,
-  name: string,
-  type: 'react',
-  status: 'creating' | 'idle' | 'installing-dependency',
-  statusMetadata: ?string,
-};
+// TODO: add a type for Project
 
 const initialState = {};
 
