@@ -16,3 +16,5 @@ export default (state = initialState, action) => {
       return state;
   }
 };
+
+export const getNumberOfProjects = state => Object.keys(state.projects).length;

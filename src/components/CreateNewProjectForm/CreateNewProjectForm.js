@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { refreshProjects } from '../../actions';
 import createProject from '../../services/create-project.service';
 
 import ProgressStep from './ProgressStep';
@@ -69,6 +70,9 @@ class CreateNewProjectForm extends Component {
       currentBuildStep: buildSteps[buildSteps.length - 1],
       status: 'done',
     });
+
+    // TODO: quick timeout for effects?
+    this.props.refreshProjects();
   };
 
   render() {
@@ -131,4 +135,4 @@ const Progress = styled.div`
   opacity: ${props => (props.isVisible ? 1 : 0)};
 `;
 
-export default connect(null, { createProject })(CreateNewProjectForm);
+export default connect(null, { refreshProjects })(CreateNewProjectForm);

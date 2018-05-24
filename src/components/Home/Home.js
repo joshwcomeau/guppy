@@ -5,7 +5,7 @@ class Home extends Component {
   componentDidMount() {}
 
   render() {
-    return <IntroScreen />;
+    return 'Homepage!';
   }
 }
 

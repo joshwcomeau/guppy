@@ -4,8 +4,10 @@ import { Route } from 'react-router-dom';
 
 import { initialize } from '../../actions';
 import readLocalProjectsFromDisk from '../../services/read-local-projects.service';
+import { getNumberOfProjects } from '../../reducers/projects.reducer';
 
 import Home from '../Home';
+import IntroScreen from '../IntroScreen';
 
 class App extends Component {
   componentDidMount() {
@@ -17,19 +19,24 @@ class App extends Component {
   }
 
   render() {
-    if (this.props.initializing) {
+    const { initializing, hasProjects } = this.props;
+
+    if (initializing) {
       // NOTE: Originally I was gonna put a fancy loading screen here.
       // It seems like it takes like 50ms to load, though, and so rendering
       // anything is just this awkward flash of content.
       return null;
     }
 
-    return <Route exact path="/" component={Home} />;
+    const DefaultComponent = hasProjects ? Home : IntroScreen;
+
+    return <Route exact path="/" component={DefaultComponent} />;
   }
 }
 
 const mapStateToProps = state => ({
   initializing: state.initializing,
+  hasProjects: getNumberOfProjects(state) > 0,
 });
 
 export default connect(mapStateToProps, { initialize })(App);
