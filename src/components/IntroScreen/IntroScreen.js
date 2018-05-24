@@ -13,10 +13,10 @@ class IntroScreen extends Component {
     this.setState({ showCreateNew: !this.state.showCreateNew });
   };
 
+  handleCreateProject = () => {};
+
   render() {
     const { showCreateNew } = this.state;
-
-    console.log(showCreateNew);
 
     return (
       <Wrapper>
@@ -25,7 +25,7 @@ class IntroScreen extends Component {
 
         {showCreateNew && (
           <Modal handleClose={this.toggleModal}>
-            <CreateNewProjectForm />
+            <CreateNewProjectForm onComplete={this.handleCreateProject} />
           </Modal>
         )}
       </Wrapper>

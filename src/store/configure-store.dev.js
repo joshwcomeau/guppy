@@ -2,7 +2,7 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from '../reducers';
-import { handleStoreUpdates } from '../helpers/local-storage.helpers';
+import { handleStoreUpdates } from '../services/redux-persistence.service';
 import DevTools from '../components/DevTools';
 
 export default function configureStore(initialState) {

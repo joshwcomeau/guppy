@@ -1,3 +1,5 @@
+import readLocalProjectsFromDisk from './read-local-projects.service';
+
 const REDUX_STATE_KEY = 'redux-state';
 
 /**
@@ -17,10 +19,10 @@ const updateLocalStorage = value =>
  * persist it to localStorage.
  */
 export const handleStoreUpdates = function handleStoreUpdates(store) {
-  // Omit modals and flash messages, we don't want to rehydrate this.
-  // We also omit the calendar, since presumably you care more about the present week,
-  // not the week you were looking at last time.
-  const { ...relevantState } = store.getState();
+  // We don't want to save ALL state.
+  // For example, projects are read when the app starts, since their state
+  // may have changed outside of Guppy's control.
+  const { projects, ...relevantState } = store.getState();
 
   updateLocalStorage(JSON.stringify(relevantState));
 };
@@ -31,5 +33,12 @@ export const handleStoreUpdates = function handleStoreUpdates(store) {
  * auth token from the cookie. Handles validating and resetting the state as
  * needed.
  */
-export const getInitialState = defaultState =>
-  JSON.parse(localStorage.getItem(REDUX_STATE_KEY) || '{}');
+export const getInitialState = defaultState => {
+  const projects = readLocalProjectsFromDisk();
+
+  const localStorageSavedState = JSON.parse(
+    localStorage.getItem(REDUX_STATE_KEY) || '{}'
+  );
+
+  return { ...localStorageSavedState, projects };
+};

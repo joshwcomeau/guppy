@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Futura PT';
+  src: url('./assets/fonts/futura/FuturaPT-Bold.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura PT';
+  src: url('./assets/fonts/futura/FuturaPT-Demi.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura PT';
+  src: url('./assets/fonts/futura/FuturaPT-Book.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura PT';
+  src: url('./assets/fonts/futura/FuturaPT-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}

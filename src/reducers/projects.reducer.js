@@ -1,6 +1,6 @@
 // @flow
 import { produce } from 'immer';
-import { READ_PROJECTS_FROM_DISK } from '../actions';
+import { INITIALIZE, REFRESH_PROJECTS } from '../actions';
 
 type Project = {
   id: string,
@@ -14,7 +14,8 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case READ_PROJECTS_FROM_DISK: {
+    case INITIALIZE:
+    case REFRESH_PROJECTS: {
       return action.projects;
     }
 

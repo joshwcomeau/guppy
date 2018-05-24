@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 
 import rootReducer from '../reducers';
-import { handleStoreUpdates } from '../helpers/local-storage.helpers';
+import { handleStoreUpdates } from '../services/redux-persistence.service';
 
 export default function configureStore(initialState) {
   const store = createStore(rootReducer, initialState);

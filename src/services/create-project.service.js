@@ -32,6 +32,8 @@ export default ({ name, type }, onStatusUpdate, onError, onComplete) => {
     fs.mkdirSync(parentPath);
   }
 
+  onStatusUpdate('Created parent directory');
+
   const id = slug(name);
   const path = `${parentPath}/${id}`;
 
