@@ -1,11 +1,11 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import IconBase from 'react-icons-kit';
-import { loadC } from 'react-icons-kit/ionicons/loadC';
+import { loader } from 'react-icons-kit/feather/loader';
 
 import { COLORS } from '../../constants';
 
-const Spinner = ({ size }) => <Icon size={size} icon={loadC} />;
+const Spinner = ({ size }) => <Icon size={size} icon={loader} />;
 
 const spin = keyframes`
   from {

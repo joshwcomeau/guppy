@@ -1,11 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { refreshProjects } from '../../actions';
 import createProject from '../../services/create-project.service';
 
+import FormField from '../FormField';
+import TextInput from '../TextInput';
+import Button from '../Button';
 import ProgressStep from './ProgressStep';
+import { COLORS } from '../../constants';
 
 const buildSteps = [
   'creating-parent-directory',
@@ -80,45 +84,61 @@ class CreateNewProjectForm extends Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <Label>
-          <span>Project Name</span>
-          <input type="text" value={name} onChange={this.updateName} />
-        </Label>
+        {status === 'idle' && (
+          <Fragment>
+            <FormField label="Name" labelWidth={50}>
+              <TextInput type="text" value={name} onChange={this.updateName} />
+            </FormField>
 
-        <Label>
-          <span>Project Type</span>
-          <button>React</button>
-        </Label>
+            <FormField label="Type" labelWidth={50}>
+              <button>React</button>
+            </FormField>
 
-        <Progress isVisible={true}>
-          {buildSteps.map(step => {
-            if (step === 'done') {
-              return null;
-            }
+            <SubmitWrapper>
+              <Button
+                size="large"
+                style={{
+                  backgroundImage: `linear-gradient(
+                    -80deg,
+                    ${COLORS.green[500]},
+                    ${COLORS.lime[500]}
+                  `,
+                }}
+                disabled={status !== 'idle'}
+              >
+                {status === 'idle' ? 'Create' : 'Creating...'}
+              </Button>
+            </SubmitWrapper>
+          </Fragment>
+        )}
 
-            let stepStatus;
+        {status !== 'idle' && (
+          <Progress>
+            {buildSteps.map(step => {
+              if (step === 'done') {
+                return null;
+              }
 
-            if (step === currentBuildStep) {
-              stepStatus = 'in-progress';
-            } else if (
-              buildSteps.indexOf(currentBuildStep) > buildSteps.indexOf(step)
-            ) {
-              stepStatus = 'done';
-            } else {
-              stepStatus = 'upcoming';
-            }
+              let stepStatus;
 
-            return (
-              <ProgressStep key={step} status={stepStatus}>
-                {step}
-              </ProgressStep>
-            );
-          })}
-        </Progress>
+              if (step === currentBuildStep) {
+                stepStatus = 'in-progress';
+              } else if (
+                buildSteps.indexOf(currentBuildStep) > buildSteps.indexOf(step)
+              ) {
+                stepStatus = 'done';
+              } else {
+                stepStatus = 'upcoming';
+              }
 
-        <button disabled={status !== 'idle'}>
-          {status === 'idle' ? 'Create' : 'Creating...'}
-        </button>
+              return (
+                <ProgressStep key={step} status={stepStatus}>
+                  {step}
+                </ProgressStep>
+              );
+            })}
+          </Progress>
+        )}
       </form>
     );
   }
@@ -132,7 +152,11 @@ const Progress = styled.div`
   width: 400px;
   margin: auto;
   padding: 10px;
-  opacity: ${props => (props.isVisible ? 1 : 0)};
+`;
+
+const SubmitWrapper = styled.div`
+  margin-top: 40px;
+  text-align: center;
 `;
 
 export default connect(null, { refreshProjects })(CreateNewProjectForm);

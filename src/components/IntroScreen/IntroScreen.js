@@ -24,7 +24,7 @@ class IntroScreen extends Component {
         <button onClick={this.toggleModal}>Create new React project</button>
 
         {showCreateNew && (
-          <Modal handleClose={this.toggleModal}>
+          <Modal title="Create New Project" handleClose={this.toggleModal}>
             <CreateNewProjectForm onComplete={this.handleCreateProject} />
           </Modal>
         )}

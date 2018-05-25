@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
-import { iosCheckmarkEmpty } from 'react-icons-kit/ionicons/iosCheckmarkEmpty';
+import { check } from 'react-icons-kit/feather/check';
 
 import Spinner from '../Spinner';
 import { COLORS } from '../../constants';
@@ -18,7 +18,7 @@ export default ({ status, children }: Props) => (
   <Wrapper>
     <IconWrapper>
       {status === 'in-progress' && <Spinner size={24} />}
-      {status === 'done' && <Checkmark size={24} icon={iosCheckmarkEmpty} />}
+      {status === 'done' && <Checkmark size={24} icon={check} />}
     </IconWrapper>
     <ChildWrapper>{children}</ChildWrapper>
   </Wrapper>

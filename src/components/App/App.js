@@ -28,7 +28,8 @@ class App extends Component {
       return null;
     }
 
-    const DefaultComponent = hasProjects ? Home : IntroScreen;
+    // const DefaultComponent = hasProjects ? Home : IntroScreen;
+    const DefaultComponent = IntroScreen; // TEMP
 
     return <Route exact path="/" component={DefaultComponent} />;
   }
