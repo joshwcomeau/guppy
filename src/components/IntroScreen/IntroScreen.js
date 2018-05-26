@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 import Modal from '../Modal';
-import CreateNewProjectForm from '../CreateNewProjectForm';
+import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
 class IntroScreen extends Component {
   state = {
@@ -23,11 +23,12 @@ class IntroScreen extends Component {
         <Logo>Guppy</Logo>
         <button onClick={this.toggleModal}>Create new React project</button>
 
-        {showCreateNew && (
+        {/* {showCreateNew && (
           <Modal title="Create New Project" handleClose={this.toggleModal}>
             <CreateNewProjectForm onComplete={this.handleCreateProject} />
           </Modal>
-        )}
+        )} */}
+        <CreateNewProjectWizard />
       </Wrapper>
     );
   }

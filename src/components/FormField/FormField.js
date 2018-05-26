@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { COLORS } from '../../constants';
 
 class FormField extends Component {
   static propTypes = {
@@ -10,11 +11,13 @@ class FormField extends Component {
   };
 
   render() {
-    const { label, labelWidth, children } = this.props;
+    const { label, labelWidth, focused, children } = this.props;
 
     return (
       <Wrapper>
-        <LabelText width={labelWidth}>{label}:</LabelText>
+        <LabelText width={labelWidth} focused={focused}>
+          {label}:
+        </LabelText>
         <Children>{children}</Children>
       </Wrapper>
     );
@@ -22,20 +25,22 @@ class FormField extends Component {
 }
 
 const Wrapper = styled.label`
-  display: flex;
-  align-items: center;
+  display: block;
+  margin-bottom: 30px;
 `;
 
 const LabelText = styled.div`
   flex-basis: ${props => props.width}px;
-  text-align: right;
-  font-size: 15px;
-  padding: 5px;
+  font-size: 13px;
+  color: ${props => (props.focused ? COLORS.pink[500] : COLORS.gray[500])};
+  padding: 0px 5px;
+  text-transform: uppercase;
+  font-weight: 500;
 `;
 
 const Children = styled.div`
   flex: 1;
-  padding: 5px;
+  padding: 0px 5px 5px;
 `;
 
 export default FormField;

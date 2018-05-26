@@ -25,8 +25,9 @@ const ButtonBase = styled.button`
 `;
 
 const SmallButton = styled(ButtonBase)`
-  padding: 4px 10px;
-  font-size: 16px;
+  padding: ${props => (props.noPadding ? '0px' : '0px 14px')};
+  height: 35px;
+  font-size: 14px;
   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 
@@ -37,7 +38,7 @@ const SmallButton = styled(ButtonBase)`
 `;
 
 const MediumButton = styled(ButtonBase)`
-  padding: 6px 16px;
+  padding: ${props => (props.noPadding ? '0px' : '6px 16px')};
   font-size: 20px;
   border-bottom: 3px solid rgba(0, 0, 0, 0.2);
   border-radius: 6px;
@@ -49,7 +50,7 @@ const MediumButton = styled(ButtonBase)`
 `;
 
 const LargeButton = styled(ButtonBase)`
-  padding: 5px 32px;
+  padding: ${props => (props.noPadding ? '0px' : '5px 32px')};
   font-size: 22px;
   border-bottom: 3px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;

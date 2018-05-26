@@ -10,6 +10,7 @@ import TextInput from '../TextInput';
 import Button from '../Button';
 import ProgressStep from './ProgressStep';
 import { COLORS } from '../../constants';
+import ButtonToggleGroup from '../ButtonToggleGroup/ButtonToggleGroup';
 
 const buildSteps = [
   'creating-parent-directory',
@@ -90,9 +91,7 @@ class CreateNewProjectForm extends Component {
               <TextInput type="text" value={name} onChange={this.updateName} />
             </FormField>
 
-            <FormField label="Type" labelWidth={50}>
-              <button>React</button>
-            </FormField>
+            <FormField label="Type" labelWidth={50} />
 
             <SubmitWrapper>
               <Button
