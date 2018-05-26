@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 
   display: flex;
   border-bottom: 2px solid
-    ${props => (props.focused ? COLORS.pink[500] : COLORS.gray[700])};
+    ${props => (props.focused ? COLORS.purple[700] : COLORS.gray[700])};
 `;
 
 const InputElem = styled.input`

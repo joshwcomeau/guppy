@@ -24,8 +24,8 @@ class Button extends Component<Props, State> {
   static defaultProps = {
     type: 'stroke',
     size: 'medium',
-    color1: COLORS.gray[800],
-    color2: COLORS.gray[500],
+    color1: COLORS.purple[500],
+    color2: COLORS.violet[500],
     showOutline: true,
     style: {},
   };

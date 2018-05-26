@@ -38,7 +38,7 @@ const WrapperDiv = styled.div`
 const LabelText = styled.div`
   flex-basis: ${props => props.width}px;
   font-size: 13px;
-  color: ${props => (props.isFocused ? COLORS.pink[500] : COLORS.gray[500])};
+  color: ${props => (props.isFocused ? COLORS.purple[700] : COLORS.gray[500])};
   padding: 0px 5px;
   text-transform: uppercase;
   font-weight: 500;

@@ -6,7 +6,7 @@ import Button from '../Button';
 
 const ButtonWithIcon = ({ icon, children, ...delegated }) => (
   // TODO: Support other sizes
-  <Button noPadding size="small" {...delegated}>
+  <Button noPadding {...delegated}>
     <InnerWrapper>
       <IconWrapper>{icon}</IconWrapper>
       {children}

@@ -147,7 +147,7 @@ class ProjectName extends PureComponent<Props, State> {
                 onMouseDown={handleFocus}
                 onClick={this.handleRandomize}
                 color1={COLORS.purple[500]}
-                color2={COLORS.blue[500]}
+                color2={COLORS.violet[500]}
                 style={{ width: 32, height: 32 }}
               >
                 <IconBase size={22} icon={sparkles} />

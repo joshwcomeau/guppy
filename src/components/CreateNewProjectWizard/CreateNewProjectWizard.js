@@ -6,7 +6,6 @@ import { u1F423 as hatching } from 'react-icons-kit/noto_emoji_regular/u1F423';
 import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 import { u1F421 as fish } from 'react-icons-kit/noto_emoji_regular/u1F421';
 
-import { COLORS } from '../../constants';
 import { sampleMany } from '../../utils';
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
@@ -94,59 +93,59 @@ class CreateNewProjectWizard extends Component {
         />
 
         {currentStepIndex > STEPS.indexOf('projectName') && (
-          <FormField
-            label="Project Type"
-            isFocused={activeField === 'projectType'}
-          >
-            <ProjectTypeTogglesWrapper>
-              <ButtonWithIcon
-                showOutline={projectType === 'react'}
-                color1="#61DAFB"
-                color2="#61DAFB"
-                icon={<ReactIcon src={reactIconSrc} />}
-                onClick={() => this.updateProjectType('react')}
-              >
-                React.js
-              </ButtonWithIcon>
-              <Spacer inline size={10} />
-              <ButtonWithIcon
-                showOutline={projectType === 'gatsby'}
-                color1="#663399"
-                color2="#663399"
-                icon={<GatsbyIcon src={gatsbyIconSrc} />}
-                onClick={() => this.updateProjectType('gatsby')}
-              >
-                Gatsby
-              </ButtonWithIcon>
-            </ProjectTypeTogglesWrapper>
-          </FormField>
+          <FadeIn>
+            <FormField
+              label="Project Type"
+              isFocused={activeField === 'projectType'}
+            >
+              <ProjectTypeTogglesWrapper>
+                <ButtonWithIcon
+                  showOutline={projectType === 'react'}
+                  icon={<ReactIcon src={reactIconSrc} />}
+                  onClick={() => this.updateProjectType('react')}
+                >
+                  React.js
+                </ButtonWithIcon>
+                <Spacer inline size={10} />
+                <ButtonWithIcon
+                  showOutline={projectType === 'gatsby'}
+                  icon={<GatsbyIcon src={gatsbyIconSrc} />}
+                  onClick={() => this.updateProjectType('gatsby')}
+                >
+                  Gatsby
+                </ButtonWithIcon>
+              </ProjectTypeTogglesWrapper>
+            </FormField>
+          </FadeIn>
         )}
 
         {currentStepIndex > STEPS.indexOf('projectType') && (
-          <FormField
-            label="Project Icon"
-            focusOnClick={false}
-            isFocused={activeField === 'projectIcon'}
-          >
-            <ProjectIconWrapper>
-              {this.iconSubset.map(src => (
-                <SelectableImageWrapper key={src}>
-                  <SelectableImage
-                    src={src}
-                    size={60}
-                    onClick={() => this.updateProjectIcon(src)}
-                    status={
-                      projectIcon === null
-                        ? 'default'
-                        : projectIcon === src
-                          ? 'highlighted'
-                          : 'faded'
-                    }
-                  />
-                </SelectableImageWrapper>
-              ))}
-            </ProjectIconWrapper>
-          </FormField>
+          <FadeIn>
+            <FormField
+              label="Project Icon"
+              focusOnClick={false}
+              isFocused={activeField === 'projectIcon'}
+            >
+              <ProjectIconWrapper>
+                {this.iconSubset.map(src => (
+                  <SelectableImageWrapper key={src}>
+                    <SelectableImage
+                      src={src}
+                      size={60}
+                      onClick={() => this.updateProjectIcon(src)}
+                      status={
+                        projectIcon === null
+                          ? 'default'
+                          : projectIcon === src
+                            ? 'highlighted'
+                            : 'faded'
+                      }
+                    />
+                  </SelectableImageWrapper>
+                ))}
+              </ProjectIconWrapper>
+            </FormField>
+          </FadeIn>
         )}
 
         <Spacer size={20} />
@@ -165,13 +164,7 @@ class CreateNewProjectWizard extends Component {
   }
 
   renderLeftPane() {
-    return (
-      <Fragment>
-        {/* <Title>Create New Project</Title> */}
-
-        {this.renderGuidanceText()}
-      </Fragment>
-    );
+    return <LeftPaneWrapper>{this.renderGuidanceText()}</LeftPaneWrapper>;
   }
 
   renderGuidanceText = () => {
@@ -288,6 +281,10 @@ class CreateNewProjectWizard extends Component {
     );
   }
 }
+
+const LeftPaneWrapper = styled.div`
+  text-shadow: 1px 1px 0px rgba(13, 37, 170, 0.1);
+`;
 
 const fadeIn = keyframes`
   from { opacity: 0 }

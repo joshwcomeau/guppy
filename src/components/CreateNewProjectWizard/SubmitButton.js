@@ -25,8 +25,8 @@ const SubmitButton = ({
   <Button
     type="fill"
     size="large"
-    color1={COLORS.pink[300]}
-    color2={COLORS.red[500]}
+    color1={readyToBeSubmitted ? COLORS.green[700] : COLORS.blue[700]}
+    color2={readyToBeSubmitted ? COLORS.lightGreen[500] : COLORS.blue[500]}
     style={{ color: COLORS.pink[500], width: 200 }}
     onClick={readyToBeSubmitted ? handleSubmit : handleNext}
   >

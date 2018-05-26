@@ -83,54 +83,52 @@ class RoundedOutline extends Component<Props, State> {
             : pathLength || 0,
         }}
       >
-        {({ dashOffset }) =>
-          console.log(dashOffset) || (
-            <Svg
-              innerRef={node => (this.wrapperNode = node)}
-              width="100%"
-              height="100%"
-            >
-              <defs>
-                <linearGradient id={svgId} x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop
-                    offset="0%"
-                    style={{
-                      stopColor: color1,
-                      stopOpacity: 1,
-                    }}
-                  />
-                  <stop
-                    offset="100%"
-                    style={{
-                      stopColor: color2,
-                      stopOpacity: 1,
-                    }}
-                  />
-                </linearGradient>
-              </defs>
-              {typeof width === 'number' &&
-                typeof height === 'number' && (
-                  <Rect
-                    innerRef={node => (this.shapeNode = node)}
-                    x={0}
-                    y={0}
-                    width={width}
-                    height={height}
-                    rx={height / 2}
-                    ry={width / 2}
-                    fill="none"
-                    stroke={`url(#${svgId})`}
-                    strokeWidth={strokeWidth}
-                    strokeLinecap="round"
-                    style={{
-                      strokeDasharray: `${pathLength}, ${pathLength + 1}`,
-                      strokeDashoffset: dashOffset,
-                    }}
-                  />
-                )}
-            </Svg>
-          )
-        }
+        {({ dashOffset }) => (
+          <Svg
+            innerRef={node => (this.wrapperNode = node)}
+            width="100%"
+            height="100%"
+          >
+            <defs>
+              <linearGradient id={svgId} x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop
+                  offset="0%"
+                  style={{
+                    stopColor: color1,
+                    stopOpacity: 1,
+                  }}
+                />
+                <stop
+                  offset="100%"
+                  style={{
+                    stopColor: color2,
+                    stopOpacity: 1,
+                  }}
+                />
+              </linearGradient>
+            </defs>
+            {typeof width === 'number' &&
+              typeof height === 'number' && (
+                <Rect
+                  innerRef={node => (this.shapeNode = node)}
+                  x={0}
+                  y={0}
+                  width={width}
+                  height={height}
+                  rx={height / 2}
+                  ry={width / 2}
+                  fill="none"
+                  stroke={`url(#${svgId})`}
+                  strokeWidth={strokeWidth}
+                  strokeLinecap="round"
+                  style={{
+                    strokeDasharray: `${pathLength}, ${pathLength + 1}`,
+                    strokeDashoffset: dashOffset,
+                  }}
+                />
+              )}
+          </Svg>
+        )}
       </Motion>
     );
   }

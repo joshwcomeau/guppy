@@ -20,7 +20,7 @@ class SelectableImage extends Component<Props> {
         <OutlineWrapper size={size}>
           <CircularOutline
             color1={COLORS.purple[500]}
-            color2={COLORS.blue[500]}
+            color2={COLORS.violet[500]}
             size={size + 6}
             isShown={status === 'highlighted'}
           />

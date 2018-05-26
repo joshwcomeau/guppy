@@ -70,8 +70,8 @@ const LeftPaneBackground = styled.div`
   color: ${COLORS.white};
   background-image: linear-gradient(
     70deg,
-    ${COLORS.pink[300]},
-    ${COLORS.red[500]}
+    ${COLORS.blue[700]},
+    ${COLORS.teal[500]}
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border: 4px solid ${COLORS.white};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
