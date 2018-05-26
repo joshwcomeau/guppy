@@ -6345,10 +6345,6 @@ schema-utils@^0.3.0:
   dependencies:
     ajv "^5.0.0"
 
-scrambling-letters@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/scrambling-letters/-/scrambling-letters-1.2.2.tgz#1db0e3480c4c12fdc556204bcfbdc212ca46bc02"
-
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"

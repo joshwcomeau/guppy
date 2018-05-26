@@ -40,6 +40,9 @@ class CircularOutlineButton extends Component<Props, State> {
       ellipseStyles = {
         strokeDasharray: pathLength,
         strokeDashoffset: isHovered ? 0 : pathLength,
+        transition: isHovered
+          ? 'stroke-dashoffset 500ms'
+          : 'stroke-dashoffset 500ms 500ms',
       };
     }
 
@@ -109,7 +112,7 @@ const Svg = styled.svg`
 const Ellipse = styled.ellipse`
   transform: rotate(-90deg);
   transform-origin: center center;
-  transition: stroke-dashoffset 500ms;
+  transition: stroke-dashoffset 500ms 500ms;
 
   ${ButtonElem}:active & {
     stroke-width: 4;

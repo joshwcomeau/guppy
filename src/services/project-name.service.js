@@ -4,7 +4,7 @@ export const createRandomNameGenerator = () => {
   // Prevent duplicates
   const seenProjectNames = [];
 
-  return () => {
+  const generate = () => {
     // We have a few strategies for random name generation.
     // Pick one at random.
     const source = sample(['assembled-phrase', 'intel-codenames']);
@@ -22,6 +22,8 @@ export const createRandomNameGenerator = () => {
 
     return name;
   };
+
+  return generate;
 };
 
 const adjectives = [

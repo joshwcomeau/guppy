@@ -6,14 +6,13 @@ import { u2728 as shuffle } from 'react-icons-kit/noto_emoji_regular/u2728';
 
 import { COLORS } from '../../constants';
 import { createRandomNameGenerator } from '../../services/project-name.service';
+import { getInterpolatedValue, range, random } from '../../utils';
 
 import FormField from '../FormField';
 import TextInput from '../TextInput';
 import CircularOutlineButton from '../CircularOutlineButton';
 
 const generateRandomName = createRandomNameGenerator();
-
-console.log(createRandomNameGenerator, generateRandomName);
 
 type Props = {
   name: string,
@@ -23,21 +22,72 @@ type Props = {
   handleChange: (ev: any) => void,
 };
 
-type State = {};
+type State = {
+  randomizedOverrideName: ?string,
+};
 
 class ProjectName extends PureComponent<Props, State> {
-  state = {};
+  state = {
+    randomizedOverrideName: null,
+    randomizeCount: 0,
+  };
 
   handleRandomize = () => {
     const newName = generateRandomName();
 
-    console.log({ newName });
-
     this.props.handleChange(newName);
+
+    const numOfTicks = 10; // TODO: Based on `randomizeCount`
+
+    this.scramble(this.props.name, newName, numOfTicks);
   };
 
   updateName = ev => {
     this.props.handleChange(ev.target.value);
+  };
+
+  scramble = (from, to, numOfTicks) => {
+    const fromNumOfChars = from.length;
+    const toNumOfChars = to.length;
+
+    let revealedLetterIndices = [];
+
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    const tick = (i = 0) => {
+      const progress = i / numOfTicks;
+
+      if (progress === 1) {
+        this.setState({ randomizedOverrideName: null });
+        return;
+      }
+
+      // As we get closer to the "to" term, letters should be progressively
+      // revealed. So we may not want to randomize every letter.
+      const numOfRevealedLetters = revealedLetterIndices.length;
+      const numOfLettersToReveal = Math.round(progress * toNumOfChars);
+
+      range(0, numOfLettersToReveal - numOfRevealedLetters).forEach(() => {
+        revealedLetterIndices.push(random(0, toNumOfChars));
+      });
+
+      const semiRandomString = to
+        .split('')
+        .map((letter, index) => {
+          if (revealedLetterIndices.includes(index)) {
+            return letter;
+          }
+
+          return letters.charAt(random(0, letters.length));
+        })
+        .join('');
+
+      this.setState({ randomizedOverrideName: semiRandomString });
+
+      window.setTimeout(() => tick(i + 1), 15 + progress * 100);
+    };
+
+    tick();
   };
 
   render() {
@@ -48,13 +98,15 @@ class ProjectName extends PureComponent<Props, State> {
       handleBlur,
       handleChange,
     } = this.props;
+    const { randomizedOverrideName } = this.state;
 
     return (
       <FormField label="Project Name" labelWidth={50} focused={isFocused}>
         <FlexWrapper>
           <TextInput
+            id="text-input"
             type="text"
-            value={name}
+            value={randomizedOverrideName || name}
             focused={isFocused}
             onChange={this.updateName}
             onFocus={handleFocus}
