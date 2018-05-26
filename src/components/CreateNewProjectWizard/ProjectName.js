@@ -33,13 +33,23 @@ class ProjectName extends PureComponent<Props, State> {
   };
 
   handleRandomize = () => {
+    const { randomizeCount } = this.state;
     const newName = generateRandomName();
 
     this.props.handleChange(newName);
 
-    const numOfTicks = 10; // TODO: Based on `randomizeCount`
+    let numOfTicks;
+    if (randomizeCount <= 3) {
+      numOfTicks = 10;
+    } else if (randomizeCount <= 6) {
+      numOfTicks = 5;
+    } else {
+      numOfTicks = 0;
+    }
 
-    this.scramble(this.props.name, newName, numOfTicks);
+    if (numOfTicks > 0) {
+      this.scramble(this.props.name, newName, numOfTicks);
+    }
   };
 
   updateName = ev => {
@@ -50,24 +60,37 @@ class ProjectName extends PureComponent<Props, State> {
     const fromNumOfChars = from.length;
     const toNumOfChars = to.length;
 
-    let revealedLetterIndices = [];
+    // Start with all spaces revealed
+    let revealedLetterIndices = to
+      .split('')
+      .map((_, i) => i)
+      .filter(i => to[i].match(/\s/));
 
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
     const tick = (i = 0) => {
       const progress = i / numOfTicks;
 
-      if (progress === 1) {
-        this.setState({ randomizedOverrideName: null });
+      const isFinished =
+        this.state.randomizedOverrideName === to || progress === 1;
+
+      if (isFinished) {
+        this.setState({
+          randomizedOverrideName: null,
+          randomizeCount: this.state.randomizeCount + 1,
+        });
         return;
       }
 
       // As we get closer to the "to" term, letters should be progressively
       // revealed. So we may not want to randomize every letter.
       const numOfRevealedLetters = revealedLetterIndices.length;
-      const numOfLettersToReveal = Math.round(progress * toNumOfChars);
+      const numOfLettersToReveal = Math.floor(progress * toNumOfChars);
 
       range(0, numOfLettersToReveal - numOfRevealedLetters).forEach(() => {
+        // We want to pick a random index to reveal
+        // TODO: Prioritize early-in-the-string letters, for a nicer effect?
+        // TODO: Worry about duplicates, so that the timing is more consistent?
         revealedLetterIndices.push(random(0, toNumOfChars));
       });
 
