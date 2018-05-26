@@ -1,29 +1,16 @@
 import { sample, capitalizeAll } from '../utils';
 
-export const createRandomNameGenerator = () => {
-  // Prevent duplicates
-  const seenProjectNames = [];
+export const generateRandomName = () => {
+  const source = sample(['assembled-phrase', 'intel-codenames']);
 
-  const generate = () => {
-    // We have a few strategies for random name generation.
-    // Pick one at random.
-    const source = sample(['assembled-phrase', 'intel-codenames']);
+  let name;
+  if (source === 'assembled-phrase') {
+    name = capitalizeAll(`${sample(adjectives)} ${sample(nouns)}`);
+  } else {
+    name = sample(intelCodenames);
+  }
 
-    let name;
-    if (source === 'assembled-phrase') {
-      name = capitalizeAll(`${sample(adjectives)} ${sample(nouns)}`);
-    } else {
-      name = sample(intelCodenames);
-    }
-
-    if (seenProjectNames.includes(name)) {
-      return generate();
-    }
-
-    return name;
-  };
-
-  return generate;
+  return name;
 };
 
 const adjectives = [
@@ -40,7 +27,10 @@ const adjectives = [
   'wonderful',
   'witty',
   'sassy',
-  'thundering',
+  'thunder',
+  'lightning',
+  'stormy',
+  'sunny',
   'rhythmic',
   'old-fashioned',
   'fresh',

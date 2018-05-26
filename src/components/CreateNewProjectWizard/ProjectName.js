@@ -5,14 +5,12 @@ import IconBase from 'react-icons-kit';
 import { u2728 as shuffle } from 'react-icons-kit/noto_emoji_regular/u2728';
 
 import { COLORS } from '../../constants';
-import { createRandomNameGenerator } from '../../services/project-name.service';
+import { generateRandomName } from '../../services/project-name.service';
 import { getInterpolatedValue, range, random } from '../../utils';
 
 import FormField from '../FormField';
 import TextInput from '../TextInput';
 import CircularOutlineButton from '../CircularOutlineButton';
-
-const generateRandomName = createRandomNameGenerator();
 
 type Props = {
   name: string,
@@ -38,11 +36,13 @@ class ProjectName extends PureComponent<Props, State> {
 
     this.props.handleChange(newName);
 
+    this.node.focus();
+
     let numOfTicks;
     if (randomizeCount <= 3) {
       numOfTicks = 10;
     } else if (randomizeCount <= 6) {
-      numOfTicks = 5;
+      numOfTicks = 3;
     } else {
       numOfTicks = 0;
     }
@@ -124,10 +124,10 @@ class ProjectName extends PureComponent<Props, State> {
     const { randomizedOverrideName } = this.state;
 
     return (
-      <FormField label="Project Name" labelWidth={50} focused={isFocused}>
+      <FormField label="Project Name" isFocused={isFocused}>
         <FlexWrapper>
           <TextInput
-            id="text-input"
+            innerRef={node => (this.node = node)}
             type="text"
             value={randomizedOverrideName || name}
             focused={isFocused}
@@ -140,6 +140,8 @@ class ProjectName extends PureComponent<Props, State> {
               <CircularOutlineButton
                 drawOutlineOnHover
                 onClick={this.handleRandomize}
+                color1={COLORS.purple[500]}
+                color2={COLORS.violet[500]}
                 size={32}
               >
                 <IconBase size={22} icon={shuffle} />

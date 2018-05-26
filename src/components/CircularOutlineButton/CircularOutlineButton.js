@@ -1,9 +1,12 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { COLORS } from '../../constants';
 
 type Props = {
   size: number,
+  color1: string,
+  color2: string,
   drawOutlineOnHover: boolean,
   children: React$Node,
 };
@@ -24,6 +27,11 @@ class CircularOutlineButton extends Component<Props, State> {
 
   node = HTMLElement;
 
+  static defaultProps = {
+    color1: COLORS.gray[800],
+    color2: COLORS.gray[500],
+  };
+
   componentDidMount() {
     // $FlowFixMe
     const pathLength = Math.ceil(this.node.getTotalLength()) + 1;
@@ -32,7 +40,14 @@ class CircularOutlineButton extends Component<Props, State> {
   }
 
   render() {
-    const { size, drawOutlineOnHover, children, ...delegated } = this.props;
+    const {
+      size,
+      drawOutlineOnHover,
+      children,
+      color1,
+      color2,
+      ...delegated
+    } = this.props;
     const { isHovered, pathLength } = this.state;
 
     let ellipseStyles = {};
@@ -60,14 +75,14 @@ class CircularOutlineButton extends Component<Props, State> {
               <stop
                 offset="0%"
                 style={{
-                  stopColor: '#ff416c',
+                  stopColor: color1,
                   stopOpacity: 1,
                 }}
               />
               <stop
                 offset="100%"
                 style={{
-                  stopColor: '#ff4b2b',
+                  stopColor: color2,
                   stopOpacity: 1,
                 }}
               />

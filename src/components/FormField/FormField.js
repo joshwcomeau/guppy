@@ -1,23 +1,22 @@
+// @flow
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { COLORS } from '../../constants';
 
-class FormField extends Component {
-  static propTypes = {
-    label: PropTypes.string.isRequired,
-    labelWidth: PropTypes.number.isRequired,
-    children: PropTypes.node.isRequired,
-  };
+type Props = {
+  label: string,
+  isFocused: boolean,
+  children: React$Node,
+};
 
+class FormField extends Component<Props> {
   render() {
-    const { label, labelWidth, focused, children } = this.props;
+    const { label, isFocused, children } = this.props;
 
     return (
       <Wrapper>
-        <LabelText width={labelWidth} focused={focused}>
-          {label}:
-        </LabelText>
+        <LabelText isFocused={isFocused}>{label}</LabelText>
         <Children>{children}</Children>
       </Wrapper>
     );
@@ -32,7 +31,7 @@ const Wrapper = styled.label`
 const LabelText = styled.div`
   flex-basis: ${props => props.width}px;
   font-size: 13px;
-  color: ${props => (props.focused ? COLORS.pink[500] : COLORS.gray[500])};
+  color: ${props => (props.isFocused ? COLORS.pink[500] : COLORS.gray[500])};
   padding: 0px 5px;
   text-transform: uppercase;
   font-weight: 500;
