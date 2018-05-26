@@ -169,6 +169,11 @@ export function setTimeoutPromise(duration) {
 }
 
 export const capitalize = str => str[0].toUpperCase() + str.slice(1);
+export const capitalizeAll = str =>
+  str
+    .split(' ')
+    .map(capitalize)
+    .join(' ');
 
 export const deleteCookie = key => {
   document.cookie = `${encodeURIComponent(

@@ -12,6 +12,8 @@ import ButtonWithIcon from '../ButtonWithIcon';
 import OutlineButton from '../OutlineButton';
 import CircularOutlineButton from '../CircularOutlineButton';
 
+import ProjectName from './ProjectName';
+
 class CreateNewProjectWizard extends Component {
   state = {
     activeField: null,
@@ -22,51 +24,20 @@ class CreateNewProjectWizard extends Component {
     currentBuildStep: null,
   };
 
-  updateName = ev => this.setState({ name: ev.target.value });
+  updateName = name => this.setState({ name });
 
   renderRightPane() {
     const { name, activeField } = this.state;
 
     return (
       <Fragment>
-        <FormField
-          label="Project Name"
-          labelWidth={50}
-          focused={activeField === 'name'}
-        >
-          <FlexWrapper>
-            <TextInput
-              type="text"
-              value={name}
-              focused={activeField === 'name'}
-              onChange={this.updateName}
-              onFocus={() => this.setState({ activeField: 'name' })}
-              onBlur={() => this.setState({ activeField: null })}
-              placeholder="Some Fantastic Project Name"
-            >
-              <ButtonWrapper>
-                <CircularOutlineButton size={32}>
-                  <IconBase size={22} icon={shuffle} />
-                </CircularOutlineButton>
-              </ButtonWrapper>
-
-              {/* <ButtonWithIcon
-                icon={shuffle}
-                size="small"
-                style={{
-                  color: COLORS.white,
-                  backgroundImage: `linear-gradient(
-                    -80deg,
-                    ${COLORS.pink[700]},
-                    ${COLORS.violet[500]})
-                  `,
-                }}
-              >
-                Randomize
-              </ButtonWithIcon> */}
-            </TextInput>
-          </FlexWrapper>
-        </FormField>
+        <ProjectName
+          name={name}
+          isFocused={activeField === 'name'}
+          handleFocus={() => this.setState({ activeField: 'name' })}
+          handleBlur={() => this.setState({ activeField: null })}
+          handleChange={this.updateName}
+        />
 
         <FormField label="Project Type" labelWidth={50} />
       </Fragment>
@@ -113,10 +84,6 @@ const ButtonHider = styled.div`
     opacity: 1;
     transition: opacity 500ms 100ms;
   }
-`;
-
-const ButtonWrapper = styled.div`
-  transform: translateY(5px);
 `;
 
 export default CreateNewProjectWizard;

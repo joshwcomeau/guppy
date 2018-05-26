@@ -5,8 +5,7 @@
   "main": "src/electron-starter.js",
   "homepage": "./",
   "scripts": {
-    "start":
-      "concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
+    "start": "concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
     "start:react": "PORT=5678 react-scripts start",
     "start:electron": "ELECTRON_START_URL=http://localhost:5678 electron .",
     "build": "react-scripts build",
@@ -17,7 +16,6 @@
   "dependencies": {
     "async": "^2.6.1",
     "immer": "^1.3.0",
-    "project-name-generator": "^2.1.5",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-icons-kit": "^1.1.5",

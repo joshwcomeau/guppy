@@ -4,23 +4,44 @@ import styled from 'styled-components';
 
 type Props = {
   size: number,
+  drawOutlineOnHover: boolean,
   children: React$Node,
 };
 
-class CircularOutlineButton extends Component {
+type State = {
+  isHovered: boolean,
+  pathLength: number,
+};
+
+class CircularOutlineButton extends Component<Props, State> {
   state = {
     isHovered: false,
-    pathLength: 0,
+    // HACK: Having trouble with on-mount stroke animation.
+    // Setting this to the known value of our 1 instance, but this is obv.
+    // a horrible hack.
+    pathLength: 101,
   };
 
+  node = HTMLElement;
+
   componentDidMount() {
+    // $FlowFixMe
     const pathLength = Math.ceil(this.node.getTotalLength()) + 1;
+
     this.setState({ pathLength });
   }
 
   render() {
-    const { size, children } = this.props;
+    const { size, drawOutlineOnHover, children, ...delegated } = this.props;
     const { isHovered, pathLength } = this.state;
+
+    let ellipseStyles = {};
+    if (drawOutlineOnHover) {
+      ellipseStyles = {
+        strokeDasharray: pathLength,
+        strokeDashoffset: isHovered ? 0 : pathLength,
+      };
+    }
 
     // Not using `viewBox` because I want the stroke width to be a constant
     // 2px regardless of SVG size.
@@ -28,6 +49,7 @@ class CircularOutlineButton extends Component {
       <ButtonElem
         onMouseEnter={() => this.setState({ isHovered: true })}
         onMouseLeave={() => this.setState({ isHovered: false })}
+        {...delegated}
       >
         <Svg width={size} height={size}>
           <defs>
@@ -57,10 +79,7 @@ class CircularOutlineButton extends Component {
             fill="none"
             stroke="url(#grad1)"
             strokeWidth={2}
-            style={{
-              strokeDasharray: pathLength,
-              strokeDashoffset: isHovered ? 0 : pathLength,
-            }}
+            style={ellipseStyles}
           />
         </Svg>
         {children}
@@ -79,6 +98,7 @@ const ButtonElem = styled.button`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  outline: none;
 `;
 
 const Svg = styled.svg`
@@ -90,6 +110,10 @@ const Ellipse = styled.ellipse`
   transform: rotate(-90deg);
   transform-origin: center center;
   transition: stroke-dashoffset 500ms;
+
+  ${ButtonElem}:active & {
+    stroke-width: 4;
+  }
 `;
 
 export default CircularOutlineButton;
