@@ -6,13 +6,16 @@ import { COLORS } from '../../constants';
 
 type Props = {
   label: string,
+  useLabelTag: boolean,
   isFocused: boolean,
   children: React$Node,
 };
 
 class FormField extends Component<Props> {
   render() {
-    const { label, isFocused, children } = this.props;
+    const { label, useLabelTag, isFocused, children } = this.props;
+
+    const Wrapper = useLabelTag ? WrapperLabel : WrapperDiv;
 
     return (
       <Wrapper>
@@ -23,8 +26,12 @@ class FormField extends Component<Props> {
   }
 }
 
-const Wrapper = styled.label`
+const WrapperLabel = styled.label`
   display: block;
+  margin-bottom: 30px;
+`;
+
+const WrapperDiv = styled.div`
   margin-bottom: 30px;
 `;
 

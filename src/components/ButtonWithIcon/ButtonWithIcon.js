@@ -2,25 +2,24 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 
-import Button from '../Button';
+import CircularOutlineButton from '../CircularOutlineButton';
 
-const ButtonWithIcon = ({ size, icon, children, ...delegated }) => (
-  <Button noPadding size={size} {...delegated}>
+const ButtonWithIcon = ({ icon, children, ...delegated }) => (
+  // TODO: Support other sizes
+  <CircularOutlineButton noPadding size="small" {...delegated}>
     <InnerWrapper>
-      <IconWrapper>
-        <IconBase icon={icon} style={{ fontSize: 'inherit' }} />
-      </IconWrapper>
+      <IconWrapper>{icon}</IconWrapper>
       {children}
     </InnerWrapper>
-  </Button>
+  </CircularOutlineButton>
 );
 
 const InnerWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  height: 100%;
-  padding: 4px 10px 4px 32px;
+  height: 34px;
+  padding: 0 10px 0 32px;
 `;
 
 const IconWrapper = styled.div`

@@ -10,11 +10,12 @@ import { getInterpolatedValue, range, random } from '../../utils';
 
 import FormField from '../FormField';
 import TextInput from '../TextInput';
-import CircularOutlineButton from '../CircularOutlineButton';
+import HoverableOutlineButton from '../HoverableOutlineButton';
 
 type Props = {
   name: string,
   isFocused: boolean,
+  // TODO: Change to onFocus, onBlur, onChange for consistency
   handleFocus: () => void,
   handleBlur: () => void,
   handleChange: (ev: any) => void,
@@ -124,7 +125,7 @@ class ProjectName extends PureComponent<Props, State> {
     const { randomizedOverrideName } = this.state;
 
     return (
-      <FormField label="Project Name" isFocused={isFocused}>
+      <FormField useLabelTag label="Project Name" isFocused={isFocused}>
         <FlexWrapper>
           <TextInput
             innerRef={node => (this.node = node)}
@@ -137,15 +138,16 @@ class ProjectName extends PureComponent<Props, State> {
             placeholder="Some Fantastic Project Name"
           >
             <ButtonPositionAdjuster>
-              <CircularOutlineButton
-                drawOutlineOnHover
+              <HoverableOutlineButton
+                noPadding
+                onMouseDown={handleFocus}
                 onClick={this.handleRandomize}
                 color1={COLORS.purple[500]}
-                color2={COLORS.violet[500]}
-                size={32}
+                color2={COLORS.blue[500]}
+                style={{ width: 32, height: 32 }}
               >
                 <IconBase size={22} icon={shuffle} />
-              </CircularOutlineButton>
+              </HoverableOutlineButton>
             </ButtonPositionAdjuster>
           </TextInput>
         </FlexWrapper>
