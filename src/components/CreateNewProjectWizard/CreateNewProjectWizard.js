@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
+import importAll from 'import-all.macro';
 import IconBase from 'react-icons-kit';
 import { u2728 as shuffle } from 'react-icons-kit/noto_emoji_regular/u2728';
 
@@ -17,6 +18,10 @@ import CircularOutlineButton from '../CircularOutlineButton';
 import Spacer from '../Spacer';
 
 import ProjectName from './ProjectName';
+
+const icons = importAll.sync('../../assets/images/icons/*.jpg');
+
+console.log(icons);
 
 class CreateNewProjectWizard extends Component {
   state = {
