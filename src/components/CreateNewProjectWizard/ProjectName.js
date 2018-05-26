@@ -2,7 +2,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
-import { u2728 as shuffle } from 'react-icons-kit/noto_emoji_regular/u2728';
+import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
 import { COLORS } from '../../constants';
 import { generateRandomName } from '../../services/project-name.service';
@@ -30,6 +30,10 @@ class ProjectName extends PureComponent<Props, State> {
     randomizedOverrideName: null,
     randomizeCount: 0,
   };
+
+  componentDidMount() {
+    this.node.focus();
+  }
 
   handleRandomize = () => {
     const { randomizeCount } = this.state;
@@ -146,7 +150,7 @@ class ProjectName extends PureComponent<Props, State> {
                 color2={COLORS.blue[500]}
                 style={{ width: 32, height: 32 }}
               >
-                <IconBase size={22} icon={shuffle} />
+                <IconBase size={22} icon={sparkles} />
               </HoverableOutlineButton>
             </ButtonPositionAdjuster>
           </TextInput>

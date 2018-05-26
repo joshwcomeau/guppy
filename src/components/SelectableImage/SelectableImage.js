@@ -54,6 +54,7 @@ const OutlineWrapper = styled.div`
   left: -3px;
   right: -3px;
   bottom: -3px;
+  pointer-events: none;
 `;
 
 const Image = styled.img`
@@ -72,8 +73,12 @@ const ImageFader = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: ${props => (props.isShown ? 0.4 : 0)};
+  opacity: ${props => (props.isShown ? 0.55 : 0)};
   transition: opacity 500ms;
+
+  &:hover {
+    opacity: 0;
+  }
 `;
 
 export default SelectableImage;

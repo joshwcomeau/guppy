@@ -88,7 +88,7 @@ const RightPaneBackground = styled.div`
 `;
 
 const PaneChildren = styled.div`
-  padding: 20px;
+  padding: 30px;
   height: 100%;
 `;
 

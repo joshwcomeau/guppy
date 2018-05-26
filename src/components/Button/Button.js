@@ -7,6 +7,7 @@ import { COLORS } from '../../constants';
 import CircularOutline from '../CircularOutline';
 
 type Props = {
+  type: 'fill' | 'stroke',
   size: 'small' | 'medium' | 'large',
   color1: string,
   color2: string,
@@ -21,10 +22,12 @@ type State = {
 
 class Button extends Component<Props, State> {
   static defaultProps = {
+    type: 'stroke',
     size: 'medium',
     color1: COLORS.gray[800],
     color2: COLORS.gray[500],
     showOutline: true,
+    style: {},
   };
 
   getButtonElem = size => {
@@ -40,25 +43,39 @@ class Button extends Component<Props, State> {
 
   render() {
     const {
+      type,
       size,
       children,
       color1,
       color2,
       showOutline,
+      style,
       ...delegated
     } = this.props;
 
     const Elem = this.getButtonElem(size);
 
-    // Not using `viewBox` because I want the stroke width to be a constant
-    // 2px regardless of SVG size.
+    let mutatedStyle = { ...style };
+    if (type === 'fill') {
+      mutatedStyle.color = '#FFF';
+      mutatedStyle.backgroundImage = `
+        linear-gradient(
+          70deg,
+          ${color1},
+          ${color2}
+        )
+      `;
+    }
+
     return (
-      <Elem {...delegated}>
-        <CircularOutline
-          color1={color1}
-          color2={color2}
-          isShown={showOutline}
-        />
+      <Elem style={mutatedStyle} {...delegated}>
+        {type === 'stroke' && (
+          <CircularOutline
+            color1={color1}
+            color2={color2}
+            isShown={showOutline}
+          />
+        )}
 
         {children}
       </Elem>
@@ -84,19 +101,22 @@ const ButtonBase = styled.button`
 const SmallButton = styled(ButtonBase)`
   padding: ${props => (props.noPadding ? '0px' : '0px 14px')};
   height: ${props => (props.noPadding ? 'auto' : '34px')};
+  border-radius: 17px;
   font-size: 14px;
 `;
 
 const MediumButton = styled(ButtonBase)`
   padding: ${props => (props.noPadding ? '0px' : '0px 20px')};
   height: ${props => (props.noPadding ? 'auto' : '38px')};
+  border-radius: 19px;
   font-size: 16px;
 `;
 
 const LargeButton = styled(ButtonBase)`
   padding: ${props => (props.noPadding ? '0px' : '0 32px')};
-  height: ${props => (props.noPadding ? 'auto' : '44px')};
-  font-size: 22px;
+  height: ${props => (props.noPadding ? 'auto' : '48px')};
+  border-radius: 24px;
+  font-size: 24px;
 `;
 
 export default Button;
