@@ -1,11 +1,22 @@
 // @flow
 import { INITIALIZE, REFRESH_PROJECTS } from '../actions';
 
-// TODO: add a type for Project
+import type { Project } from '../types';
 
-const initialState = {};
+type State = {
+  projects: Array<Project>,
+};
 
-export default (state = initialState, action) => {
+type Action = {
+  type: string,
+  projects: Array<Project>,
+};
+
+const initialState = {
+  projects: [],
+};
+
+export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case INITIALIZE:
     case REFRESH_PROJECTS: {
@@ -17,4 +28,6 @@ export default (state = initialState, action) => {
   }
 };
 
-export const getNumberOfProjects = state => Object.keys(state.projects).length;
+export const getNumberOfProjects = (state: State) =>
+  // $FlowFixMe
+  Object.keys(state.projects).length;
