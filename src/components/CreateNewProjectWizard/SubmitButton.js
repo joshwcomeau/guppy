@@ -12,16 +12,10 @@ import Button from '../Button';
 type Props = {
   readyToBeSubmitted: boolean,
   isDisabled: boolean,
-  handleNext: () => void,
-  handleSubmit: () => void,
+  onSubmit: () => void,
 };
 
-const SubmitButton = ({
-  readyToBeSubmitted,
-  isDisabled,
-  handleNext,
-  handleSubmit,
-}: Props) => (
+const SubmitButton = ({ readyToBeSubmitted, isDisabled, onSubmit }: Props) => (
   <Button
     disabled={isDisabled}
     type="fill"
@@ -29,7 +23,7 @@ const SubmitButton = ({
     color1={readyToBeSubmitted ? COLORS.green[700] : COLORS.blue[700]}
     color2={readyToBeSubmitted ? COLORS.lightGreen[500] : COLORS.blue[500]}
     style={{ color: COLORS.pink[500], width: 200 }}
-    onClick={readyToBeSubmitted ? handleSubmit : handleNext}
+    onClick={onSubmit}
   >
     <ChildWrapper>{readyToBeSubmitted ? 'Submit' : 'Next'}</ChildWrapper>
     <SubmitButtonIconWrapper>
