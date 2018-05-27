@@ -1,23 +1,53 @@
-import React, { Component } from 'react';
+// @flow
+import React, { PureComponent } from 'react';
+import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
+
 import { COLORS } from '../../constants';
 
-class TwoPaneModal extends Component {
+type Props = {
+  leftPane: React$Node,
+  rightPane: React$Node,
+  backface: React$Node,
+  isFolded: boolean,
+  handleClose: () => void,
+};
+
+const springSettings = {
+  stiffness: 66,
+  damping: 20,
+};
+
+class TwoPaneModal extends PureComponent<Props> {
   render() {
     const { handleClose, isFolded, leftPane, rightPane, backface } = this.props;
 
     return (
       <Wrapper>
         <Backdrop onClick={handleClose} />
-        <PaneWrapper>
-          <LeftPaneBackground>
-            <PaneChildren>{leftPane}</PaneChildren>
-          </LeftPaneBackground>
 
-          <RightPaneBackground>
-            <PaneChildren>{rightPane}</PaneChildren>
-          </RightPaneBackground>
-        </PaneWrapper>
+        <Motion
+          style={{
+            foldDegrees: spring(isFolded ? 180 : 0, springSettings),
+            translatePercentage: spring(isFolded ? -25 : 0, springSettings),
+          }}
+        >
+          {({ foldDegrees, translatePercentage }) => (
+            <PaneWrapper translatePercentage={translatePercentage}>
+              <LeftHalf foldDegrees={foldDegrees}>
+                <LeftPaneWrapper>
+                  <PaneChildren>{leftPane}</PaneChildren>
+                </LeftPaneWrapper>
+
+                <BackfaceWrapper>{backface}</BackfaceWrapper>
+              </LeftHalf>
+
+              <RightPaneWrapper>
+                <PaneChildren>{rightPane}</PaneChildren>
+              </RightPaneWrapper>
+            </PaneWrapper>
+          )}
+        </Motion>
       </Wrapper>
     );
   }
@@ -53,20 +83,26 @@ const PaneWrapper = styled.div`
   width: 80%;
   max-width: 850px;
   display: flex;
-  /* background: white;
-  box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
-  border-radius: ${BORDER_RADIUS}px;
-  padding: 4px; */
+  transform: translateX(${props => props.translatePercentage}%);
+  will-change: transform;
 `;
 
 const OverflowManager = styled.div`
   overflow: hidden;
 `;
 
-const LeftPaneBackground = styled.div`
+const LeftHalf = styled.div`
   position: relative;
   z-index: 2;
   flex: 1;
+  transform: perspective(2000px) rotateY(${props => props.foldDegrees}deg);
+  will-change: transform;
+  transform-origin: center right;
+  transform-style: preserve-3d;
+`;
+
+const LeftPaneWrapper = styled.div`
+  height: 100%;
   color: ${COLORS.white};
   background-image: linear-gradient(
     70deg,
@@ -76,15 +112,28 @@ const LeftPaneBackground = styled.div`
   border: 4px solid ${COLORS.white};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px 0 0 8px;
+  backface-visibility: hidden;
 `;
 
-const RightPaneBackground = styled.div`
+const RightPaneWrapper = styled.div`
   position: relative;
   z-index: 1;
   flex: 1;
   background: ${COLORS.white};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 0 8px 8px 0;
+`;
+
+const BackfaceWrapper = styled.div`
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: rotateY(180deg);
+  transform-origin: center center;
+  backface-visibility: hidden;
 `;
 
 const PaneChildren = styled.div`

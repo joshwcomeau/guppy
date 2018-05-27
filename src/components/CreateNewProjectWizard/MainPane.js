@@ -19,7 +19,8 @@ import FadeIn from '../FadeIn';
 import ProjectName from './ProjectName';
 import SubmitButton from './SubmitButton';
 
-import type { Field, Step, ProjectType } from './types';
+import type { Field, Step } from './types';
+import type { ProjectType } from '../../types';
 
 const icons = importAll.sync('../../assets/images/icons/icon_*.jpg');
 const iconSrcs = Object.values(icons);

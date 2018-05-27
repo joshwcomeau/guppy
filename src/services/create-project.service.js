@@ -20,10 +20,15 @@ const childProcess = window.require('child_process');
  * TODO: Ew callbacks. I can't just use a promise, though, since it needs to
  * fire multiple times, to handle updates mid-creation. Maybe an observable?
  */
-export default ({ name, type }, onStatusUpdate, onError, onComplete) => {
+export default (
+  { projectName, projectType, projectIcon },
+  onStatusUpdate,
+  onError,
+  onComplete
+) => {
   // When the app first loads, we need to get an index of existing projects.
-  // The default path for projects is `~/guppy`.
-  const parentPath = `${os.homedir()}/guppy`;
+  // The default path for projects is `~/guppy-projects`.
+  const parentPath = `${os.homedir()}/guppy-projects`;
 
   // Create the projects directory, if this is the first time creating a
   // project.
@@ -33,10 +38,15 @@ export default ({ name, type }, onStatusUpdate, onError, onComplete) => {
 
   onStatusUpdate('Created parent directory');
 
-  const id = slug(name);
+  const id = slug(
+    'Hello World' + Math.round(Math.random() * 10000)
+  ).toLowerCase(); // TEMP
+
+  console.log({ id });
+
   const path = `${parentPath}/${id}`;
 
-  // TODO: support Vue?
+  // TODO: support Gatsby
   const instruction = 'npx';
   const args = ['create-react-app', path];
 

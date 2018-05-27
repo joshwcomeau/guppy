@@ -36,6 +36,7 @@ export const COLORS = {
   blue: {
     '500': '#3f6cff',
     '700': '#304FFE',
+    '900': '#1b2457',
   },
   violet: {
     '500': '#D500F9',

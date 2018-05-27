@@ -5,14 +5,11 @@ import TwoPaneModal from '../TwoPaneModal';
 
 import MainPane from './MainPane';
 import SummaryPane from './SummaryPane';
+import BuildPane from './BuildPane';
 
-import type {
-  Field,
-  Status,
-  Step,
-  ProjectType,
-  SubmittedProject,
-} from './types';
+import type { Field, Status, Step } from './types';
+
+import type { ProjectType, SubmittedProject } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
@@ -106,11 +103,14 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       currentStep,
       shouldShowRandomizationHint,
     } = this.state;
-    const isFolded = this.state.currentStep === 'done';
+
+    const project = { projectName, projectType, projectIcon };
+
+    const readyToBeBuilt = this.state.status !== 'filling-in-form';
 
     return (
       <TwoPaneModal
-        isFolded={isFolded}
+        isFolded={true /* readyToBeBuilt */}
         leftPane={
           <SummaryPane
             currentStep={currentStep}
@@ -120,9 +120,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
         }
         rightPane={
           <MainPane
-            projectName={projectName}
-            projectType={projectType}
-            projectIcon={projectIcon}
+            {...project}
             activeField={activeField}
             currentStepIndex={FORM_STEPS.indexOf(currentStep)}
             updateFieldValue={this.updateFieldValue}
@@ -131,7 +129,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
             hasBeenSubmitted={status !== 'filling-in-form'}
           />
         }
-        backface={"I'm in the back"}
+        backface={true && <BuildPane project={project} />}
       />
     );
   }
