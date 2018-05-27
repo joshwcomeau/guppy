@@ -8,21 +8,25 @@ import { COLORS } from '../../constants';
 type Props = {
   height: number,
   progress: number,
+  stiffness: number,
+  damping: number,
   colors: Array<string>,
 };
 
 class ProgressBar extends Component<Props> {
   static defaultProps = {
     height: 8,
+    stiffness: 32,
+    damping: 32,
     colors: [COLORS.blue[700], COLORS.teal[500], COLORS.lightGreen[500]],
   };
 
   render() {
-    const { height, progress, colors } = this.props;
+    const { height, progress, stiffness, damping, colors } = this.props;
 
     return (
       <Wrapper height={height}>
-        <Motion style={{ progress: spring(progress) }}>
+        <Motion style={{ progress: spring(progress, { stiffness, damping }) }}>
           {({ progress }) => (
             <ProgressGradient colors={colors} progress={progress} />
           )}

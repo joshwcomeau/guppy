@@ -26,6 +26,12 @@ class BuildStepProgress extends PureComponent<Props, State> {
     shouldShowAdditionalCopy: false,
   };
 
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.status === 'done') {
+      this.setState({ shouldShowAdditionalCopy: false });
+    }
+  }
+
   componentDidUpdate(prevProps: Props) {
     if (
       prevProps.status !== 'in-progress' &&
@@ -47,7 +53,7 @@ class BuildStepProgress extends PureComponent<Props, State> {
     const { step, status } = this.props;
     const { shouldShowAdditionalCopy } = this.state;
     return (
-      <Wrapper>
+      <Wrapper isUpcoming={status === 'upcoming'}>
         <IconWrapper>
           {status === 'in-progress' && <Spinner size={20} />}
           {status === 'done' && <Checkmark size={32} icon={check} />}
@@ -71,6 +77,9 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 10px;
   font-size: 18px;
+  opacity: ${props => (props.isUpcoming ? 0.5 : 1)};
+  will-change: opacity;
+  transition: opacity 800ms;
 `;
 
 const IconWrapper = styled.div`
@@ -92,14 +101,15 @@ const Checkmark = styled(IconBase)`
 `;
 
 const MainCopy = styled.div`
-  font-weight: 500;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
   font-size: 18px;
 `;
 
 const AdditionalCopy = styled.div`
   position: absolute;
-  top: 120%;
-  font-size: 16px;
+  top: 110%;
+  font-size: 14px;
 `;
 
 export default BuildStepProgress;

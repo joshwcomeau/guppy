@@ -25,6 +25,9 @@ const BUILD_STEPS = {
     copy: 'Installing dependencies.',
     additionalCopy: 'This step can take a while...',
   },
+  guppification: {
+    copy: 'Persisting project info.',
+  },
 };
 
 const BUILD_STEP_KEYS: Array<BuildStep> = Object.keys(BUILD_STEPS);
@@ -76,6 +79,30 @@ class BuildPane extends PureComponent<Props, State> {
         currentBuildStep: BUILD_STEP_KEYS[3],
         progress: 0.4,
       });
+    } else if (message.match(/Installing \[36mreact/i)) {
+      this.setState(state => ({
+        progress: state.progress + 0.025,
+      }));
+    } else if (message.match(/No lockfile found/i)) {
+      this.setState(state => ({
+        progress: state.progress + 0.025,
+      }));
+    } else if (message.match(/Resolving packages/i)) {
+      this.setState(state => ({
+        progress: state.progress + 0.05,
+      }));
+    } else if (message.match(/Fetching packages/i)) {
+      this.setState(state => ({
+        progress: state.progress + 0.05,
+      }));
+    } else if (message.match(/Linking dependencies/i)) {
+      this.setState(state => ({
+        progress: state.progress + 0.05,
+      }));
+    } else if (message.match(/Building fresh packages/i)) {
+      this.setState(state => ({
+        progress: state.progress + 0.15,
+      }));
     }
   };
 
@@ -105,7 +132,11 @@ class BuildPane extends PureComponent<Props, State> {
     return (
       <Wrapper>
         <ProgressBarWrapper>
-          <ProgressBar progress={progress} />
+          <ProgressBar
+            progress={progress}
+            stiffness={progress === 1 ? 128 : 64}
+            damping={progress === 1 ? 22 : 32}
+          />
         </ProgressBarWrapper>
         <Title>Building Project...</Title>
 
@@ -168,7 +199,7 @@ const ProgressBarWrapper = styled.div`
 `;
 
 const BuildSteps = styled.div`
-  width: 250px;
+  width: 270px;
   padding-bottom: 30px;
 `;
 

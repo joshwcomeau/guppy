@@ -42,8 +42,6 @@ export default (
     'Hello World' + Math.round(Math.random() * 10000)
   ).toLowerCase(); // TEMP
 
-  console.log({ id });
-
   const path = `${parentPath}/${id}`;
 
   // TODO: support Gatsby

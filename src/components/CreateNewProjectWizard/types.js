@@ -2,11 +2,11 @@
 
 export type Field = 'projectName' | 'projectType' | 'projectIcon';
 export type BuildStep =
-  | 'initializing'
   | 'creatingParentDirectory'
   | 'installingCliTool'
   | 'creatingProjectDirectory'
-  | 'installingDependencies';
+  | 'installingDependencies'
+  | 'guppification';
 
 export type Status = 'filling-in-form' | 'building-project' | 'project-created';
 
