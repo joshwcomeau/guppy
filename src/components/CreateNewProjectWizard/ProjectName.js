@@ -18,11 +18,13 @@ type Props = {
   // TODO: Change to onFocus, onBlur, onChange for consistency
   handleFocus: () => void,
   handleBlur: () => void,
-  handleChange: (ev: any) => void,
+  handleChange: (val: string) => void,
+  handleSubmit: () => void,
 };
 
 type State = {
   randomizedOverrideName: ?string,
+  randomizeCount: number,
 };
 
 class ProjectName extends PureComponent<Props, State> {
@@ -31,7 +33,13 @@ class ProjectName extends PureComponent<Props, State> {
     randomizeCount: 0,
   };
 
+  node = HTMLElement;
+
   componentDidMount() {
+    // Weird, Flow says that HTMLElements have a `focus` method
+    // (https://github.com/facebook/flow/blob/v0.72.0/lib/dom.js#L1339),
+    // but for some raeson Flow doesn't like this.
+    // $FlowFixMe
     this.node.focus();
   }
 
@@ -41,6 +49,7 @@ class ProjectName extends PureComponent<Props, State> {
 
     this.props.handleChange(newName);
 
+    // See note above. $FlowFixMe
     this.node.focus();
 
     let numOfTicks;
@@ -57,11 +66,11 @@ class ProjectName extends PureComponent<Props, State> {
     }
   };
 
-  updateName = ev => {
+  updateName = (ev: SyntheticInputEvent<*>) => {
     this.props.handleChange(ev.target.value);
   };
 
-  scramble = (from, to, numOfTicks) => {
+  scramble = (from: string, to: string, numOfTicks: number) => {
     const fromNumOfChars = from.length;
     const toNumOfChars = to.length;
 
@@ -118,9 +127,11 @@ class ProjectName extends PureComponent<Props, State> {
     tick();
   };
 
-  maybeHandleSubmit = ev => {
+  maybeHandleSubmit = (ev: SyntheticKeyboardEvent<*>) => {
     if (ev.key === 'Enter') {
       this.props.handleSubmit();
+
+      // See note above. $FlowFixMe
       this.node.blur();
     }
   };

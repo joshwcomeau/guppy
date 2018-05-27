@@ -1,8 +1,5 @@
 // @flow
 
-export type Field = 'projectName' | 'projectType' | 'projectIcon';
-export type Step = Field | 'done';
-
 export type ProjectType = 'create-react-app' | 'gatsby';
 
 export type SubmittedProject = {
@@ -10,3 +7,15 @@ export type SubmittedProject = {
   projectType: ProjectType,
   projectIcon: string,
 };
+
+export type Field = 'projectName' | 'projectType' | 'projectIcon';
+export type BuildStep =
+  | 'initializing'
+  | 'creatingParentDirectory'
+  | 'installingCliTool'
+  | 'creatingProjectDirectory'
+  | 'installingDependencies';
+
+export type Status = 'filling-in-form' | 'building-project' | 'project-created';
+
+export type Step = Field | BuildStep;

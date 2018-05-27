@@ -6,14 +6,15 @@ import TwoPaneModal from '../TwoPaneModal';
 import MainPane from './MainPane';
 import SummaryPane from './SummaryPane';
 
-import type { Field, Step, ProjectType, SubmittedProject } from './types';
+import type {
+  Field,
+  Status,
+  Step,
+  ProjectType,
+  SubmittedProject,
+} from './types';
 
-const STEPS: Array<Step> = [
-  'projectName',
-  'projectType',
-  'projectIcon',
-  'done',
-];
+const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
 type Props = {
   onCreateProject: (project: SubmittedProject) => void,
@@ -24,6 +25,7 @@ type State = {
   projectType: ?ProjectType,
   projectIcon: ?string,
   activeField: ?Field,
+  status: Status,
   currentStep: Step,
   shouldShowRandomizationHint: boolean,
 };
@@ -34,6 +36,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     projectType: null,
     projectIcon: null,
     activeField: 'projectName',
+    status: 'filling-in-form',
     currentStep: 'projectName',
     shouldShowRandomizationHint: false,
   };
@@ -42,8 +45,29 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     window.setTimeout(this.enableRandomizationHint, 2000);
   }
 
+  componentDidUpdate(_: Props, prevState: State) {
+    const { projectName, projectType, projectIcon, status } = this.state;
+
+    if (
+      prevState.status === 'filling-in-form' &&
+      status === 'building-project'
+    ) {
+      // At this point, it should be impossible for the project fields to be
+      // blank? Flow doesn't know that, though, and maybe it has a point.
+      // Maybe we should add some sort of error toast here?
+      if (!projectName || !projectType || !projectIcon) {
+        return;
+      }
+
+      const project = { projectName, projectType, projectIcon };
+
+      // TODO:
+      this.props.onCreateProject(project);
+    }
+  }
+
   updateFieldValue = (field: Field, value: any) => {
-    this.setState({ [field]: value });
+    this.setState({ [field]: value, activeField: field });
   };
 
   focusField = (field: ?Field) => {
@@ -54,17 +78,22 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     this.setState({ shouldShowRandomizationHint: true });
 
   handleSubmit = () => {
-    const currentStepIndex = STEPS.indexOf(this.state.currentStep);
-    const nextStep = STEPS[currentStepIndex + 1];
+    const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
+    const nextStep = FORM_STEPS[currentStepIndex + 1];
 
-    if (nextStep) {
+    if (!nextStep) {
       this.setState({
-        currentStep: nextStep,
-        activeField: nextStep,
+        activeField: null,
+        currentStep: 'initializing',
+        status: 'building-project',
       });
-    } else {
-      this.setState({ currentStep: 'done' });
+      return;
     }
+
+    this.setState({
+      currentStep: nextStep,
+      activeField: nextStep,
+    });
   };
 
   render() {
@@ -73,6 +102,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       projectType,
       projectIcon,
       activeField,
+      status,
       currentStep,
       shouldShowRandomizationHint,
     } = this.state;
@@ -94,10 +124,11 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
             projectType={projectType}
             projectIcon={projectIcon}
             activeField={activeField}
-            currentStepIndex={STEPS.indexOf(currentStep)}
+            currentStepIndex={FORM_STEPS.indexOf(currentStep)}
             updateFieldValue={this.updateFieldValue}
             focusField={this.focusField}
             handleSubmit={this.handleSubmit}
+            hasBeenSubmitted={status !== 'filling-in-form'}
           />
         }
         backface={"I'm in the back"}

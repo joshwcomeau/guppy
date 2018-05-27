@@ -28,7 +28,7 @@ class IntroScreen extends Component {
             <CreateNewProjectForm onComplete={this.handleCreateProject} />
           </Modal>
         )} */}
-        <CreateNewProjectWizard />
+        <CreateNewProjectWizard onCreateProject={this.handleCreateProject} />
       </Wrapper>
     );
   }

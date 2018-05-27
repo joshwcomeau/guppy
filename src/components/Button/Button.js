@@ -6,13 +6,18 @@ import { COLORS } from '../../constants';
 
 import CircularOutline from '../CircularOutline';
 
+type Size = 'small' | 'medium' | 'large';
+type Type = 'fill' | 'stroke';
+
 type Props = {
-  type: 'fill' | 'stroke',
-  size: 'small' | 'medium' | 'large',
+  type: Type,
+  size: Size,
   color1: string,
   color2: string,
   showOutline: boolean,
   noPadding: boolean,
+  style: { [key: string]: any },
+  disabled: boolean,
   children: React$Node,
 };
 
@@ -30,10 +35,11 @@ class Button extends Component<Props, State> {
     style: {},
   };
 
-  getButtonElem = size => {
+  getButtonElem = (size: Size) => {
     switch (size) {
       case 'small':
         return SmallButton;
+      default:
       case 'medium':
         return MediumButton;
       case 'large':
@@ -61,7 +67,7 @@ class Button extends Component<Props, State> {
       mutatedStyle.color = '#FFF';
       mutatedStyle.backgroundImage = `
         linear-gradient(
-          70deg,
+          45deg,
           ${color1},
           ${color2}
         )
@@ -99,7 +105,7 @@ const ButtonBase = styled.button`
 
   &:disabled {
     background-image: linear-gradient(
-      70deg,
+      45deg,
       ${COLORS.gray[300]},
       ${COLORS.gray[400]}
     ) !important;

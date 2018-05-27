@@ -5,7 +5,13 @@ import Button from '../Button';
 type Props = {
   color1: string,
   color2: string,
+  handleMouseEnter: () => void,
+  handleMouseLeave: () => void,
   children: React$Node,
+};
+
+type State = {
+  isHovered: boolean,
 };
 
 class HoverableOutlineButton extends Component<Props, State> {

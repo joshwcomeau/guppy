@@ -4,16 +4,18 @@ import styled from 'styled-components';
 
 type Props = {
   color1: string,
+  color2: string,
+  children: React$Node,
+  icon: ?React$Node,
 };
 
 const OutlineButton = ({
   color1,
   color2,
-  size,
   children,
   icon,
   ...delegated
-}) => (
+}: Props) => (
   <ButtonElem color1={color1} color2={color2} {...delegated}>
     <InnerButtonWrapper>
       {children}

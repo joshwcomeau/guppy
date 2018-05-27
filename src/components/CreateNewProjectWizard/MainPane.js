@@ -19,7 +19,7 @@ import FadeIn from '../FadeIn';
 import ProjectName from './ProjectName';
 import SubmitButton from './SubmitButton';
 
-import type { Field, Step } from './types';
+import type { Field, Step, ProjectType } from './types';
 
 const icons = importAll.sync('../../assets/images/icons/icon_*.jpg');
 const iconSrcs = Object.values(icons);
@@ -30,6 +30,7 @@ type Props = {
   projectIcon: ?string,
   activeField: ?Field,
   currentStepIndex: number,
+  hasBeenSubmitted: boolean,
   updateFieldValue: (field: Field, value: any) => void,
   focusField: (field: ?Field) => void,
   handleSubmit: () => void,
@@ -41,11 +42,11 @@ class MainPane extends PureComponent<Props> {
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
 
-  updateProjectName = projectName =>
+  updateProjectName = (projectName: string) =>
     this.props.updateFieldValue('projectName', projectName);
-  updateProjectType = projectType =>
+  updateProjectType = (projectType: ProjectType) =>
     this.props.updateFieldValue('projectType', projectType);
-  updateProjectIcon = projectIcon =>
+  updateProjectIcon = (projectIcon: string) =>
     this.props.updateFieldValue('projectIcon', projectIcon);
 
   render() {
@@ -55,6 +56,7 @@ class MainPane extends PureComponent<Props> {
       projectIcon,
       activeField,
       currentStepIndex,
+      hasBeenSubmitted,
       handleSubmit,
     } = this.props;
 
@@ -80,11 +82,13 @@ class MainPane extends PureComponent<Props> {
                   >
                     <ProjectTypeTogglesWrapper>
                       <ButtonWithIcon
-                        showOutline={projectType === 'react'}
+                        showOutline={projectType === 'create-react-app'}
                         icon={<ReactIcon src={reactIconSrc} />}
-                        onClick={() => this.updateProjectType('react')}
+                        onClick={() =>
+                          this.updateProjectType('create-react-app')
+                        }
                       >
-                        React.js
+                        Vanilla React
                       </ButtonWithIcon>
                       <Spacer inline size={10} />
                       <ButtonWithIcon
@@ -138,6 +142,7 @@ class MainPane extends PureComponent<Props> {
               (currentStepIndex > 1 && !projectIcon)
             }
             readyToBeSubmitted={currentStepIndex >= 2}
+            hasBeenSubmitted={hasBeenSubmitted}
             onSubmit={handleSubmit}
           />
         </SubmitButtonWrapper>

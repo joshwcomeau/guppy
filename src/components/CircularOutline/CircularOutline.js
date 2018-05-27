@@ -1,4 +1,35 @@
 // @flow
+/**
+ * Draws a totally-rounded rectangle inside the parent node.
+ *
+ * NOTE: This turned out to be a surprisingly hard problem! I had to use an
+ * SVG since I needed a gradient border, and because the SVG is computed
+ * dynamically, a few re-renders need to take place.
+ *
+ * Here's the flow:
+ *   - Initial render:  Capture a reference to the SVG, so we can work out the
+ *                      width and height of the parent container
+ *
+ *   - Path length:     Now that we have the length/height, we can add our SVG
+ *                      <rect> that fills the space. After that update is
+ *                      flushed to the DOM, we can figure out the length of the
+ *                      path with `getTotalLength`.
+ *                      TODO: I can probably use math to work out that path
+ *                      so that I can skip this update cycle?
+ *
+ *   - Enabling trans:  We don't want the 'self-drawing' transition to happen
+ *                      on mount. Because of this, transition starts as
+ *                      disabled.
+ *                      Once we make it to this stage, though, we can set
+ *                      `finishedAllMountingSteps` to indicate that all this
+ *                      stuff is done, so that any future changes to `isShown`
+ *                      can be animated
+ *
+ * There's surely a lot of room for improvement with this flow.
+ *
+ * Also, this component is oblivious to any parent resize-changes, so don't use
+ * it in a component that has the propensity to change sizes.
+ */
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Motion, spring } from 'react-motion';
@@ -18,6 +49,7 @@ type State = {
   width: ?number,
   height: ?number,
   pathLength: number,
+  finishedAllMountingSteps: boolean,
 };
 
 const springSettings = { stiffness: 150, damping: 22, precision: 5 };
@@ -29,6 +61,9 @@ class RoundedOutline extends Component<Props, State> {
     pathLength: 0,
     finishedAllMountingSteps: false,
   };
+
+  wrapperNode: HTMLElement;
+  shapeNode: HTMLElement;
 
   static defaultProps = {
     color1: COLORS.gray[800],
@@ -45,7 +80,7 @@ class RoundedOutline extends Component<Props, State> {
     this.setState({ width, height });
   }
 
-  componentDidUpdate(_, prevState) {
+  componentDidUpdate(_: Props, prevState: State) {
     if (
       prevState.width == null &&
       prevState.height == null &&
@@ -69,8 +104,6 @@ class RoundedOutline extends Component<Props, State> {
       color1,
       color2,
       strokeWidth,
-      showDelay,
-      hideDelay,
       isShown,
       animateChanges,
     } = this.props;
@@ -96,7 +129,7 @@ class RoundedOutline extends Component<Props, State> {
             height="100%"
           >
             <defs>
-              <linearGradient id={svgId} x1="0%" y1="0%" x2="100%" y2="0%">
+              <linearGradient id={svgId} x1="0%" y1="100%" x2="100%" y2="0%">
                 <stop
                   offset="0%"
                   style={{

@@ -13,7 +13,7 @@ import type { Field, Step } from './types';
 
 type Props = {
   currentStep: Step,
-  activeField: Field,
+  activeField: ?Field,
   shouldShowRandomizationHint: boolean,
 };
 
