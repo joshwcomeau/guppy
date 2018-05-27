@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
 
+import ProgressBar from '../ProgressBar';
 import BuildStepProgress from './BuildStepProgress';
 
 import type { BuildStep } from './types';
@@ -35,7 +36,7 @@ type Props = {
 
 type State = {
   currentBuildStep: BuildStep,
-  completed: boolean,
+  progress: number,
 };
 
 class BuildPane extends PureComponent<Props, State> {
@@ -46,6 +47,7 @@ class BuildPane extends PureComponent<Props, State> {
   state = {
     currentBuildStep: BUILD_STEPS[0],
     completed: false,
+    progress: 0,
   };
 
   componentDidMount() {
@@ -65,9 +67,15 @@ class BuildPane extends PureComponent<Props, State> {
     const message = output.toString();
 
     if (message.match(/Created parent directory/i)) {
-      this.setState({ currentBuildStep: BUILD_STEP_KEYS[1] });
+      this.setState({
+        currentBuildStep: BUILD_STEP_KEYS[1],
+        progress: 0.1,
+      });
     } else if (message.match(/Installing packages/i)) {
-      this.setState({ currentBuildStep: BUILD_STEP_KEYS[3] });
+      this.setState({
+        currentBuildStep: BUILD_STEP_KEYS[3],
+        progress: 0.4,
+      });
     }
   };
 
@@ -78,21 +86,27 @@ class BuildPane extends PureComponent<Props, State> {
       // For unknown reasons, npx installation throws an error?
       // Everything appears to work though, so I'm just going to treat this
       // as a success.
-      this.setState({ currentBuildStep: BUILD_STEP_KEYS[2] });
+      this.setState({
+        currentBuildStep: BUILD_STEP_KEYS[2],
+        progress: 0.2,
+      });
     }
   };
 
   handleComplete = () => {
-    this.setState({ completed: true });
+    this.setState({ progress: 1 });
     // TODO: quick timeout for effects?
     this.props.handleCompleteBuild();
   };
 
   render() {
-    const { currentBuildStep, completed } = this.state;
+    const { currentBuildStep, progress } = this.state;
 
     return (
       <Wrapper>
+        <ProgressBarWrapper>
+          <ProgressBar progress={progress} />
+        </ProgressBarWrapper>
         <Title>Building Project...</Title>
 
         <BuildSteps>
@@ -101,7 +115,7 @@ class BuildPane extends PureComponent<Props, State> {
 
             let stepStatus;
 
-            if (completed) {
+            if (progress === 1) {
               stepStatus = 'done';
             } else if (stepKey === currentBuildStep) {
               stepStatus = 'in-progress';
@@ -144,6 +158,13 @@ const Wrapper = styled.div`
   color: ${COLORS.white};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 0;
+`;
+
+const ProgressBarWrapper = styled.div`
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
 `;
 
 const BuildSteps = styled.div`

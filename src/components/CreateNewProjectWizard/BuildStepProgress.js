@@ -98,7 +98,7 @@ const MainCopy = styled.div`
 
 const AdditionalCopy = styled.div`
   position: absolute;
-  top: 100%;
+  top: 120%;
   font-size: 16px;
 `;
 
