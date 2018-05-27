@@ -50,6 +50,7 @@ class Button extends Component<Props, State> {
       color2,
       showOutline,
       style,
+      disabled,
       ...delegated
     } = this.props;
 
@@ -68,16 +69,15 @@ class Button extends Component<Props, State> {
     }
 
     return (
-      <Elem style={mutatedStyle} {...delegated}>
-        {type === 'stroke' && (
-          <CircularOutline
-            color1={color1}
-            color2={color2}
-            isShown={showOutline}
-          />
-        )}
+      <Elem disabled={disabled} type={type} style={mutatedStyle} {...delegated}>
+        <CircularOutline
+          color1={disabled ? COLORS.gray[300] : color1}
+          color2={disabled ? COLORS.gray[400] : color2}
+          isShown={showOutline}
+          animateChanges={type === 'stroke'}
+        />
 
-        {children}
+        <span style={{ display: 'block' }}>{children}</span>
       </Elem>
     );
   }
@@ -93,8 +93,16 @@ const ButtonBase = styled.button`
   cursor: pointer;
   outline: none;
 
-  &:active rect {
+  &:not(:disabled):active rect {
     stroke-width: 4;
+  }
+
+  &:disabled {
+    background-image: linear-gradient(
+      70deg,
+      ${COLORS.gray[300]},
+      ${COLORS.gray[400]}
+    ) !important;
   }
 `;
 

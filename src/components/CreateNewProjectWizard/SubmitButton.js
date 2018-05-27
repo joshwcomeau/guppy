@@ -23,6 +23,7 @@ const SubmitButton = ({
   handleSubmit,
 }: Props) => (
   <Button
+    disabled={isDisabled}
     type="fill"
     size="large"
     color1={readyToBeSubmitted ? COLORS.green[700] : COLORS.blue[700]}

@@ -11,6 +11,7 @@ type Props = {
   color2: string,
   strokeWidth: number,
   isShown: boolean,
+  animateChanges: boolean,
 };
 
 type State = {
@@ -26,13 +27,14 @@ class RoundedOutline extends Component<Props, State> {
     width: null,
     height: null,
     pathLength: 0,
-    enableTransition: false,
+    finishedAllMountingSteps: false,
   };
 
   static defaultProps = {
     color1: COLORS.gray[800],
     color2: COLORS.gray[500],
     strokeWidth: 2,
+    animateChanges: true,
   };
 
   componentDidMount() {
@@ -57,7 +59,7 @@ class RoundedOutline extends Component<Props, State> {
     }
 
     if (prevState.pathLength === 0 && this.state.pathLength !== 0) {
-      this.setState({ enableTransition: true });
+      this.setState({ finishedAllMountingSteps: true });
     }
   }
 
@@ -70,17 +72,21 @@ class RoundedOutline extends Component<Props, State> {
       showDelay,
       hideDelay,
       isShown,
+      animateChanges,
     } = this.props;
-    const { width, height, pathLength, enableTransition } = this.state;
+    const { width, height, pathLength, finishedAllMountingSteps } = this.state;
 
     const svgId = `${color1}-${color2}`;
+
+    const dashOffset = isShown ? 0 : pathLength;
 
     return (
       <Motion
         style={{
-          dashOffset: enableTransition
-            ? spring(isShown ? 0 : pathLength, springSettings)
-            : pathLength || 0,
+          dashOffset:
+            animateChanges && finishedAllMountingSteps
+              ? spring(dashOffset, springSettings)
+              : dashOffset,
         }}
       >
         {({ dashOffset }) => (

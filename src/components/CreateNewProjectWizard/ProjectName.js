@@ -139,7 +139,7 @@ class ProjectName extends PureComponent<Props, State> {
             onChange={this.updateName}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            placeholder="Some Fantastic Project Name"
+            placeholder="Todo MVC"
           >
             <ButtonPositionAdjuster>
               <HoverableOutlineButton

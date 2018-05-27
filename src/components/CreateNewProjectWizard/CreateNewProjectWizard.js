@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { Motion, spring } from 'react-motion';
 import styled, { keyframes } from 'styled-components';
 import importAll from 'import-all.macro';
 import IconBase from 'react-icons-kit';
@@ -26,15 +27,14 @@ const icons = importAll.sync('../../assets/images/icons/icon_*.jpg');
 
 const iconSrcs = Object.values(icons);
 
-const STEPS = ['projectName', 'projectType', 'projectIcon'];
+const STEPS = ['projectName', 'projectType', 'projectIcon', 'done'];
 
 class CreateNewProjectWizard extends Component {
   state = {
-    activeField: 'projectName',
-    folded: false,
     projectName: '',
     projectType: null,
     projectIcon: null,
+    activeField: 'projectName',
     currentStep: 'projectName',
   };
 
@@ -52,15 +52,15 @@ class CreateNewProjectWizard extends Component {
     this.setState({ projectIcon, activeField: 'projectIcon' });
 
   handleFocusProjectName = () => this.setState({ activeField: 'projectName' });
+  handleBlurProjectName = () => this.setState({ activeField: null });
 
   showRandomizationHint = () => this.setState({ hasBeenAWhile: true });
 
   handleSubmit = () => {
-    console.log('habndke submit');
+    this.setState({ currentStep: 'done' });
   };
 
   attemptStepIncrement = () => {
-    console.log('handle next');
     const currentStepIndex = STEPS.indexOf(this.state.currentStep);
     const nextStep = STEPS[currentStepIndex + 1];
 
@@ -84,74 +84,83 @@ class CreateNewProjectWizard extends Component {
     const currentStepIndex = STEPS.indexOf(currentStep);
 
     return (
-      <RightPaneWrapper>
-        <ProjectName
-          name={projectName}
-          isFocused={activeField === 'projectName'}
-          handleFocus={this.handleFocusProjectName}
-          handleChange={this.updateProjectName}
-        />
+      <Fragment>
+        <Motion style={{ offset: spring(currentStepIndex === 0 ? 50 : 0) }}>
+          {({ offset }) => (
+            <RightPaneWrapper style={{ transform: `translateY(${offset}px)` }}>
+              <ProjectName
+                name={projectName}
+                isFocused={activeField === 'projectName'}
+                handleFocus={this.handleFocusProjectName}
+                handleBlur={this.handleBlurProjectName}
+                handleChange={this.updateProjectName}
+              />
 
-        {currentStepIndex > STEPS.indexOf('projectName') && (
-          <FadeIn>
-            <FormField
-              label="Project Type"
-              isFocused={activeField === 'projectType'}
-            >
-              <ProjectTypeTogglesWrapper>
-                <ButtonWithIcon
-                  showOutline={projectType === 'react'}
-                  icon={<ReactIcon src={reactIconSrc} />}
-                  onClick={() => this.updateProjectType('react')}
-                >
-                  React.js
-                </ButtonWithIcon>
-                <Spacer inline size={10} />
-                <ButtonWithIcon
-                  showOutline={projectType === 'gatsby'}
-                  icon={<GatsbyIcon src={gatsbyIconSrc} />}
-                  onClick={() => this.updateProjectType('gatsby')}
-                >
-                  Gatsby
-                </ButtonWithIcon>
-              </ProjectTypeTogglesWrapper>
-            </FormField>
-          </FadeIn>
-        )}
+              {currentStepIndex > STEPS.indexOf('projectName') && (
+                <FadeIn>
+                  <FormField
+                    label="Project Type"
+                    isFocused={activeField === 'projectType'}
+                  >
+                    <ProjectTypeTogglesWrapper>
+                      <ButtonWithIcon
+                        showOutline={projectType === 'react'}
+                        icon={<ReactIcon src={reactIconSrc} />}
+                        onClick={() => this.updateProjectType('react')}
+                      >
+                        React.js
+                      </ButtonWithIcon>
+                      <Spacer inline size={10} />
+                      <ButtonWithIcon
+                        showOutline={projectType === 'gatsby'}
+                        icon={<GatsbyIcon src={gatsbyIconSrc} />}
+                        onClick={() => this.updateProjectType('gatsby')}
+                      >
+                        Gatsby
+                      </ButtonWithIcon>
+                    </ProjectTypeTogglesWrapper>
+                  </FormField>
+                </FadeIn>
+              )}
 
-        {currentStepIndex > STEPS.indexOf('projectType') && (
-          <FadeIn>
-            <FormField
-              label="Project Icon"
-              focusOnClick={false}
-              isFocused={activeField === 'projectIcon'}
-            >
-              <ProjectIconWrapper>
-                {this.iconSubset.map(src => (
-                  <SelectableImageWrapper key={src}>
-                    <SelectableImage
-                      src={src}
-                      size={60}
-                      onClick={() => this.updateProjectIcon(src)}
-                      status={
-                        projectIcon === null
-                          ? 'default'
-                          : projectIcon === src
-                            ? 'highlighted'
-                            : 'faded'
-                      }
-                    />
-                  </SelectableImageWrapper>
-                ))}
-              </ProjectIconWrapper>
-            </FormField>
-          </FadeIn>
-        )}
-
-        <Spacer size={20} />
-
+              {currentStepIndex > STEPS.indexOf('projectType') && (
+                <FadeIn>
+                  <FormField
+                    label="Project Icon"
+                    focusOnClick={false}
+                    isFocused={activeField === 'projectIcon'}
+                  >
+                    <ProjectIconWrapper>
+                      {this.iconSubset.map(src => (
+                        <SelectableImageWrapper key={src}>
+                          <SelectableImage
+                            src={src}
+                            size={60}
+                            onClick={() => this.updateProjectIcon(src)}
+                            status={
+                              projectIcon === null
+                                ? 'default'
+                                : projectIcon === src
+                                  ? 'highlighted'
+                                  : 'faded'
+                            }
+                          />
+                        </SelectableImageWrapper>
+                      ))}
+                    </ProjectIconWrapper>
+                  </FormField>
+                </FadeIn>
+              )}
+            </RightPaneWrapper>
+          )}
+        </Motion>
         <SubmitButtonWrapper>
           <SubmitButton
+            isDisabled={
+              !projectName ||
+              (currentStepIndex > 0 && !projectType) ||
+              (currentStepIndex > 1 && !projectIcon)
+            }
             readyToBeSubmitted={
               currentStepIndex >= STEPS.indexOf('projectIcon')
             }
@@ -159,7 +168,7 @@ class CreateNewProjectWizard extends Component {
             handleSubmit={this.handleSubmit}
           />
         </SubmitButtonWrapper>
-      </RightPaneWrapper>
+      </Fragment>
     );
   }
 
@@ -200,11 +209,9 @@ class CreateNewProjectWizard extends Component {
 
     // After that first step, there's a "default" display for each step,
     // but that can be overridden with active focus.
+    const focusField = activeField || currentStep;
 
-    switch (activeField) {
-      case null: {
-      }
-
+    switch (focusField) {
       case 'projectName': {
         return (
           <Fragment>
@@ -271,9 +278,11 @@ class CreateNewProjectWizard extends Component {
   };
 
   render() {
+    const isFolded = this.state.currentStep === 'done';
+
     return (
       <TwoPaneModal
-        isFolded={false}
+        isFolded={isFolded}
         leftPane={this.renderLeftPane()}
         rightPane={this.renderRightPane()}
         backface={"I'm in the back"}
@@ -282,22 +291,24 @@ class CreateNewProjectWizard extends Component {
   }
 }
 
-const LeftPaneWrapper = styled.div`
-  text-shadow: 1px 1px 0px rgba(13, 37, 170, 0.1);
-`;
-
 const fadeIn = keyframes`
   from { opacity: 0 }
   to { opacity: 1 }
-`;
+  `;
 
 const FadeIn = styled(Paragraph)`
   animation: ${fadeIn} 500ms;
 `;
 
+const LeftPaneWrapper = styled.div`
+  text-shadow: 1px 1px 0px rgba(13, 37, 170, 0.1);
+`;
 const RightPaneWrapper = styled.div`
   height: 470px;
+  will-change: transform;
 `;
+
+const ProjectNameWrapper = styled.div``;
 
 const StepTitle = styled.h1`
   font-size: 28px;
