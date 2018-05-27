@@ -19,9 +19,11 @@ import SelectableImage from '../SelectableImage';
 import Button from '../Button';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
+import FadeIn from '../FadeIn';
 
 import ProjectName from './ProjectName';
 import SubmitButton from './SubmitButton';
+import SummaryPane from './SummaryPane';
 
 const icons = importAll.sync('../../assets/images/icons/icon_*.jpg');
 
@@ -36,12 +38,13 @@ class CreateNewProjectWizard extends Component {
     projectIcon: null,
     activeField: 'projectName',
     currentStep: 'projectName',
+    shouldShowRandomizationHint: false,
   };
 
   iconSubset = sampleMany(iconSrcs, 10);
 
   componentDidMount() {
-    window.setTimeout(this.showRandomizationHint, 2000);
+    window.setTimeout(this.enableRandomizationHint, 2000);
   }
 
   updateProjectName = projectName =>
@@ -54,7 +57,8 @@ class CreateNewProjectWizard extends Component {
   handleFocusProjectName = () => this.setState({ activeField: 'projectName' });
   handleBlurProjectName = () => this.setState({ activeField: null });
 
-  showRandomizationHint = () => this.setState({ hasBeenAWhile: true });
+  enableRandomizationHint = () =>
+    this.setState({ shouldShowRandomizationHint: true });
 
   handleSubmit = () => {
     this.setState({ currentStep: 'done' });
@@ -173,117 +177,37 @@ class CreateNewProjectWizard extends Component {
   }
 
   renderLeftPane() {
-    return <LeftPaneWrapper>{this.renderGuidanceText()}</LeftPaneWrapper>;
+    return;
   }
 
   renderGuidanceText = () => {
-    const { currentStep, activeField, hasBeenAWhile } = this.state;
-
-    // If we're still in the first step, we want to show our intro details.
-    if (currentStep === 'projectName') {
-      return (
-        <IntroWrapper>
-          <FadeIn key="intro-t">
-            <IconBase size={96} icon={fish} />
-            <Spacer size={30} />
-            <StepTitle>Welcome to Guppy!</StepTitle>
-            <Paragraph>
-              Let's start by giving your new project a name.
-            </Paragraph>
-          </FadeIn>
-          {hasBeenAWhile && (
-            <FadeIn key="intro-addendum">
-              <Spacer size={50} />
-              <Paragraph>
-                Can't think of anything? Click the{' '}
-                <InlineSparkles>
-                  <IconBase size={26} icon={sparkles} />
-                </InlineSparkles>{' '}
-                to generate a temporary code-name.
-              </Paragraph>
-            </FadeIn>
-          )}
-        </IntroWrapper>
-      );
-    }
-
-    // After that first step, there's a "default" display for each step,
-    // but that can be overridden with active focus.
-    const focusField = activeField || currentStep;
-
-    switch (focusField) {
-      case 'projectName': {
-        return (
-          <Fragment>
-            <FadeIn key="s1-1">
-              <StepTitle>Project Name</StepTitle>
-              <Paragraph>
-                Don't stress too much about your project's name! You can always
-                change this later.
-              </Paragraph>
-            </FadeIn>
-            <Spacer size={20} />
-
-            {hasBeenAWhile && (
-              <FadeIn key="s1-2">
-                <Paragraph>
-                  Let the universe decide by using the{' '}
-                  <InlineSparkles>
-                    <IconBase size={26} icon={sparkles} />
-                  </InlineSparkles>{' '}
-                  to generate a random code-name for your project.
-                </Paragraph>
-              </FadeIn>
-            )}
-          </Fragment>
-        );
-      }
-
-      case 'projectType': {
-        return (
-          <Fragment>
-            <FadeIn key="s2t">
-              <StepTitle>Project Type</StepTitle>
-              <Paragraph>
-                Guppy interfaces with several external tools to manage your
-                projects.
-              </Paragraph>
-              <Paragraph>
-                React.js uses create-react-app, a flexible development
-                environment for building web applications of all types.
-              </Paragraph>
-              <Paragraph>
-                Gatsby is a static site generator for React.js, and is an
-                awesome choice
-              </Paragraph>
-            </FadeIn>
-          </Fragment>
-        );
-      }
-
-      case 'projectIcon': {
-        return (
-          <Fragment>
-            <FadeIn key="s3t">
-              <StepTitle>Project Icon</StepTitle>
-
-              <Paragraph>
-                Choose an icon, to help you recognize this project from a list.
-              </Paragraph>
-            </FadeIn>
-          </Fragment>
-        );
-      }
-    }
+    const {
+      currentStep,
+      activeField,
+      shouldShowRandomizationHint,
+    } = this.state;
   };
 
   render() {
+    const {
+      currentStep,
+      activeField,
+      shouldShowRandomizationHint,
+    } = this.state;
     const isFolded = this.state.currentStep === 'done';
 
     return (
       <TwoPaneModal
         isFolded={isFolded}
-        leftPane={this.renderLeftPane()}
+        leftPane={
+          <LeftPaneWrapper>
+            <SummaryPane
+              currentStep={currentStep}
+              activeField={activeField}
+              shouldShowRandomizationHint={shouldShowRandomizationHint}
+            />
+          </LeftPaneWrapper>
+        }
         rightPane={this.renderRightPane()}
         backface={"I'm in the back"}
       />
@@ -291,28 +215,12 @@ class CreateNewProjectWizard extends Component {
   }
 }
 
-const fadeIn = keyframes`
-  from { opacity: 0 }
-  to { opacity: 1 }
-  `;
-
-const FadeIn = styled(Paragraph)`
-  animation: ${fadeIn} 500ms;
-`;
-
 const LeftPaneWrapper = styled.div`
   text-shadow: 1px 1px 0px rgba(13, 37, 170, 0.1);
 `;
 const RightPaneWrapper = styled.div`
   height: 470px;
   will-change: transform;
-`;
-
-const ProjectNameWrapper = styled.div``;
-
-const StepTitle = styled.h1`
-  font-size: 28px;
-  margin-bottom: 30px;
 `;
 
 const ReactIcon = styled.img`
@@ -351,16 +259,6 @@ const SubmitButtonWrapper = styled.div`
   right: 0;
   bottom: 30px;
   text-align: center;
-`;
-
-const IntroWrapper = styled.div`
-  text-align: center;
-  padding-top: 20px;
-`;
-
-const InlineSparkles = styled.span`
-  display: inline-block;
-  transform: translateY(5px);
 `;
 
 export default CreateNewProjectWizard;

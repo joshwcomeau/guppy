@@ -144,7 +144,7 @@ class ProjectName extends PureComponent<Props, State> {
             <ButtonPositionAdjuster>
               <HoverableOutlineButton
                 noPadding
-                onMouseDown={handleFocus}
+                onMouseDown={() => window.requestAnimationFrame(handleFocus)}
                 onClick={this.handleRandomize}
                 color1={COLORS.purple[500]}
                 color2={COLORS.violet[500]}
