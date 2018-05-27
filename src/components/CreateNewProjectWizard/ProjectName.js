@@ -118,6 +118,13 @@ class ProjectName extends PureComponent<Props, State> {
     tick();
   };
 
+  maybeHandleSubmit = ev => {
+    if (ev.key === 'Enter') {
+      this.props.handleSubmit();
+      this.node.blur();
+    }
+  };
+
   render() {
     const {
       name,
@@ -139,6 +146,7 @@ class ProjectName extends PureComponent<Props, State> {
             onChange={this.updateName}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            onKeyPress={this.maybeHandleSubmit}
             placeholder="Todo MVC"
           >
             <ButtonPositionAdjuster>

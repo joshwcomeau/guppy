@@ -69,6 +69,7 @@ class MainPane extends PureComponent<Props> {
                 handleFocus={this.handleFocusProjectName}
                 handleBlur={this.handleBlurProjectName}
                 handleChange={this.updateProjectName}
+                handleSubmit={handleSubmit}
               />
 
               {currentStepIndex > 0 && (
