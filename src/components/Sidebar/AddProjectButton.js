@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { plus } from 'react-icons-kit/feather/plus';
 
-import HoverableOutlineButton from '../HoverableOutlineButton';
 import { COLORS } from '../../constants';
 
 type Props = {
@@ -15,11 +14,12 @@ type Props = {
 
 const AddProjectButton = ({ size, isVisible, onClick }: Props) => (
   <Button
+    fill
     noPadding
     size={size}
     isVisible={isVisible}
-    color1={COLORS.white}
-    color2={COLORS.white}
+    color1="rgba(255, 255, 255, 0.1)"
+    color2="rgba(255, 255, 255, 0.1)"
     onClick={onClick}
   >
     <IconWrapper>
@@ -29,23 +29,35 @@ const AddProjectButton = ({ size, isVisible, onClick }: Props) => (
   </Button>
 );
 
-const Button = styled(HoverableOutlineButton).attrs({
-  style: props => ({
-    width: props.size + 6 + 'px',
-    height: props.size + 6 + 'px',
-    opacity: props.isVisible ? 1 : 0,
-  }),
-})`
-  transition: opacity 750ms;
+const Button = styled.button`
+  position: relative;
+  width: ${props => props.size}px;
+  height: ${props => props.size}px;
+  outline: none;
+  border: none;
+  background: none;
+  cursor: pointer;
 `;
 
 const Background = styled.div`
   position: absolute;
   z-index: -1;
-  top: 3px;
-  left: 3px;
-  right: 3px;
-  bottom: 3px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: ${COLORS.white};
+  opacity: 0.1;
+  transition: opacity 300ms;
+  border-radius: 100%;
+
+  ${Button}:hover & {
+    opacity: 0.2;
+  }
+
+  ${Button}:focus & {
+    opacity: 0.3;
+  }
 `;
 
 const IconWrapper = styled.div`
