@@ -1,19 +1,27 @@
 // @flow
-import { INITIALIZE, ADD_PROJECT, REFRESH_PROJECTS } from '../actions';
+import { combineReducers } from 'redux';
+import { ADD_PROJECT, REFRESH_PROJECTS } from '../actions';
 
-import type { Project, Action } from '../types';
+import type { Action } from 'redux';
+import type { Project } from '../types';
+
+type ById = {
+  [key: string]: Project,
+};
+type SelectedId = ?string;
 
 type State = {
-  [key: string]: Project,
+  byId: ById,
+  selectedId: SelectedId,
 };
 
 const initialState = {
-  projects: {},
+  byId: {},
+  selectedId: null,
 };
 
-export default (state: State = initialState, action: Action) => {
+const byId = (state: ById = initialState.byId, action: Action) => {
   switch (action.type) {
-    case INITIALIZE:
     case REFRESH_PROJECTS: {
       return action.projects;
     }
@@ -30,11 +38,32 @@ export default (state: State = initialState, action: Action) => {
   }
 };
 
+const selectedId = (
+  state: SelectedId = initialState.selectedId,
+  action: Action
+) => {
+  switch (action.type) {
+    case ADD_PROJECT: {
+      return action.project.name;
+    }
+
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({ byId, selectedId });
+
+//
+//
+//
+// Selectors
 type GlobalState = { projects: State };
 
-export const getNumberOfProjects = (state: GlobalState) =>
-  // $FlowFixMe
-  Object.keys(state.projects).length;
-
 export const getProjectsArray = (state: GlobalState) =>
-  Object.values(state.projects);
+  Object.values(state.projects.byId);
+
+export const getSelectedProject = (state: GlobalState) =>
+  state.projects.selectedId
+    ? state.projects.byId[state.projects.selectedId]
+    : null;

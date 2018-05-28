@@ -25,6 +25,7 @@ type Props = {
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
   startCreatingNewProject: () => void,
+  dismissSidebarIntro: () => void,
 };
 
 type State = {
@@ -35,7 +36,10 @@ type State = {
     | null,
 };
 
+const SIDEBAR_WIDTH = 70;
+const SIDEBAR_OVERFLOW = 20;
 const SIDEBAR_ICON_SIZE = 45;
+
 const springSettings = { stiffness: 200, damping: 20, precision: 0.75 };
 
 const INTRO_SEQUENCE_STEPS = [
@@ -102,33 +106,36 @@ class Sidebar extends PureComponent<Props, State> {
         }}
       >
         {({ sidebarOffsetPercentage, firstProjectPosition }) => (
-          <Wrapper offset={`${sidebarOffsetPercentage}%`}>
-            <IntroductionBlurb
-              isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
-              onDismiss={dismissSidebarIntro}
-            />
-
-            <Projects offset={`${firstProjectPosition}px`}>
-              {projects.map(project => (
-                <Fragment key={project.guppy.id}>
-                  <SidebarProjectIcon
-                    size={SIDEBAR_ICON_SIZE}
-                    id={project.guppy.id}
-                    name={project.guppy.name}
-                    iconSrc={project.guppy.icon}
-                    isSelected={true}
-                    onClick={console.log}
-                  />
-                  <Spacer size={18} />
-                </Fragment>
-              ))}
-              <AddProjectButton
-                size={SIDEBAR_ICON_SIZE}
-                onClick={startCreatingNewProject}
-                isVisible={finishedOnboarding || introSequenceStepIndex >= 2}
+          <Fragment>
+            <Wrapper offset={`${sidebarOffsetPercentage}%`}>
+              <IntroductionBlurb
+                isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
+                onDismiss={dismissSidebarIntro}
               />
-            </Projects>
-          </Wrapper>
+
+              <Projects offset={`${firstProjectPosition}px`}>
+                {projects.map(project => (
+                  <Fragment key={project.guppy.id}>
+                    <SidebarProjectIcon
+                      size={SIDEBAR_ICON_SIZE}
+                      id={project.guppy.id}
+                      name={project.guppy.name}
+                      iconSrc={project.guppy.icon}
+                      isSelected={true}
+                      onClick={console.log}
+                    />
+                    <Spacer size={18} />
+                  </Fragment>
+                ))}
+                <AddProjectButton
+                  size={SIDEBAR_ICON_SIZE}
+                  onClick={startCreatingNewProject}
+                  isVisible={finishedOnboarding || introSequenceStepIndex >= 2}
+                />
+              </Projects>
+            </Wrapper>
+            {isVisible && <SidebarSpacer />}
+          </Fragment>
         )}
       </Motion>
     );
@@ -143,11 +150,11 @@ const Wrapper = styled.nav.attrs({
   position: absolute;
   z-index: ${Z_INDICES.sidebar};
   top: 0;
-  left: -20px;
+  left: -${SIDEBAR_OVERFLOW}px;
   bottom: 0;
-  width: 90px;
+  width: ${SIDEBAR_WIDTH + SIDEBAR_OVERFLOW}px;
   padding-top: 40px;
-  padding-left: 20px;
+  padding-left: ${SIDEBAR_OVERFLOW}px;
   background-image: linear-gradient(
     85deg,
     ${COLORS.blue[900]},
@@ -155,6 +162,12 @@ const Wrapper = styled.nav.attrs({
   );
   transform: translateX(${props => props.offset});
   will-change: transform;
+`;
+
+const SidebarSpacer = styled.div`
+  position: relative;
+  height: 100vh;
+  width: ${SIDEBAR_WIDTH}px;
 `;
 
 const Projects = styled.div.attrs({

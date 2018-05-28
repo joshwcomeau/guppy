@@ -6,7 +6,6 @@ import { startCreatingNewProject } from '../../actions';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 import Button from '../Button';
-import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
 type Props = {
   shouldHideContent: boolean,
@@ -26,8 +25,6 @@ class IntroScreen extends Component<Props> {
             Create new React project
           </Button>
         </Wrapper>
-
-        <CreateNewProjectWizard />
       </Fragment>
     );
   }

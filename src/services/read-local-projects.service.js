@@ -8,7 +8,7 @@ const os = window.require('os');
 // The default path for this directory is `~/guppy`.
 // TODO: Make this path overrideable?
 // TODO: Windows?
-const DEFAULT_PATH = `${os.homedir()}/guppy`;
+const DEFAULT_PATH = `${os.homedir()}/guppy-projects`;
 
 export default function readLocalProjectsFromDisk(fromPath = DEFAULT_PATH) {
   // TODO: Make this path overrideable?
@@ -48,11 +48,22 @@ export default function readLocalProjectsFromDisk(fromPath = DEFAULT_PATH) {
         );
       },
       (err, results) => {
+        console.log(err, results);
         if (err) {
           return reject(err);
         }
 
-        resolve(results);
+        // The results will be an array of package.jsons.
+        // I want a database-style map.
+        const projects = results.reduce(
+          (projectsMap, project) => ({
+            ...projectsMap,
+            [project.name]: project,
+          }),
+          {}
+        );
+
+        resolve(projects);
       }
     );
   });

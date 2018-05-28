@@ -1,18 +1,21 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
+import styled from 'styled-components';
 
-import { initialize } from '../../actions';
+import { refreshProjects } from '../../actions';
 import readLocalProjectsFromDisk from '../../services/read-local-projects.service';
 import { getProjectsArray } from '../../reducers/projects.reducer';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
+import { getSelectedProject } from '../../reducers/selected-project.reducer';
 
 import Home from '../Home';
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
 import Titlebar from '../Titlebar';
 import ProjectPage from '../ProjectPage';
+import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
 import type { Action } from 'redux';
 import type { Project } from '../../types';
@@ -20,19 +23,20 @@ import type { State as OnboardingStatus } from '../../reducers/onboarding-status
 
 type Props = {
   initializing: boolean,
-  initialize: Action,
+  refreshProjects: Action,
   onboardingStatus: OnboardingStatus,
+  selectedProject: string,
   projects: Array<Project>,
   history: any, // Provided by `withRouter`
 };
 
 class App extends Component<Props> {
   componentDidMount() {
-    readLocalProjectsFromDisk()
-      .then(this.props.initialize)
-      .catch(err => {
-        console.error(err);
-      });
+    this.props.refreshProjects();
+
+    // TODO: Redirect if project exists
+    if (this.props.selectedProject) {
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,12 +45,6 @@ class App extends Component<Props> {
     // them to the wrong one. In this case, we'll let them click it from
     // the projects sidebar.
     const only1Project = nextProps.projects.length === 1;
-
-    console.log(
-      { only1Project },
-      this.props.onboardingStatus,
-      nextProps.onboardingStatus
-    );
 
     if (
       only1Project &&
@@ -64,36 +62,48 @@ class App extends Component<Props> {
   render() {
     const { initializing } = this.props;
 
-    if (initializing) {
-      // NOTE: Originally I was gonna put a fancy loading screen here.
-      // It seems like it takes like 50ms to load, though, and so rendering
-      // anything is just this awkward flash of content.
-      return null;
-    }
-
     // const DefaultComponent = hasProjects ? Home : IntroScreen;
     const DefaultComponent = IntroScreen; // TEMP
 
     return (
       <Fragment>
         <Titlebar />
-        <Sidebar />
-        <Route exact path="/" component={DefaultComponent} />
-        <Route path="/project/:projectId" component={ProjectPage} />
+
+        <Wrapper>
+          <Sidebar />
+
+          <MainContent>
+            <Switch>
+              <Route exact path="/" component={DefaultComponent} />
+              <Route path="/project/:projectId" component={ProjectPage} />
+            </Switch>
+          </MainContent>
+        </Wrapper>
+
+        <CreateNewProjectWizard />
       </Fragment>
     );
   }
 }
 
+const Wrapper = styled.div`
+  display: flex;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+`;
+
 const mapStateToProps = state => ({
   initializing: state.initializing,
   onboardingStatus: getOnboardingStatus(state),
   projects: getProjectsArray(state),
+  selectedProject: getSelectedProject(state),
 });
 
 export default withRouter(
   connect(
     mapStateToProps,
-    { initialize }
+    { refreshProjects }
   )(App)
 );

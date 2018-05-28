@@ -19,12 +19,11 @@ const updateLocalStorage = value =>
  * persist it to localStorage.
  */
 export const handleStoreUpdates = function handleStoreUpdates(store) {
-  // We don't want to save ALL state.
-  // For example, projects are read when the app starts, since their state
-  // may have changed outside of Guppy's control.
-  const { projects, ...relevantState } = store.getState();
+  // Because most data that Guppy deals with is written to disk,
+  // we only need to store a small slice of the Redux store in localStorage.
+  const { onboardingStatus, projects } = store.getState();
 
-  updateLocalStorage(JSON.stringify(relevantState));
+  updateLocalStorage(JSON.stringify({ onboardingStatus, projects }));
 };
 
 /**
@@ -33,12 +32,6 @@ export const handleStoreUpdates = function handleStoreUpdates(store) {
  * auth token from the cookie. Handles validating and resetting the state as
  * needed.
  */
-export const getInitialState = defaultState => {
-  const projects = readLocalProjectsFromDisk();
-
-  const localStorageSavedState = JSON.parse(
-    localStorage.getItem(REDUX_STATE_KEY) || '{}'
-  );
-
-  return { ...localStorageSavedState, projects };
+export const getInitialState = () => {
+  return JSON.parse(localStorage.getItem(REDUX_STATE_KEY) || '{}');
 };

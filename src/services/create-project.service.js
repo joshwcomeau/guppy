@@ -5,7 +5,7 @@ const fs = window.require('fs');
 const os = window.require('os');
 const childProcess = window.require('child_process');
 
-const DISABLE = true;
+const DISABLE = false;
 
 /**
  * This service manages the creation of a new project.
