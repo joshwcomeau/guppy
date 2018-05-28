@@ -29,7 +29,7 @@ class Sidebar extends Component<Props, State> {
 
     return (
       <Motion style={{ translate: isVisible ? 0 : -100 }}>
-        {({ translate }) => <Wrapper>Hello</Wrapper>}
+        {({ translate }) => <Wrapper>Hello World</Wrapper>}
       </Motion>
     );
   }

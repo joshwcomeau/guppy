@@ -60,15 +60,4 @@ const ProgressGradient = styled.div.attrs({
   background: linear-gradient(to right, ${props => props.colors.join(', ')});
 `;
 
-const ProgressBlocker = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: white;
-  transform-origin: center right;
-  transform: scaleX(${props => props.inverseProgress});
-`;
-
 export default ProgressBar;

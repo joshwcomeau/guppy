@@ -120,6 +120,9 @@ class SummaryPane extends PureComponent<Props> {
           </Fragment>
         );
       }
+
+      default:
+        throw new Error('Unrecognized `focusField`: ' + focusField);
     }
   }
 

@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
 
@@ -82,6 +82,7 @@ class BuildPane extends PureComponent<Props, State> {
         currentBuildStep: BUILD_STEP_KEYS[3],
         progress: 0.4,
       });
+      // eslint-disable-next-line no-control-regex
     } else if (message.match(/Installing \[36mreact/i)) {
       this.setState(state => ({
         progress: state.progress + 0.025,

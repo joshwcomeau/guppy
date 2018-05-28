@@ -1,12 +1,12 @@
 // @flow
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
 import { COLORS } from '../../constants';
 import { generateRandomName } from '../../services/project-name.service';
-import { getInterpolatedValue, range, random } from '../../utils';
+import { range, random } from '../../utils';
 
 import FormField from '../FormField';
 import TextInput from '../TextInput';
@@ -71,7 +71,6 @@ class ProjectName extends PureComponent<Props, State> {
   };
 
   scramble = (from: string, to: string, numOfTicks: number) => {
-    const fromNumOfChars = from.length;
     const toNumOfChars = to.length;
 
     // Start with all spaces revealed
@@ -137,13 +136,7 @@ class ProjectName extends PureComponent<Props, State> {
   };
 
   render() {
-    const {
-      name,
-      isFocused,
-      handleFocus,
-      handleBlur,
-      handleChange,
-    } = this.props;
+    const { name, isFocused, handleFocus, handleBlur } = this.props;
     const { randomizedOverrideName } = this.state;
 
     return (

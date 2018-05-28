@@ -48,14 +48,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
   };
 
   render() {
-    const {
-      onDismiss,
-      isFolded,
-      state,
-      leftPane,
-      rightPane,
-      backface,
-    } = this.props;
+    const { isFolded, state, leftPane, rightPane, backface } = this.props;
     const { isBeingDismissed } = this.state;
 
     if (state === 'exited') {
@@ -108,8 +101,6 @@ class TwoPaneModal extends PureComponent<Props, State> {
   }
 }
 
-const BORDER_RADIUS = 8;
-
 const Wrapper = styled.div`
   position: fixed;
   z-index: 10;
@@ -146,10 +137,6 @@ const PaneWrapper = styled.div.attrs({
   max-width: 850px;
   display: flex;
   will-change: transform;
-`;
-
-const OverflowManager = styled.div`
-  overflow: hidden;
 `;
 
 const LeftHalf = styled.div.attrs({
@@ -203,40 +190,6 @@ const BackfaceWrapper = styled.div`
 const PaneChildren = styled.div`
   padding: 30px;
   height: 100%;
-`;
-
-const ChildWrapper = styled.div`
-  padding: 25px;
-`;
-
-const TitleArea = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  padding: 22px 25px;
-  height: 170px;
-  background: rgb(7, 23, 61);
-  background: linear-gradient(
-    113deg,
-    rgba(7, 23, 61, 1) 0%,
-    rgba(50, 38, 105, 1) 72%,
-    rgba(60, 33, 85, 1) 100%
-  );
-  font-size: 36px;
-  font-weight: 400;
-  color: white;
-  border-radius: ${BORDER_RADIUS - 4}px ${BORDER_RADIUS - 4}px 0px 0px;
-`;
-
-const Curves = styled.svg`
-  position: absolute;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  width: calc(100% + 2px);
-  overflow: visile;
-  display: none;
 `;
 
 export default connect(

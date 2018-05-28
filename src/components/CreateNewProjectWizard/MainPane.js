@@ -9,9 +9,7 @@ import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
 
 import FormField from '../FormField';
-import TextInput from '../TextInput';
 import SelectableImage from '../SelectableImage';
-import Button from '../Button';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
@@ -19,7 +17,7 @@ import FadeIn from '../FadeIn';
 import ProjectName from './ProjectName';
 import SubmitButton from './SubmitButton';
 
-import type { Field, Step } from './types';
+import type { Field } from './types';
 import type { ProjectType } from '../../types';
 
 const icons = importAll.sync('../../assets/images/icons/icon_*.jpg');
@@ -174,12 +172,6 @@ const ProjectTypeTogglesWrapper = styled.div`
 
 const ProjectIconWrapper = styled.div`
   margin-top: 16px;
-`;
-
-const ProjectIconImage = styled.img`
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
 `;
 
 const SelectableImageWrapper = styled.div`

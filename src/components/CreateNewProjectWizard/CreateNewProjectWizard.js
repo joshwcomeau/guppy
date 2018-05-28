@@ -13,7 +13,7 @@ import BuildPane from './BuildPane';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, SubmittedProject, Project } from '../../types';
+import type { ProjectType, Project } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 

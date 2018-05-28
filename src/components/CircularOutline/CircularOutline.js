@@ -37,7 +37,6 @@ import { Motion, spring } from 'react-motion';
 import { COLORS } from '../../constants';
 
 type Props = {
-  size: number,
   color1: string,
   color2: string,
   strokeWidth: number,
@@ -99,14 +98,7 @@ class RoundedOutline extends Component<Props, State> {
   }
 
   render() {
-    const {
-      size,
-      color1,
-      color2,
-      strokeWidth,
-      isShown,
-      animateChanges,
-    } = this.props;
+    const { color1, color2, strokeWidth, isShown, animateChanges } = this.props;
     const { width, height, pathLength, finishedAllMountingSteps } = this.state;
 
     const svgId = `${color1}-${color2}`;
