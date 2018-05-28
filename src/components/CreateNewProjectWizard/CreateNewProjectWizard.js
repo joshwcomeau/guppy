@@ -1,5 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
+import Transition from 'react-transition-group/Transition';
 
 import TwoPaneModal from '../TwoPaneModal';
 
@@ -9,11 +10,13 @@ import BuildPane from './BuildPane';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, SubmittedProject } from '../../types';
+import type { ProjectType, SubmittedProject, Project } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
 type Props = {
+  isVisible: boolean,
+  onDismiss: () => void,
   onCreateProject: (project: SubmittedProject) => void,
 };
 
@@ -27,40 +30,21 @@ type State = {
   shouldShowRandomizationHint: boolean,
 };
 
+const initialState = {
+  projectName: '',
+  projectType: null,
+  projectIcon: null,
+  activeField: 'projectName',
+  status: 'filling-in-form',
+  currentStep: 'projectName',
+  shouldShowRandomizationHint: false,
+};
+
 class CreateNewProjectWizard extends PureComponent<Props, State> {
-  state = {
-    projectName: '',
-    projectType: null,
-    projectIcon: null,
-    activeField: 'projectName',
-    status: 'filling-in-form',
-    currentStep: 'projectName',
-    shouldShowRandomizationHint: false,
-  };
+  state = initialState;
 
   componentDidMount() {
     window.setTimeout(this.enableRandomizationHint, 2000);
-  }
-
-  componentDidUpdate(_: Props, prevState: State) {
-    const { projectName, projectType, projectIcon, status } = this.state;
-
-    if (
-      prevState.status === 'filling-in-form' &&
-      status === 'building-project'
-    ) {
-      // At this point, it should be impossible for the project fields to be
-      // blank? Flow doesn't know that, though, and maybe it has a point.
-      // Maybe we should add some sort of error toast here?
-      if (!projectName || !projectType || !projectIcon) {
-        return;
-      }
-
-      const project = { projectName, projectType, projectIcon };
-
-      // TODO:
-      this.props.onCreateProject(project);
-    }
   }
 
   updateFieldValue = (field: Field, value: any) => {
@@ -81,7 +65,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     if (!nextStep) {
       this.setState({
         activeField: null,
-        currentStep: 'initializing',
         status: 'building-project',
       });
       return;
@@ -93,7 +76,14 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     });
   };
 
+  finishBuilding = (project: Project) => {
+    this.setState(initialState);
+
+    this.props.onCreateProject(project);
+  };
+
   render() {
+    const { isVisible, onDismiss } = this.props;
     const {
       projectName,
       projectType,
@@ -106,31 +96,44 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
     const project = { projectName, projectType, projectIcon };
 
-    const readyToBeBuilt = this.state.status !== 'filling-in-form';
+    const readyToBeBuilt = status !== 'filling-in-form';
 
     return (
-      <TwoPaneModal
-        isFolded={true /* readyToBeBuilt */}
-        leftPane={
-          <SummaryPane
-            currentStep={currentStep}
-            activeField={activeField}
-            shouldShowRandomizationHint={shouldShowRandomizationHint}
+      <Transition in={isVisible} timeout={1000}>
+        {state => (
+          <TwoPaneModal
+            isFolded={readyToBeBuilt}
+            state={state}
+            onDismiss={onDismiss}
+            leftPane={
+              <SummaryPane
+                currentStep={currentStep}
+                activeField={activeField}
+                shouldShowRandomizationHint={shouldShowRandomizationHint}
+              />
+            }
+            rightPane={
+              <MainPane
+                {...project}
+                activeField={activeField}
+                currentStepIndex={FORM_STEPS.indexOf(currentStep)}
+                updateFieldValue={this.updateFieldValue}
+                focusField={this.focusField}
+                handleSubmit={this.handleSubmit}
+                hasBeenSubmitted={status !== 'filling-in-form'}
+              />
+            }
+            backface={
+              readyToBeBuilt && (
+                <BuildPane
+                  project={project}
+                  handleCompleteBuild={this.finishBuilding}
+                />
+              )
+            }
           />
-        }
-        rightPane={
-          <MainPane
-            {...project}
-            activeField={activeField}
-            currentStepIndex={FORM_STEPS.indexOf(currentStep)}
-            updateFieldValue={this.updateFieldValue}
-            focusField={this.focusField}
-            handleSubmit={this.handleSubmit}
-            hasBeenSubmitted={status !== 'filling-in-form'}
-          />
-        }
-        backface={true && <BuildPane project={project} />}
-      />
+        )}
+      </Transition>
     );
   }
 }

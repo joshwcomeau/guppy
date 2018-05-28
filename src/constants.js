@@ -36,7 +36,8 @@ export const COLORS = {
   blue: {
     '500': '#3f6cff',
     '700': '#304FFE',
-    '900': '#1b2457',
+    '800': '#143a80',
+    '900': '#151942',
   },
   violet: {
     '500': '#D500F9',
@@ -82,4 +83,8 @@ export const BREAKPOINTS = {
   lgMin: `(min-width: ${BREAKPOINT_SIZES.lg + 1}px)`,
   xlMin: `(min-width: ${BREAKPOINT_SIZES.xl + 1}px)`,
   desktop: `(min-width: ${BREAKPOINT_SIZES.sm + 1}px)`,
+};
+
+export const Z_INDICES = {
+  titlebar: 10000,
 };

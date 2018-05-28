@@ -1,4 +1,5 @@
 import slug from 'slug';
+const prettier = window.require('prettier');
 
 const fs = window.require('fs');
 const os = window.require('os');
@@ -12,7 +13,7 @@ const childProcess = window.require('child_process');
  *
  *   2) Generate the project directory, if it doesn't already exist
  *
- *   3) Using create-react-app (or the Vue CLI) to generate a new project
+ *   3) Using create-react-app (or Gatsby) to generate a new project
  *
  *   4) Add some custom info to package.json to make it a distinct Guppy project
  *      (probably just the 'name' so that we can avoid slug-only names?)
@@ -38,9 +39,7 @@ export default (
 
   onStatusUpdate('Created parent directory');
 
-  const id = slug(
-    'Hello World' + Math.round(Math.random() * 10000)
-  ).toLowerCase(); // TEMP
+  const id = slug(projectName).toLowerCase();
 
   const path = `${parentPath}/${id}`;
 
@@ -53,5 +52,34 @@ export default (
   process.stdout.on('data', onStatusUpdate);
   process.stderr.on('data', onError);
 
-  process.on('close', onComplete);
+  // TODO: This code could be a lot nicer.
+  // Maybe promisify some of these callback APIs to avoid callback hell?
+  process.on('close', () => {
+    onStatusUpdate('Dependencies installed');
+
+    fs.readFile(`${path}/package.json`, 'utf8', (err, data) => {
+      if (err) {
+        return console.error(err);
+      }
+
+      const packageJson = JSON.parse(data);
+
+      packageJson.guppy = {
+        name: projectName,
+        icon: projectIcon,
+      };
+
+      const prettyPrintedPackageJson = prettier.format(
+        JSON.stringify(packageJson),
+        { parser: 'json' }
+      );
+
+      fs.writeFile(`${path}/package.json`, prettyPrintedPackageJson, err => {
+        if (err) {
+          return console.error(err);
+        }
+        onComplete(packageJson);
+      });
+    });
+  });
 };

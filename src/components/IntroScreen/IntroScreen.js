@@ -13,7 +13,9 @@ class IntroScreen extends Component {
     this.setState({ showCreateNew: !this.state.showCreateNew });
   };
 
-  handleCreateProject = () => {};
+  handleCreateProject = () => {
+    this.toggleModal();
+  };
 
   render() {
     const { showCreateNew } = this.state;
@@ -23,12 +25,11 @@ class IntroScreen extends Component {
         <Logo>Guppy</Logo>
         <button onClick={this.toggleModal}>Create new React project</button>
 
-        {/* {showCreateNew && (
-          <Modal title="Create New Project" handleClose={this.toggleModal}>
-            <CreateNewProjectForm onComplete={this.handleCreateProject} />
-          </Modal>
-        )} */}
-        <CreateNewProjectWizard onCreateProject={this.handleCreateProject} />
+        <CreateNewProjectWizard
+          isVisible={showCreateNew}
+          onDismiss={this.toggleModal}
+          onCreateProject={this.handleCreateProject}
+        />
       </Wrapper>
     );
   }

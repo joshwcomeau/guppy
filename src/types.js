@@ -7,3 +7,16 @@ export type SubmittedProject = {
 };
 
 // TODO: Add types for existing projects, held in Redux
+export type Project = {
+  name: string,
+  dependencies: {
+    [key: string]: string,
+  },
+  scripts: {
+    [key: string]: string,
+  },
+  guppy: {
+    name: string,
+    icon: string,
+  },
+};

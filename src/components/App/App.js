@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 
@@ -8,6 +8,8 @@ import { getNumberOfProjects } from '../../reducers/projects.reducer';
 
 import Home from '../Home';
 import IntroScreen from '../IntroScreen';
+import Sidebar from '../Sidebar';
+import Titlebar from '../Titlebar';
 
 class App extends Component {
   componentDidMount() {
@@ -31,7 +33,13 @@ class App extends Component {
     // const DefaultComponent = hasProjects ? Home : IntroScreen;
     const DefaultComponent = IntroScreen; // TEMP
 
-    return <Route exact path="/" component={DefaultComponent} />;
+    return (
+      <Fragment>
+        <Titlebar />
+        <Sidebar />
+        <Route exact path="/" component={DefaultComponent} />
+      </Fragment>
+    );
   }
 }
 
@@ -40,4 +48,7 @@ const mapStateToProps = state => ({
   hasProjects: getNumberOfProjects(state) > 0,
 });
 
-export default connect(mapStateToProps, { initialize })(App);
+export default connect(
+  mapStateToProps,
+  { initialize }
+)(App);

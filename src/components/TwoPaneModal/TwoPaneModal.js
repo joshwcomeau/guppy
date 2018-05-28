@@ -10,30 +10,83 @@ type Props = {
   rightPane: React$Node,
   backface: React$Node,
   isFolded: boolean,
-  handleClose: () => void,
+  state: 'entering' | 'entered' | 'exiting' | 'exited',
+  onDismiss: () => void,
 };
 
-const springSettings = {
+type State = {
+  isBeingDismissed: boolean,
+};
+
+const foldSpringSettings = {
   stiffness: 66,
   damping: 20,
 };
 
-class TwoPaneModal extends PureComponent<Props> {
+const transitSpringSettings = {
+  stiffness: 95,
+  damping: 25,
+};
+
+class TwoPaneModal extends PureComponent<Props, State> {
+  state = {
+    isBeingDismissed: false,
+  };
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.state === 'exiting' && this.props.state === 'exited') {
+      this.setState({ isBeingDismissed: false });
+    }
+  }
+
+  dismiss = () => {
+    this.setState({ isBeingDismissed: true });
+
+    this.props.onDismiss();
+  };
+
   render() {
-    const { handleClose, isFolded, leftPane, rightPane, backface } = this.props;
+    const {
+      onDismiss,
+      isFolded,
+      state,
+      leftPane,
+      rightPane,
+      backface,
+    } = this.props;
+    const { isBeingDismissed } = this.state;
+
+    if (state === 'exited') {
+      return null;
+    }
+
+    const inTransit = state === 'entering' || state === 'exiting';
+
+    // prettier-ignore
+    const modalVerticalTranslate = state === 'entering' || isBeingDismissed
+        ? 50
+        : state === 'exiting'
+          ? -50
+          : 0;
 
     return (
-      <Wrapper>
-        <Backdrop onClick={handleClose} />
+      <Wrapper
+        style={{
+          opacity: inTransit ? 0 : 1,
+          transition: state === 'exiting' ? 'opacity 400ms' : 'opacity 400ms',
+        }}
+      >
+        <Backdrop onClick={this.dismiss} />
 
         <Motion
           style={{
-            foldDegrees: spring(isFolded ? 180 : 0, springSettings),
-            translatePercentage: spring(isFolded ? -25 : 0, springSettings),
+            foldDegrees: spring(isFolded ? 180 : 0, foldSpringSettings),
+            translateX: spring(isFolded ? -25 : 0, foldSpringSettings),
+            translateY: spring(modalVerticalTranslate, transitSpringSettings),
           }}
         >
-          {({ foldDegrees, translatePercentage }) => (
-            <PaneWrapper translatePercentage={translatePercentage}>
+          {({ foldDegrees, translateX, translateY }) => (
+            <PaneWrapper translateX={translateX} translateY={translateY}>
               <LeftHalf foldDegrees={foldDegrees}>
                 <LeftPaneWrapper>
                   <PaneChildren>{leftPane}</PaneChildren>
@@ -83,7 +136,10 @@ const PaneWrapper = styled.div`
   width: 80%;
   max-width: 850px;
   display: flex;
-  transform: translateX(${props => props.translatePercentage}%);
+  transform: translate(
+    ${props => props.translateX}%,
+    ${props => props.translateY}%
+  );
   will-change: transform;
 `;
 

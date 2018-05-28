@@ -1,15 +1,18 @@
 // @flow
 import React, { PureComponent } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import IconBase from 'react-icons-kit';
+import { check } from 'react-icons-kit/feather/check';
 
 import { COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
 
 import ProgressBar from '../ProgressBar';
+import Spacer from '../Spacer';
 import BuildStepProgress from './BuildStepProgress';
 
 import type { BuildStep } from './types';
-import type { SubmittedProject } from '../../types';
+import type { SubmittedProject, Project } from '../../types';
 
 const BUILD_STEPS = {
   creatingParentDirectory: {
@@ -34,7 +37,7 @@ const BUILD_STEP_KEYS: Array<BuildStep> = Object.keys(BUILD_STEPS);
 
 type Props = {
   project: SubmittedProject,
-  handleCompleteBuild: () => void,
+  handleCompleteBuild: (project: Project) => void,
 };
 
 type State = {
@@ -103,6 +106,11 @@ class BuildPane extends PureComponent<Props, State> {
       this.setState(state => ({
         progress: state.progress + 0.15,
       }));
+    } else if (message.match(/Dependencies installed/i)) {
+      this.setState({
+        currentBuildStep: BUILD_STEP_KEYS[4],
+        progress: 0.9,
+      });
     }
   };
 
@@ -120,10 +128,12 @@ class BuildPane extends PureComponent<Props, State> {
     }
   };
 
-  handleComplete = () => {
+  handleComplete = (project: Project) => {
     this.setState({ progress: 1 });
-    // TODO: quick timeout for effects?
-    this.props.handleCompleteBuild();
+
+    window.setTimeout(() => {
+      this.props.handleCompleteBuild(project);
+    }, 2000);
   };
 
   render() {
@@ -131,6 +141,14 @@ class BuildPane extends PureComponent<Props, State> {
 
     return (
       <Wrapper>
+        <Finished isVisible={progress === 1}>
+          <FinishedInnerWrapper>
+            <IconBase size={128} icon={check} />
+            <Spacer size={20} />
+            Project Created!
+          </FinishedInnerWrapper>
+        </Finished>
+
         <ProgressBarWrapper>
           <ProgressBar
             progress={progress}
@@ -182,8 +200,8 @@ const Wrapper = styled.div`
   padding: 40px;
   background-image: linear-gradient(
     45deg,
-    ${COLORS.gray[900]},
-    ${COLORS.blue[900]}
+    ${COLORS.blue[900]},
+    ${COLORS.blue[800]}
   );
   border: 4px solid ${COLORS.white};
   color: ${COLORS.white};
@@ -205,6 +223,40 @@ const BuildSteps = styled.div`
 
 const Title = styled.h1`
   font-size: 36px;
+  text-align: center;
+`;
+
+const Finished = styled.div`
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  border: 4px solid ${COLORS.white};
+  background-image: linear-gradient(
+    45deg,
+    ${COLORS.teal[500]},
+    ${COLORS.lightGreen[700]}
+  );
+  font-size: 32px;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  will-change: clip-path;
+  clip-path: polygon(
+    ${props =>
+      props.isVisible
+        ? '-100% 0%, 100% 200%, 100% 0%'
+        : '100% 0%, 100% 0%, 100% 0%'}
+  );
+  transition: clip-path 1000ms;
+`;
+
+const FinishedInnerWrapper = styled.div`
   text-align: center;
 `;
 
