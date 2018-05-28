@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { COLORS, Z_INDICES } from '../../constants';
 import { hideModal } from '../../actions';
 
 type Props = {
@@ -25,9 +25,14 @@ const foldSpringSettings = {
   damping: 20,
 };
 
-const transitSpringSettings = {
+const transitTranslateSpringSettings = {
   stiffness: 95,
   damping: 25,
+};
+
+const transitOpacitySpringSettings = {
+  stiffness: 170,
+  damping: 22,
 };
 
 class TwoPaneModal extends PureComponent<Props, State> {
@@ -58,30 +63,43 @@ class TwoPaneModal extends PureComponent<Props, State> {
     const inTransit = state === 'entering' || state === 'exiting';
 
     // prettier-ignore
-    const modalVerticalTranslate = state === 'entering' || isBeingDismissed
+    const transitTranslate = state === 'entering' || isBeingDismissed
         ? 50
         : state === 'exiting'
           ? -50
           : 0;
 
     return (
-      <Wrapper
+      <Motion
         style={{
-          opacity: inTransit ? 0 : 1,
-          transition: state === 'exiting' ? 'opacity 400ms' : 'opacity 400ms',
+          foldDegrees: spring(isFolded ? 180 : 0, foldSpringSettings),
+          foldCenteringTranslate: spring(
+            isFolded ? -25 : 0,
+            foldSpringSettings
+          ),
+          transitTranslate: spring(
+            transitTranslate,
+            transitTranslateSpringSettings
+          ),
+          transitOpacity: spring(
+            inTransit ? 0 : 1,
+            transitOpacitySpringSettings
+          ),
         }}
       >
-        <Backdrop onClick={this.dismiss} />
+        {({
+          foldDegrees,
+          foldCenteringTranslate,
+          transitTranslate,
+          transitOpacity,
+        }) => (
+          <Wrapper opacity={transitOpacity} clickable={!inTransit}>
+            <Backdrop onClick={this.dismiss} />
 
-        <Motion
-          style={{
-            foldDegrees: spring(isFolded ? 180 : 0, foldSpringSettings),
-            translateX: spring(isFolded ? -25 : 0, foldSpringSettings),
-            translateY: spring(modalVerticalTranslate, transitSpringSettings),
-          }}
-        >
-          {({ foldDegrees, translateX, translateY }) => (
-            <PaneWrapper translateX={translateX} translateY={translateY}>
+            <PaneWrapper
+              translateX={foldCenteringTranslate}
+              translateY={transitTranslate}
+            >
               <LeftHalf foldDegrees={foldDegrees}>
                 <LeftPaneWrapper>
                   <PaneChildren>{leftPane}</PaneChildren>
@@ -94,16 +112,21 @@ class TwoPaneModal extends PureComponent<Props, State> {
                 <PaneChildren>{rightPane}</PaneChildren>
               </RightPaneWrapper>
             </PaneWrapper>
-          )}
-        </Motion>
-      </Wrapper>
+          </Wrapper>
+        )}
+      </Motion>
     );
   }
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div.attrs({
+  style: props => ({
+    opacity: props.opacity,
+    pointerEvents: props.clickable ? 'auto' : 'none',
+  }),
+})`
   position: fixed;
-  z-index: 10;
+  z-index: ${Z_INDICES.modal};
   top: 0;
   left: 0;
   right: 0;
