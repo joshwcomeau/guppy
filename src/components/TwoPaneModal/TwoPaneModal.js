@@ -1,9 +1,11 @@
 // @flow
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
+import { hideModal } from '../../actions';
 
 type Props = {
   leftPane: React$Node,
@@ -130,16 +132,19 @@ const Backdrop = styled.div`
   background: rgba(230, 230, 230, 0.8);
 `;
 
-const PaneWrapper = styled.div`
+const PaneWrapper = styled.div.attrs({
+  style: props => ({
+    transform: `translate(
+      ${props.translateX}%,
+      ${props.translateY}%
+    )`,
+  }),
+})`
   position: relative;
   z-index: 2;
   width: 80%;
   max-width: 850px;
   display: flex;
-  transform: translate(
-    ${props => props.translateX}%,
-    ${props => props.translateY}%
-  );
   will-change: transform;
 `;
 
@@ -147,11 +152,14 @@ const OverflowManager = styled.div`
   overflow: hidden;
 `;
 
-const LeftHalf = styled.div`
+const LeftHalf = styled.div.attrs({
+  style: props => ({
+    transform: `perspective(2000px) rotateY(${props.foldDegrees}deg)`,
+  }),
+})`
   position: relative;
   z-index: 2;
   flex: 1;
-  transform: perspective(2000px) rotateY(${props => props.foldDegrees}deg);
   will-change: transform;
   transform-origin: center right;
   transform-style: preserve-3d;
@@ -231,4 +239,7 @@ const Curves = styled.svg`
   display: none;
 `;
 
-export default TwoPaneModal;
+export default connect(
+  null,
+  { onDismiss: hideModal }
+)(TwoPaneModal);

@@ -40,7 +40,7 @@ const Wrapper = styled.nav`
   top: 0;
   left: 0;
   bottom: 0;
-  width: 72px;
+  width: 70px;
   background-image: linear-gradient(
     45deg,
     ${COLORS.blue[900]},

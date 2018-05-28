@@ -6,7 +6,6 @@ export type SubmittedProject = {
   projectIcon: string,
 };
 
-// TODO: Add types for existing projects, held in Redux
 export type Project = {
   name: string,
   dependencies: {
@@ -19,4 +18,10 @@ export type Project = {
     name: string,
     icon: string,
   },
+};
+
+// TODO: Find a better way to use Flow and Redux together :/
+export type Action = {
+  type: string,
+  [key: string]: any,
 };

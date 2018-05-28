@@ -253,7 +253,7 @@ const Finished = styled.div`
         ? '-100% 0%, 100% 200%, 100% 0%'
         : '100% 0%, 100% 0%, 100% 0%'}
   );
-  transition: clip-path 1000ms;
+  transition: clip-path 1000ms 350ms;
 `;
 
 const FinishedInnerWrapper = styled.div`

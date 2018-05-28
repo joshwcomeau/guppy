@@ -1,6 +1,9 @@
 // @flow
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
+
+import { addProject } from '../../actions';
 
 import TwoPaneModal from '../TwoPaneModal';
 
@@ -16,8 +19,7 @@ const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
 type Props = {
   isVisible: boolean,
-  onDismiss: () => void,
-  onCreateProject: (project: SubmittedProject) => void,
+  addProject: (project: Project) => void,
 };
 
 type State = {
@@ -77,13 +79,15 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: Project) => {
-    this.setState(initialState);
+    this.props.addProject(project);
 
-    this.props.onCreateProject(project);
+    window.setTimeout(() => {
+      this.setState(initialState);
+    }, 1000);
   };
 
   render() {
-    const { isVisible, onDismiss } = this.props;
+    const { isVisible } = this.props;
     const {
       projectName,
       projectType,
@@ -104,7 +108,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
           <TwoPaneModal
             isFolded={readyToBeBuilt}
             state={state}
-            onDismiss={onDismiss}
             leftPane={
               <SummaryPane
                 currentStep={currentStep}
@@ -138,4 +141,15 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   }
 }
 
-export default CreateNewProjectWizard;
+const mapStateToProps = state => ({
+  isVisible: state.modal === 'new-project-wizard',
+});
+
+const mapDispatchToProps = {
+  addProject,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateNewProjectWizard);

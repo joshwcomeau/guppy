@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import Modal from '../Modal';
+import { startCreatingNewProject } from '../../actions';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
 class IntroScreen extends Component {
@@ -18,12 +19,16 @@ class IntroScreen extends Component {
   };
 
   render() {
+    const { startCreatingNewProject } = this.props;
     const { showCreateNew } = this.state;
 
     return (
       <Wrapper>
         <Logo>Guppy</Logo>
-        <button onClick={this.toggleModal}>Create new React project</button>
+
+        <button onClick={() => startCreatingNewProject()}>
+          Create new React project
+        </button>
 
         <CreateNewProjectWizard
           isVisible={showCreateNew}
@@ -51,4 +56,7 @@ const Logo = styled.div`
   font-size: 42px;
 `;
 
-export default IntroScreen;
+export default connect(
+  null,
+  { startCreatingNewProject }
+)(IntroScreen);

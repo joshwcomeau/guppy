@@ -1,14 +1,9 @@
 // @flow
-import { INITIALIZE, REFRESH_PROJECTS } from '../actions';
+import { INITIALIZE, ADD_PROJECT, REFRESH_PROJECTS } from '../actions';
 
-import type { Project } from '../types';
+import type { Project, Action } from '../types';
 
 type State = {
-  projects: Array<Project>,
-};
-
-type Action = {
-  type: string,
   projects: Array<Project>,
 };
 
@@ -21,6 +16,13 @@ export default (state: State = initialState, action: Action) => {
     case INITIALIZE:
     case REFRESH_PROJECTS: {
       return action.projects;
+    }
+
+    case ADD_PROJECT: {
+      return {
+        ...state,
+        [action.project.name]: action.project,
+      };
     }
 
     default:
