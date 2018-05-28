@@ -103,12 +103,11 @@ class Sidebar extends PureComponent<Props, State> {
       >
         {({ sidebarOffsetPercentage, firstProjectPosition }) => (
           <Wrapper offset={`${sidebarOffsetPercentage}%`}>
-            <IntroductionBlurbWrapper>
-              <IntroductionBlurb
-                isVisible={introSequenceStepIndex >= 1}
-                onDismiss={dismissSidebarIntro}
-              />
-            </IntroductionBlurbWrapper>
+            <IntroductionBlurb
+              isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
+              onDismiss={dismissSidebarIntro}
+            />
+
             <Projects offset={`${firstProjectPosition}px`}>
               {projects.map(project => (
                 <Fragment key={project.guppy.id}>
@@ -156,13 +155,6 @@ const Wrapper = styled.nav.attrs({
   );
   transform: translateX(${props => props.offset});
   will-change: transform;
-`;
-
-const IntroductionBlurbWrapper = styled.div`
-  position: absolute;
-  top: 36px;
-  right: 0;
-  transform: translateX(100%);
 `;
 
 const Projects = styled.div.attrs({
