@@ -1,6 +1,6 @@
 // @flow
 import { combineReducers } from 'redux';
-import { ADD_PROJECT, REFRESH_PROJECTS } from '../actions';
+import { ADD_PROJECT, REFRESH_PROJECTS, SELECT_PROJECT } from '../actions';
 
 import type { Action } from 'redux';
 import type { Project } from '../types';
@@ -29,7 +29,7 @@ const byId = (state: ById = initialState.byId, action: Action) => {
     case ADD_PROJECT: {
       return {
         ...state,
-        [action.project.name]: action.project,
+        [action.project.guppy.id]: action.project,
       };
     }
 
@@ -44,7 +44,11 @@ const selectedId = (
 ) => {
   switch (action.type) {
     case ADD_PROJECT: {
-      return action.project.name;
+      return action.project.guppy.id;
+    }
+
+    case SELECT_PROJECT: {
+      return action.projectId;
     }
 
     default:
@@ -62,6 +66,9 @@ type GlobalState = { projects: State };
 
 export const getProjectsArray = (state: GlobalState) =>
   Object.values(state.projects.byId);
+
+export const getSelectedProjectId = (state: GlobalState) =>
+  state.projects.selectedId;
 
 export const getSelectedProject = (state: GlobalState) =>
   state.projects.selectedId

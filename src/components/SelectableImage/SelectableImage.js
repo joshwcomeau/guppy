@@ -77,6 +77,7 @@ const ImageFader = styled.div`
   height: 100%;
   opacity: ${props => (props.isShown ? 0.55 : 0)};
   transition: opacity 500ms;
+  border-radius: 100%;
 
   &:hover {
     opacity: 0;

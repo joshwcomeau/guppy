@@ -11,17 +11,9 @@ type Props = {
   name: string,
   iconSrc: string,
   isSelected: boolean,
-  onClick: (id: string) => void,
 };
 
-const SidebarProjectIcon = ({
-  id,
-  size,
-  name,
-  iconSrc,
-  isSelected,
-  onClick,
-}: Props) => {
+const SidebarProjectIcon = ({ id, size, name, iconSrc, isSelected }: Props) => {
   return (
     <SelectableImage
       src={iconSrc}
@@ -29,7 +21,6 @@ const SidebarProjectIcon = ({
       color1={COLORS.white}
       color2={COLORS.white}
       status={isSelected ? 'highlighted' : 'faded'}
-      onClick={() => onClick(id)}
     />
   );
 };

@@ -46,10 +46,6 @@ type State = {
 };
 
 class BuildPane extends PureComponent<Props, State> {
-  static defaultProps = {
-    handleCompleteBuild: () => console.log('DONE!'),
-  };
-
   state = {
     currentBuildStep: BUILD_STEPS[0],
     completed: false,

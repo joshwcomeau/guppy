@@ -48,17 +48,20 @@ export default function readLocalProjectsFromDisk(fromPath = DEFAULT_PATH) {
         );
       },
       (err, results) => {
-        console.log(err, results);
         if (err) {
           return reject(err);
         }
+
+        // TODO: It's possible the projects on disk may not have been created
+        // with Guppy. In this case, I'll need to infer the guppy ID from the
+        // `packageJson.name` field
 
         // The results will be an array of package.jsons.
         // I want a database-style map.
         const projects = results.reduce(
           (projectsMap, project) => ({
             ...projectsMap,
-            [project.name]: project,
+            [project.guppy.id]: project,
           }),
           {}
         );

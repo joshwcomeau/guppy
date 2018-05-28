@@ -4,11 +4,17 @@ import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { refreshProjects } from '../../actions';
+import { refreshProjects, selectProject } from '../../actions';
 import readLocalProjectsFromDisk from '../../services/read-local-projects.service';
-import { getProjectsArray } from '../../reducers/projects.reducer';
+import {
+  extractProjectIdFromUrl,
+  buildUrlForProjectId,
+} from '../../services/location.service';
+import {
+  getProjectsArray,
+  getSelectedProject,
+} from '../../reducers/projects.reducer';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
-import { getSelectedProject } from '../../reducers/selected-project.reducer';
 
 import Home from '../Home';
 import IntroScreen from '../IntroScreen';
@@ -23,20 +29,37 @@ import type { State as OnboardingStatus } from '../../reducers/onboarding-status
 
 type Props = {
   initializing: boolean,
-  refreshProjects: Action,
   onboardingStatus: OnboardingStatus,
-  selectedProject: string,
+  selectedProject: ?Project,
   projects: Array<Project>,
+  refreshProjects: Action,
+  selectProject: Action,
   history: any, // Provided by `withRouter`
 };
 
 class App extends Component<Props> {
   componentDidMount() {
-    this.props.refreshProjects();
+    const {
+      history,
+      selectedProject,
+      selectProject,
+      refreshProjects,
+    } = this.props;
+
+    refreshProjects();
 
     // TODO: Redirect if project exists
-    if (this.props.selectedProject) {
+    if (selectedProject) {
+      history.replace(buildUrlForProjectId(selectedProject.guppy.id));
     }
+
+    history.listen(location => {
+      const projectId = extractProjectIdFromUrl(location);
+
+      if (projectId) {
+        selectProject(projectId);
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,7 +79,7 @@ class App extends Component<Props> {
   }
 
   forwardToProject = project => {
-    this.props.history.push(`/project/${project.id}`);
+    this.props.history.push(buildUrlForProjectId(project.id));
   };
 
   render() {
@@ -104,6 +127,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { refreshProjects }
+    { refreshProjects, selectProject }
   )(App)
 );

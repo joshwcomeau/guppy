@@ -99,8 +99,6 @@ export default (
         icon: projectIcon,
       };
 
-      console.log(JSON.stringify(packageJson));
-
       const prettyPrintedPackageJson = prettier.format(
         JSON.stringify(packageJson),
         { parser: 'json' }

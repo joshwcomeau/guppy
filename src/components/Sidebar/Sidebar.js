@@ -2,15 +2,27 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
-import { startCreatingNewProject, dismissSidebarIntro } from '../../actions';
-import { getProjectsArray } from '../../reducers/projects.reducer';
+import {
+  selectProject,
+  startCreatingNewProject,
+  dismissSidebarIntro,
+} from '../../actions';
+import {
+  getProjectsArray,
+  getSelectedProjectId,
+} from '../../reducers/projects.reducer';
 import {
   getOnboardingStatus,
   getSidebarVisibility,
 } from '../../reducers/onboarding-status.reducer';
+import {
+  extractProjectIdFromUrl,
+  buildUrlForProjectId,
+} from '../../services/location.service';
 
 import Spacer from '../Spacer';
 import SidebarProjectIcon from './SidebarProjectIcon';
@@ -22,10 +34,13 @@ import type { State as OnboardingStatus } from '../../reducers/onboarding-status
 
 type Props = {
   projects: Array<Project>,
+  selectedProjectId: ?string,
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
   startCreatingNewProject: () => void,
   dismissSidebarIntro: () => void,
+  selectProject: (projectId: string) => void,
+  location: any, // Provided by React Router
 };
 
 type State = {
@@ -81,10 +96,12 @@ class Sidebar extends PureComponent<Props, State> {
   render() {
     const {
       projects,
+      selectedProjectId,
       isVisible,
       onboardingStatus,
       startCreatingNewProject,
       dismissSidebarIntro,
+      selectProject,
     } = this.props;
     const { introSequenceStep } = this.state;
 
@@ -116,14 +133,15 @@ class Sidebar extends PureComponent<Props, State> {
               <Projects offset={`${firstProjectPosition}px`}>
                 {projects.map(project => (
                   <Fragment key={project.guppy.id}>
-                    <SidebarProjectIcon
-                      size={SIDEBAR_ICON_SIZE}
-                      id={project.guppy.id}
-                      name={project.guppy.name}
-                      iconSrc={project.guppy.icon}
-                      isSelected={true}
-                      onClick={console.log}
-                    />
+                    <Link to={buildUrlForProjectId(project.guppy.id)}>
+                      <SidebarProjectIcon
+                        size={SIDEBAR_ICON_SIZE}
+                        id={project.guppy.id}
+                        name={project.guppy.name}
+                        iconSrc={project.guppy.icon}
+                        isSelected={project.guppy.id === selectedProjectId}
+                      />
+                    </Link>
                     <Spacer size={18} />
                   </Fragment>
                 ))}
@@ -184,11 +202,18 @@ const mapStateToProps = state => ({
   projects: getProjectsArray(state),
   onboardingStatus: getOnboardingStatus(state),
   isVisible: getSidebarVisibility(state),
+  selectedProjectId: getSelectedProjectId(state),
 });
 
-const mapDispatchToProps = { startCreatingNewProject, dismissSidebarIntro };
+const mapDispatchToProps = {
+  startCreatingNewProject,
+  dismissSidebarIntro,
+  selectProject,
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Sidebar);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Sidebar)
+);
