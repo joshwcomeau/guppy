@@ -3,7 +3,11 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 
-import { addProject } from '../../actions';
+import {
+  addProject,
+  cancelCreatingNewProject,
+  finishCreatingNewProject,
+} from '../../actions';
 
 import TwoPaneModal from '../TwoPaneModal';
 
@@ -20,6 +24,8 @@ const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 type Props = {
   isVisible: boolean,
   addProject: (project: Project) => void,
+  cancelCreatingNewProject: () => void,
+  finishCreatingNewProject: () => void,
 };
 
 type State = {
@@ -43,10 +49,23 @@ const initialState = {
 };
 
 class CreateNewProjectWizard extends PureComponent<Props, State> {
+  randomizationHintTimeoutId: number;
+
   state = initialState;
 
-  componentDidMount() {
-    window.setTimeout(this.enableRandomizationHint, 2000);
+  componentWillReceiveProps(nextProps: Props) {
+    if (!this.props.isVisible && nextProps.isVisible) {
+      window.clearTimeout(this.randomizationHintTimeoutId);
+
+      this.randomizationHintTimeoutId = window.setTimeout(
+        this.enableRandomizationHint,
+        4000
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.randomizationHintTimeoutId);
   }
 
   updateFieldValue = (field: Field, value: any) => {
@@ -79,15 +98,19 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: Project) => {
-    this.props.addProject(project);
+    this.props.finishCreatingNewProject();
 
     window.setTimeout(() => {
-      this.setState(initialState);
-    }, 1000);
+      this.props.addProject(project);
+
+      window.setTimeout(() => {
+        this.setState(initialState);
+      }, 500);
+    }, 500);
   };
 
   render() {
-    const { isVisible } = this.props;
+    const { isVisible, cancelCreatingNewProject } = this.props;
     const {
       projectName,
       projectType,
@@ -104,10 +127,11 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
     return (
       <Transition in={isVisible} timeout={1000}>
-        {state => (
+        {transitionState => (
           <TwoPaneModal
             isFolded={readyToBeBuilt}
-            state={state}
+            transitionState={transitionState}
+            onDismiss={cancelCreatingNewProject}
             leftPane={
               <SummaryPane
                 currentStep={currentStep}
@@ -147,6 +171,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   addProject,
+  cancelCreatingNewProject,
+  finishCreatingNewProject,
 };
 
 export default connect(

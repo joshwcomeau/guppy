@@ -1,41 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { startCreatingNewProject } from '../../actions';
+import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
+
+import Button from '../Button';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
-class IntroScreen extends Component {
-  state = {
-    showCreateNew: false,
-  };
+type Props = {
+  shouldHideContent: boolean,
+  startCreatingNewProject: () => void,
+};
 
-  toggleModal = () => {
-    this.setState({ showCreateNew: !this.state.showCreateNew });
-  };
-
-  handleCreateProject = () => {
-    this.toggleModal();
-  };
-
+class IntroScreen extends Component<Props> {
   render() {
-    const { startCreatingNewProject } = this.props;
-    const { showCreateNew } = this.state;
+    const { shouldHideContent, startCreatingNewProject } = this.props;
 
     return (
-      <Wrapper>
-        <Logo>Guppy</Logo>
+      <Fragment>
+        <Wrapper isVisible={!shouldHideContent}>
+          <Logo>Guppy</Logo>
 
-        <button onClick={() => startCreatingNewProject()}>
-          Create new React project
-        </button>
+          <Button size="large" onClick={() => startCreatingNewProject()}>
+            Create new React project
+          </Button>
+        </Wrapper>
 
-        <CreateNewProjectWizard
-          isVisible={showCreateNew}
-          onDismiss={this.toggleModal}
-          onCreateProject={this.handleCreateProject}
-        />
-      </Wrapper>
+        <CreateNewProjectWizard />
+      </Fragment>
     );
   }
 }
@@ -50,13 +43,20 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  opacity: ${props => (props.isVisible ? 1 : 0)};
+  pointer-events: ${props => (props.isVisible ? 'auto' : 'none')};
+  transition: opacity 500ms;
 `;
 
 const Logo = styled.div`
   font-size: 42px;
 `;
 
+const mapStateToProps = state => ({
+  shouldHideContent: getOnboardingStatus(state) !== 'brand-new',
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { startCreatingNewProject }
 )(IntroScreen);

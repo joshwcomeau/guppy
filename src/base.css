@@ -6,6 +6,10 @@ option {
   font-family: 'Futura PT';
 }
 
+body {
+  background: #fff;
+}
+
 *,
 *:before,
 *:after {

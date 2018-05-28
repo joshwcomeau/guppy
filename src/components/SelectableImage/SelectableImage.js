@@ -8,19 +8,21 @@ import { COLORS } from '../../constants';
 type Props = {
   src: string,
   size: number,
+  color1: string,
+  color2: string,
   status: 'default' | 'highlighted' | 'faded',
 };
 
 class SelectableImage extends Component<Props> {
   render() {
-    const { src, size, status, ...delegated } = this.props;
+    const { src, size, color1, color2, status, ...delegated } = this.props;
 
     return (
       <ButtonElem size={size} {...delegated}>
         <OutlineWrapper size={size}>
           <CircularOutline
-            color1={COLORS.purple[500]}
-            color2={COLORS.violet[500]}
+            color1={color1}
+            color2={color2}
             size={size + 6}
             isShown={status === 'highlighted'}
           />

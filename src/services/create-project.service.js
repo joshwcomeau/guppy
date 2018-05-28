@@ -5,6 +5,8 @@ const fs = window.require('fs');
 const os = window.require('os');
 const childProcess = window.require('child_process');
 
+const DISABLE = true;
+
 /**
  * This service manages the creation of a new project.
  * It is in charge of interfacing with the host machine to:
@@ -27,6 +29,33 @@ export default (
   onError,
   onComplete
 ) => {
+  if (DISABLE) {
+    const fakeProject = {
+      name: 'haidddd',
+      version: '0.1.0',
+      private: true,
+      dependencies: {
+        react: '^16.4.0',
+        'react-dom': '^16.4.0',
+        'react-scripts': '1.1.4',
+      },
+      scripts: {
+        start: 'react-scripts start',
+        build: 'react-scripts build',
+        test: 'react-scripts test --env=jsdom',
+        eject: 'react-scripts eject',
+      },
+      guppy: {
+        id: 'haidddd',
+        name: 'Haidddd',
+        icon: '/static/media/icon_blueorange.174c0078.jpg',
+      },
+    };
+
+    onComplete(fakeProject);
+    return;
+  }
+
   // When the app first loads, we need to get an index of existing projects.
   // The default path for projects is `~/guppy-projects`.
   const parentPath = `${os.homedir()}/guppy-projects`;
@@ -65,9 +94,12 @@ export default (
       const packageJson = JSON.parse(data);
 
       packageJson.guppy = {
+        id,
         name: projectName,
         icon: projectIcon,
       };
+
+      console.log(JSON.stringify(packageJson));
 
       const prettyPrintedPackageJson = prettier.format(
         JSON.stringify(packageJson),

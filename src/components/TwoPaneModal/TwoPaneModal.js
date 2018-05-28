@@ -1,18 +1,16 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
-import { hideModal } from '../../actions';
 
 type Props = {
   leftPane: React$Node,
   rightPane: React$Node,
   backface: React$Node,
   isFolded: boolean,
-  state: 'entering' | 'entered' | 'exiting' | 'exited',
+  transitionState: 'entering' | 'entered' | 'exiting' | 'exited',
   onDismiss: () => void,
 };
 
@@ -41,7 +39,10 @@ class TwoPaneModal extends PureComponent<Props, State> {
   };
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.state === 'exiting' && this.props.state === 'exited') {
+    if (
+      prevProps.transitionState === 'exiting' &&
+      this.props.transitionState === 'exited'
+    ) {
       this.setState({ isBeingDismissed: false });
     }
   }
@@ -53,19 +54,26 @@ class TwoPaneModal extends PureComponent<Props, State> {
   };
 
   render() {
-    const { isFolded, state, leftPane, rightPane, backface } = this.props;
+    const {
+      isFolded,
+      transitionState,
+      leftPane,
+      rightPane,
+      backface,
+    } = this.props;
     const { isBeingDismissed } = this.state;
 
-    if (state === 'exited') {
+    if (transitionState === 'exited') {
       return null;
     }
 
-    const inTransit = state === 'entering' || state === 'exiting';
+    const inTransit =
+      transitionState === 'entering' || transitionState === 'exiting';
 
     // prettier-ignore
-    const transitTranslate = state === 'entering' || isBeingDismissed
+    const transitTranslate = transitionState === 'entering' || isBeingDismissed
         ? 50
-        : state === 'exiting'
+        : transitionState === 'exiting'
           ? -50
           : 0;
 
@@ -215,7 +223,4 @@ const PaneChildren = styled.div`
   height: 100%;
 `;
 
-export default connect(
-  null,
-  { onDismiss: hideModal }
-)(TwoPaneModal);
+export default TwoPaneModal;

@@ -4,11 +4,11 @@ import { INITIALIZE, ADD_PROJECT, REFRESH_PROJECTS } from '../actions';
 import type { Project, Action } from '../types';
 
 type State = {
-  projects: Array<Project>,
+  [key: string]: Project,
 };
 
 const initialState = {
-  projects: [],
+  projects: {},
 };
 
 export default (state: State = initialState, action: Action) => {
@@ -30,6 +30,11 @@ export default (state: State = initialState, action: Action) => {
   }
 };
 
-export const getNumberOfProjects = (state: State) =>
+type GlobalState = { projects: State };
+
+export const getNumberOfProjects = (state: GlobalState) =>
   // $FlowFixMe
   Object.keys(state.projects).length;
+
+export const getProjectsArray = (state: GlobalState) =>
+  Object.values(state.projects);

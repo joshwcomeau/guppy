@@ -86,5 +86,7 @@ export const BREAKPOINTS = {
 };
 
 export const Z_INDICES = {
+  sidebar: 100,
+  modal: 1000,
   titlebar: 10000,
 };

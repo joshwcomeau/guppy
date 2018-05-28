@@ -158,8 +158,6 @@ class ProjectName extends PureComponent<Props, State> {
                 noPadding
                 onMouseDown={() => window.requestAnimationFrame(handleFocus)}
                 onClick={this.handleRandomize}
-                color1={COLORS.purple[500]}
-                color2={COLORS.violet[500]}
                 style={{ width: 32, height: 32 }}
               >
                 <IconBase size={22} icon={sparkles} />

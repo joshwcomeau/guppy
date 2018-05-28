@@ -1,8 +1,8 @@
 // @flow
 import {
   START_CREATING_NEW_PROJECT,
-  ADD_PROJECT,
-  HIDE_MODAL,
+  CANCEL_CREATING_NEW_PROJECT,
+  FINISH_CREATING_NEW_PROJECT,
 } from '../actions';
 
 import type { Action } from '../types';
@@ -16,8 +16,8 @@ export default (state: State = initialState, action: Action) => {
     case START_CREATING_NEW_PROJECT:
       return 'new-project-wizard';
 
-    case ADD_PROJECT:
-    case HIDE_MODAL:
+    case CANCEL_CREATING_NEW_PROJECT:
+    case FINISH_CREATING_NEW_PROJECT:
       return null;
 
     default:

@@ -4,7 +4,7 @@ export const generateRandomName = () => {
   const source = sample(['assembled-phrase', 'intel-codenames']);
 
   let name;
-  if (source === 'assembled-phrase') {
+  if (source === 'assembled-phrase' || true) {
     name = capitalizeAll(`${sample(adjectives)} ${sample(nouns)}`);
   } else {
     name = sample(intelCodenames);
