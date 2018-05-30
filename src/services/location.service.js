@@ -17,5 +17,19 @@ export const extractProjectIdFromUrl = (location: Location) => {
   return projectId;
 };
 
+export const extractProjectTabFromUrl = (location: Location) => {
+  // Match the entire url, to guard against false-positive matches from other
+  // URLs.
+  const regexMatch = location.pathname.match(/\/project\/[\w\-]+\/([\w]+)/i);
+
+  if (!regexMatch) {
+    return null;
+  }
+
+  const [matchStr, projectTab] = regexMatch;
+
+  return projectTab;
+};
+
 export const buildUrlForProjectId = (projectId: string) =>
   `/project/${projectId}`;

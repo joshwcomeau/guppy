@@ -7,6 +7,7 @@ import configureStore from './store';
 import { getInitialState } from './services/redux-persistence.service';
 
 import App from './components/App';
+import NodeProvider from './components/NodeProvider';
 import DevTools from './components/DevTools';
 
 import './fonts.css';
@@ -18,12 +19,14 @@ const store = configureStore(initialState);
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <Fragment>
-        <App />
-        <DevTools />
-      </Fragment>
-    </Router>
+    <NodeProvider>
+      <Router>
+        <Fragment>
+          <App />
+          <DevTools />
+        </Fragment>
+      </Router>
+    </NodeProvider>
   </Provider>,
   document.getElementById('root')
 );

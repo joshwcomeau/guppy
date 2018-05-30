@@ -1,10 +1,21 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { selectProject } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { extractProjectTabFromUrl } from '../../services/location.service';
+
+import MainContentWrapper from '../MainContentWrapper';
+import PageTitle from '../PageTitle';
+import TabbedNav from '../TabbedNav';
+import PixelShifter from '../PixelShifter';
+import Spacer from '../Spacer';
+import ProjectTasks from '../ProjectTasks';
+import ProjectDependencies from '../ProjectDependencies';
+import ProjectConfiguration from '../ProjectConfiguration';
 
 import type { Action } from 'redux';
 import type { Project } from '../../types';
@@ -12,32 +23,54 @@ import type { Project } from '../../types';
 type Props = {
   project: Project,
   selectProject: Action,
+  location: any, // provided by react-router
   match: any, // provided by react-router
 };
 
 class ProjectPage extends Component<Props> {
   render() {
-    const { project, match } = this.props;
+    const { project, location, match } = this.props;
+
     const projectIdFromUrl = match.params.projectId;
+    const projectTabFromUrl = extractProjectTabFromUrl(location) || 'tasks';
+
     return (
-      <div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        Hello World.
-        <br />
-        Project ID from URL: <strong>{projectIdFromUrl}</strong>
-        <br />
-        <br />
-        Selected project: {JSON.stringify(project)}
-        <br />
-        <Link to="/">Back home</Link>
-      </div>
+      <MainContentWrapper>
+        <PixelShifter x={-2}>
+          <PageTitle>{project.guppy.name}</PageTitle>
+        </PixelShifter>
+
+        <Spacer size={30} />
+
+        <TabbedNav
+          selectedTabId={projectTabFromUrl}
+          tabs={[
+            { id: 'tasks', label: 'Tasks', href: `${match.url}/tasks` },
+            { id: 'deps', label: 'Dependencies', href: `${match.url}/deps` },
+            { id: 'conf', label: 'Configuration', href: `${match.url}/conf` },
+          ]}
+        />
+
+        <Spacer size={10} />
+
+        <Switch>
+          <Route path="/project/:projectId/tasks" component={ProjectTasks} />
+          <Route
+            path="/project/:projectId/deps"
+            component={ProjectDependencies}
+          />
+          <Route
+            path="/project/:projectId/conf"
+            component={ProjectConfiguration}
+          />
+          <Route component={ProjectTasks} />
+        </Switch>
+      </MainContentWrapper>
     );
   }
 }
+
+const ChildRoutes = styled.div``;
 
 const mapStateToProps = state => ({
   project: getSelectedProject(state),
