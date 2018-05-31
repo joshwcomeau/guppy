@@ -24,7 +24,6 @@ class NodeProvider extends Component<Props, State> {
     nodes: {},
     boundingBoxes: {},
     refCapturer: (id: string, node: HTMLElement) => {
-      console.log('capturing', id, node);
       if (!node) {
         return;
       }

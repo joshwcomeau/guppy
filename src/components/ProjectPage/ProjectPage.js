@@ -9,7 +9,7 @@ import { getSelectedProject } from '../../reducers/projects.reducer';
 import { extractProjectTabFromUrl } from '../../services/location.service';
 
 import MainContentWrapper from '../MainContentWrapper';
-import PageTitle from '../PageTitle';
+import Heading from '../Heading';
 import TabbedNav from '../TabbedNav';
 import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
@@ -37,7 +37,7 @@ class ProjectPage extends Component<Props> {
     return (
       <MainContentWrapper>
         <PixelShifter x={-2}>
-          <PageTitle>{project.guppy.name}</PageTitle>
+          <Heading size="large">{project.guppy.name}</Heading>
         </PixelShifter>
 
         <Spacer size={30} />

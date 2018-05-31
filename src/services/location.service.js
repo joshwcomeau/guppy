@@ -31,5 +31,22 @@ export const extractProjectTabFromUrl = (location: Location) => {
   return projectTab;
 };
 
+export const extractSelectedTaskFromUrl = (location: Location) => {
+  // Match the entire url, to guard against false-positive matches from other
+  // URLs.
+  const regexMatch = location.pathname.match(/\/tasks\/([\w]+)/i);
+
+  if (!regexMatch) {
+    return null;
+  }
+
+  const [matchStr, task] = regexMatch;
+
+  return task;
+};
+
 export const buildUrlForProjectId = (projectId: string) =>
   `/project/${projectId}`;
+
+export const buildUrlForProjectTask = (projectId: string, taskId: string) =>
+  `${buildUrlForProjectId(projectId)}/tasks/${taskId}`;

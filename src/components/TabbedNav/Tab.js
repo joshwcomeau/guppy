@@ -7,8 +7,6 @@ import { COLORS } from '../../constants';
 
 import { NodeConsumer } from '../NodeProvider';
 
-console.log(NodeConsumer);
-
 type Props = {
   id: string,
   href: string,
@@ -21,7 +19,12 @@ const Tab = ({ id, href, isSelected, children }: Props) => {
     <NodeConsumer>
       {({ refCapturer }) => (
         <TabWrapper innerRef={node => refCapturer(id, node)}>
-          <TabLink to={href} isSelected={isSelected}>
+          <TabLink
+            to={href}
+            style={{
+              color: isSelected ? COLORS.blue[700] : COLORS.gray[800],
+            }}
+          >
             {children}
           </TabLink>
         </TabWrapper>
@@ -49,7 +52,6 @@ const TabLink = styled(Link)`
   font-weight: 500;
   letter-spacing: -0.5px;
   -webkit-font-smoothing: antialiased;
-  color: ${props => (props.isSelected ? COLORS.blue[700] : COLORS.gray[800])};
 `;
 
 export default Tab;

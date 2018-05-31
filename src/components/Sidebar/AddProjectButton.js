@@ -14,8 +14,6 @@ type Props = {
 
 const AddProjectButton = ({ size, isVisible, onClick }: Props) => (
   <Button
-    fill
-    noPadding
     size={size}
     isVisible={isVisible}
     color1="rgba(255, 255, 255, 0.1)"
