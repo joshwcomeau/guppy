@@ -4,7 +4,10 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
-import { extractSelectedTaskFromUrl } from '../../services/location.service';
+import {
+  extractSelectedTaskFromUrl,
+  buildUrlForProjectTask,
+} from '../../services/location.service';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 
 import ProjectTaskNavItem from '../ProjectTaskNavItem';
@@ -44,7 +47,9 @@ class ProjectTasks extends PureComponent<Props> {
               path="/project/:projectId/tasks/:taskId"
               component={ProjectTaskManagement}
             />
-            <Redirect to={`/project/:projectId/tasks/${selectedTaskId}`} />
+            <Redirect
+              to={buildUrlForProjectTask(project.guppy.id, selectedTaskId)}
+            />
           </Switch>
         </TaskInfoWrapper>
       </Wrapper>
