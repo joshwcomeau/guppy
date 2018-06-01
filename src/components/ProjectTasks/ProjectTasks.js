@@ -72,7 +72,7 @@ const Task = styled.div`
 `;
 const TaskInfoWrapper = styled.div`
   flex: 1;
-  padding: 30px;
+  padding-left: 30px;
 `;
 
 const mapStateToProps = state => ({

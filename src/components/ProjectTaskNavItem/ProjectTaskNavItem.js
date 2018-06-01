@@ -6,10 +6,14 @@ import { Link } from 'react-router-dom';
 import { COLORS } from '../../constants';
 import { buildUrlForProjectTask } from '../../services/location.service';
 
+import SmallLED from '../SmallLED';
+
+import type { TaskStatus } from '../../types';
+
 type Props = {
   projectId: string,
   taskId: string,
-  status: 'idle' | 'running' | 'error',
+  status: TaskStatus,
   isSelected: boolean,
 };
 
@@ -20,12 +24,12 @@ class ProjectTaskNavItem extends PureComponent<Props> {
     return (
       <Wrapper to={buildUrlForProjectTask(projectId, taskId)}>
         <Base>
-          <StatusIndicator status={status} isVisible={isSelected} />
+          <SmallLED status={status} isVisible={isSelected} />
           {taskId}
         </Base>
 
         <Highlighted isVisible={isSelected}>
-          <StatusIndicator status={status} isVisible={true} />
+          <SmallLED status={status} isVisible={true} />
           {taskId}
         </Highlighted>
       </Wrapper>
@@ -49,15 +53,6 @@ const Base = styled.div`
   font-weight: 500;
   width: 90%;
   -webkit-font-smoothing: antialiased;
-`;
-
-const StatusIndicator = styled.div`
-  width: 10px;
-  height: 10px;
-  margin-right: 10px;
-  border-radius: 100%;
-  background-color: ${COLORS.green[500]};
-  opacity: ${props => (props.isVisible ? 1 : 0)};
 `;
 
 const Highlighted = styled(Base)`

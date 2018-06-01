@@ -28,20 +28,20 @@ class Heading extends Component<Props> {
   }
 }
 
-const HeadingMedium = styled.h3`
-  font-size: 24px;
+const HeadingSmall = styled.h5`
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: -0.5px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: ${COLORS.gray[800]};
 `;
 
-const HeadingSmall = HeadingMedium.withComponent('h5').extend`
-  font-size: 20px;
-  letter-spacing: 0px;
+const HeadingMedium = HeadingSmall.withComponent('h3').extend`
+  font-size: 32px;
+  letter-spacing: -0.5px;
 `;
-const HeadingLarge = HeadingMedium.withComponent('h1').extend`
+
+const HeadingLarge = HeadingSmall.withComponent('h1').extend`
   font-size: 42px;
   letter-spacing: -1px;
 `;
