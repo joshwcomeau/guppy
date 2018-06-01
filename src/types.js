@@ -15,6 +15,8 @@ export type Project = {
     [key: string]: string,
   },
   guppy: {
+    id: string,
+    type: 'create-react-app' | 'gatsby',
     name: string,
     icon: string,
   },

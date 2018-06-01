@@ -16,6 +16,9 @@ export const ADD_PROJECT = 'ADD_PROJECT';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
+export const START_TASK = 'START_TASK';
+export const ABORT_TASK = 'ABORT_TASK';
+export const COMPLETE_TASK = 'COMPLETE_TASK';
 
 //
 //
@@ -56,4 +59,37 @@ export const dismissSidebarIntro = () => ({
 export const selectProject = (projectId: string) => ({
   type: SELECT_PROJECT,
   projectId,
+});
+
+export const startTask = (
+  projectId: string,
+  taskId: string,
+  timestamp: Date
+) => ({
+  type: START_TASK,
+  projectId,
+  taskId,
+  timestamp,
+});
+
+export const abortTask = (
+  projectId: string,
+  taskId: string,
+  timestamp: Date
+) => ({
+  type: ABORT_TASK,
+  projectId,
+  taskId,
+  timestamp,
+});
+
+export const completeTask = (
+  projectId: string,
+  taskId: string,
+  timestamp: Date
+) => ({
+  type: COMPLETE_TASK,
+  projectId,
+  taskId,
+  timestamp,
 });
