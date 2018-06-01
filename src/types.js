@@ -25,3 +25,5 @@ export type Action = {
   type: string,
   [key: string]: any,
 };
+
+export type TaskStatus = 'running' | 'idle' | 'error';
