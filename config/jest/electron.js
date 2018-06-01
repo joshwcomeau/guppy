@@ -1,0 +1,3 @@
+global.window = {
+  require: require,
+};
