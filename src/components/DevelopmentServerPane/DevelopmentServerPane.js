@@ -28,6 +28,7 @@ type Props = {
 class DevelopmentServerPane extends PureComponent<Props> {
   handleToggle = (isToggled: boolean) => {
     const { task, runTask, abortTask } = this.props;
+    console.log('toggle', task);
 
     if (!task) {
       // Should be impossible, since the Toggle control won't render without
@@ -79,7 +80,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
           </DocumentationLink>
         </LeftSide>
         <RightSide>
-          <TerminalOutput height={300} />
+          <TerminalOutput height={300} logs={task.logs} />
         </RightSide>
       </Wrapper>
     );

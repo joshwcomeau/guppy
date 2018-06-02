@@ -13,7 +13,7 @@ export type Task = {
   taskCommand: string,
   status: 'idle' | 'running',
   timeSinceStatusChange: Date,
-  logs: string,
+  logs: Array<string>,
 };
 
 type AppType = 'create-react-app' | 'gatsby';

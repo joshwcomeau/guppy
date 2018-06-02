@@ -69,6 +69,7 @@ const Wrapper = styled.button`
   background-color: ${COLORS.gray[200]};
   overflow: hidden; /* Hide 'OnBackground' corners */
   outline: none; /* TODO: better a11y story */
+  cursor: pointer;
 `;
 
 const OnBackground = styled.div`

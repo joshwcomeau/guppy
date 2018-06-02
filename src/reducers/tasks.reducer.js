@@ -5,6 +5,7 @@ import {
   RUN_TASK,
   ABORT_TASK,
   COMPLETE_TASK,
+  RECEIVE_DATA_FROM_TASK_EXECUTION,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -19,13 +20,13 @@ type State = {
 const initialState = {};
 
 const buildUniqueTaskId = (projectId, taskName) => `${projectId}-${taskName}`;
-const buildNewTask = (projectId, taskName, taskCommand) => ({
+const buildNewTask = (projectId, taskName, command) => ({
   projectId,
   taskName,
-  taskCommand,
+  command,
   status: 'idle',
   timeSinceStatusChange: null,
-  logs: null,
+  logs: [],
 });
 
 export default (state: State = initialState, action: Action) => {
@@ -35,7 +36,7 @@ export default (state: State = initialState, action: Action) => {
         Object.values(action.projects).forEach(project => {
           const projectId = project.guppy.id;
 
-          Object.entries(project.scripts).forEach(([taskName, taskCommand]) => {
+          Object.entries(project.scripts).forEach(([taskName, command]) => {
             const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
             // If this task already exists, we need to be careful.
@@ -48,14 +49,15 @@ export default (state: State = initialState, action: Action) => {
             // the log history, and the `timeSinceStatusChange`. So we don't
             // want to overwrite it, we want to merge it.
             if (draftState[uniqueTaskId]) {
-              draftState[uniqueTaskId].taskCommand = taskCommand;
+              draftState[uniqueTaskId].logs = [];
+              draftState[uniqueTaskId].command = command;
               return;
             }
 
             draftState[uniqueTaskId] = buildNewTask(
               projectId,
               taskName,
-              taskCommand
+              command
             );
           });
         });
@@ -68,20 +70,17 @@ export default (state: State = initialState, action: Action) => {
       const projectId = project.guppy.id;
 
       return produce(state, draftState => {
-        Object.entries(project.scripts).forEach(([taskName, taskCommand]) => {
+        Object.entries(project.scripts).forEach(([taskName, command]) => {
           const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
-          draftState[uniqueTaskId] = buildNewTask(
-            projectId,
-            taskName,
-            taskCommand
-          );
+          draftState[uniqueTaskId] = buildNewTask(projectId, taskName, command);
         });
       });
     }
 
     case RUN_TASK: {
-      const { projectId, taskName, timestamp } = action;
+      const { task, timestamp } = action;
+      const { projectId, taskName } = task;
 
       const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
@@ -93,13 +92,25 @@ export default (state: State = initialState, action: Action) => {
 
     case ABORT_TASK:
     case COMPLETE_TASK: {
-      const { projectId, taskName, timestamp } = action;
+      const { task, timestamp } = action;
+      const { projectId, taskName } = task;
 
       const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
         draftState[uniqueTaskId].status = 'idle';
         draftState[uniqueTaskId].timeSinceStatusChange = timestamp;
+      });
+    }
+
+    case RECEIVE_DATA_FROM_TASK_EXECUTION: {
+      const { task, data } = action;
+      const { projectId, taskName } = task;
+
+      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
+
+      return produce(state, draftState => {
+        draftState[uniqueTaskId].logs.push(data);
       });
     }
 

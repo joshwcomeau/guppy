@@ -19,6 +19,8 @@ export const SELECT_PROJECT = 'SELECT_PROJECT';
 export const RUN_TASK = 'RUN_TASK';
 export const ABORT_TASK = 'ABORT_TASK';
 export const COMPLETE_TASK = 'COMPLETE_TASK';
+export const RECEIVE_DATA_FROM_TASK_EXECUTION =
+  'RECEIVE_DATA_FROM_TASK_EXECUTION';
 
 //
 //
@@ -63,21 +65,24 @@ export const selectProject = (projectId: string) => ({
 
 export const runTask = (task: Task, timestamp: Date) => ({
   type: RUN_TASK,
-  projectId: task.projectId,
-  taskName: task.taskName,
+  task,
   timestamp,
 });
 
 export const abortTask = (task: Task, timestamp: Date) => ({
   type: ABORT_TASK,
-  projectId: task.projectId,
-  taskName: task.taskName,
+  task,
   timestamp,
 });
 
 export const completeTask = (task: Task, timestamp: Date) => ({
   type: COMPLETE_TASK,
-  projectId: task.projectId,
-  taskName: task.taskName,
+  task,
   timestamp,
+});
+
+export const receiveDataFromTaskExecution = (task: Task, data: string) => ({
+  type: RECEIVE_DATA_FROM_TASK_EXECUTION,
+  task,
+  data,
 });

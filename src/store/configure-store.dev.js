@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 import rootReducer from '../reducers';
 import { handleStoreUpdates } from '../services/redux-persistence.service';
+import taskMiddleware from '../middlewares/task.middleware';
 import DevTools from '../components/DevTools';
 
 export default function configureStore(initialState) {
@@ -10,7 +11,7 @@ export default function configureStore(initialState) {
     rootReducer,
     initialState,
     compose(
-      applyMiddleware(thunk),
+      applyMiddleware(thunk, taskMiddleware),
       DevTools.instrument()
     )
   );
