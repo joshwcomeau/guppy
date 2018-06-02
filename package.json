@@ -28,6 +28,7 @@
     "chalk": "2.3.0",
     "color": "^3.0.0",
     "css-loader": "0.28.9",
+    "detect-port-alt": "^1.1.6",
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
     "eslint": "4.15.0",

@@ -1,9 +1,5 @@
 // @flow
 import React, { PureComponent } from 'react';
-// import { Terminal } from 'xterm';
-// import * as fit from 'xterm/lib/addons/fit/fit';
-// import * as webLinks from 'xterm/lib/addons/webLinks/webLinks';
-// import * as winptyCompat from 'xterm/lib/addons/winptyCompat/winptyCompat';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
@@ -13,10 +9,6 @@ var convert = new Convert();
 
 var AU = require('ansi_up');
 var ansi_up = new AU.default();
-
-// Terminal.applyAddon(fit);
-// Terminal.applyAddon(webLinks);
-// Terminal.applyAddon(winptyCompat);
 
 type Props = {
   height?: number,
@@ -29,65 +21,60 @@ class TerminalOutput extends PureComponent<Props> {
     height: 200,
   };
 
-  wrapperNode: HTMLElement;
-  node: HTMLElement;
-  term: any; // Terminal instance
-
-  componentDidMount() {
-    // this.term = new Terminal();
-    // this.term.open(this.node);
-    // window.setInterval(() => {
-    //   this.term.write('Hello World\n');
-    // }, 1000);
-  }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener('resize', this.fitResize, {
-  //     passive: true,
-  //   });
-  // }
-
-  // fitResize() {
-  //   if (!this.wrapperNode) {
-  //     return;
-  //   }
-  //   this.term.fit();
-  // }
-
   render() {
     const { height, logs } = this.props;
 
     return (
       <Wrapper height={height}>
-        {logs.map(log => (
-          <Log
-            dangerouslySetInnerHTML={{
-              __html: convert.toHtml(log.replace(/(\r\n|\r|\n)/g, '<br />')),
-            }}
-          />
-        ))}
+        <TableWrapper height={height}>
+          <LogWrapper>
+            {logs.map(log => (
+              <Log
+                dangerouslySetInnerHTML={{
+                  __html: convert.toHtml(
+                    log
+                      .replace(/^[\ ]/gm, '&nbsp;&nbsp;')
+                      .replace(/(\r\n|\r|\n)/g, '<br />')
+                  ),
+                }}
+              />
+            ))}
+          </LogWrapper>
+        </TableWrapper>
       </Wrapper>
     );
   }
 }
 
 const Wrapper = styled.div`
-  /* display: flex;
-  flex-direction: column;
-  justify-content: flex-end; */
-  width: 500px;
   height: ${props => props.height}px;
+  overflow: auto;
   padding: 15px;
   color: ${COLORS.white};
   background-color: ${COLORS.blue[900]};
   border-radius: 4px;
   font-family: monospace;
-  overflow: auto;
+`;
+
+// NOTE: I have a loooot of nested elements here, to try and align things
+// to the bottom. Flexbox doesn't play nicely with overflow: scroll :/
+// There's almost certainly a better way to do this, just haven't spent time.
+const TableWrapper = styled.div`
+  display: table;
+  width: 100%;
+  height: 100%;
+`;
+
+const LogWrapper = styled.div`
+  display: table-cell;
+  vertical-align: bottom;
+  width: 100%;
+  height: 100%;
 `;
 
 const Log = styled.div`
   min-height: 0;
-  margin-top: 20px;
+  margin-top: 10px;
 `;
 
 export default TerminalOutput;
