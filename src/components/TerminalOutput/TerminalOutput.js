@@ -21,11 +21,27 @@ class TerminalOutput extends PureComponent<Props> {
     height: 200,
   };
 
+  componentDidUpdate() {
+    if (!this.node) {
+      return;
+    }
+
+    this.scrollToBottom();
+  }
+
+  scrollToBottom = () => {
+    const scrollHeight = this.node.scrollHeight;
+    const height = this.node.clientHeight;
+    const maxScrollTop = scrollHeight - height;
+
+    this.node.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+  };
+
   render() {
     const { height, logs } = this.props;
 
     return (
-      <Wrapper height={height}>
+      <Wrapper height={height} innerRef={node => (this.node = node)}>
         <TableWrapper height={height}>
           <LogWrapper>
             {logs.map(log => (
@@ -53,7 +69,8 @@ const Wrapper = styled.div`
   color: ${COLORS.white};
   background-color: ${COLORS.blue[900]};
   border-radius: 4px;
-  font-family: monospace;
+  font-family: 'Fira Mono', monospace;
+  font-size: 13px;
 `;
 
 // NOTE: I have a loooot of nested elements here, to try and align things

@@ -9,6 +9,8 @@ import { getTaskByProjectIdAndTaskName } from '../reducers/tasks.reducer';
 const childProcess = window.require('child_process');
 const os = window.require('os');
 
+const detect = require('detect-port-alt');
+
 // When the app first loads, we need to get an index of existing projects.
 // The default path for projects is `~/guppy-projects`.
 // TODO: Configurable!
@@ -39,29 +41,35 @@ export default store => next => action => {
         throw new Error('Could not find task when attempting to run task');
       }
 
-      const child = childProcess.spawn('PORT=4545 npm', ['run', taskName], {
-        cwd: `${parentPath}/${projectId}`,
-        shell: true,
+      detect(3000, (err, availablePort) => {
+        if (err) {
+          console.log(err);
+        }
+
+        const child = childProcess.spawn(
+          `PORT=${availablePort} npm`,
+          ['run', taskName],
+          {
+            cwd: `${parentPath}/${projectId}`,
+            shell: true,
+          }
+        );
+
+        child.stdout.on('data', data => {
+          console.log('LOG THING', data.toString());
+          next(receiveDataFromTaskExecution(task, data.toString()));
+        });
+
+        child.stderr.on('data', data => {
+          next(receiveDataFromTaskExecution(task, data.toString()));
+        });
+
+        child.on('exit', code => {
+          console.log('EXITED', code);
+        });
+
+        processes[processId] = child;
       });
-
-      child.stdout.on('data', data => {
-        console.log('LOG THING', data.toString());
-        next(receiveDataFromTaskExecution(task, data.toString()));
-      });
-
-      child.stderr.on('data', data => {
-        next(receiveDataFromTaskExecution(task, data.toString()));
-      });
-
-      child.on('exit', code => {
-        console.log('EXITED', code);
-      });
-
-      window.setTimeout(() => {
-        store.dispatch(abortTask(task, new Date()));
-      }, 4000);
-
-      processes[processId] = child;
 
       break;
     }
