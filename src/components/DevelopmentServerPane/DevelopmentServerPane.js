@@ -72,7 +72,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
           </Description>
 
           <StatusWrapper>
-            <LargeLED />
+            <LargeLED status={task.status} />
             <StatusTextWrapper>
               <Status>{capitalize(task.status)}</Status>
               <StatusCaption>
