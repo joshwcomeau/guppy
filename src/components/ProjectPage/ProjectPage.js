@@ -37,7 +37,7 @@ class ProjectPage extends Component<Props> {
     return (
       <MainContentWrapper>
         <PixelShifter x={-2}>
-          <Heading size="large">{project.guppy.name}</Heading>
+          <Heading size="large">{project.name}</Heading>
         </PixelShifter>
 
         <Spacer size={30} />

@@ -5,7 +5,7 @@ import {
   FINISH_CREATING_NEW_PROJECT,
 } from '../actions';
 
-import type { Action } from '../types';
+import type { Action } from 'redux';
 
 type State = 'new-project-wizard' | null;
 

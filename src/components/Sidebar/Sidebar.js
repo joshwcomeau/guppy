@@ -29,7 +29,7 @@ import SidebarProjectIcon from './SidebarProjectIcon';
 import AddProjectButton from './AddProjectButton';
 import IntroductionBlurb from './IntroductionBlurb';
 
-import type Project from '../../types';
+import type { Project } from '../../types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 type Props = {
@@ -132,14 +132,14 @@ class Sidebar extends PureComponent<Props, State> {
 
               <Projects offset={`${firstProjectPosition}px`}>
                 {projects.map(project => (
-                  <Fragment key={project.guppy.id}>
-                    <Link to={buildUrlForProjectId(project.guppy.id)}>
+                  <Fragment key={project.id}>
+                    <Link to={buildUrlForProjectId(project.id)}>
                       <SidebarProjectIcon
                         size={SIDEBAR_ICON_SIZE}
-                        id={project.guppy.id}
-                        name={project.guppy.name}
-                        iconSrc={project.guppy.icon}
-                        isSelected={project.guppy.id === selectedProjectId}
+                        id={project.id}
+                        name={project.name}
+                        iconSrc={project.icon}
+                        isSelected={project.id === selectedProjectId}
                       />
                     </Link>
                     <Spacer size={18} />

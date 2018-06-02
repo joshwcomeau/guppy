@@ -6,6 +6,7 @@ import IconBase from 'react-icons-kit';
 import { play } from 'react-icons-kit/feather/play';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getTasksForProject } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
 
 import Heading from '../Heading';
@@ -24,19 +25,17 @@ type Props = {
 class ProjectTaskManagement extends Component<Props> {
   render() {
     const { project, match } = this.props;
-    const { taskId } = match.params;
+    const { taskName } = match.params;
 
-    const task = project.scripts[taskId];
+    const task = project.tasks[taskName];
 
     return (
       <Wrapper>
         <Header>
-          <div>
-            <Heading style={{ display: 'flex', alignItems: 'center' }}>
-              {taskId}
-            </Heading>
-            A task to do things
-          </div>
+          <LeftHeader>
+            <TaskName>{taskName}</TaskName>
+            <TaskDescription>Run a local development server.</TaskDescription>
+          </LeftHeader>
           <RightHeader>
             <BigClickableButton width={128} height={48}>
               <IconBase icon={play} size={24} /> Run task
@@ -51,10 +50,24 @@ class ProjectTaskManagement extends Component<Props> {
 const Wrapper = styled.div``;
 
 const Header = styled.div`
-  margin-top: 12px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+`;
+
+const TaskName = styled(Heading)`
+  margin-top: -4px;
+`;
+
+const TaskDescription = styled.div`
+  font-size: 18px;
+  color: ${COLORS.gray[400]};
+  margin-left: 20px;
+`;
+
+const LeftHeader = styled.div`
+  display: flex;
+  line-height: 54px;
 `;
 
 const RightHeader = styled.div`

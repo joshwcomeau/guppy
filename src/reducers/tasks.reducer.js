@@ -8,26 +8,20 @@ import {
 } from '../actions';
 
 import type { Action } from 'redux';
+import type { Task } from '../types';
 
 // @flow
 
 type State = {
-  [uniqueTaskId: string]: {
-    projectId: string,
-    taskId: string,
-    taskCommand: string,
-    status: 'idle' | 'running',
-    timeSinceStatusChange: Date,
-    logs: string,
-  },
+  [uniqueTaskId: string]: Task,
 };
 
 const initialState = {};
 
-const buildUniqueTaskId = (projectId, taskId) => `${projectId}-${taskId}`;
-const buildNewTask = (projectId, taskId, taskCommand) => ({
+const buildUniqueTaskId = (projectId, taskName) => `${projectId}-${taskName}`;
+const buildNewTask = (projectId, taskName, taskCommand) => ({
   projectId,
-  taskId,
+  taskName,
   taskCommand,
   status: 'idle',
   timeSinceStatusChange: null,
@@ -41,8 +35,8 @@ export default (state: State = initialState, action: Action) => {
         Object.values(action.projects).forEach(project => {
           const projectId = project.guppy.id;
 
-          Object.entries(project.scripts).forEach(([taskId, taskCommand]) => {
-            const uniqueTaskId = buildUniqueTaskId(projectId, taskId);
+          Object.entries(project.scripts).forEach(([taskName, taskCommand]) => {
+            const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
             // If this task already exists, we need to be careful.
             //
@@ -60,7 +54,7 @@ export default (state: State = initialState, action: Action) => {
 
             draftState[uniqueTaskId] = buildNewTask(
               projectId,
-              taskId,
+              taskName,
               taskCommand
             );
           });
@@ -74,12 +68,12 @@ export default (state: State = initialState, action: Action) => {
       const projectId = project.guppy.id;
 
       return produce(state, draftState => {
-        Object.entries(project.scripts).forEach(([taskId, taskCommand]) => {
-          const uniqueTaskId = buildUniqueTaskId(projectId, taskId);
+        Object.entries(project.scripts).forEach(([taskName, taskCommand]) => {
+          const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
           draftState[uniqueTaskId] = buildNewTask(
             projectId,
-            taskId,
+            taskName,
             taskCommand
           );
         });
@@ -87,9 +81,9 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case START_TASK: {
-      const { projectId, taskId, timestamp } = action;
+      const { projectId, taskName, timestamp } = action;
 
-      const uniqueTaskId = buildUniqueTaskId(projectId, taskId);
+      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
         draftState[uniqueTaskId].status = 'running';
@@ -99,9 +93,9 @@ export default (state: State = initialState, action: Action) => {
 
     case ABORT_TASK:
     case COMPLETE_TASK: {
-      const { projectId, taskId, timestamp } = action;
+      const { projectId, taskName, timestamp } = action;
 
-      const uniqueTaskId = buildUniqueTaskId(projectId, taskId);
+      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
         draftState[uniqueTaskId].status = 'idle';
@@ -113,3 +107,12 @@ export default (state: State = initialState, action: Action) => {
       return state;
   }
 };
+
+//
+//
+//
+// Selectors
+type GlobalState = { tasks: State };
+
+export const getTasksForProjectId = (projectId, state: GlobalState) =>
+  Object.values(state.tasks).filter(task => task.projectId === projectId);

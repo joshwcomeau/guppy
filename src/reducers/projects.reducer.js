@@ -1,12 +1,14 @@
 // @flow
 import { combineReducers } from 'redux';
+
 import { ADD_PROJECT, REFRESH_PROJECTS, SELECT_PROJECT } from '../actions';
+import { getTasksForProjectId } from './tasks.reducer';
 
 import type { Action } from 'redux';
-import type { Project } from '../types';
+import type { ProjectInternal, Project } from '../types';
 
 type ById = {
-  [key: string]: Project,
+  [key: string]: ProjectInternal,
 };
 type SelectedId = ?string;
 
@@ -64,13 +66,49 @@ export default combineReducers({ byId, selectedId });
 // Selectors
 type GlobalState = { projects: State };
 
+// Our projects in-reducer are essentially database items that represent the
+// package.json on disk.
+//
+// For using within the app, though, we can do a few things to make it nicer
+// to work with:
+//
+//  - Combine it with the tasks in `tasks.reducer`, since this is much more
+//    useful than project.scripts
+//  - Solve the ugliness with `project.guppy.X`
+const prepareProjectForConsumption = (
+  project: ProjectInternal,
+  state: GlobalState
+): Project => {
+  return {
+    id: project.guppy.id,
+    name: project.guppy.name,
+    type: project.guppy.type,
+    icon: project.guppy.icon,
+    dependencies: project.dependencies,
+    tasks: getTasksForProjectId(project.guppy.id, state),
+  };
+};
+
 export const getProjectsArray = (state: GlobalState) =>
-  Object.values(state.projects.byId);
+  Object.values(state.projects.byId).map(project =>
+    prepareProjectForConsumption(project, state)
+  );
 
 export const getSelectedProjectId = (state: GlobalState) =>
   state.projects.selectedId;
 
-export const getSelectedProject = (state: GlobalState) =>
-  state.projects.selectedId
-    ? state.projects.byId[state.projects.selectedId]
-    : null;
+export const getSelectedProject = (state: GlobalState) => {
+  const selectedId = getSelectedProjectId(state);
+
+  if (!selectedId) {
+    return null;
+  }
+
+  const project = state.projects.byId[selectedId];
+
+  if (!project) {
+    throw new Error('Project not found for ID: ' + selectedId);
+  }
+
+  return prepareProjectForConsumption(project, state);
+};

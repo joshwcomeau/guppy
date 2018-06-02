@@ -50,7 +50,7 @@ class App extends Component<Props> {
 
     // TODO: Redirect if project exists
     if (selectedProject) {
-      history.replace(buildUrlForProjectId(selectedProject.guppy.id));
+      history.replace(buildUrlForProjectId(selectedProject.id));
     }
 
     history.listen(location => {

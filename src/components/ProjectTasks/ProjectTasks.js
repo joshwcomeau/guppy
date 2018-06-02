@@ -24,31 +24,32 @@ class ProjectTasks extends PureComponent<Props> {
   render() {
     const { project, location } = this.props;
 
-    const taskIds = Object.keys(project.scripts);
+    const taskNames = project.tasks.map(task => task.taskName);
 
-    const selectedTaskId = extractSelectedTaskFromUrl(location) || taskIds[0];
+    const selectedTaskName =
+      extractSelectedTaskFromUrl(location) || taskNames[0];
 
     return (
       <Wrapper>
         <TaskList>
-          {taskIds.map(taskId => (
+          {taskNames.map(taskName => (
             <ProjectTaskNavItem
-              key={taskId}
-              projectId={project.guppy.id}
-              taskId={taskId}
+              key={taskName}
+              projectId={project.id}
+              taskName={taskName}
               status="running"
-              isSelected={taskId === selectedTaskId}
+              isSelected={taskName === selectedTaskName}
             />
           ))}
         </TaskList>
         <TaskInfoWrapper>
           <Switch>
             <Route
-              path="/project/:projectId/tasks/:taskId"
+              path="/project/:projectId/tasks/:taskName"
               component={ProjectTaskManagement}
             />
             <Redirect
-              to={buildUrlForProjectTask(project.guppy.id, selectedTaskId)}
+              to={buildUrlForProjectTask(project.id, selectedTaskName)}
             />
           </Switch>
         </TaskInfoWrapper>
@@ -69,7 +70,7 @@ const TaskList = styled.div`
   background: ${COLORS.gray[100]};
   padding-top: 10px;
   padding-bottom: 10px;
-  box-shadow: inset -4px 0px 0px rgba(0, 0, 0, 0.1);
+  border-right: 4px solid rgba(0, 0, 0, 0.1);
 `;
 
 const Task = styled.div`

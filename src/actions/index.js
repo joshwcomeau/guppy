@@ -63,33 +63,33 @@ export const selectProject = (projectId: string) => ({
 
 export const startTask = (
   projectId: string,
-  taskId: string,
+  taskName: string,
   timestamp: Date
 ) => ({
   type: START_TASK,
   projectId,
-  taskId,
+  taskName,
   timestamp,
 });
 
 export const abortTask = (
   projectId: string,
-  taskId: string,
+  taskName: string,
   timestamp: Date
 ) => ({
   type: ABORT_TASK,
   projectId,
-  taskId,
+  taskName,
   timestamp,
 });
 
 export const completeTask = (
   projectId: string,
-  taskId: string,
+  taskName: string,
   timestamp: Date
 ) => ({
   type: COMPLETE_TASK,
   projectId,
-  taskId,
+  taskName,
   timestamp,
 });

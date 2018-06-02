@@ -1,3 +1,4 @@
+// @flow
 export type ProjectType = 'create-react-app' | 'gatsby';
 
 export type SubmittedProject = {
@@ -6,7 +7,28 @@ export type SubmittedProject = {
   projectIcon: string,
 };
 
-export type Project = {
+export type Task = {
+  projectId: string,
+  taskName: string,
+  taskCommand: string,
+  status: 'idle' | 'running',
+  timeSinceStatusChange: Date,
+  logs: string,
+};
+
+type AppType = 'create-react-app' | 'gatsby';
+
+/**
+ * ProjectInternal is the behind-the-scenes type used in projects.reducer.
+ * This is a copy of the project's package.json (which means it may have many
+ * more fields, but these are the only ones I care about).
+ */
+export type ProjectInternal = {
+  // NOTE: this `name` is the same as `guppy.id`. It's the actual name of the
+  // project, in package.json.
+  // The reason for this confusing discrepancy is that NPM package names are
+  // lowercase-and-dash only, whereas I want Guppy projects to be able to use
+  // any UTF-8 characters.
   name: string,
   dependencies: {
     [key: string]: string,
@@ -16,16 +38,26 @@ export type Project = {
   },
   guppy: {
     id: string,
-    type: 'create-react-app' | 'gatsby',
     name: string,
+    type: AppType,
     icon: string,
   },
 };
 
-// TODO: Find a better way to use Flow and Redux together :/
-export type Action = {
-  type: string,
-  [key: string]: any,
+export type Project = {
+  // `id` here is equal to `name` in `ProjectInternal`
+  id: string,
+  // `name` is the friendly name, with full UTF-8 character access.
+  name: string,
+  type: AppType,
+  icon: string,
+  // `dependencies` is unchanged from `ProjectInternal`.
+  dependencies: {
+    [key: string]: string,
+  },
+  // `tasks` is a superset of `ProjectInternal.scripts`. Includes much more
+  // info.
+  tasks: Array<Task>,
 };
 
 export type TaskStatus = 'running' | 'idle' | 'error';

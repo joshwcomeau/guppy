@@ -19,11 +19,9 @@ const updateLocalStorage = value =>
  * persist it to localStorage.
  */
 export const handleStoreUpdates = function handleStoreUpdates(store) {
-  // Because most data that Guppy deals with is written to disk,
-  // we only need to store a small slice of the Redux store in localStorage.
-  const { onboardingStatus, projects } = store.getState();
+  const { onboardingStatus, projects, tasks } = store.getState();
 
-  updateLocalStorage(JSON.stringify({ onboardingStatus, projects }));
+  updateLocalStorage(JSON.stringify({ onboardingStatus, projects, tasks }));
 };
 
 /**

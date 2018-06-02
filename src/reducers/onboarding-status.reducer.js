@@ -6,7 +6,7 @@ import {
   ADD_PROJECT,
 } from '../actions';
 
-import type { Action } from '../types';
+import type { Action } from 'redux';
 
 export type State =
   | 'brand-new'
