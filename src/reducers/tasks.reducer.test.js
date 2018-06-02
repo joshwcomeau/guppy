@@ -1,7 +1,7 @@
 import {
   REFRESH_PROJECTS,
   ADD_PROJECT,
-  START_TASK,
+  RUN_TASK,
   ABORT_TASK,
   COMPLETE_TASK,
 } from '../actions';
@@ -189,7 +189,7 @@ describe('Tasks reducer', () => {
     });
   });
 
-  describe(START_TASK, () => {
+  describe(RUN_TASK, () => {
     test('marks a task as running', () => {
       const initialState = {
         'foo-start': {
@@ -210,7 +210,7 @@ describe('Tasks reducer', () => {
 
       const timestamp = new Date();
       const action = {
-        type: START_TASK,
+        type: RUN_TASK,
         projectId: 'foo',
         taskName: 'start',
         timestamp,

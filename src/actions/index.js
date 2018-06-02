@@ -1,7 +1,7 @@
 // @flow
 import readLocalProjectsFromDisk from '../services/read-local-projects.service';
 
-import type { Project } from '../types';
+import type { Project, Task } from '../types';
 
 //
 //
@@ -16,7 +16,7 @@ export const ADD_PROJECT = 'ADD_PROJECT';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
-export const START_TASK = 'START_TASK';
+export const RUN_TASK = 'RUN_TASK';
 export const ABORT_TASK = 'ABORT_TASK';
 export const COMPLETE_TASK = 'COMPLETE_TASK';
 
@@ -61,35 +61,23 @@ export const selectProject = (projectId: string) => ({
   projectId,
 });
 
-export const startTask = (
-  projectId: string,
-  taskName: string,
-  timestamp: Date
-) => ({
-  type: START_TASK,
-  projectId,
-  taskName,
+export const runTask = (task: Task, timestamp: Date) => ({
+  type: RUN_TASK,
+  projectId: task.projectId,
+  taskName: task.taskName,
   timestamp,
 });
 
-export const abortTask = (
-  projectId: string,
-  taskName: string,
-  timestamp: Date
-) => ({
+export const abortTask = (task: Task, timestamp: Date) => ({
   type: ABORT_TASK,
-  projectId,
-  taskName,
+  projectId: task.projectId,
+  taskName: task.taskName,
   timestamp,
 });
 
-export const completeTask = (
-  projectId: string,
-  taskName: string,
-  timestamp: Date
-) => ({
+export const completeTask = (task: Task, timestamp: Date) => ({
   type: COMPLETE_TASK,
-  projectId,
-  taskName,
+  projectId: task.projectId,
+  taskName: task.taskName,
   timestamp,
 });

@@ -2,7 +2,7 @@ import produce from 'immer';
 import {
   REFRESH_PROJECTS,
   ADD_PROJECT,
-  START_TASK,
+  RUN_TASK,
   ABORT_TASK,
   COMPLETE_TASK,
 } from '../actions';
@@ -80,7 +80,7 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
-    case START_TASK: {
+    case RUN_TASK: {
       const { projectId, taskName, timestamp } = action;
 
       const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
@@ -116,3 +116,13 @@ type GlobalState = { tasks: State };
 
 export const getTasksForProjectId = (projectId, state: GlobalState) =>
   Object.values(state.tasks).filter(task => task.projectId === projectId);
+
+export const getTaskByProjectIdAndTaskName = (
+  projectId: string,
+  taskName: string,
+  state: GlobalState
+) => {
+  const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
+
+  return state.tasks[uniqueTaskId];
+};
