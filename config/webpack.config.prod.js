@@ -150,7 +150,6 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -185,7 +184,6 @@ module.exports = {
               baseConfig: {
                 extends: [require.resolve('eslint-config-react-app')],
               },
-              
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -221,7 +219,6 @@ module.exports = {
               {
                 loader: require.resolve('babel-loader'),
                 options: {
-                  
                   presets: [require.resolve('babel-preset-react-app')],
                   plugins: [
                     [
@@ -456,7 +453,7 @@ module.exports = {
           // https://github.com/facebook/create-react-app/issues/2612
           return;
         }
-        console.log(message);
+        console.info(message);
       },
       minify: true,
       // Don't precache sourcemaps (they're large) and build asset manifest:
