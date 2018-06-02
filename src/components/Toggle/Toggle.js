@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { Motion, spring } from 'react-motion';
 
@@ -12,27 +12,52 @@ type Props = {
   onToggle: (isToggled: boolean) => void,
 };
 
-const Toggle = ({ isToggled, size, padding, onToggle }: Props) => {
-  const doublePadding = padding * 2;
-  return (
-    <Wrapper
-      height={size + doublePadding}
-      width={size * 2 + doublePadding}
-      padding={padding}
-      onClick={() => onToggle(!isToggled)}
-    >
-      <OnBackground isVisible={isToggled} />
-      <Motion style={{ translate: spring(isToggled ? 100 : 0) }}>
-        {({ translate }) => <Ball size={size} translate={translate} />}
-      </Motion>
-    </Wrapper>
-  );
-};
+class Toggle extends PureComponent<Props> {
+  static defaultProps = {
+    size: 24,
+    padding: 2,
+  };
 
-Toggle.defaultProps = {
-  size: 24,
-  padding: 2,
-};
+  lastTranslateVal: number = this.props.isToggled ? 100 : 0;
+
+  renderBall = ({ translate }: { translate: number }) => {
+    const { size } = this.props;
+
+    const translateDelta = Math.abs(this.lastTranslateVal - translate);
+
+    this.lastTranslateVal = translate;
+
+    const stretch = 1 + translateDelta / 40;
+
+    return <Ball size={size} translate={translate} stretch={stretch} />;
+  };
+
+  render() {
+    const { isToggled, size, padding, onToggle } = this.props;
+    const doublePadding = padding * 2;
+
+    return (
+      <Wrapper
+        height={size + doublePadding}
+        width={size * 2 + doublePadding}
+        padding={padding}
+        onClick={() => onToggle(!isToggled)}
+      >
+        <OnBackground isVisible={isToggled} />
+        <Motion
+          style={{
+            translate: spring(isToggled ? 100 : 0, {
+              stiffness: 220,
+              damping: 19,
+            }),
+          }}
+        >
+          {this.renderBall}
+        </Motion>
+      </Wrapper>
+    );
+  }
+}
 
 const Wrapper = styled.button`
   position: relative;
@@ -62,14 +87,22 @@ const OnBackground = styled.div`
   transition: opacity 300ms;
 `;
 
-const Ball = styled.div`
+const Ball = styled.div.attrs({
+  style: props => ({
+    transform: `
+      translateX(${props.translate}%)
+      scaleX(${props.stretch})
+    `,
+  }),
+})`
   position: relative;
   z-index: 2;
   width: ${props => props.size}px;
   height: ${props => props.size}px;
   background: ${COLORS.white};
   border-radius: 50%;
-  transform: translateX(${props => props.translate}%);
+
+  transform-origin: center center;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
 

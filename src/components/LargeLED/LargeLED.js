@@ -1,31 +1,44 @@
 // @flow
 import React, { Component } from 'react';
 import styled, { keyframes } from 'styled-components';
+import Color from 'color';
 
 import { COLORS } from '../../constants';
 
 import type { TaskStatus } from '../../types';
 
 type Props = {
+  size: number,
   status: TaskStatus,
 };
 
 class LargeLED extends Component<Props> {
+  static defaultProps = {
+    size: 64,
+  };
+
   render() {
-    const OUTLINE_SIZE = 14;
+    const { size } = this.props;
+
+    const OUTLINE_SIZE = size * (5.5 / 8);
+
     return (
-      <LED>
-        <OutlineSvg width={OUTLINE_SIZE} height={OUTLINE_SIZE}>
+      <LED size={size}>
+        <OutlineSvg
+          width={OUTLINE_SIZE}
+          height={OUTLINE_SIZE}
+          viewBox="0 0 28 28"
+        >
           <ellipse
-            cx={OUTLINE_SIZE / 2}
-            cy={OUTLINE_SIZE / 2}
-            rx={OUTLINE_SIZE / 2}
-            ry={OUTLINE_SIZE / 2}
+            cx={14}
+            cy={14}
+            rx={14}
+            ry={14}
             fill="none"
             stroke="#FFF"
-            strokeWidth={2}
-            strokeDasharray="4 100"
-            strokeDashoffset={-25}
+            strokeWidth={3}
+            strokeDasharray="6 100"
+            strokeDashoffset={-50}
             strokeLinecap="round"
           />
         </OutlineSvg>
@@ -44,14 +57,24 @@ const fadeInOut = keyframes`
 const LED = styled.div`
   display: inline-block;
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: ${props => props.size}px;
+  height: ${props => props.size}px;
   border-radius: 50%;
-  /* background-color: ${COLORS.green[500]}; */
-  background-image: radial-gradient(farthest-corner at 10px 5px,
-      ${COLORS.lime[500]} 0%, ${COLORS.green[700]} 100%);
-  /* box-shadow: 0px 2px 12px -2px ${COLORS.green[500]}; */
+  background-image: radial-gradient(
+    farthest-corner at 10px 5px,
+    ${COLORS.lime[500]} 0%,
+    ${COLORS.green[500]} 100%
+  );
   border: 2px solid #fff;
+  box-shadow: inset 1px 1px 5px
+      ${Color(COLORS.green[900])
+        .alpha(0.25)
+        .rgb()
+        .string()},
+    inset -3px -3px 10px -2px ${Color(COLORS.green[900])
+        .alpha(0.5)
+        .rgb()
+        .string()};
 `;
 
 const OutlineSvg = styled.svg`
@@ -72,8 +95,12 @@ const Pulser = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: ${props => props.color};
-  animation: ${fadeInOut} 5000ms infinite;
+  background-image: radial-gradient(
+    farthest-corner at 10px 5px,
+    ${COLORS.lime[500]} 0%,
+    ${COLORS.green[700]} 100%
+  );
+  animation: ${fadeInOut} 2500ms infinite;
   border-radius: 50%;
 `;
 
