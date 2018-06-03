@@ -11,6 +11,8 @@ import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
 import DevelopmentServerPane from '../DevelopmentServerPane';
+import TaskRunnerPane from '../TaskRunnerPane';
+import DependencyManagementPane from '../DependencyManagementPane';
 
 import type { Action } from 'redux';
 import type { Project } from '../../types';
@@ -37,15 +39,15 @@ class ProjectPage extends Component<Props> {
 
         <Spacer size={30} />
 
-        <DevelopmentServerPane />
+        <DevelopmentServerPane leftSideWidth={300} />
 
         <Spacer size={30} />
 
-        <SecondaryModules>
-          <TaskRunnerPane />
-          <Spacer size={30} />
-          <DependencyManagementPane />
-        </SecondaryModules>
+        {/* <SecondaryModules> */}
+        <TaskRunnerPane leftSideWidth={200} />
+        <Spacer size={30} />
+        <DependencyManagementPane />
+        {/* </SecondaryModules> */}
       </MainContentWrapper>
     );
   }

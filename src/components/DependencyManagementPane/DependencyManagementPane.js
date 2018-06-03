@@ -8,22 +8,21 @@ import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 
 import Pane from '../Pane';
-import TerminalOutput from '../TerminalOutput';
 
-import type { Task } from '../../types';
+import type { Project } from '../../types';
 
 type Props = {
-  tasks: Array<Task>,
+  project: Project,
 };
 
-class TaskRunnerPane extends PureComponent<Props> {
+class DependencyManagementPane extends PureComponent<Props> {
   render() {
     return (
       <Pane
-        title="Tasks"
+        title="Dependencies"
         primaryActionChildren={'Action'}
         leftSideChildren="Stuff"
-        rightSideChildren={<TerminalOutput height={300} logs={[]} />}
+        rightSideChildren="Other stuff"
       />
     );
   }
@@ -47,4 +46,4 @@ const mapDispatchToProps = { runTask, abortTask };
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TaskRunnerPane);
+)(DependencyManagementPane);

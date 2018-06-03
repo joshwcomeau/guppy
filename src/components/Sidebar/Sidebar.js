@@ -165,7 +165,7 @@ const Wrapper = styled.nav.attrs({
     transform: `translateX(${props.offset})`,
   }),
 })`
-  position: absolute;
+  position: fixed;
   z-index: ${Z_INDICES.sidebar};
   top: 0;
   left: -${SIDEBAR_OVERFLOW}px;

@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -9,8 +9,7 @@ import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 
-import Card from '../Card';
-import Heading from '../Heading';
+import Pane from '../Pane';
 import Toggle from '../Toggle';
 import TerminalOutput from '../TerminalOutput';
 import Paragraph from '../Paragraph';
@@ -55,67 +54,44 @@ class DevelopmentServerPane extends PureComponent<Props> {
     const isRunning = task.status !== 'idle';
 
     return (
-      <Wrapper>
-        <LeftSide>
-          <Header>
-            <Heading>Dev Server</Heading>
-            <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
-          </Header>
-          <Description>
-            Runs a local development server that updates whenever you make
-            changes to the files.
-          </Description>
+      <Pane
+        title="Dev Server"
+        primaryActionChildren={
+          <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
+        }
+        leftSideChildren={
+          <Fragment>
+            <Description>
+              Runs a local development server that updates whenever you make
+              changes to the files.
+            </Description>
 
-          <DevelopmentServerStatus status={task.status} />
+            <DevelopmentServerStatus status={task.status} />
 
-          <DocumentationLink>
-            <ExternalLink
-              color={COLORS.blue[700]}
-              hoverColor={COLORS.blue[500]}
-              href="https://github.com/facebook/create-react-app#user-guide"
-            >
-              View Documentation
-            </ExternalLink>
-          </DocumentationLink>
-        </LeftSide>
-        <RightSide>
-          <TerminalOutput height={300} logs={task.logs} />
-        </RightSide>
-      </Wrapper>
+            <DocumentationLink>
+              <ExternalLink
+                color={COLORS.blue[700]}
+                hoverColor={COLORS.blue[500]}
+                href="https://github.com/facebook/create-react-app#user-guide"
+              >
+                View Documentation
+              </ExternalLink>
+            </DocumentationLink>
+          </Fragment>
+        }
+        rightSideChildren={<TerminalOutput height={300} logs={task.logs} />}
+      />
     );
   }
 }
-
-const Wrapper = Card.extend`
-  display: flex;
-`;
-
-const LeftSide = styled.div`
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
 
 const DocumentationLink = styled.div`
   line-height: 35px;
   text-align: center;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
 const Description = styled.div`
   font-size: 1.125rem;
-`;
-
-const RightSide = styled.div`
-  padding-left: 20px;
-  flex: 1;
 `;
 
 const mapStateToProps = state => {
