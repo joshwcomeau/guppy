@@ -7,7 +7,7 @@ import { runTask, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 
-import Pane from '../Pane';
+import Module from '../Module';
 
 import type { Project } from '../../types';
 
@@ -18,12 +18,9 @@ type Props = {
 class DependencyManagementPane extends PureComponent<Props> {
   render() {
     return (
-      <Pane
-        title="Dependencies"
-        primaryActionChildren={'Action'}
-        leftSideChildren="Stuff"
-        rightSideChildren="Other stuff"
-      />
+      <Module title="Dependencies" primaryActionChildren={'Action'}>
+        Dependency things
+      </Module>
     );
   }
 }

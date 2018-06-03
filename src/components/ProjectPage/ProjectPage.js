@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { extractProjectTabFromUrl } from '../../services/location.service';
+import { COLORS } from '../../constants';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -33,9 +34,13 @@ class ProjectPage extends Component<Props> {
 
     return (
       <MainContentWrapper>
-        <PixelShifter x={-2}>
-          <Heading size="large">{project.name}</Heading>
-        </PixelShifter>
+        <Header>
+          <PixelShifter x={-2}>
+            <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
+              {project.name}
+            </Heading>
+          </PixelShifter>
+        </Header>
 
         <Spacer size={30} />
 
@@ -43,18 +48,16 @@ class ProjectPage extends Component<Props> {
 
         <Spacer size={30} />
 
-        {/* <SecondaryModules> */}
         <TaskRunnerPane leftSideWidth={200} />
         <Spacer size={30} />
         <DependencyManagementPane />
-        {/* </SecondaryModules> */}
       </MainContentWrapper>
     );
   }
 }
 
-const SecondaryModules = styled.div`
-  display: flex;
+const Header = styled.div`
+  /* padding: 0 10px; */
 `;
 
 const mapStateToProps = state => ({

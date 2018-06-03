@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants';
 
 type Props = {
-  size: 'small' | 'medium' | 'large',
+  size: 'small' | 'medium' | 'large' | 'xlarge',
   children: React$Node,
 };
 
@@ -24,6 +24,8 @@ class Heading extends Component<Props> {
         return <HeadingMedium {...delegated} />;
       case 'large':
         return <HeadingLarge {...delegated} />;
+      case 'xlarge':
+        return <HeadingXLarge {...delegated} />;
     }
   }
 }
@@ -44,6 +46,11 @@ const HeadingMedium = HeadingSmall.withComponent('h3').extend`
 const HeadingLarge = HeadingSmall.withComponent('h1').extend`
   font-size: 42px;
   letter-spacing: -1px;
+`;
+
+const HeadingXLarge = HeadingSmall.withComponent('h1').extend`
+  font-size: 60px;
+  letter-spacing: -2px;
 `;
 
 export default Heading;

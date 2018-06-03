@@ -8,7 +8,6 @@ import type { TaskStatus } from '../../types';
 
 type Props = {
   status: TaskStatus,
-  isVisible: boolean,
 };
 
 const getColorForStatus = ({ status }: Props) => {
@@ -29,5 +28,5 @@ export default styled.div`
   margin-right: 10px;
   border-radius: 100%;
   background-color: ${getColorForStatus};
-  opacity: ${props => (props.isVisible ? 1 : 0)};
+  opacity: 1;
 `;

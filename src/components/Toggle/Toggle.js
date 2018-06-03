@@ -14,22 +14,41 @@ type Props = {
 
 class Toggle extends PureComponent<Props> {
   static defaultProps = {
-    size: 24,
+    size: 32,
     padding: 2,
   };
 
-  lastTranslateVal: number = this.props.isToggled ? 100 : 0;
+  lastTranslateVal: ?number = null;
+  lastFrameTime: ?number = null;
 
   renderBall = ({ translate }: { translate: number }) => {
     const { size } = this.props;
 
+    if (this.lastTranslateVal == null || this.lastFrameTime == null) {
+      this.lastTranslateVal = translate;
+      this.lastFrameTime = performance.now();
+      return <Ball size={size} translate={translate} stretch={1} />;
+    }
+
+    const now = performance.now();
+
     const translateDelta = Math.abs(this.lastTranslateVal - translate);
+    const timeDelta = now - this.lastFrameTime;
 
     this.lastTranslateVal = translate;
+    this.lastFrameTime = now;
 
-    const stretch = 1 + translateDelta / 40;
+    const timeAdjustment = 1 / (timeDelta / 16.666);
 
-    return <Ball size={size} translate={translate} stretch={stretch} />;
+    const stretch = translateDelta / 40;
+
+    return (
+      <Ball
+        size={size}
+        translate={translate}
+        stretch={1 + stretch * timeAdjustment}
+      />
+    );
   };
 
   render() {

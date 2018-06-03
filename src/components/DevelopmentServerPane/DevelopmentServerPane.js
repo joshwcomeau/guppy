@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -9,7 +9,9 @@ import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 
-import Pane from '../Pane';
+import Module from '../Module';
+import Card from '../Card';
+import Heading from '../Heading';
 import Toggle from '../Toggle';
 import TerminalOutput from '../TerminalOutput';
 import Paragraph from '../Paragraph';
@@ -54,13 +56,14 @@ class DevelopmentServerPane extends PureComponent<Props> {
     const isRunning = task.status !== 'idle';
 
     return (
-      <Pane
-        title="Dev Server"
+      <Module
+        title="Development Server"
         primaryActionChildren={
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
-        leftSideChildren={
-          <Fragment>
+      >
+        <Wrapper>
+          <LeftSide>
             <Description>
               Runs a local development server that updates whenever you make
               changes to the files.
@@ -77,21 +80,46 @@ class DevelopmentServerPane extends PureComponent<Props> {
                 View Documentation
               </ExternalLink>
             </DocumentationLink>
-          </Fragment>
-        }
-        rightSideChildren={<TerminalOutput height={300} logs={task.logs} />}
-      />
+          </LeftSide>
+          <RightSide>
+            <TerminalOutput height={300} logs={task.logs} />
+          </RightSide>
+        </Wrapper>
+      </Module>
     );
   }
 }
+
+const Wrapper = Card.extend`
+  display: flex;
+`;
+
+const LeftSide = styled.div`
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
 const DocumentationLink = styled.div`
   line-height: 35px;
   text-align: center;
 `;
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
 const Description = styled.div`
   font-size: 1.125rem;
+`;
+
+const RightSide = styled.div`
+  padding-left: 20px;
+  flex: 1;
 `;
 
 const mapStateToProps = state => {

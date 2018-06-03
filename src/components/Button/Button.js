@@ -114,7 +114,7 @@ const ButtonBase = styled.button`
 
 const SmallButton = styled(ButtonBase)`
   padding: ${props => (props.noPadding ? '0px' : '0px 14px')};
-  height: ${props => (props.noPadding ? 'auto' : '34px')};
+  height: ${props => (props.noPadding ? 'auto' : '30px')};
   border-radius: 17px;
   font-size: 14px;
 `;
