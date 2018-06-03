@@ -28,7 +28,6 @@ type Props = {
 class DevelopmentServerPane extends PureComponent<Props> {
   handleToggle = (isToggled: boolean) => {
     const { task, runTask, abortTask } = this.props;
-    console.log('toggle', task);
 
     if (!task) {
       // Should be impossible, since the Toggle control won't render without

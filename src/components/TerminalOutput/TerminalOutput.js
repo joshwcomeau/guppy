@@ -7,9 +7,6 @@ import { COLORS } from '../../constants';
 var Convert = require('ansi-to-html');
 var convert = new Convert();
 
-var AU = require('ansi_up');
-var ansi_up = new AU.default();
-
 type Props = {
   height?: number,
   logs: Array<string>,
@@ -21,15 +18,18 @@ class TerminalOutput extends PureComponent<Props> {
     height: 200,
   };
 
-  componentDidUpdate() {
-    if (!this.node) {
-      return;
-    }
+  node: ?HTMLElement;
 
+  componentDidUpdate() {
     this.scrollToBottom();
   }
 
   scrollToBottom = () => {
+    // TODO: can element.scrollIntoView(false) be used instead?
+    if (!this.node) {
+      return;
+    }
+
     const scrollHeight = this.node.scrollHeight;
     const height = this.node.clientHeight;
     const maxScrollTop = scrollHeight - height;
