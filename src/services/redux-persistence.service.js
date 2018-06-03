@@ -26,10 +26,34 @@ export const handleStoreUpdates = function handleStoreUpdates(store) {
 
 /**
  * getInitialState
- * Builds the initial Redux state, using data in localStorage, as well as the
- * auth token from the cookie. Handles validating and resetting the state as
- * needed.
+ * Builds the initial Redux state, using data in localStorage.
  */
 export const getInitialState = () => {
-  return JSON.parse(localStorage.getItem(REDUX_STATE_KEY) || '{}');
+  const reconstructedState = JSON.parse(
+    localStorage.getItem(REDUX_STATE_KEY) || '{}'
+  );
+
+  // Certain components of the state should be re-initialized.
+  // It doesn't matter if the last snapshot of state in the previous session
+  // had a running dev-server, that server was closed when Guppy was.
+  //
+  // NOTE: My initial idea was to do this in `handleStoreUpdates` so that this
+  // erroneous data was never committed to localStorage in the first place...
+  // but it takes about 8ms of synchronous work time to run (in a test env with
+  // only 4 projects).
+  // Given that `handleStoreUpdates` runs whenever the redux state changes,
+  // this felt too expensive
+  const scrubbedTasks = Object.keys(reconstructedState.tasks).reduce(
+    (acc, taskId) => {
+      const task = { ...reconstructedState.tasks[taskId] };
+      task.status = 'idle';
+
+      return { ...acc, [taskId]: task };
+    },
+    {}
+  );
+
+  reconstructedState.tasks = scrubbedTasks;
+
+  return reconstructedState;
 };

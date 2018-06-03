@@ -24,27 +24,19 @@ export default (state: State = initialState, action: Action) => {
 
   switch (action.type) {
     case START_CREATING_NEW_PROJECT: {
-      if (state === 'brand-new') {
-        return 'creating-first-project';
-      }
+      return state === 'brand-new' ? 'creating-first-project' : state;
     }
 
     case CANCEL_CREATING_NEW_PROJECT: {
-      if (state === 'creating-first-project') {
-        return 'brand-new';
-      }
+      return state === 'creating-first-project' ? 'brand-new' : state;
     }
 
     case ADD_PROJECT: {
-      if (state === 'creating-first-project') {
-        return 'introducing-sidebar';
-      }
+      return state === 'creating-first-project' ? 'introducing-sidebar' : state;
     }
 
     case DISMISS_SIDEBAR_INTRO: {
-      if (state === 'introducing-sidebar') {
-        return 'done';
-      }
+      return state === 'introducing-sidebar' ? 'done' : state;
     }
 
     default:

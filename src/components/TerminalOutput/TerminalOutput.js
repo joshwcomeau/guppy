@@ -46,6 +46,7 @@ class TerminalOutput extends PureComponent<Props> {
           <LogWrapper>
             {logs.map(log => (
               <Log
+                key={log}
                 dangerouslySetInnerHTML={{
                   __html: convert.toHtml(
                     log

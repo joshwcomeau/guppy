@@ -1,3 +1,4 @@
+// @flow
 import produce from 'immer';
 import {
   REFRESH_PROJECTS,
@@ -10,8 +11,6 @@ import {
 
 import type { Action } from 'redux';
 import type { Task } from '../types';
-
-// @flow
 
 type State = {
   [uniqueTaskId: string]: Task,

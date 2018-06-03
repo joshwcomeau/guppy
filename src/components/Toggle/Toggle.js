@@ -66,9 +66,14 @@ const Wrapper = styled.button`
   padding: ${props => props.padding}px;
   border: none;
   border-radius: ${props => props.height / 2}px;
-  background-color: ${COLORS.gray[200]};
+  background-image: linear-gradient(
+    45deg,
+    ${COLORS.gray[400]},
+    ${COLORS.gray[200]}
+  );
   overflow: hidden; /* Hide 'OnBackground' corners */
   outline: none; /* TODO: better a11y story */
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 `;
 
@@ -86,6 +91,7 @@ const OnBackground = styled.div`
   );
   opacity: ${props => (props.isVisible ? 1 : 0)};
   transition: opacity 300ms;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
 
 const Ball = styled.div.attrs({

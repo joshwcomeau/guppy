@@ -6,13 +6,13 @@ type Location = {
 };
 
 export const extractProjectIdFromUrl = (location: Location) => {
-  const regexMatch = location.pathname.match(/\/project\/([\w\-]+)/i);
+  const regexMatch = location.pathname.match(/\/project\/([\w-]+)/i);
 
   if (!regexMatch) {
     return null;
   }
 
-  const [matchStr, projectId] = regexMatch;
+  const [, projectId] = regexMatch;
 
   return projectId;
 };
@@ -20,13 +20,13 @@ export const extractProjectIdFromUrl = (location: Location) => {
 export const extractProjectTabFromUrl = (location: Location) => {
   // Match the entire url, to guard against false-positive matches from other
   // URLs.
-  const regexMatch = location.pathname.match(/\/project\/[\w\-]+\/([\w]+)/i);
+  const regexMatch = location.pathname.match(/\/project\/[\w-]+\/([\w]+)/i);
 
   if (!regexMatch) {
     return null;
   }
 
-  const [matchStr, projectTab] = regexMatch;
+  const [, projectTab] = regexMatch;
 
   return projectTab;
 };
@@ -40,7 +40,7 @@ export const extractSelectedTaskFromUrl = (location: Location) => {
     return null;
   }
 
-  const [matchStr, task] = regexMatch;
+  const [, task] = regexMatch;
 
   return task;
 };
