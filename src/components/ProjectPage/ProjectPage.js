@@ -38,12 +38,22 @@ class ProjectPage extends Component<Props> {
         <Spacer size={30} />
 
         <DevelopmentServerPane />
+
+        <Spacer size={30} />
+
+        <SecondaryModules>
+          <TaskRunnerPane />
+          <Spacer size={30} />
+          <DependencyManagementPane />
+        </SecondaryModules>
       </MainContentWrapper>
     );
   }
 }
 
-const ChildRoutes = styled.div``;
+const SecondaryModules = styled.div`
+  display: flex;
+`;
 
 const mapStateToProps = state => ({
   project: getSelectedProject(state),
