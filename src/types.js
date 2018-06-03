@@ -10,7 +10,8 @@ export type SubmittedProject = {
 export type Task = {
   projectId: string,
   taskName: string,
-  taskCommand: string,
+  processId: number,
+  command: string,
   status: 'idle' | 'running',
   timeSinceStatusChange: Date,
   logs: Array<string>,

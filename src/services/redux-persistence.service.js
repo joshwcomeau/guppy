@@ -47,6 +47,7 @@ export const getInitialState = () => {
     (acc, taskId) => {
       const task = { ...reconstructedState.tasks[taskId] };
       task.status = 'idle';
+      task.logs = [];
 
       return { ...acc, [taskId]: task };
     },

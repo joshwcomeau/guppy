@@ -6,6 +6,7 @@ import {
   RUN_TASK,
   ABORT_TASK,
   COMPLETE_TASK,
+  ATTACH_PROCESS_ID_TO_TASK,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
 } from '../actions';
 
@@ -48,7 +49,6 @@ export default (state: State = initialState, action: Action) => {
             // the log history, and the `timeSinceStatusChange`. So we don't
             // want to overwrite it, we want to merge it.
             if (draftState[uniqueTaskId]) {
-              draftState[uniqueTaskId].logs = [];
               draftState[uniqueTaskId].command = command;
               return;
             }
@@ -99,6 +99,18 @@ export default (state: State = initialState, action: Action) => {
       return produce(state, draftState => {
         draftState[uniqueTaskId].status = 'idle';
         draftState[uniqueTaskId].timeSinceStatusChange = timestamp;
+        delete draftState[uniqueTaskId].processId;
+      });
+    }
+
+    case ATTACH_PROCESS_ID_TO_TASK: {
+      const { task, processId } = action;
+      const { projectId, taskName } = task;
+
+      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
+
+      return produce(state, draftState => {
+        draftState[uniqueTaskId].processId = processId;
       });
     }
 

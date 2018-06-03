@@ -17,6 +17,7 @@ export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
 export const RUN_TASK = 'RUN_TASK';
+export const ATTACH_PROCESS_ID_TO_TASK = 'ATTACH_PROCESS_ID_TO_TASK';
 export const ABORT_TASK = 'ABORT_TASK';
 export const COMPLETE_TASK = 'COMPLETE_TASK';
 export const RECEIVE_DATA_FROM_TASK_EXECUTION =
@@ -67,6 +68,12 @@ export const runTask = (task: Task, timestamp: Date) => ({
   type: RUN_TASK,
   task,
   timestamp,
+});
+
+export const attachProcessIdToTask = (task: Task, processId: number) => ({
+  type: ATTACH_PROCESS_ID_TO_TASK,
+  task,
+  processId,
 });
 
 export const abortTask = (task: Task, timestamp: Date) => ({

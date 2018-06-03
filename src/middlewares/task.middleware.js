@@ -1,8 +1,11 @@
 import {
   RUN_TASK,
   ABORT_TASK,
+  COMPLETE_TASK,
   abortTask,
+  completeTask,
   receiveDataFromTaskExecution,
+  attachProcessIdToTask,
 } from '../actions';
 import { getTaskByProjectIdAndTaskName } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
@@ -13,10 +16,8 @@ const psTree = window.require('ps-tree');
 
 // When the app first loads, we need to get an index of existing projects.
 // The default path for projects is `~/guppy-projects`.
-// TODO: Configurable!
+// TODO: Make this configurable, should live in Redux!
 const parentPath = `${os.homedir()}/guppy-projects`;
-
-const processes = {};
 
 export default store => next => action => {
   switch (action.type) {
@@ -27,7 +28,7 @@ export default store => next => action => {
       // it's a bit weird that I'm re-creating this here, but it's also weird
       // to import the taskId generator function from the reducer...
       // Whatever this is fine for now.
-      const processId = `${projectId}-${taskName}`;
+      const taskId = `${projectId}-${taskName}`;
 
       // TODO: cancel any existing child with this name.
 
@@ -75,6 +76,10 @@ export default store => next => action => {
             }
           );
 
+          // To abort this task, we'll need access to its processId (pid).
+          // Attach it to the task.
+          next(attachProcessIdToTask(task, child.pid));
+
           child.stdout.on('data', data => {
             next(receiveDataFromTaskExecution(task, data.toString()));
           });
@@ -84,16 +89,9 @@ export default store => next => action => {
           });
 
           child.on('exit', code => {
-            // TODO: In the case that the process is somehow killed outside
-            // of the GUI toggle (maybe in a console the process is killed?)
-            // we should dispatch an action that prints something to the
-            // terminal.
-            console.log('EXITED', code);
+            const timestamp = new Date();
+            store.dispatch(completeTask(task, timestamp));
           });
-
-          processes[processId] = child;
-
-          console.log(child);
         })
         .catch(err => {
           // TODO: Error handling (this can happen if the first 15 ports are
@@ -105,19 +103,8 @@ export default store => next => action => {
     }
 
     case ABORT_TASK: {
-      const { projectId, taskName } = action.task;
-
-      const processId = `${projectId}-${taskName}`;
-
-      const child = processes[processId];
-
-      // We definitely should have a child here, unless the app initialized
-      // with the wrong state (say, if the GUI thinks the process is running
-      // when it isn't).
-      // TODO: Handle this case with an error or something.
-      if (!child) {
-        return;
-      }
+      const { task } = action;
+      const { projectId, processId, taskName } = task;
 
       // Our child was spawned using `shell: true` to get around a quirk with
       // electron not working when specifying environment variables the
@@ -126,7 +113,7 @@ export default store => next => action => {
       // Because of that, `child.pid` refers to the `sh` command that spawned
       // the actual Node process, and so we need to use `psTree` to build a
       // tree of descendent children and kill them that way.
-      psTree(child.pid, (err, children) => {
+      psTree(processId, (err, children) => {
         if (err) {
           console.error('Could not gather process children:', err);
         }
@@ -134,7 +121,40 @@ export default store => next => action => {
         const childrenPIDs = children.map(child => child.PID);
 
         childProcess.spawn('kill', ['-9', ...childrenPIDs]);
+
+        // Once the children are killed, we should dispatch a notification
+        // so that the terminal shows something about this update.
+        // My initial thought was that all tasks would have the same message,
+        // but given that we're treating `start` as its own special thing,
+        // I'm realizing that it should vary depending on the task type.
+        // TODO: Find a better place for this to live.
+        // TODO: How will this work with Gatsby, when the 'start' task is
+        // different?
+        const abortMessage =
+          taskName === 'start' ? 'Server stopped' : 'Task aborted';
+
+        next(
+          receiveDataFromTaskExecution(
+            task,
+            `\u001b[31;1m${abortMessage}\u001b[0m`
+          )
+        );
       });
+
+      break;
+    }
+
+    case COMPLETE_TASK: {
+      const { task } = action;
+
+      // Send a message to add info to the terminal about the task being done.
+      // TODO: ASCII fish art?
+
+      const message = 'Task completed';
+
+      next(
+        receiveDataFromTaskExecution(task, `\u001b[32;1m${message}\u001b[0m`)
+      );
 
       break;
     }
