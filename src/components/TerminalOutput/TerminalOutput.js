@@ -4,12 +4,14 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
+import type { Log } from '../../types';
+
 var Convert = require('ansi-to-html');
 var convert = new Convert();
 
 type Props = {
   height?: number,
-  logs: Array<string>,
+  logs: Array<Log>,
 };
 
 class TerminalOutput extends PureComponent<Props> {
@@ -40,16 +42,18 @@ class TerminalOutput extends PureComponent<Props> {
   render() {
     const { height, logs } = this.props;
 
+    console.log(logs);
+
     return (
       <Wrapper height={height} innerRef={node => (this.node = node)}>
         <TableWrapper height={height}>
           <LogWrapper>
             {logs.map(log => (
-              <Log
-                key={log}
+              <LogRow
+                key={log.id}
                 dangerouslySetInnerHTML={{
                   __html: convert.toHtml(
-                    log
+                    log.text
                       .replace(/^[\ ]/gm, '&nbsp;&nbsp;')
                       .replace(/(\r\n|\r|\n)/g, '<br />')
                   ),
@@ -90,7 +94,7 @@ const LogWrapper = styled.div`
   height: 100%;
 `;
 
-const Log = styled.div`
+const LogRow = styled.div`
   min-height: 0;
   margin-top: 10px;
 `;

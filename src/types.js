@@ -7,6 +7,11 @@ export type SubmittedProject = {
   projectIcon: string,
 };
 
+export type Log = {
+  text: string,
+  id: string,
+};
+
 export type Task = {
   projectId: string,
   taskName: string,
@@ -14,7 +19,7 @@ export type Task = {
   command: string,
   status: 'idle' | 'running',
   timeSinceStatusChange: Date,
-  logs: Array<string>,
+  logs: Array<Log>,
 };
 
 type AppType = 'create-react-app' | 'gatsby';

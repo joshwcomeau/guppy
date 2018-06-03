@@ -115,13 +115,13 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case RECEIVE_DATA_FROM_TASK_EXECUTION: {
-      const { task, data } = action;
+      const { task, text, logId } = action;
       const { projectId, taskName } = task;
 
       const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
-        draftState[uniqueTaskId].logs.push(data);
+        draftState[uniqueTaskId].logs.push({ id: logId, text });
       });
     }
 
@@ -136,7 +136,8 @@ export default (state: State = initialState, action: Action) => {
 // Selectors
 type GlobalState = { tasks: State };
 
-export const getTasksForProjectId = (projectId, state: GlobalState) =>
+export const getTasksForProjectId = (projectId: string, state: GlobalState) =>
+  // $FlowFixMe
   Object.values(state.tasks).filter(task => task.projectId === projectId);
 
 export const getTaskByProjectIdAndTaskName = (

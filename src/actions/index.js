@@ -1,4 +1,5 @@
 // @flow
+import uuid from 'uuid/v1';
 import readLocalProjectsFromDisk from '../services/read-local-projects.service';
 
 import type { Project, Task } from '../types';
@@ -88,8 +89,9 @@ export const completeTask = (task: Task, timestamp: Date) => ({
   timestamp,
 });
 
-export const receiveDataFromTaskExecution = (task: Task, data: string) => ({
+export const receiveDataFromTaskExecution = (task: Task, text: string) => ({
   type: RECEIVE_DATA_FROM_TASK_EXECUTION,
   task,
-  data,
+  text,
+  logId: uuid(),
 });
