@@ -8,6 +8,7 @@ export const COLORS = {
   red: {
     '500': '#ff4b2b',
     '700': '#c41d00',
+    '900': '#5b0400',
   },
   orange: {
     '500': '#FF9100',

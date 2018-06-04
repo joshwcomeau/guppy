@@ -3,6 +3,7 @@ import produce from 'immer';
 import {
   REFRESH_PROJECTS,
   ADD_PROJECT,
+  LAUNCH_DEV_SERVER,
   RUN_TASK,
   ABORT_TASK,
   COMPLETE_TASK,
@@ -18,16 +19,6 @@ type State = {
 };
 
 const initialState = {};
-
-const buildUniqueTaskId = (projectId, taskName) => `${projectId}-${taskName}`;
-const buildNewTask = (projectId, taskName, command) => ({
-  projectId,
-  taskName,
-  command,
-  status: 'idle',
-  timeSinceStatusChange: null,
-  logs: [],
-});
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
@@ -77,6 +68,7 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
+    case LAUNCH_DEV_SERVER:
     case RUN_TASK: {
       const { task, timestamp } = action;
       const { projectId, taskName } = task;
@@ -115,13 +107,17 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case RECEIVE_DATA_FROM_TASK_EXECUTION: {
-      const { task, text, logId } = action;
+      const { task, text, status, logId } = action;
       const { projectId, taskName } = task;
 
       const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
         draftState[uniqueTaskId].logs.push({ id: logId, text });
+
+        if (status) {
+          draftState[uniqueTaskId].status = status;
+        }
       });
     }
 
@@ -133,12 +129,81 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 //
+// Helpers
+const buildUniqueTaskId = (projectId, taskName) => `${projectId}-${taskName}`;
+
+const getTaskDescription = taskName => {
+  switch (taskName) {
+    case 'start': {
+      return 'Run a local development server';
+    }
+    case 'build': {
+      return 'Bundle your project for production';
+    }
+    case 'test': {
+      return 'Run the automated tests';
+    }
+    case 'eject': {
+      return 'Permanently reveal the create-react-app configuration files';
+    }
+  }
+};
+
+const isDevServerTask = taskName =>
+  // Gatsby and create-react-app use different names for the same task.
+  // TODO: Maybe I should rename `develop` to `start` in Gatsby projects?
+  taskName === 'start' || taskName === 'develop';
+
+const getTaskType = taskName => {
+  // We have two kinds of tasks:
+  // - long-running tasks, like the dev server
+  // - short-term tasks, like building for production.
+  //
+  // The distinction is important because the expectations are different.
+  // For a dev server, "running" is a successful status - it means there are
+  // no errors - while for a short-term task, "running" is essentially the same
+  // as "loading", it's a yellow-light kind of thing.
+  //
+  // TODO: Gatsby tests are not long-running :/
+  const sustainedTasks = ['start', 'develop', 'test'];
+
+  return sustainedTasks.includes(taskName) ? 'sustained' : 'short-term';
+};
+
+const buildNewTask = (projectId, taskName, command) => ({
+  projectId,
+  command,
+  taskName,
+  description: getTaskDescription(taskName),
+  type: getTaskType(taskName),
+  status: 'idle',
+  // TODO: Finer control over `isDestructiveTask`
+  isDestructiveTask: taskName === 'eject',
+  timeSinceStatusChange: null,
+  logs: [],
+});
+
+//
+//
+//
 // Selectors
 type GlobalState = { tasks: State };
 
-export const getTasksForProjectId = (projectId: string, state: GlobalState) =>
-  // $FlowFixMe
-  Object.values(state.tasks).filter(task => task.projectId === projectId);
+export const getTasksForProjectId = (
+  projectId: string,
+  state: GlobalState
+): Array<Task> =>
+  Object.keys(state.tasks)
+    .map(taskId => state.tasks[taskId])
+    .filter(task => task.projectId === projectId);
+
+export const getTasksInTaskListForProjectId = (
+  projectId: string,
+  state: GlobalState
+) =>
+  getTasksForProjectId(projectId, state).filter(
+    task => !isDevServerTask(task.taskName)
+  );
 
 export const getTaskByProjectIdAndTaskName = (
   projectId: string,

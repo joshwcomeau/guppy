@@ -2,10 +2,11 @@ import {
   RUN_TASK,
   ABORT_TASK,
   COMPLETE_TASK,
+  LAUNCH_DEV_SERVER,
   abortTask,
   completeTask,
-  receiveDataFromTaskExecution,
   attachProcessIdToTask,
+  receiveDataFromTaskExecution,
 } from '../actions';
 import { getTaskByProjectIdAndTaskName } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
@@ -20,7 +21,92 @@ const psTree = window.require('ps-tree');
 const parentPath = `${os.homedir()}/guppy-projects`;
 
 export default store => next => action => {
+  if (!action.task) {
+    return next(action);
+  }
+
+  const { task } = action;
+
+  // TODO: So this is the same format as task IDs.
+  // it's a bit weird that I'm re-creating this here, but it's also weird
+  // to import the taskId generator function from the reducer...
+  // Whatever this is fine for now.
+  const taskId = `${task.projectId}-${task.taskName}`;
+
   switch (action.type) {
+    case LAUNCH_DEV_SERVER: {
+      findAvailablePort()
+        .then(port => {
+          /**
+           * NOTE: Ideally, we would use the following command:
+           *
+              childProcess.spawn(
+                `npm`,
+                ['run', taskName],
+                {
+                  cwd: `${parentPath}/${projectId}`,
+                  env: { PORT: port },
+                }
+              );
+           *
+           * The difference is that we're not using "shell" mode, and we're
+           * specifying the port number as an environment variable.
+           *
+           * Because of a likely bug in Electron, the `env` option for
+           * childProcess causes everything to blow up. I added a comment here:
+           * https://github.com/electron/electron/issues/3627
+           *
+           * As a workaround, I'm using "shell mode" to avoid having to
+           * specify environment variables:
+           */
+
+          const child = childProcess.spawn(
+            `PORT=${port} npm`,
+            ['run', task.taskName],
+            {
+              cwd: `${parentPath}/${task.projectId}`,
+              shell: true,
+            }
+          );
+
+          // To abort this task, we'll need access to its processId (pid).
+          // Attach it to the task.
+          next(attachProcessIdToTask(task, child.pid));
+
+          child.stdout.on('data', data => {
+            // Ok so, unfortunately, failure-to-compile is still pushed
+            // through stdout, not stderr. We want that message specifically
+            // to trigger an error state, and so we need to parse it.
+            const text = data.toString();
+
+            const status = text.includes('Failed to compile.')
+              ? 'error'
+              : 'running';
+
+            console.log('GOT STATUS', status);
+
+            next(receiveDataFromTaskExecution(task, text, status));
+          });
+
+          child.stderr.on('data', data => {
+            console.log('\n\nSAD DATA', data.toString());
+            next(receiveDataFromTaskExecution(task, data.toString()));
+          });
+
+          child.on('exit', code => {
+            const timestamp = new Date();
+            store.dispatch(completeTask(task, timestamp));
+          });
+        })
+        .catch(err => {
+          // TODO: Error handling (this can happen if the first 15 ports are
+          // occupied, or if there's some generic Node error)
+          console.error(err);
+        });
+
+      break;
+    }
+
     case RUN_TASK: {
       const { projectId, taskName } = action.task;
 

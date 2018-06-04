@@ -47,6 +47,22 @@ const getColorsForStatus = (status: TaskStatus) => {
           .string(),
       };
     }
+    case 'error': {
+      return {
+        base: COLORS.red[500],
+        highlight: COLORS.pink[300],
+        pulseBase: COLORS.red[700],
+        pulseHighlight: COLORS.pink[500],
+        shadowLight: Color(COLORS.red[900])
+          .alpha(0.25)
+          .rgb()
+          .string(),
+        shadowDark: Color(COLORS.red[900])
+          .alpha(0.5)
+          .rgb()
+          .string(),
+      };
+    }
   }
 };
 
@@ -72,6 +88,8 @@ class LargeLED extends Component<Props> {
 
   render() {
     const { size, status } = this.props;
+
+    const pulseSpeed = status === 'error' ? 750 : 2500;
 
     const OUTLINE_SIZE = size * (5.5 / 8);
 
@@ -99,7 +117,7 @@ class LargeLED extends Component<Props> {
                 strokeLinecap="round"
               />
             </OutlineSvg>
-            {status !== 'idle' && <Pulser colors={colors} />}
+            {status !== 'idle' && <Pulser colors={colors} speed={pulseSpeed} />}
           </LED>
         )}
       </Spring>
@@ -164,7 +182,7 @@ const Pulser = styled.div.attrs({
   left: 0;
   right: 0;
   bottom: 0;
-  animation: ${fadeInOut} 2500ms infinite;
+  animation: ${fadeInOut} ${props => props.speed}ms infinite;
   border-radius: 50%;
 `;
 

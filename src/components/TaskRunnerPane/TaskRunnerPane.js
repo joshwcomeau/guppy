@@ -2,10 +2,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import IconBase from 'react-icons-kit';
+import { u1F4A3 as bombIcon } from 'react-icons-kit/noto_emoji_regular/u1F4A3';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
-import { getTasksForProjectId } from '../../reducers/tasks.reducer';
+import { getTasksInTaskListForProjectId } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 
@@ -35,7 +37,7 @@ class TaskRunnerPane extends PureComponent<Props> {
             <TaskCard>
               <NameColumn>
                 <TaskName>{capitalize(task.taskName)}</TaskName>
-                <TaskDescription>Run the automated test suite</TaskDescription>
+                <TaskDescription>{task.description}</TaskDescription>
               </NameColumn>
 
               <StatusColumn>
@@ -48,7 +50,17 @@ class TaskRunnerPane extends PureComponent<Props> {
               </LinkColumn>
 
               <ActionsColumn>
-                <Toggle size={24} />
+                {task.isDestructiveTask ? (
+                  <BigClickableButton
+                    width={40}
+                    height={34}
+                    colors={[COLORS.red[500], COLORS.pink[300]]}
+                  >
+                    <IconBase size={24} icon={bombIcon} />
+                  </BigClickableButton>
+                ) : (
+                  <Toggle size={24} />
+                )}
               </ActionsColumn>
             </TaskCard>
           ))}
@@ -66,9 +78,19 @@ const TaskCard = Card.extend`
   padding: 12px 24px;
 `;
 
-const NameColumn = styled.div`
-  width: 50%;
-  display: flex;
+const Column = styled.div`
+  margin-right: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
+const NameColumn = Column.extend`
+  flex: 1;
   font-size: 20px;
   -webkit-font-smoothing: antialiased;
   line-height: 48px;
@@ -81,24 +103,25 @@ const TaskName = styled.span`
 
 const TaskDescription = styled.span`
   font-weight: 400;
-  margin-left: 10px;
+  margin-left: 15px;
   color: ${COLORS.gray[500]};
 `;
 
-const StatusColumn = styled.div`
-  width: 25%;
+const StatusColumn = Column.extend`
+  width: 150px;
   display: flex;
   align-items: center;
 `;
 
-const LinkColumn = styled.div`
-  width: 15%;
+const LinkColumn = Column.extend`
+  width: 115px;
+  padding-left: 2px;
   display: flex;
   align-items: center;
 `;
 
-const ActionsColumn = styled.div`
-  width: 10%;
+const ActionsColumn = Column.extend`
+  width: 70px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -112,14 +135,13 @@ const Link = styled.div`
 const mapStateToProps = state => {
   const selectedProjectId = getSelectedProjectId(state);
 
-  // For now, I'm assuming that the dev server task will be named `start`.
-  // This is not universally true, not even for Gatsby projects! So this will
-  // need to be customizable (or at least based on type).
-  const taskName = 'start';
+  const tasks = selectedProjectId
+    ? getTasksInTaskListForProjectId(selectedProjectId, state)
+    : [];
 
-  return {
-    tasks: getTasksForProjectId(selectedProjectId, state),
-  };
+  console.log(selectedProjectId, tasks);
+
+  return { tasks };
 };
 
 const mapDispatchToProps = { runTask, abortTask };

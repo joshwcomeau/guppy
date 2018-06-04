@@ -23,6 +23,7 @@ export const ABORT_TASK = 'ABORT_TASK';
 export const COMPLETE_TASK = 'COMPLETE_TASK';
 export const RECEIVE_DATA_FROM_TASK_EXECUTION =
   'RECEIVE_DATA_FROM_TASK_EXECUTION';
+export const LAUNCH_DEV_SERVER = 'LAUNCH_DEV_SERVER';
 
 //
 //
@@ -89,9 +90,20 @@ export const completeTask = (task: Task, timestamp: Date) => ({
   timestamp,
 });
 
-export const receiveDataFromTaskExecution = (task: Task, text: string) => ({
+export const receiveDataFromTaskExecution = (
+  task: Task,
+  text: string,
+  status?: 'running' | 'error'
+) => ({
   type: RECEIVE_DATA_FROM_TASK_EXECUTION,
   task,
   text,
+  status,
   logId: uuid(),
+});
+
+export const launchDevServer = (task: Task, timestamp: Date) => ({
+  type: LAUNCH_DEV_SERVER,
+  task,
+  timestamp,
 });

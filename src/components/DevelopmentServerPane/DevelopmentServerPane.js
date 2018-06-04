@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { runTask, abortTask } from '../../actions';
+import { launchDevServer, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
@@ -22,13 +22,13 @@ import type { Task } from '../../types';
 
 type Props = {
   task: ?Task,
-  runTask: (task: Task, timestamp: Date) => void,
+  launchDevServer: (task: Task, timestamp: Date) => void,
   abortTask: (task: Task, timestamp: Date) => void,
 };
 
 class DevelopmentServerPane extends PureComponent<Props> {
   handleToggle = (isToggled: boolean) => {
-    const { task, runTask, abortTask } = this.props;
+    const { task, launchDevServer, abortTask } = this.props;
 
     if (!task) {
       // Should be impossible, since the Toggle control won't render without
@@ -39,7 +39,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
     const timestamp = new Date();
 
     if (isToggled) {
-      runTask(task, timestamp);
+      launchDevServer(task, timestamp);
     } else {
       abortTask(task, timestamp);
     }
@@ -135,7 +135,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { runTask, abortTask };
+const mapDispatchToProps = { launchDevServer, abortTask };
 
 export default connect(
   mapStateToProps,

@@ -43,18 +43,20 @@ export const getInitialState = () => {
   // only 4 projects).
   // Given that `handleStoreUpdates` runs whenever the redux state changes,
   // this felt too expensive
-  const scrubbedTasks = Object.keys(reconstructedState.tasks).reduce(
-    (acc, taskId) => {
-      const task = { ...reconstructedState.tasks[taskId] };
-      task.status = 'idle';
-      task.logs = [];
+  if (reconstructedState.tasks) {
+    const scrubbedTasks = Object.keys(reconstructedState.tasks).reduce(
+      (acc, taskId) => {
+        const task = { ...reconstructedState.tasks[taskId] };
+        task.status = 'idle';
+        task.logs = [];
 
-      return { ...acc, [taskId]: task };
-    },
-    {}
-  );
+        return { ...acc, [taskId]: task };
+      },
+      {}
+    );
 
-  reconstructedState.tasks = scrubbedTasks;
+    reconstructedState.tasks = scrubbedTasks;
+  }
 
   return reconstructedState;
 };

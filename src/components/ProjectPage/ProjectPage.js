@@ -29,8 +29,14 @@ class ProjectPage extends Component<Props> {
   render() {
     const { project, location, match } = this.props;
 
+    console.log('render', this.props);
+
     const projectIdFromUrl = match.params.projectId;
     const projectTabFromUrl = extractProjectTabFromUrl(location) || 'tasks';
+
+    if (!project) {
+      return null;
+    }
 
     return (
       <MainContentWrapper>

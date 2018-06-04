@@ -12,12 +12,20 @@ export type Log = {
   id: string,
 };
 
+// TODO: Better names:
+export type TaskType = 'short-term' | 'sustained';
+
 export type Task = {
   projectId: string,
   taskName: string,
+  description: string,
+  type: TaskType,
   processId: number,
   command: string,
-  status: 'idle' | 'running',
+  status: 'idle' | 'running' | 'error',
+  // Destructive tasks, like create-react-app's "eject", should make it clear
+  // in the UI that they are serious-business, not to be done lightly.
+  isDestructiveTask: boolean,
   timeSinceStatusChange: Date,
   logs: Array<Log>,
 };

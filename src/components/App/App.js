@@ -54,6 +54,7 @@ class App extends Component<Props> {
     }
 
     history.listen(location => {
+      console.log('location change!', location);
       const projectId = extractProjectIdFromUrl(location);
 
       if (projectId) {
@@ -85,8 +86,7 @@ class App extends Component<Props> {
   render() {
     const { initializing } = this.props;
 
-    // const DefaultComponent = hasProjects ? Home : IntroScreen;
-    const DefaultComponent = IntroScreen; // TEMP
+    const DefaultComponent = IntroScreen;
 
     return (
       <Fragment>
@@ -111,6 +111,8 @@ class App extends Component<Props> {
 
 const Wrapper = styled.div`
   display: flex;
+  position: relative;
+  z-index: 1;
 `;
 
 const MainContent = styled.div`

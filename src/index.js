@@ -13,6 +13,11 @@ import DevTools from './components/DevTools';
 import './fonts.css';
 import './base.css';
 
+// TODO: I'm told that this is required to build mac apps, but enabling it
+// throws an error for me :/
+// const fixPath = require('fix-path');
+// fixPath();
+
 const initialState = getInitialState();
 
 const store = configureStore(initialState);
