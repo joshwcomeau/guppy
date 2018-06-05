@@ -84,7 +84,11 @@ export const abortTask = (task: Task, timestamp: Date) => ({
   timestamp,
 });
 
-export const completeTask = (task: Task, timestamp: Date) => ({
+export const completeTask = (
+  task: Task,
+  timestamp: Date,
+  wasSuccessful: boolean
+) => ({
   type: COMPLETE_TASK,
   task,
   timestamp,
@@ -93,12 +97,12 @@ export const completeTask = (task: Task, timestamp: Date) => ({
 export const receiveDataFromTaskExecution = (
   task: Task,
   text: string,
-  status?: 'running' | 'error'
+  isError?: boolean
 ) => ({
   type: RECEIVE_DATA_FROM_TASK_EXECUTION,
   task,
   text,
-  status,
+  isError,
   logId: uuid(),
 });
 

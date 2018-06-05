@@ -41,13 +41,12 @@ class BigClickableButton extends Component<Props, State> {
     const { width, height, thickness, colors, children } = this.props;
     const { status, isDepressed } = this.state;
 
-    const darkerColor = Color(colors[0]);
-    const bottomColor = darkerColor
+    const bottomColor = Color(colors[0])
       .darken(0.3)
       .rgb()
       .string();
-    const sideColor = darkerColor
-      .darken(0.15)
+    const sideColor = Color(colors[1])
+      .darken(0.3)
       .rgb()
       .string();
 
@@ -149,25 +148,5 @@ const ButtonSideWrapper = styled.div`
 `;
 
 const SidesSvg = styled.svg``;
-
-const BottomBlocker = styled.div`
-  position: absolute;
-  left: 0;
-  right: -${props => props.thickness * 2.25}px;
-  bottom: -${props => props.thickness}px;
-  height: ${props => props.thickness * 1.5}px;
-  background: #fff;
-  transform: translateY(100%);
-`;
-
-const RightBlocker = styled.div`
-  position: absolute;
-  top: 0;
-  right: -${props => props.thickness}px;
-  bottom: -${props => props.thickness * 2.25}px;
-  width: ${props => props.thickness * 1.5}px;
-  background: #fff;
-  transform: translateX(100%);
-`;
 
 export default BigClickableButton;

@@ -12,9 +12,9 @@ type Props = {
 
 const getColorForStatus = ({ status }: Props) => {
   switch (status) {
-    case 'running':
+    case 'success':
       return COLORS.lightGreen[500];
-    case 'error':
+    case 'failed':
       return COLORS.red[500];
     default:
     case 'idle':

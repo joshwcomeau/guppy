@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { launchDevServer, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
-import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
+import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 
@@ -125,13 +125,12 @@ const RightSide = styled.div`
 const mapStateToProps = state => {
   const selectedProjectId = getSelectedProjectId(state);
 
-  // For now, I'm assuming that the dev server task will be named `start`.
-  // This is not universally true, not even for Gatsby projects! So this will
-  // need to be customizable (or at least based on type).
-  const taskName = 'start';
+  if (!selectedProjectId) {
+    return { task: null };
+  }
 
   return {
-    task: getTaskByProjectIdAndTaskName(selectedProjectId, taskName, state),
+    task: getDevServerTaskForProjectId(selectedProjectId, state),
   };
 };
 

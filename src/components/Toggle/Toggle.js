@@ -24,7 +24,9 @@ class Toggle extends PureComponent<Props> {
   renderBall = ({ translate }: { translate: number }) => {
     const { size } = this.props;
 
-    if (this.lastTranslateVal == null || this.lastFrameTime == null) {
+    const { lastTranslateVal, lastFrameTime } = this;
+
+    if (lastTranslateVal == null || lastFrameTime == null) {
       this.lastTranslateVal = translate;
       this.lastFrameTime = performance.now();
       return <Ball size={size} translate={translate} stretch={1} />;
@@ -32,8 +34,8 @@ class Toggle extends PureComponent<Props> {
 
     const now = performance.now();
 
-    const translateDelta = Math.abs(this.lastTranslateVal - translate);
-    const timeDelta = now - this.lastFrameTime;
+    const translateDelta = Math.abs(lastTranslateVal - translate);
+    const timeDelta = now - lastFrameTime;
 
     this.lastTranslateVal = translate;
     this.lastFrameTime = now;

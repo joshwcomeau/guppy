@@ -27,8 +27,8 @@ export default (state: State = initialState, action: Action) => {
         Object.values(action.projects).forEach(project => {
           const projectId = project.guppy.id;
 
-          Object.entries(project.scripts).forEach(([taskName, command]) => {
-            const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
+          Object.entries(project.scripts).forEach(([name, command]) => {
+            const uniqueTaskId = buildUniqueTaskId(projectId, name);
 
             // If this task already exists, we need to be careful.
             //
@@ -45,8 +45,9 @@ export default (state: State = initialState, action: Action) => {
             }
 
             draftState[uniqueTaskId] = buildNewTask(
+              uniqueTaskId,
               projectId,
-              taskName,
+              name,
               command
             );
           });
@@ -60,10 +61,15 @@ export default (state: State = initialState, action: Action) => {
       const projectId = project.guppy.id;
 
       return produce(state, draftState => {
-        Object.entries(project.scripts).forEach(([taskName, command]) => {
-          const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
+        Object.entries(project.scripts).forEach(([name, command]) => {
+          const uniqueTaskId = buildUniqueTaskId(projectId, name);
 
-          draftState[uniqueTaskId] = buildNewTask(projectId, taskName, command);
+          draftState[uniqueTaskId] = buildNewTask(
+            uniqueTaskId,
+            projectId,
+            name,
+            command
+          );
         });
       });
     }
@@ -71,53 +77,66 @@ export default (state: State = initialState, action: Action) => {
     case LAUNCH_DEV_SERVER:
     case RUN_TASK: {
       const { task, timestamp } = action;
-      const { projectId, taskName } = task;
-
-      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
-        draftState[uniqueTaskId].status = 'running';
-        draftState[uniqueTaskId].timeSinceStatusChange = timestamp;
+        // If this is a long-running task, it's considered successful as long
+        // as it doesn't have an failed.
+        // For periodic tasks, though, this is a 'pending' state.
+        const nextStatus = task.type === 'short-term' ? 'pending' : 'success';
+
+        draftState[task.id].status = nextStatus;
+        draftState[task.id].timeSinceStatusChange = timestamp;
       });
     }
 
-    case ABORT_TASK:
-    case COMPLETE_TASK: {
+    case ABORT_TASK: {
       const { task, timestamp } = action;
-      const { projectId, taskName } = task;
-
-      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
-        draftState[uniqueTaskId].status = 'idle';
-        draftState[uniqueTaskId].timeSinceStatusChange = timestamp;
-        delete draftState[uniqueTaskId].processId;
+        draftState[task.id].status = 'idle';
+        draftState[task.id].timeSinceStatusChange = timestamp;
+        delete draftState[task.id].processId;
+      });
+    }
+
+    case COMPLETE_TASK: {
+      const { task, timestamp, wasSuccessful } = action;
+
+      return produce(state, draftState => {
+        const nextStatus = !wasSuccessful
+          ? 'failed'
+          : task.type === 'short-term'
+            ? 'success'
+            : 'idle';
+
+        draftState[task.id].status = nextStatus;
+        draftState[task.id].timeSinceStatusChange = timestamp;
+        delete draftState[task.id].processId;
       });
     }
 
     case ATTACH_PROCESS_ID_TO_TASK: {
       const { task, processId } = action;
-      const { projectId, taskName } = task;
-
-      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
 
       return produce(state, draftState => {
-        draftState[uniqueTaskId].processId = processId;
+        draftState[task.id].processId = processId;
       });
     }
 
     case RECEIVE_DATA_FROM_TASK_EXECUTION: {
-      const { task, text, status, logId } = action;
-      const { projectId, taskName } = task;
-
-      const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
+      const { task, text, isError, logId } = action;
 
       return produce(state, draftState => {
-        draftState[uniqueTaskId].logs.push({ id: logId, text });
+        draftState[task.id].logs.push({ id: logId, text });
 
-        if (status) {
-          draftState[uniqueTaskId].status = status;
-        }
+        // Either set or reset a failed status, based on the data received.
+        const nextStatus = isError
+          ? 'failed'
+          : task.type === 'short-term'
+            ? 'pending'
+            : 'success';
+
+        draftState[task.id].status = nextStatus;
       });
     }
 
@@ -130,10 +149,10 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-const buildUniqueTaskId = (projectId, taskName) => `${projectId}-${taskName}`;
+const buildUniqueTaskId = (projectId, name) => `${projectId}-${name}`;
 
-const getTaskDescription = taskName => {
-  switch (taskName) {
+const getTaskDescription = name => {
+  switch (name) {
     case 'start': {
       return 'Run a local development server';
     }
@@ -149,12 +168,12 @@ const getTaskDescription = taskName => {
   }
 };
 
-const isDevServerTask = taskName =>
+const isDevServerTask = name =>
   // Gatsby and create-react-app use different names for the same task.
   // TODO: Maybe I should rename `develop` to `start` in Gatsby projects?
-  taskName === 'start' || taskName === 'develop';
+  name === 'start' || name === 'develop';
 
-const getTaskType = taskName => {
+const getTaskType = name => {
   // We have two kinds of tasks:
   // - long-running tasks, like the dev server
   // - short-term tasks, like building for production.
@@ -163,22 +182,21 @@ const getTaskType = taskName => {
   // For a dev server, "running" is a successful status - it means there are
   // no errors - while for a short-term task, "running" is essentially the same
   // as "loading", it's a yellow-light kind of thing.
-  //
-  // TODO: Gatsby tests are not long-running :/
-  const sustainedTasks = ['start', 'develop', 'test'];
+  const sustainedTasks = ['start', 'develop'];
 
-  return sustainedTasks.includes(taskName) ? 'sustained' : 'short-term';
+  return sustainedTasks.includes(name) ? 'sustained' : 'short-term';
 };
 
-const buildNewTask = (projectId, taskName, command) => ({
+// TODO: A lot of this stuff shouldn't be done here :/ maybe best to resolve
+// this in an action before it hits the reducer?
+const buildNewTask = (id, projectId, name, command) => ({
+  id,
+  name,
   projectId,
   command,
-  taskName,
-  description: getTaskDescription(taskName),
-  type: getTaskType(taskName),
+  description: getTaskDescription(name),
+  type: getTaskType(name),
   status: 'idle',
-  // TODO: Finer control over `isDestructiveTask`
-  isDestructiveTask: taskName === 'eject',
   timeSinceStatusChange: null,
   logs: [],
 });
@@ -202,15 +220,22 @@ export const getTasksInTaskListForProjectId = (
   state: GlobalState
 ) =>
   getTasksForProjectId(projectId, state).filter(
-    task => !isDevServerTask(task.taskName)
+    task => !isDevServerTask(task.name)
   );
+
+export const getDevServerTaskForProjectId = (
+  projectId: string,
+  state: GlobalState
+) =>
+  state.tasks[buildUniqueTaskId(projectId, 'start')] ||
+  state.tasks[buildUniqueTaskId(projectId, 'develop')];
 
 export const getTaskByProjectIdAndTaskName = (
   projectId: string,
-  taskName: string,
+  name: string,
   state: GlobalState
 ) => {
-  const uniqueTaskId = buildUniqueTaskId(projectId, taskName);
+  const uniqueTaskId = buildUniqueTaskId(projectId, name);
 
   return state.tasks[uniqueTaskId];
 };

@@ -15,17 +15,17 @@ export type Log = {
 // TODO: Better names:
 export type TaskType = 'short-term' | 'sustained';
 
+export type TaskStatus = 'idle' | 'pending' | 'success' | 'failed';
+
 export type Task = {
+  id: string,
   projectId: string,
-  taskName: string,
+  name: string,
   description: string,
   type: TaskType,
-  processId: number,
+  status: TaskStatus,
+  processId?: number,
   command: string,
-  status: 'idle' | 'running' | 'error',
-  // Destructive tasks, like create-react-app's "eject", should make it clear
-  // in the UI that they are serious-business, not to be done lightly.
-  isDestructiveTask: boolean,
   timeSinceStatusChange: Date,
   logs: Array<Log>,
 };
@@ -73,5 +73,3 @@ export type Project = {
   // info.
   tasks: Array<Task>,
 };
-
-export type TaskStatus = 'running' | 'idle' | 'error';

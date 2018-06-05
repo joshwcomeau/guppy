@@ -3,7 +3,10 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
-import { u1F4A3 as bombIcon } from 'react-icons-kit/noto_emoji_regular/u1F4A3';
+import { u1F44C as successIcon } from 'react-icons-kit/noto_emoji_regular/u1F44C';
+import { u1F319 as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F319';
+import { u274C as failIcon } from 'react-icons-kit/noto_emoji_regular/u274C';
+import { ic_eject as ejectIcon } from 'react-icons-kit/md/ic_eject';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
@@ -16,59 +19,107 @@ import TerminalOutput from '../TerminalOutput';
 import Heading from '../Heading';
 import Card from '../Card';
 import SmallLED from '../SmallLED';
+import Spinner from '../Spinner';
 import BigClickableButton from '../BigClickableButton';
 import Button from '../Button';
 import Toggle from '../Toggle';
 
-import type { Task } from '../../types';
+import type { Task, TaskStatus } from '../../types';
 
 type Props = {
   tasks: Array<Task>,
+  runTask: Function,
+  abortTask: Function,
 };
 
 class TaskRunnerPane extends PureComponent<Props> {
+  handleToggleTask = task => {
+    const { runTask, abortTask } = this.props;
+
+    const isRunning = !!task.processId;
+
+    const timestamp = new Date();
+
+    isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
+  };
+
+  renderTaskRow = task => (
+    <TaskCard key={task.id}>
+      <NameColumn>
+        <TaskName>{capitalize(task.name)}</TaskName>
+        <TaskDescription>{task.description}</TaskDescription>
+      </NameColumn>
+
+      <StatusColumn>
+        {getIconForStatus(task.status)}
+        <TaskStatusLabel>{capitalize(task.status)}</TaskStatusLabel>
+      </StatusColumn>
+
+      <LinkColumn>
+        <Button size="small">View Details</Button>
+      </LinkColumn>
+
+      <ActionsColumn>
+        {task.name === 'eject' ? (
+          <BigClickableButton
+            width={40}
+            height={34}
+            colors={[COLORS.purple[500], COLORS.blue[700]]}
+          >
+            <IconBase size={24} icon={ejectIcon} />
+          </BigClickableButton>
+        ) : (
+          <Toggle
+            size={24}
+            isToggled={!!task.processId}
+            onToggle={() => this.handleToggleTask(task)}
+          />
+        )}
+      </ActionsColumn>
+    </TaskCard>
+  );
+
   render() {
     const { tasks } = this.props;
 
     return (
-      <Module title="Tasks" primaryActionChildren={'Action'}>
-        <Wrapper>
-          {tasks.map(task => (
-            <TaskCard>
-              <NameColumn>
-                <TaskName>{capitalize(task.taskName)}</TaskName>
-                <TaskDescription>{task.description}</TaskDescription>
-              </NameColumn>
-
-              <StatusColumn>
-                <SmallLED />
-                Watching
-              </StatusColumn>
-
-              <LinkColumn>
-                <Button size="small">View Details</Button>
-              </LinkColumn>
-
-              <ActionsColumn>
-                {task.isDestructiveTask ? (
-                  <BigClickableButton
-                    width={40}
-                    height={34}
-                    colors={[COLORS.red[500], COLORS.pink[300]]}
-                  >
-                    <IconBase size={24} icon={bombIcon} />
-                  </BigClickableButton>
-                ) : (
-                  <Toggle size={24} />
-                )}
-              </ActionsColumn>
-            </TaskCard>
-          ))}
-        </Wrapper>
+      <Module title="Tasks">
+        <Wrapper>{tasks.map(this.renderTaskRow)}</Wrapper>
       </Module>
     );
   }
 }
+
+const getIconForStatus = (status: TaskStatus) => {
+  switch (status) {
+    case 'pending':
+      return <Spinner size={18} />;
+    case 'success':
+      return (
+        <IconBase
+          size={21}
+          icon={successIcon}
+          style={{ color: COLORS.green[700] }}
+        />
+      );
+    case 'failed':
+      return (
+        <IconBase
+          size={18}
+          icon={failIcon}
+          style={{ color: COLORS.red[500] }}
+        />
+      );
+    default:
+      return (
+        <IconBase
+          size={21}
+          icon={idleIcon}
+          style={{ color: COLORS.gray[400], transform: 'translateY(-2px)' }}
+        />
+      );
+  }
+};
 
 const Wrapper = styled.div``;
 
@@ -113,6 +164,12 @@ const StatusColumn = Column.extend`
   align-items: center;
 `;
 
+const TaskStatusLabel = styled.span`
+  display: inline-block;
+  width: 22px;
+  margin-left: 8px;
+`;
+
 const LinkColumn = Column.extend`
   width: 115px;
   padding-left: 2px;
@@ -138,8 +195,6 @@ const mapStateToProps = state => {
   const tasks = selectedProjectId
     ? getTasksInTaskListForProjectId(selectedProjectId, state)
     : [];
-
-  console.log(selectedProjectId, tasks);
 
   return { tasks };
 };

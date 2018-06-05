@@ -1,83 +1,44 @@
 // @flow
 import React, { Component } from 'react';
 import styled, { keyframes } from 'styled-components';
-import Color from 'color';
 import { Spring } from 'react-spring';
 
-import { COLORS } from '../../constants';
+import { getColorsForStatus } from './LargeLED.helpers';
 
 import type { TaskStatus } from '../../types';
+import type { ColorData } from './LargeLED.helpers';
+
+// TODO: The statuses in this component are based on the TaskStatus.
+// This works for DevServer, but is not generalizable for other tasks that are
+// not long-running.
+// Instead, the statuses should be:
+// - success (green)
+// - pending (yellow)
+// - error (red)
+// - idle (gray)
 
 type Props = {
   size: number,
   status: TaskStatus,
 };
 
-const getColorsForStatus = (status: TaskStatus) => {
-  switch (status) {
-    case 'idle': {
-      return {
-        base: COLORS.gray[700],
-        highlight: COLORS.gray[500],
-        pulseBase: COLORS.gray[700],
-        pulseHighlight: COLORS.gray[500],
-        shadowLight: Color(COLORS.gray[900])
-          .alpha(0.25)
-          .rgb()
-          .string(),
-        shadowDark: Color(COLORS.gray[900])
-          .alpha(0.5)
-          .rgb()
-          .string(),
-      };
-    }
-    case 'running': {
-      return {
-        base: COLORS.green[500],
-        highlight: COLORS.lime[500],
-        pulseBase: COLORS.green[700],
-        pulseHighlight: COLORS.lime[500],
-        shadowLight: Color(COLORS.green[900])
-          .alpha(0.25)
-          .rgb()
-          .string(),
-        shadowDark: Color(COLORS.green[900])
-          .alpha(0.5)
-          .rgb()
-          .string(),
-      };
-    }
-    case 'error': {
-      return {
-        base: COLORS.red[500],
-        highlight: COLORS.pink[300],
-        pulseBase: COLORS.red[700],
-        pulseHighlight: COLORS.pink[500],
-        shadowLight: Color(COLORS.red[900])
-          .alpha(0.25)
-          .rgb()
-          .string(),
-        shadowDark: Color(COLORS.red[900])
-          .alpha(0.5)
-          .rgb()
-          .string(),
-      };
-    }
-  }
+type State = {
+  colors: ColorData,
+  prevColors: ColorData,
 };
 
-class LargeLED extends Component<Props> {
+class LargeLED extends Component<Props, State> {
   static defaultProps = {
     size: 64,
   };
 
   state = {
+    colors: getColorsForStatus(this.props.status),
     // TODO: Can I just init this as blank?
     prevColors: getColorsForStatus('idle'),
-    colors: getColorsForStatus(this.props.status),
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (this.props.status !== nextProps.status) {
       this.setState({
         prevColors: this.state.colors,
@@ -89,7 +50,7 @@ class LargeLED extends Component<Props> {
   render() {
     const { size, status } = this.props;
 
-    const pulseSpeed = status === 'error' ? 750 : 2500;
+    const pulseSpeed = status === 'failed' ? 750 : 2500;
 
     const OUTLINE_SIZE = size * (5.5 / 8);
 

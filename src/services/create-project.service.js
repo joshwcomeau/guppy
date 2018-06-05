@@ -1,3 +1,5 @@
+// @flow
+// TODO: Flow fixes
 import slug from 'slug';
 const prettier = window.require('prettier');
 
@@ -96,6 +98,7 @@ export default (
       packageJson.guppy = {
         id,
         name: projectName,
+        type: projectType,
         icon: projectIcon,
       };
 

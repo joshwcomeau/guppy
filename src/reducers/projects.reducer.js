@@ -94,6 +94,9 @@ export const getProjectsArray = (state: GlobalState) =>
     prepareProjectForConsumption(project, state)
   );
 
+export const getProjectById = (id: string, state: GlobalState) =>
+  prepareProjectForConsumption(state.projects.byId[id], state);
+
 export const getSelectedProjectId = (state: GlobalState) =>
   state.projects.selectedId;
 
