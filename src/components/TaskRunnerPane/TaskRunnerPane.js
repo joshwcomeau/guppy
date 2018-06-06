@@ -63,6 +63,7 @@ class TaskRunnerPane extends Component<Props, State> {
       <Module title="Tasks">
         {tasks.map(task => (
           <TaskRunnerPaneRow
+            key={task.id}
             id={task.id}
             name={task.name}
             description={task.description}

@@ -14,6 +14,7 @@ import Transition from 'react-transition-group/Transition';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
+import { hasPropChanged } from '../../utils';
 
 const translateYSpringSettings = {
   stiffness: 95,
@@ -32,13 +33,36 @@ type Props = {
   children: React$Node,
 };
 
-class Modal extends PureComponent<Props> {
+type State = {
+  outdatedChildren: React$Node,
+};
+
+class Modal extends PureComponent<Props, State> {
   static defaultProps = {
     width: 750,
   };
 
+  state = {
+    outdatedChildren: null,
+  };
+
+  componentWillReceiveProps(nextProps: Props) {
+    // When the modal is dismissed, we want to render the "stale" children for
+    // a couple hundred milliseconds, until the modal has fully closed.
+    // This is to prevent the underlying component from changing as it fades
+    // away.
+    if (hasPropChanged(this.props, nextProps, 'isVisible')) {
+      if (nextProps.isVisible) {
+        this.setState({ outdatedChildren: null });
+      } else {
+        this.setState({ outdatedChildren: this.props.children });
+      }
+    }
+  }
+
   render() {
     const { isVisible, width, onDismiss, children } = this.props;
+    const { outdatedChildren } = this.state;
 
     return (
       <Transition in={isVisible} timeout={300}>
@@ -50,13 +74,7 @@ class Modal extends PureComponent<Props> {
           const inTransit =
             transitionState === 'entering' || transitionState === 'exiting';
 
-          // prettier-ignore
-          const translateY =
-              (transitionState === 'entering' || transitionState === 'exited')
-                ? 50
-                : transitionState === 'exiting'
-                  ? -50
-                  : 0;
+          const translateY = transitionState === 'entered' ? 0 : 50;
 
           return (
             <Motion
@@ -69,8 +87,8 @@ class Modal extends PureComponent<Props> {
                 <Wrapper opacity={opacity} clickable={!inTransit}>
                   <Backdrop onClick={onDismiss} />
 
-                  <PaneWrapper style={{ width }} translateY={translateY}>
-                    {children}
+                  <PaneWrapper width={width} translateY={translateY}>
+                    {outdatedChildren || children}
                   </PaneWrapper>
                 </Wrapper>
               )}
@@ -111,7 +129,8 @@ const Backdrop = styled.div`
 
 const PaneWrapper = styled.div.attrs({
   style: props => ({
-    transform: `translateY(${props.translateY}%)`,
+    width: props.width,
+    transform: `translateY(${props.translateY}px)`,
   }),
 })`
   position: relative;

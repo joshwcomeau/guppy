@@ -10,9 +10,19 @@ import type { Task } from '../../types';
 
 type Props = {
   taskId: ?string,
-  task: ?Task,
+  task: Task,
 };
 const TaskDetails = ({ task }: Props) => {
+  // const {
+  //   name,
+  //   description,
+  //   status,
+  //   processId,
+  //   command,
+  //   timeSinceStatusChange,
+  //   logs,
+  // } = task;
+
   return <div>Hello World, ${task ? task.name : 'No task selected'}</div>;
 };
 
@@ -20,4 +30,4 @@ const mapStateToProps = (state, ownProps) => ({
   task: getTaskById(ownProps.taskId, state),
 });
 
-export default connect()(TaskDetails);
+export default connect(mapStateToProps)(TaskDetails);
