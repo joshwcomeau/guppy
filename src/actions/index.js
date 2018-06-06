@@ -92,6 +92,7 @@ export const completeTask = (
   type: COMPLETE_TASK,
   task,
   timestamp,
+  wasSuccessful,
 });
 
 export const receiveDataFromTaskExecution = (

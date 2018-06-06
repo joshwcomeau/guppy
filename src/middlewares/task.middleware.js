@@ -126,8 +126,6 @@ export default store => next => action => {
         additionalArgs.push('--', '--coverage');
       }
 
-      console.log(additionalArgs, project.type, name);
-
       const child = childProcess.spawn(
         `npm`,
         ['run', name, ...additionalArgs],

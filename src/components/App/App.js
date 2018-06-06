@@ -54,7 +54,6 @@ class App extends Component<Props> {
     }
 
     history.listen(location => {
-      console.log('location change!', location);
       const projectId = extractProjectIdFromUrl(location);
 
       if (projectId) {
