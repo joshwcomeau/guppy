@@ -126,7 +126,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     const readyToBeBuilt = status !== 'filling-in-form';
 
     return (
-      <Transition in={isVisible} timeout={1000}>
+      <Transition in={isVisible} timeout={300}>
         {transitionState => (
           <TwoPaneModal
             isFolded={readyToBeBuilt}

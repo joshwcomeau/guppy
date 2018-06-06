@@ -207,6 +207,9 @@ const buildNewTask = (id, projectId, name, command) => ({
 // Selectors
 type GlobalState = { tasks: State };
 
+export const getTaskById = (taskId: string, state: GlobalState) =>
+  state.tasks[taskId];
+
 export const getTasksForProjectId = (
   projectId: string,
   state: GlobalState

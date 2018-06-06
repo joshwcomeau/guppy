@@ -63,6 +63,9 @@ const INTRO_SEQUENCE_STEPS = [
   'add-projects-fade-in',
 ];
 
+// TODO: this component re-renders whenever _anything_ with a project changes
+// (like adding a log to a task). It might be prudent to add a selector that
+// only provides the fields necessary for the sidebar.
 class Sidebar extends PureComponent<Props, State> {
   timeoutId: number;
   state = {
