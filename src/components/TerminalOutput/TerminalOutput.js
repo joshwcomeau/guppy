@@ -42,8 +42,6 @@ class TerminalOutput extends PureComponent<Props> {
   render() {
     const { height, logs } = this.props;
 
-    console.log(logs);
-
     return (
       <Wrapper height={height} innerRef={node => (this.node = node)}>
         <TableWrapper height={height}>
@@ -52,11 +50,7 @@ class TerminalOutput extends PureComponent<Props> {
               <LogRow
                 key={log.id}
                 dangerouslySetInnerHTML={{
-                  __html: convert.toHtml(
-                    log.text
-                      .replace(/^[\ ]/gm, '&nbsp;&nbsp;')
-                      .replace(/(\r\n|\r|\n)/g, '<br />')
-                  ),
+                  __html: convert.toHtml(log.text),
                 }}
               />
             ))}
@@ -97,6 +91,7 @@ const LogWrapper = styled.div`
 const LogRow = styled.div`
   min-height: 0;
   margin-top: 10px;
+  white-space: pre;
 `;
 
 export default TerminalOutput;
