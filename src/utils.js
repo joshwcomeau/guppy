@@ -223,3 +223,7 @@ export const getTimeOfDay = () => {
     return 'night';
   }
 };
+
+export const hasPropChanged = (oldProps, newProps, key) => {
+  return oldProps[key] !== newProps[key];
+};

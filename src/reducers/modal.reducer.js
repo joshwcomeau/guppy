@@ -1,4 +1,9 @@
 // @flow
+/**
+ * NOTE: Not all modals use this reducer.
+ * Clicking a task details button just uses local state.
+ * Unclear to me if it makes sense to keep this in Redux or not.
+ */
 import {
   START_CREATING_NEW_PROJECT,
   CANCEL_CREATING_NEW_PROJECT,

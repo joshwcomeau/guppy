@@ -1,9 +1,18 @@
 // @flow
+/**
+ * NOTE: This code duplicates a lot of <Modal />.
+ *
+ * It's 100% possible that this code can be reconciled and combiled, but it's
+ * non-trivial (for one thing, it would be hard to imagine it without nested
+ * ReactMotion instances, and that could be bad for perf).
+ */
 import React, { PureComponent } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
+
+import Modal from '../Modal';
 
 type Props = {
   leftPane: React$Node,

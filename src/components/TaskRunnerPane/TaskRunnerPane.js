@@ -9,7 +9,9 @@ import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 
 import Module from '../Module';
+import Modal from '../Modal';
 import TaskRunnerPaneRow from '../TaskRunnerPaneRow';
+import TaskDetails from '../TaskDetails';
 
 import type { Task } from '../../types';
 
@@ -19,7 +21,15 @@ type Props = {
   abortTask: Function,
 };
 
-class TaskRunnerPane extends Component<Props> {
+type State = {
+  selectedTaskId: ?string,
+};
+
+class TaskRunnerPane extends Component<Props, State> {
+  state = {
+    selectedTaskId: null,
+  };
+
   handleToggleTask = taskId => {
     const { tasks, runTask, abortTask } = this.props;
 
@@ -37,21 +47,40 @@ class TaskRunnerPane extends Component<Props> {
     isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
   };
 
+  handleViewDetails = taskId => {
+    this.setState({ selectedTaskId: taskId });
+  };
+
+  handleDismissTaskDetails = () => {
+    this.setState({ selectedTaskId: null });
+  };
+
   render() {
     const { tasks } = this.props;
+    const { selectedTaskId } = this.state;
 
     return (
       <Module title="Tasks">
         {tasks.map(task => (
           <TaskRunnerPaneRow
+            key={task.id}
             id={task.id}
             name={task.name}
             description={task.description}
             status={task.status}
             processId={task.processId}
             onToggleTask={this.handleToggleTask}
+            onViewDetails={this.handleViewDetails}
           />
         ))}
+
+        <Modal
+          width={620}
+          isVisible={!!selectedTaskId}
+          onDismiss={this.handleDismissTaskDetails}
+        >
+          <TaskDetails taskId={selectedTaskId} />
+        </Modal>
       </Module>
     );
   }

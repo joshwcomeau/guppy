@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { u1F44C as successIcon } from 'react-icons-kit/noto_emoji_regular/u1F44C';
-import { u1F319 as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F319';
+import { u1F31B as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F31B';
 import { u274C as failIcon } from 'react-icons-kit/noto_emoji_regular/u274C';
 import { ic_eject as ejectIcon } from 'react-icons-kit/md/ic_eject';
 
@@ -25,6 +25,7 @@ type Props = {
   status: TaskStatus,
   processId?: number,
   onToggleTask: (taskId: string) => void,
+  onViewDetails: (taskId: string) => void,
 };
 
 class TaskRunnerPaneRow extends PureComponent<Props> {
@@ -36,9 +37,8 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
       status,
       processId,
       onToggleTask,
+      onViewDetails,
     } = this.props;
-
-    console.log('task runner render');
 
     return (
       <TaskCard key={id}>
@@ -53,7 +53,9 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
         </StatusColumn>
 
         <LinkColumn>
-          <Button size="small">View Details</Button>
+          <Button size="small" onClick={() => onViewDetails(id)}>
+            View Details
+          </Button>
         </LinkColumn>
 
         <ActionsColumn>
@@ -61,7 +63,7 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
             <BigClickableButton
               width={40}
               height={34}
-              colors={[COLORS.purple[500], COLORS.blue[700]]}
+              colors={[COLORS.pink[500], '#FF4081']}
             >
               <IconBase size={24} icon={ejectIcon} />
             </BigClickableButton>
