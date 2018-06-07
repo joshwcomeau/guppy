@@ -136,10 +136,8 @@ const PaneWrapper = styled.div.attrs({
   position: relative;
   z-index: 2;
   max-width: 100%;
-  display: flex;
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.2), 0px 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  padding: 30px;
   background: ${COLORS.white};
   will-change: transform;
 `;

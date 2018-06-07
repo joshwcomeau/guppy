@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { u1F44C as successIcon } from 'react-icons-kit/noto_emoji_regular/u1F44C';
-import { u1F319 as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F319';
+import { u1F31B as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F31B';
 import { u274C as failIcon } from 'react-icons-kit/noto_emoji_regular/u274C';
 import { ic_eject as ejectIcon } from 'react-icons-kit/md/ic_eject';
 

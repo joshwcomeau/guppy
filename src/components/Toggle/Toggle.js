@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Motion, spring } from 'react-motion';
 
 import { COLORS } from '../../constants';
@@ -64,7 +64,9 @@ class Toggle extends PureComponent<Props> {
         padding={padding}
         onClick={() => onToggle(!isToggled)}
       >
-        <OnBackground isVisible={isToggled} />
+        <OnBackground isVisible={isToggled}>
+          <Pulsing />
+        </OnBackground>
         <Motion
           style={{
             translate: spring(isToggled ? 100 : 0, {
@@ -79,6 +81,13 @@ class Toggle extends PureComponent<Props> {
     );
   }
 }
+
+const pulse = keyframes`
+  0% { opacity: 0 }
+  20% { opacity: 0 }
+  70% { opacity: 0.35 }
+  100% { opacity: 0 }
+`;
 
 const Wrapper = styled.button`
   position: relative;
@@ -112,6 +121,18 @@ const OnBackground = styled.div`
   );
   opacity: ${props => (props.isVisible ? 1 : 0)};
   transition: opacity 300ms;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
+`;
+
+const Pulsing = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: ${COLORS.blue[800]};
+  animation: ${pulse} 2000ms infinite;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
 
