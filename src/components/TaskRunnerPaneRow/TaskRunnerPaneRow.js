@@ -5,7 +5,6 @@ import IconBase from 'react-icons-kit';
 import { u1F44C as successIcon } from 'react-icons-kit/noto_emoji_regular/u1F44C';
 import { u1F31B as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F31B';
 import { u274C as failIcon } from 'react-icons-kit/noto_emoji_regular/u274C';
-import { ic_eject as ejectIcon } from 'react-icons-kit/md/ic_eject';
 
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
@@ -13,7 +12,7 @@ import { capitalize } from '../../utils';
 import Card from '../Card';
 import Spinner from '../Spinner';
 import Button from '../Button';
-import BigClickableButton from '../BigClickableButton';
+import EjectButton from '../EjectButton';
 import Toggle from '../Toggle';
 
 import type { Task, TaskStatus } from '../../types';
@@ -60,13 +59,12 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
 
         <ActionsColumn>
           {name === 'eject' ? (
-            <BigClickableButton
+            <EjectButton
               width={40}
               height={34}
-              colors={[COLORS.pink[500], '#FF4081']}
-            >
-              <IconBase size={24} icon={ejectIcon} />
-            </BigClickableButton>
+              isRunning={!!processId}
+              onClick={() => onToggleTask(id)}
+            />
           ) : (
             <Toggle
               size={24}

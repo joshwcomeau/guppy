@@ -110,6 +110,16 @@ export default store => next => action => {
 
       const project = getProjectById(projectId, store.getState());
 
+      if (name === 'eject') {
+        next(attachProcessIdToTask(task, 12345));
+
+        window.setTimeout(() => {
+          const timestamp = new Date();
+          store.dispatch(completeTask(task, timestamp, true));
+        }, 2000);
+        break;
+      }
+
       // TEMPORARY HACK
       // By default, create-react-app runs tests in interactive watch mode.
       // This is a brilliant way to do it, but it's interactive, which won't
