@@ -8,13 +8,15 @@
  * TODO: Use a portal to render this at the top-level, to avoid any z-index
  * issues?
  */
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import Transition from 'react-transition-group/Transition';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
 import { hasPropChanged } from '../../utils';
+
+import ScrollDisabler from '../ScrollDisabler';
 
 const translateYSpringSettings = {
   stiffness: 95,
@@ -65,37 +67,41 @@ class Modal extends PureComponent<Props, State> {
     const { outdatedChildren } = this.state;
 
     return (
-      <Transition in={isVisible} timeout={300}>
-        {transitionState => {
-          if (transitionState === 'exited') {
-            return null;
-          }
+      <Fragment>
+        {isVisible && <ScrollDisabler />}
 
-          const inTransit =
-            transitionState === 'entering' || transitionState === 'exiting';
+        <Transition in={isVisible} timeout={300}>
+          {transitionState => {
+            if (transitionState === 'exited') {
+              return null;
+            }
 
-          const translateY = transitionState === 'entered' ? 0 : 50;
+            const inTransit =
+              transitionState === 'entering' || transitionState === 'exiting';
 
-          return (
-            <Motion
-              style={{
-                translateY: spring(translateY, translateYSpringSettings),
-                opacity: spring(inTransit ? 0 : 1, opacitySpringSettings),
-              }}
-            >
-              {({ translateY, opacity }) => (
-                <Wrapper opacity={opacity} clickable={!inTransit}>
-                  <Backdrop onClick={onDismiss} />
+            const translateY = transitionState === 'entered' ? 0 : 50;
 
-                  <PaneWrapper width={width} translateY={translateY}>
-                    {outdatedChildren || children}
-                  </PaneWrapper>
-                </Wrapper>
-              )}
-            </Motion>
-          );
-        }}
-      </Transition>
+            return (
+              <Motion
+                style={{
+                  translateY: spring(translateY, translateYSpringSettings),
+                  opacity: spring(inTransit ? 0 : 1, opacitySpringSettings),
+                }}
+              >
+                {({ translateY, opacity }) => (
+                  <Wrapper opacity={opacity} clickable={!inTransit}>
+                    <Backdrop onClick={onDismiss} />
+
+                    <PaneWrapper width={width} translateY={translateY}>
+                      {outdatedChildren || children}
+                    </PaneWrapper>
+                  </Wrapper>
+                )}
+              </Motion>
+            );
+          }}
+        </Transition>
+      </Fragment>
     );
   }
 }

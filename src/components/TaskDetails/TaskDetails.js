@@ -2,6 +2,7 @@
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import moment from 'moment';
 import IconBase from 'react-icons-kit';
 import { u231B as hourglass } from 'react-icons-kit/noto_emoji_regular/u231B';
 import { u1F553 as clock } from 'react-icons-kit/noto_emoji_regular/u1F553';
@@ -14,8 +15,9 @@ import { getTaskById } from '../../reducers/tasks.reducer';
 import Heading from '../Heading';
 import Toggle from '../Toggle';
 import PixelShifter from '../PixelShifter';
-import SquareStatus from '../SquareStatus';
 import LargeLED from '../LargeLED';
+import TerminalOutput from '../TerminalOutput';
+import Spacer from '../Spacer';
 
 import type { Task } from '../../types';
 
@@ -35,6 +37,59 @@ class TaskDetails extends PureComponent<Props> {
     const timestamp = new Date();
 
     isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
+  };
+
+  getStatusText = () => {
+    const { status, timeSinceStatusChange } = this.props.task;
+
+    switch (status) {
+      case 'idle': {
+        return (
+          <span>
+            Task is <strong>idle</strong>.
+            <LastRunText>
+              Last run:{' '}
+              {moment(timeSinceStatusChange).format(
+                'MMMM Do, YYYY [at] h:mm a'
+              )}
+            </LastRunText>
+          </span>
+        );
+      }
+      case 'pending': {
+        return (
+          <span>
+            Task is{' '}
+            <strong style={{ color: COLORS.orange[500] }}>running</strong>...
+          </span>
+        );
+      }
+
+      case 'success': {
+        return (
+          <span>
+            Task{' '}
+            <strong style={{ color: COLORS.green[700] }}>
+              completed successfully
+            </strong>.
+            <LastRunText>
+              {moment(timeSinceStatusChange).calendar()}
+            </LastRunText>
+          </span>
+        );
+      }
+
+      case 'failed': {
+        return (
+          <span>
+            Task <strong>failed</strong>.
+            <LastRunText>
+              {moment(timeSinceStatusChange).calendar()}
+            </LastRunText>
+          </span>
+        );
+      }
+    }
   };
 
   render() {
@@ -62,17 +117,16 @@ class TaskDetails extends PureComponent<Props> {
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         </Header>
 
-        <Statuses>
-          <SquareStatus width={150} label="Status" value="Idle">
-            <LargeLED size={64} status="idle" />
-          </SquareStatus>
-          <SquareStatus width={150} label="Status" value="Idle">
-            <IconBase icon={hourglass} size={64} />
-          </SquareStatus>
-          <SquareStatus width={150} label="Status" value="Idle">
-            <IconBase icon={clock} size={64} />
-          </SquareStatus>
-        </Statuses>
+        <MainContent>
+          <Status>
+            <LargeLED size={32} status={status} />
+            <StatusLabel>{this.getStatusText()}</StatusLabel>
+          </Status>
+
+          <Spacer size={25} />
+
+          <TerminalOutput height={425} logs={logs} />
+        </MainContent>
       </Fragment>
     );
   }
@@ -81,22 +135,33 @@ class TaskDetails extends PureComponent<Props> {
 const Header = styled.header`
   display: flex;
   justify-content: space-between;
-  padding: 25px;
+  padding: 25px 25px 15px 25px;
   background: ${COLORS.gray[100]};
   border-radius: 8px 8px 0 0;
 `;
 
 const Description = styled.div`
-  margin-bottom: 15px;
   font-size: 24px;
   color: ${COLORS.gray[600]};
 `;
 
-const Statuses = styled.div`
+const MainContent = styled.section`
+  padding: 25px;
+`;
+
+const Status = styled.div`
   display: flex;
-  justify-content: space-around;
-  margin-top: -15px;
-  margin-bottom: 30px;
+  align-items: center;
+  font-size: 20px;
+`;
+
+const StatusLabel = styled.div`
+  margin-left: 10px;
+`;
+
+const LastRunText = styled.span`
+  margin-left: 10px;
+  color: ${COLORS.gray[400]};
 `;
 
 const mapStateToProps = (state, ownProps) => ({

@@ -22,6 +22,10 @@ class TerminalOutput extends PureComponent<Props> {
 
   node: ?HTMLElement;
 
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
   componentDidUpdate() {
     this.scrollToBottom();
   }
