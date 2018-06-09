@@ -56,14 +56,15 @@ class ProjectPage extends Component<Props> {
           </PixelShifter>
 
           <Spacer size={30} />
-
           <DevelopmentServerPane leftSideWidth={300} />
 
           <Spacer size={30} />
-
           <TaskRunnerPane leftSideWidth={200} />
+
           <Spacer size={30} />
           <DependencyManagementPane />
+
+          <Spacer size={60} />
         </MainContentWrapper>
       </FadeIn>
     );
