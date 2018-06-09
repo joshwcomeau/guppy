@@ -6,7 +6,7 @@
   "homepage": "./",
   "scripts": {
     "start": "concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
-    "start:react": "PORT=5678 node scripts/start.js",
+    "start:react": "PORT=5678 BROWSER=none node scripts/start.js",
     "start:electron": "ELECTRON_START_URL=http://localhost:5678 electron .",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=node",
