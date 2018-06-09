@@ -27,7 +27,7 @@ const parentPath = `${os.homedir()}/guppy-projects`;
 // And without that work, the test-running would be totally broken.
 // So instead, I'm gonna force it into "just run all the tests once" mode :(
 // This is bad, and I should feel bad. Hopefully we'll fix this though!
-const getAdditionalArgsForTask = task => {};
+const getAdditionalArgsForTask = task => { };
 
 export default store => next => action => {
   if (!action.task) {
@@ -126,8 +126,20 @@ export default store => next => action => {
         additionalArgs.push('--', '--coverage');
       }
 
+      /* Bypasses 'Are you sure?' check when ejecting CRA
+       * 
+       * @todo add windows support
+       * 
+       * Works perfect on Linux (Ubuntu). Most likely will
+       * work great in Mac machines too. Although it
+       * will certainly fail on Windows.
+       */
+      const command = (project.type === 'create-react-app' && name === 'eject')
+        ? 'echo yes | npm'
+        : 'npm';
+
       const child = childProcess.spawn(
-        `npm`,
+        command,
         ['run', name, ...additionalArgs],
         {
           cwd: `${parentPath}/${projectId}`,
