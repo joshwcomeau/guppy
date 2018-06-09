@@ -5,7 +5,6 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { refreshProjects, selectProject } from '../../actions';
-import readLocalProjectsFromDisk from '../../services/read-local-projects.service';
 import {
   extractProjectIdFromUrl,
   buildUrlForProjectId,

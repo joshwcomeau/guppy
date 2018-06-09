@@ -1,6 +1,11 @@
 // @flow
 import uuid from 'uuid/v1';
-import readLocalProjectsFromDisk from '../services/read-local-projects.service';
+
+import {
+  loadGuppyProjects,
+  loadProjectDependencies,
+} from '../services/read-from-disk.service';
+import { getInternalProjectById } from '../reducers/projects.reducer';
 
 import type { Project, Task } from '../types';
 
@@ -24,6 +29,7 @@ export const COMPLETE_TASK = 'COMPLETE_TASK';
 export const RECEIVE_DATA_FROM_TASK_EXECUTION =
   'RECEIVE_DATA_FROM_TASK_EXECUTION';
 export const LAUNCH_DEV_SERVER = 'LAUNCH_DEV_SERVER';
+export const LOAD_DEPENDENCY_INFO_FROM_DISK = 'LOAD_DEPENDENCY_INFO_FROM_DISK';
 
 //
 //
@@ -36,12 +42,29 @@ export const addProject = (project: Project) => ({
 
 export const refreshProjects = () => {
   return (dispatch: any) => {
-    readLocalProjectsFromDisk().then(projects =>
+    loadGuppyProjects().then(projects =>
       dispatch({
         type: REFRESH_PROJECTS,
         projects,
       })
     );
+  };
+};
+
+export const loadDependencyInfoFromDisk = (project: Project) => {
+  return (dispatch: any, getState: Function) => {
+    // The `project` this action receives is the "fit-for-consumption" one.
+    // We need the internal version, `ProjectInternal`, so that we can see the
+    // raw dependency information.
+    const internalProject = getInternalProjectById(project.id, getState());
+
+    loadProjectDependencies(internalProject).then(dependencies => {
+      dispatch({
+        type: LOAD_DEPENDENCY_INFO_FROM_DISK,
+        project,
+        dependencies,
+      });
+    });
   };
 };
 

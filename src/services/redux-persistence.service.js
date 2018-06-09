@@ -1,5 +1,3 @@
-import readLocalProjectsFromDisk from './read-local-projects.service';
-
 const REDUX_STATE_KEY = 'redux-state';
 
 /**

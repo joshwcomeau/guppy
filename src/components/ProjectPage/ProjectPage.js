@@ -6,6 +6,7 @@ import styled, { keyframes } from 'styled-components';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { extractProjectTabFromUrl } from '../../services/location.service';
 import { COLORS } from '../../constants';
+import { loadDependencyInfoFromDisk } from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -15,17 +16,26 @@ import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
 
-import type { Action } from 'redux';
 import type { Project } from '../../types';
 
 type Props = {
   project: Project,
-  selectProject: Action,
+  loadDependencyInfoFromDisk: (project: Project) => any,
   location: any, // provided by react-router
   match: any, // provided by react-router
 };
 
 class ProjectPage extends Component<Props> {
+  componentDidMount() {
+    this.getDependencyInfo();
+  }
+
+  getDependencyInfo() {
+    const { loadDependencyInfoFromDisk, project } = this.props;
+
+    loadDependencyInfoFromDisk(project);
+  }
+
   render() {
     const { project, location, match } = this.props;
 
@@ -73,4 +83,7 @@ const mapStateToProps = state => ({
   project: getSelectedProject(state),
 });
 
-export default connect(mapStateToProps)(ProjectPage);
+export default connect(
+  mapStateToProps,
+  { loadDependencyInfoFromDisk }
+)(ProjectPage);
