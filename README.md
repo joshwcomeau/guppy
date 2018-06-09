@@ -19,7 +19,37 @@ Guppy is built for beginners - I imagine the typical user as a fresh bootcamp en
 
 ### Current Status
 
-Guppy is in pre-release development.
+Guppy is in pre-release development. We hope to ship an early alpha around mid-to-late June.
+
+Some stuff that still needs to be implemented before launch:
+
+- Adding dependencies
+- Removing dependencies
+- Updating dependency version
+- Searching for dependencies (probably a very rudimentary version at first)
+- Cross-platform support (Mac, Linux, Windows)
+- Adding an icon for the project (instead of the default Electron one)
+- Support for Gatsby projects
+- Polish onboarding (add details about project types, tweak copy, add more icons, add tooltip for randomize button, ensure project name doesn't conflict)
+- Add `createdAt` field to Guppy package.json
+
+Some stuff that _probably_ should come before launch, but maybe right afterwards?
+
+- Import project (right now it only supports projects created with Guppy)
+- Delete project
+- Better port management (sometimes tasks are spawned that are "lost", and I have to kill them through the CLI. Maybe this is just dev-related... but yeah we should definitely kill all running processes when the application quits!)
+
+### Future Vision
+
+Right now, Guppy's feature-set is pretty limited. It consists of 3 modules: a "dev-server" pane, a "tasks" pane, and a "dependencies" pane.
+
+The first big change I'd like to see is better support for common dev tools like running tests, linting, code formatting, and so on. Some examples of potential improvements:
+
+- Testing shouldn't just be a thin row in a list, it should have its own module, like the Dev Server does. It should run in "interactive" mode, and allow users to re-run tests by clicking buttons.
+
+- Dependencies should be easy to update. I imagine an "update core dependencies" button that updates react, react-dom, and any associated packages, with built-in codemod support. I imagine it being able to find security problems (via [`npm audit`](https://docs.npmjs.com/getting-started/running-a-security-audit)).
+
+I'd also like to see Guppy become far more useful for educating users about web development. The philosophy of Guppy is that anybody can learn web development, and it should provide resources to help learners along. Guppy has full access to the project code and settings, and so I wonder if there are opportunities to suggest solutions to problems the user runs into... I don't have any concrete ideas yet, but it's interesting to think about.
 
 ### How it works
 
