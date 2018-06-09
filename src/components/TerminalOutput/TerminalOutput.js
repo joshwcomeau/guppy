@@ -10,6 +10,7 @@ var Convert = require('ansi-to-html');
 var convert = new Convert();
 
 type Props = {
+  width?: number,
   height?: number,
   logs: Array<Log>,
 };
@@ -17,6 +18,7 @@ type Props = {
 class TerminalOutput extends PureComponent<Props> {
   static defaultProps = {
     logs: [],
+    width: '100%',
     height: 200,
   };
 
@@ -44,10 +46,14 @@ class TerminalOutput extends PureComponent<Props> {
   };
 
   render() {
-    const { height, logs } = this.props;
+    const { width, height, logs } = this.props;
 
     return (
-      <Wrapper height={height} innerRef={node => (this.node = node)}>
+      <Wrapper
+        width={width}
+        height={height}
+        innerRef={node => (this.node = node)}
+      >
         <TableWrapper height={height}>
           <LogWrapper>
             {logs.map(log => (
@@ -66,6 +72,8 @@ class TerminalOutput extends PureComponent<Props> {
 }
 
 const Wrapper = styled.div`
+  width: ${props =>
+    typeof props.width === 'number' ? `${props.width}px` : props.width};
   height: ${props => props.height}px;
   overflow: auto;
   padding: 15px;

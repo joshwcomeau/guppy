@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { extractProjectTabFromUrl } from '../../services/location.service';
@@ -37,31 +37,36 @@ class ProjectPage extends Component<Props> {
     }
 
     return (
-      <MainContentWrapper>
-        <Header>
+      <FadeIn>
+        <MainContentWrapper>
           <PixelShifter x={-2}>
             <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
               {project.name}
             </Heading>
           </PixelShifter>
-        </Header>
 
-        <Spacer size={30} />
+          <Spacer size={30} />
 
-        <DevelopmentServerPane leftSideWidth={300} />
+          <DevelopmentServerPane leftSideWidth={300} />
 
-        <Spacer size={30} />
+          <Spacer size={30} />
 
-        <TaskRunnerPane leftSideWidth={200} />
-        <Spacer size={30} />
-        <DependencyManagementPane />
-      </MainContentWrapper>
+          <TaskRunnerPane leftSideWidth={200} />
+          <Spacer size={30} />
+          <DependencyManagementPane />
+        </MainContentWrapper>
+      </FadeIn>
     );
   }
 }
 
-const Header = styled.div`
-  /* padding: 0 10px; */
+const fadeIn = keyframes`
+  from { opacity: 0 }
+  to { opacity: 1 }
+`;
+
+const FadeIn = styled.div`
+  animation: ${fadeIn} 1000ms;
 `;
 
 const mapStateToProps = state => ({
