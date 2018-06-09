@@ -12,11 +12,12 @@ type Props = {
   thickness: number,
   colors: Array<string>,
   children: string,
+  isOn: boolean,
+  onClick: () => void,
 };
 
 type State = {
-  status: 'off' | 'on',
-  isDepressed: boolean,
+  isActive: boolean,
 };
 
 class BigClickableButton extends Component<Props, State> {
@@ -29,17 +30,23 @@ class BigClickableButton extends Component<Props, State> {
 
   state = {
     status: 'off',
-    isDepressed: false,
+    isActive: false,
   };
 
-  depress = () => this.setState({ isDepressed: true });
-  release = () => this.setState({ isDepressed: false });
-  click = () =>
-    this.setState({ status: this.state.status === 'on' ? 'off' : 'on' });
+  depress = () => this.setState({ isActive: true });
+  release = () => this.setState({ isActive: false });
 
   render() {
-    const { width, height, thickness, colors, children } = this.props;
-    const { status, isDepressed } = this.state;
+    const {
+      width,
+      height,
+      thickness,
+      colors,
+      onClick,
+      isOn,
+      children,
+    } = this.props;
+    const { isActive } = this.state;
 
     const bottomColor = Color(colors[0])
       .darken(0.3)
@@ -52,17 +59,25 @@ class BigClickableButton extends Component<Props, State> {
 
     const background = `linear-gradient(45deg, ${colors.join(', ')})`;
 
+    // When the user is actively clicking on it, it should be all-the-way
+    // depressed (full thickness).
+    // Otherwise, the amount of depression will depend on whether or not the
+    // button is "on".
+    // prettier-ignore
+    const amountDepressed = isActive
+      ? thickness
+      : isOn
+        ? thickness - 2
+        : 0;
+
     return (
       <OuterWrapper thickness={thickness}>
         <Motion
           style={{
-            offset: spring(
-              isDepressed ? thickness : status === 'on' ? thickness - 2 : 0,
-              {
-                stiffness: 196,
-                damping: 16,
-              }
-            ),
+            offset: spring(amountDepressed, {
+              stiffness: 196,
+              damping: 16,
+            }),
           }}
         >
           {({ offset }) => (
@@ -74,7 +89,7 @@ class BigClickableButton extends Component<Props, State> {
                 onMouseDown={this.depress}
                 onMouseUp={this.release}
                 onMouseLeave={this.release}
-                onClick={this.click}
+                onClick={onClick}
               >
                 {children}
               </Button>
