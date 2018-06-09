@@ -1,4 +1,8 @@
 export const COLORS = {
+  hotPink: {
+    '500': '#F50057',
+    '700': '#C51162',
+  },
   pink: {
     '100': '#FF80AB',
     '300': '#ff416c',
@@ -23,6 +27,7 @@ export const COLORS = {
     '700': '#AEEA00',
   },
   lightGreen: {
+    '400': '#a0fc20',
     '500': '#69db0d',
     '700': '#64DD17',
   },

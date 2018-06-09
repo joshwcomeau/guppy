@@ -13,6 +13,7 @@ import Card from '../Card';
 import Button from '../Button';
 import DependencyDetails from '../DependencyDetails';
 import PixelShifter from '../PixelShifter';
+import Spacer from '../Spacer';
 
 import type { Project, Dependency } from '../../types';
 
@@ -56,18 +57,16 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 </DependencyVersion>
               </DependencyButton>
             ))}
+            <Spacer size={15} />
+            <Button>Add New Dependency</Button>
           </DependencyList>
-          <CardWrapper>
-            <MainContent>
-              {selectedDependency ? (
-                <PixelShifter y={-8}>
-                  <DependencyDetails dependency={selectedDependency} />
-                </PixelShifter>
-              ) : (
-                'TODO: Add something here'
-              )}
-            </MainContent>
-          </CardWrapper>
+          <MainContent>
+            {selectedDependency ? (
+              <DependencyDetails dependency={selectedDependency} />
+            ) : (
+              'TODO: Add something here'
+            )}
+          </MainContent>
         </Wrapper>
       </Module>
     );
@@ -78,18 +77,8 @@ const Wrapper = styled.div`
   display: flex;
 `;
 
-const CardWrapper = Card.extend`
-  /* display: flex; */
-  flex: 1;
-  margin-left: 12px;
-`;
-
-const DependencyList = styled.div`
-  width: 220px;
-  /* background: ${COLORS.gray[100]};
-  border-radius: 4px;
-  padding: 4px 10px;
-  margin: 4px; */
+const DependencyList = Card.extend`
+  width: 300px;
 `;
 
 const DependencyButton = styled.button`
@@ -97,24 +86,28 @@ const DependencyButton = styled.button`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 12px 14px;
-  margin: 12px 0px;
+  padding: 8px 10px;
+  margin: 6px 0px;
   border: none;
   background: ${props =>
     props.isSelected
-      ? `linear-gradient(10deg, ${COLORS.purple[700]}, ${COLORS.blue[700]})`
-      : COLORS.white};
+      ? `linear-gradient(10deg, ${COLORS.blue[700]}, ${COLORS.blue[500]})`
+      : COLORS.gray[100]};
   color: ${props => (props.isSelected ? COLORS.white : COLORS.gray[900])};
-  border-radius: 8px;
-  box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  border-bottom: ${props =>
+    props.isSelected
+      ? '2px solid rgba(0, 0, 0, 0.5)'
+      : '2px solid rgba(0, 0, 0, 0.1)'};
+  cursor: pointer;
 
   &:active,
   &:focus {
     outline: none;
     background: ${props =>
       props.isSelected
-        ? `linear-gradient(10deg, ${COLORS.purple[700]}, ${COLORS.blue[700]})`
-        : COLORS.gray[200]};
+        ? `linear-gradient(10deg, ${COLORS.blue[700]}, ${COLORS.blue[500]})`
+        : COLORS.gray[300]};
   }
 
   &:first-of-type {
@@ -139,8 +132,10 @@ const DependencyVersion = styled.span`
     props.isSelected ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'};
 `;
 
-const MainContent = styled.div`
+const MainContent = Card.extend`
   flex: 1;
+  margin-left: 15px;
+  padding: 0;
 `;
 
 const mapStateToProps = state => ({

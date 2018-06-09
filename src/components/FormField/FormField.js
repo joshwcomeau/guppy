@@ -1,7 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
+
 import { COLORS } from '../../constants';
+
+import Label from '../Label';
 
 type Props = {
   label: string,
@@ -34,13 +37,10 @@ const WrapperDiv = styled.div`
   margin-bottom: 30px;
 `;
 
-const LabelText = styled.div`
+const LabelText = styled(Label)`
   flex-basis: ${props => props.width}px;
-  font-size: 13px;
   color: ${props => (props.isFocused ? COLORS.purple[700] : COLORS.gray[500])};
   padding: 0px 5px;
-  text-transform: uppercase;
-  font-weight: 500;
 `;
 
 const Children = styled.div`

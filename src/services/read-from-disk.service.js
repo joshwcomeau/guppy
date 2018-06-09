@@ -130,6 +130,7 @@ export function loadProjectDependencies(
             const packageJsonSubset = pick(packageJson, [
               'name',
               'description',
+              'keywords',
               'version',
               'homepage',
               'license',

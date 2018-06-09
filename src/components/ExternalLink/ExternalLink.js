@@ -15,6 +15,11 @@ type Props = {
 };
 
 class ExternalLink extends Component<Props> {
+  static defaultProps = {
+    color: COLORS.blue[700],
+    hoverColor: COLORS.blue[500],
+  };
+
   handleClick = (ev: SyntheticMouseEvent<*>) => {
     const { href } = this.props;
 

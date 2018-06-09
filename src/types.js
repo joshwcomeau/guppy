@@ -33,6 +33,7 @@ export type Task = {
 export type Dependency = {
   name: string,
   description: string,
+  keywords?: Array<string>,
   version: string,
   homepage: string,
   license: string,
