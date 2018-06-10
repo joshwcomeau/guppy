@@ -119,9 +119,10 @@ class TaskDetailsModal extends PureComponent<Props> {
       <Fragment>
         <ModalHeader
           title={capitalize(name)}
-          description={description}
           action={<Toggle isToggled={isRunning} onToggle={this.handleToggle} />}
-        />
+        >
+          <Description>{description}</Description>
+        </ModalHeader>
 
         <MainContent>
           <Status>
@@ -150,6 +151,11 @@ class TaskDetailsModal extends PureComponent<Props> {
 
 const MainContent = styled.section`
   padding: 25px;
+`;
+
+const Description = styled.div`
+  font-size: 24px;
+  color: ${COLORS.gray[600]};
 `;
 
 const Status = styled.div`

@@ -14,6 +14,7 @@ type Props = {
   size: Size,
   color1: string,
   color2: string,
+  textColor?: string,
   showOutline: boolean,
   noPadding: boolean,
   style: { [key: string]: any },
@@ -54,6 +55,7 @@ class Button extends Component<Props, State> {
       children,
       color1,
       color2,
+      textColor,
       showOutline,
       style,
       disabled,
@@ -72,6 +74,10 @@ class Button extends Component<Props, State> {
           ${color2}
         )
       `;
+    }
+
+    if (textColor) {
+      mutatedStyle.color = textColor;
     }
 
     return (

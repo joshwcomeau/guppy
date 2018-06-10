@@ -9,22 +9,40 @@ import Heading from '../Heading';
 
 type Props = {
   title: string,
-  description?: string,
   action?: React$Node,
+  theme: 'standard' | 'blueish',
+  children?: React$Node,
 };
 
 class ModalHeader extends Component<Props> {
+  static defaultProps = {
+    theme: 'standard',
+  };
+
   render() {
-    const { title, description, action } = this.props;
+    const { title, action, theme, children } = this.props;
+
+    const colors =
+      theme === 'standard'
+        ? [COLORS.gray[100], COLORS.gray[100]]
+        : [COLORS.blue[700], COLORS.teal[500]];
 
     return (
-      <Wrapper>
+      <Wrapper colors={colors}>
         <PixelShifter y={-5}>
           <PixelShifter x={-1}>
-            <Heading>{title}</Heading>
+            <Heading
+              style={{
+                color: theme === 'standard' ? COLORS.gray[900] : COLORS.white,
+              }}
+            >
+              {title}
+            </Heading>
           </PixelShifter>
-          <Description>{description}</Description>
+
+          {children}
         </PixelShifter>
+
         {action}
       </Wrapper>
     );
@@ -35,13 +53,8 @@ const Wrapper = styled.header`
   display: flex;
   justify-content: space-between;
   padding: 25px 25px 15px 25px;
-  background: ${COLORS.gray[100]};
+  background-image: linear-gradient(15deg, ${props => props.colors.join(', ')});
   border-radius: 8px 8px 0 0;
-`;
-
-const Description = styled.div`
-  font-size: 24px;
-  color: ${COLORS.gray[600]};
 `;
 
 export default ModalHeader;

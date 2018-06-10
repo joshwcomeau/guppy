@@ -31,6 +31,7 @@ const opacitySpringSettings = {
 type Props = {
   isVisible: boolean,
   width?: number,
+  height?: number,
   onDismiss: () => void,
   children: React$Node,
 };
@@ -63,7 +64,7 @@ class Modal extends PureComponent<Props, State> {
   }
 
   render() {
-    const { isVisible, width, onDismiss, children } = this.props;
+    const { isVisible, width, height, onDismiss, children } = this.props;
     const { outdatedChildren } = this.state;
 
     return (
@@ -92,7 +93,11 @@ class Modal extends PureComponent<Props, State> {
                   <Wrapper opacity={opacity} clickable={!inTransit}>
                     <Backdrop onClick={onDismiss} />
 
-                    <PaneWrapper width={width} translateY={translateY}>
+                    <PaneWrapper
+                      width={width}
+                      height={height}
+                      translateY={translateY}
+                    >
                       {outdatedChildren || children}
                     </PaneWrapper>
                   </Wrapper>
@@ -136,12 +141,14 @@ const Backdrop = styled.div`
 const PaneWrapper = styled.div.attrs({
   style: props => ({
     width: props.width,
+    height: props.height,
     transform: `translateY(${props.translateY}px)`,
   }),
 })`
   position: relative;
   z-index: 2;
   max-width: 100%;
+  max-height: 95%;
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.2), 0px 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   background: ${COLORS.white};

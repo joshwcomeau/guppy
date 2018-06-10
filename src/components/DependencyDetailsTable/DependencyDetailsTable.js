@@ -6,6 +6,7 @@ import { COLORS } from '../../constants';
 
 import ExternalLink from '../ExternalLink';
 import Label from '../Label';
+import Middot from '../Middot';
 import DeleteDependencyButton from '../DeleteDependencyButton';
 
 import type { Dependency } from '../../types';
@@ -14,8 +15,6 @@ type Props = {
   projectId: string,
   dependency: Dependency,
 };
-
-const Middot = () => <span style={{ padding: '0 9px' }}>·</span>;
 
 class DependencyDetailsTable extends Component<Props> {
   render() {

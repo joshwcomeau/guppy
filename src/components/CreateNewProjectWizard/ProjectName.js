@@ -151,7 +151,7 @@ class ProjectName extends PureComponent<Props, State> {
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyPress={this.maybeHandleSubmit}
-            placeholder="Todo MVC"
+            placeholder="Your Amazing Project Name"
           >
             <ButtonPositionAdjuster>
               <HoverableOutlineButton
