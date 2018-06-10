@@ -122,7 +122,6 @@ export function loadProjectDependencies(
           'utf8',
           (err, data) => {
             if (err) {
-              console.log(err, err.code, Object.keys(err), Object.values(err));
               if (err.code === 'ENOENT') {
                 // Interestingly, freshly-ejected packages have `babel-loader`
                 // as a dependency, but no such NPM module installed.
@@ -130,6 +129,7 @@ export function loadProjectDependencies(
                 // always matches folder name inside `node_modules`?
                 return callback(null, null);
               }
+
               return callback(err);
             }
 

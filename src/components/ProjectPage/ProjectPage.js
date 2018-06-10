@@ -31,10 +31,9 @@ class ProjectPage extends Component<Props> {
   }
 
   getDependencyInfo() {
-    console.log('Project page mount!');
     const { loadDependencyInfoFromDisk, project } = this.props;
 
-    if (project) loadDependencyInfoFromDisk(project);
+    loadDependencyInfoFromDisk(project);
   }
 
   render() {
