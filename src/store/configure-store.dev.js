@@ -1,17 +1,20 @@
+// @flow
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from '../reducers';
 import { handleStoreUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
+import dependencyMiddleware from '../middlewares/dependency.middleware';
+
 import DevTools from '../components/DevTools';
 
-export default function configureStore(initialState) {
+export default function configureStore(initialState: any) {
   const store = createStore(
     rootReducer,
     initialState,
     compose(
-      applyMiddleware(thunk, taskMiddleware),
+      applyMiddleware(thunk, taskMiddleware, dependencyMiddleware),
       DevTools.instrument()
     )
   );

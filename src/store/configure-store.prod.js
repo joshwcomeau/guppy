@@ -1,15 +1,17 @@
-import { createStore } from 'redux';
+// @flow
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from '../reducers';
 import { handleStoreUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
+import dependencyMiddleware from '../middlewares/dependency.middleware';
 
-export default function configureStore(initialState) {
+export default function configureStore(initialState: any) {
   const store = createStore(
     rootReducer,
     initialState,
-    applyMiddleware(thunk, taskMiddleware)
+    applyMiddleware(thunk, taskMiddleware, dependencyMiddleware)
   );
 
   // Commit all relevant changes to the state to localStorage, for quick

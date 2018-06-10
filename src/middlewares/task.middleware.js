@@ -21,14 +21,6 @@ const psTree = window.require('ps-tree');
 // TODO: Make this configurable, should live in Redux!
 const parentPath = `${os.homedir()}/guppy-projects`;
 
-// HACK:
-// The tests by default run in an interactive "watch" mode.
-// it would be GREAT to create a whole GUI for this, but that's so much work.
-// And without that work, the test-running would be totally broken.
-// So instead, I'm gonna force it into "just run all the tests once" mode :(
-// This is bad, and I should feel bad. Hopefully we'll fix this though!
-const getAdditionalArgsForTask = task => { };
-
 export default store => next => action => {
   if (!action.task) {
     return next(action);
@@ -105,6 +97,9 @@ export default store => next => action => {
       break;
     }
 
+    // TODO: As tasks start to get more customized for the project types,
+    // it probably makes sense to have separate actions (eg. RUN_TESTS,
+    // BUILD_FOR_PRODUCTION), and use RUN_TASK just for user-added tasks.
     case RUN_TASK: {
       const { projectId, name } = action.task;
 
@@ -127,16 +122,17 @@ export default store => next => action => {
       }
 
       /* Bypasses 'Are you sure?' check when ejecting CRA
-       * 
+       *
        * @todo add windows support
-       * 
+       *
        * Works perfect on Linux (Ubuntu). Most likely will
        * work great in Mac machines too. Although it
        * will certainly fail on Windows.
        */
-      const command = (project.type === 'create-react-app' && name === 'eject')
-        ? 'echo yes | npm'
-        : 'npm';
+      const command =
+        project.type === 'create-react-app' && name === 'eject'
+          ? 'echo yes | npm'
+          : 'npm';
 
       const child = childProcess.spawn(
         command,
