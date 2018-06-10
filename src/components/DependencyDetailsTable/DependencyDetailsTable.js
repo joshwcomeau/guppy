@@ -15,6 +15,8 @@ type Props = {
   dependency: Dependency,
 };
 
+const Middot = () => <span style={{ padding: '0 9px' }}>·</span>;
+
 class DependencyDetailsTable extends Component<Props> {
   render() {
     const { projectId, dependency } = this.props;
@@ -46,10 +48,10 @@ class DependencyDetailsTable extends Component<Props> {
               <Label>Resources</Label>
             </Cell>
             <Cell>
-              Learn more about <strong>{dependency.name}</strong> on:<br />
-              <ExternalLink href={packageHref}>NPM</ExternalLink> ·{' '}
+              <ExternalLink href={packageHref}>NPM</ExternalLink>
+              <Middot />
               <ExternalLink href={githubHref}>GitHub</ExternalLink>
-              {dependency.homepage && ' · '}
+              {dependency.homepage && <Middot />}
               {dependency.homepage && (
                 <ExternalLink href={dependency.homepage}>
                   Official Website
@@ -58,16 +60,16 @@ class DependencyDetailsTable extends Component<Props> {
             </Cell>
           </tr>
           <tr>
-            <Cell>
+            <LastCell>
               <Label style={{ color: COLORS.pink[500] }}>Danger Zone</Label>
-            </Cell>
-            <Cell>
+            </LastCell>
+            <LastCell>
               <DeleteDependencyButton
                 projectId={projectId}
                 dependencyName={dependency.name}
                 isBeingDeleted={dependency.isBeingDeleted}
               />
-            </Cell>
+            </LastCell>
           </tr>
         </tbody>
       </Table>
@@ -80,7 +82,7 @@ const Table = styled.table`
 `;
 
 const Cell = styled.td`
-  padding: 10px 0;
+  padding: 15px 0;
   vertical-align: middle;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
@@ -88,6 +90,11 @@ const Cell = styled.td`
     width: 150px;
     color: ${COLORS.gray[600]};
   }
+`;
+
+const LastCell = Cell.extend`
+  padding-bottom: 0;
+  border-bottom: none;
 `;
 
 export default DependencyDetailsTable;
