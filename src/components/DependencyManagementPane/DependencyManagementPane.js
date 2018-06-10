@@ -12,6 +12,8 @@ import { COLORS } from '../../constants';
 import HoverableOutlineButton from '../HoverableOutlineButton';
 
 import Module from '../Module';
+import Modal from '../Modal';
+import AddDependency from '../AddDependency';
 import Card from '../Card';
 import Button from '../Button';
 import DependencyDetails from '../DependencyDetails';
@@ -26,20 +28,30 @@ type Props = {
 
 type State = {
   selectedDependency: ?Dependency,
+  addingNewDependency: boolean,
 };
 
 class DependencyManagementPane extends PureComponent<Props, State> {
   state = {
     selectedDependency: this.props.project.dependencies[0],
+    addingNewDependency: false,
   };
 
   selectDependency = (dependency: Dependency) => {
     this.setState({ selectedDependency: dependency });
   };
 
+  openAddNewDependencyModal = () => {
+    this.setState({ addingNewDependency: true });
+  };
+
+  closeAddNewDependencyModal = () => {
+    this.setState({ addingNewDependency: false });
+  };
+
   render() {
     const { dependencies } = this.props.project;
-    const { selectedDependency } = this.state;
+    const { selectedDependency, addingNewDependency } = this.state;
 
     return (
       <Module title="Dependencies">
@@ -59,20 +71,24 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 </DependencyVersion>
               </DependencyButton>
             ))}
-            <AddDependencyButton>
+            <AddDependencyButton onClick={this.openAddNewDependencyModal}>
               <IconBase icon={plus} size={20} />
               <Spacer size={6} />
               Add New Dependency
             </AddDependencyButton>
           </DependencyList>
           <MainContent>
-            {selectedDependency ? (
-              <DependencyDetails dependency={selectedDependency} />
-            ) : (
-              'TODO: Add something here'
-            )}
+            <DependencyDetails dependency={selectedDependency} />
           </MainContent>
         </Wrapper>
+
+        <Modal
+          width={620}
+          isVisible={addingNewDependency}
+          onDismiss={this.closeAddNewDependencyModal}
+        >
+          <AddDependency />
+        </Modal>
       </Module>
     );
   }

@@ -23,8 +23,6 @@ class DependencyDetailsTable extends Component<Props> {
       dependency.repository &&
       `https://www.github.com/${dependency.repository}`;
 
-    console.log(dependency);
-
     return (
       <Table>
         <tbody>
