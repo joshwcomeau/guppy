@@ -122,6 +122,14 @@ export function loadProjectDependencies(
           'utf8',
           (err, data) => {
             if (err) {
+              console.log(err, err.code, Object.keys(err), Object.values(err));
+              if (err.code === 'ENOENT') {
+                // Interestingly, freshly-ejected packages have `babel-loader`
+                // as a dependency, but no such NPM module installed.
+                // Maybe it isn't a safe bet to assume that dependency name
+                // always matches folder name inside `node_modules`?
+                return callback(null, null);
+              }
               return callback(err);
             }
 
@@ -146,9 +154,12 @@ export function loadProjectDependencies(
           return reject(err);
         }
 
+        // Filter out any unloaded dependencies
+        const filteredResults = results.filter(result => result);
+
         // The results will be an array of package.jsons.
         // I want a database-style map.
-        const dependencies = results.reduce(
+        const dependencies = filteredResults.reduce(
           (dependenciesMap, dependency) => ({
             ...dependenciesMap,
             [dependency.name]: dependency,

@@ -38,6 +38,9 @@ export type Dependency = {
   homepage: string,
   license: string,
   repository: string,
+  // All of the above fields are straight from the dependency's package.json.
+  // This field is custom, to track when it's being deleted:
+  isBeingDeleted?: boolean,
 };
 
 type AppType = 'create-react-app' | 'gatsby';

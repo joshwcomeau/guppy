@@ -5,18 +5,19 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants';
 
 import ExternalLink from '../ExternalLink';
-import Button from '../Button';
 import Label from '../Label';
+import DeleteDependencyButton from '../DeleteDependencyButton';
 
 import type { Dependency } from '../../types';
 
 type Props = {
+  projectId: string,
   dependency: Dependency,
 };
 
 class DependencyDetailsTable extends Component<Props> {
   render() {
-    const { dependency } = this.props;
+    const { projectId, dependency } = this.props;
 
     const packageHref = `https://www.npmjs.org/package/${dependency.name}`;
     const githubHref =
@@ -61,14 +62,11 @@ class DependencyDetailsTable extends Component<Props> {
               <Label style={{ color: COLORS.pink[500] }}>Danger Zone</Label>
             </Cell>
             <Cell>
-              <Button
-                size="small"
-                type="fill"
-                color1={COLORS.pink[300]}
-                color2={COLORS.red[500]}
-              >
-                Delete
-              </Button>
+              <DeleteDependencyButton
+                projectId={projectId}
+                dependencyName={dependency.name}
+                isBeingDeleted={dependency.isBeingDeleted}
+              />
             </Cell>
           </tr>
         </tbody>

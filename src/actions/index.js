@@ -30,6 +30,9 @@ export const RECEIVE_DATA_FROM_TASK_EXECUTION =
   'RECEIVE_DATA_FROM_TASK_EXECUTION';
 export const LAUNCH_DEV_SERVER = 'LAUNCH_DEV_SERVER';
 export const LOAD_DEPENDENCY_INFO_FROM_DISK = 'LOAD_DEPENDENCY_INFO_FROM_DISK';
+export const DELETE_DEPENDENCY_START = 'DELETE_DEPENDENCY_START';
+export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
+export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
 
 //
 //
@@ -134,4 +137,31 @@ export const launchDevServer = (task: Task, timestamp: Date) => ({
   type: LAUNCH_DEV_SERVER,
   task,
   timestamp,
+});
+
+export const deleteDependencyStart = (
+  projectId: string,
+  dependencyName: string
+) => ({
+  type: DELETE_DEPENDENCY_START,
+  projectId,
+  dependencyName,
+});
+
+export const deleteDependencyError = (
+  projectId: string,
+  dependencyName: string
+) => ({
+  type: DELETE_DEPENDENCY_ERROR,
+  projectId,
+  dependencyName,
+});
+
+export const deleteDependencyFinish = (
+  projectId: string,
+  dependencyName: string
+) => ({
+  type: DELETE_DEPENDENCY_FINISH,
+  projectId,
+  dependencyName,
 });
