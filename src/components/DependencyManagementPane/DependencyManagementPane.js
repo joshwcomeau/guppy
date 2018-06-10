@@ -2,11 +2,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import IconBase from 'react-icons-kit';
+import { plus } from 'react-icons-kit/feather/plus';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
+import HoverableOutlineButton from '../HoverableOutlineButton';
 
 import Module from '../Module';
 import Card from '../Card';
@@ -25,10 +28,9 @@ type State = {
   selectedDependency: ?Dependency,
 };
 
-// TODO: blank state?
 class DependencyManagementPane extends PureComponent<Props, State> {
   state = {
-    selectedDependency: null,
+    selectedDependency: this.props.project.dependencies[0],
   };
 
   selectDependency = (dependency: Dependency) => {
@@ -57,8 +59,11 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 </DependencyVersion>
               </DependencyButton>
             ))}
-            <Spacer size={15} />
-            <Button>Add New Dependency</Button>
+            <AddDependencyButton>
+              <IconBase icon={plus} size={20} />
+              <Spacer size={6} />
+              Add New Dependency
+            </AddDependencyButton>
           </DependencyList>
           <MainContent>
             {selectedDependency ? (
@@ -87,7 +92,7 @@ const DependencyButton = styled.button`
   align-items: center;
   width: 100%;
   padding: 8px 10px;
-  margin: 6px 0px;
+  margin: 8px 0px;
   border: none;
   background: ${props =>
     props.isSelected
@@ -100,6 +105,14 @@ const DependencyButton = styled.button`
       ? '2px solid rgba(0, 0, 0, 0.5)'
       : '2px solid rgba(0, 0, 0, 0.1)'};
   cursor: pointer;
+
+  &:hover {
+    outline: none;
+    background: ${props =>
+      props.isSelected
+        ? `linear-gradient(10deg, ${COLORS.blue[700]}, ${COLORS.blue[500]})`
+        : COLORS.gray[200]};
+  }
 
   &:active,
   &:focus {
@@ -116,6 +129,28 @@ const DependencyButton = styled.button`
 
   &:last-of-type {
     margin-bottom: 0;
+  }
+`;
+
+const AddDependencyButton = styled.button`
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 10px;
+  border: 2px dashed ${COLORS.gray[300]};
+  border-radius: 6px;
+  color: ${COLORS.gray[500]};
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  cursor: pointer;
+
+  &:hover {
+    border: 2px dashed ${COLORS.gray[400]};
+    color: ${COLORS.gray[600]};
   }
 `;
 

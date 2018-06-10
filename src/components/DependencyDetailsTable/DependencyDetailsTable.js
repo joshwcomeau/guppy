@@ -23,44 +23,57 @@ class DependencyDetailsTable extends Component<Props> {
       dependency.repository &&
       `https://www.github.com/${dependency.repository}`;
 
+    console.log(dependency);
+
     return (
       <Table>
-        {dependency.license && (
+        <tbody>
           <tr>
             <Cell>
-              <Label>License</Label>
+              <Label>Last Updated</Label>
             </Cell>
-            <Cell>{dependency.license}</Cell>
+            <Cell>3 months ago</Cell>
           </tr>
-        )}
-        <tr>
-          <Cell>
-            <Label>Resources</Label>
-          </Cell>
-          <Cell>
-            Learn more about <strong>{dependency.name}</strong> on:<br />
-            <ExternalLink href={packageHref}>NPM</ExternalLink> ·{' '}
-            <ExternalLink href={githubHref}>GitHub</ExternalLink> ·{' '}
-            <ExternalLink href={dependency.homepage}>
-              Official Website
-            </ExternalLink>
-          </Cell>
-        </tr>
-        <tr>
-          <Cell>
-            <Label>Actions</Label>
-          </Cell>
-          <Cell>
-            <Button
-              size="small"
-              type="fill"
-              color1={COLORS.hotPink[700]}
-              color2={COLORS.pink[300]}
-            >
-              Delete
-            </Button>
-          </Cell>
-        </tr>
+          {dependency.license && (
+            <tr>
+              <Cell>
+                <Label>License</Label>
+              </Cell>
+              <Cell>{dependency.license}</Cell>
+            </tr>
+          )}
+          <tr>
+            <Cell>
+              <Label>Resources</Label>
+            </Cell>
+            <Cell>
+              Learn more about <strong>{dependency.name}</strong> on:<br />
+              <ExternalLink href={packageHref}>NPM</ExternalLink> ·{' '}
+              <ExternalLink href={githubHref}>GitHub</ExternalLink>
+              {dependency.homepage && ' · '}
+              {dependency.homepage && (
+                <ExternalLink href={dependency.homepage}>
+                  Official Website
+                </ExternalLink>
+              )}
+            </Cell>
+          </tr>
+          <tr>
+            <Cell>
+              <Label style={{ color: COLORS.pink[500] }}>Danger Zone</Label>
+            </Cell>
+            <Cell>
+              <Button
+                size="small"
+                type="fill"
+                color1={COLORS.pink[300]}
+                color2={COLORS.red[500]}
+              >
+                Delete
+              </Button>
+            </Cell>
+          </tr>
+        </tbody>
       </Table>
     );
   }

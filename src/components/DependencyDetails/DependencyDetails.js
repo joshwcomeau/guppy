@@ -35,21 +35,6 @@ class DependencyDetails extends PureComponent<Props> {
               <Description>{dependency.description}</Description>
             </HeaderText>
           </PixelShifter>
-          <Spacer size={30} />
-          <Svg viewBox="0 0 100 10" preserveAspectRatio="none">
-            <path
-              d={`
-                M 0,10
-                C 33,-5
-                  66,20
-                  100,-1
-                L 100,10
-                L 0,10
-              `}
-              stroke="none"
-              fill={COLORS.gray[100]}
-            />
-          </Svg>
         </Header>
 
         <VersionsWrapper>
@@ -131,7 +116,7 @@ const VersionsWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding-bottom: 15px;
+  padding: 15px;
   background: ${COLORS.gray[100]};
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 `;
@@ -143,13 +128,14 @@ const Col = styled.div`
 
 const VersionLabel = styled(Label)`
   color: ${COLORS.gray[600]};
-  font-size: 13px;
 `;
 
 const VersionNum = styled.div`
+  margin-top: 3px;
   font-size: 22px;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
+  line-height: 22px;
 `;
 
 const Buttons = styled.div`

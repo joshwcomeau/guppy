@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
@@ -61,8 +61,12 @@ class ProjectPage extends Component<Props> {
           <Spacer size={30} />
           <TaskRunnerPane leftSideWidth={200} />
 
-          <Spacer size={30} />
-          <DependencyManagementPane />
+          {project.dependencies.length > 0 && (
+            <Fragment>
+              <Spacer size={30} />
+              <DependencyManagementPane />
+            </Fragment>
+          )}
 
           <Spacer size={60} />
         </MainContentWrapper>
