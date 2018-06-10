@@ -14,7 +14,6 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-const { exec } = require('child_process');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
@@ -105,32 +104,8 @@ checkBrowsers(paths.appPath)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    // "done" event fires when compilation is finish
-    compiler.plugin('done', stats => {
-      process.stdout.write('\x1bc'); // clear the console
-      console.log(
-        chalk.cyan('Development server ready. ') + chalk.green('Running electron...\n')
-      );
-
-      // Run electron
-      exec(
-        'npm run start:electron',
-        (err, stdout, stderr) => {
-          if (err) {
-            process.stdout.write('\x1bc'); // clear the console
-            console.log(chalk.red('Electron failed: \n') + stderr);
-            return;
-          }
-
-          // electron run successful
-          process.stdout.write('\x1bc'); // clear the console
-          console.log(stdout);
-        }
-      );
-    });
-
-    ['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
+    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
+      process.on(sig, function() {
         devServer.close();
         process.exit();
       });
