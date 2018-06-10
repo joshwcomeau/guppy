@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -12,7 +12,8 @@ import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 import { getTaskById } from '../../reducers/tasks.reducer';
 
-import Heading from '../Heading';
+import Modal from '../Modal';
+import ModalHeader from '../ModalHeader';
 import Toggle from '../Toggle';
 import PixelShifter from '../PixelShifter';
 import LargeLED from '../LargeLED';
@@ -23,12 +24,15 @@ import type { Task } from '../../types';
 
 type Props = {
   taskId: ?string,
+  isVisible: boolean,
+  onDismiss: () => void,
+  // From Redux:
   task: Task,
   runTask: (task: Task, timestamp: Date) => any,
   abortTask: (task: Task, timestamp: Date) => any,
 };
 
-class TaskDetails extends PureComponent<Props> {
+class TaskDetailsModal extends PureComponent<Props> {
   handleToggle = () => {
     const { task, runTask, abortTask } = this.props;
 
@@ -92,7 +96,13 @@ class TaskDetails extends PureComponent<Props> {
     }
   };
 
-  render() {
+  renderContents() {
+    const { task, isVisible } = this.props;
+
+    if (!isVisible) {
+      return null;
+    }
+
     const {
       name,
       description,
@@ -101,21 +111,17 @@ class TaskDetails extends PureComponent<Props> {
       command,
       timeSinceStatusChange,
       logs,
-    } = this.props.task;
+    } = task;
 
     const isRunning = !!processId;
 
     return (
       <Fragment>
-        <Header>
-          <PixelShifter y={-5}>
-            <PixelShifter x={-1}>
-              <Heading>{capitalize(name)}</Heading>
-            </PixelShifter>
-            <Description>{description}</Description>
-          </PixelShifter>
-          <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
-        </Header>
+        <ModalHeader
+          title={capitalize(name)}
+          description={description}
+          action={<Toggle isToggled={isRunning} onToggle={this.handleToggle} />}
+        />
 
         <MainContent>
           <Status>
@@ -130,20 +136,17 @@ class TaskDetails extends PureComponent<Props> {
       </Fragment>
     );
   }
+
+  render() {
+    const { isVisible, onDismiss } = this.props;
+
+    return (
+      <Modal width={620} isVisible={isVisible} onDismiss={onDismiss}>
+        {this.renderContents()}
+      </Modal>
+    );
+  }
 }
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  padding: 25px 25px 15px 25px;
-  background: ${COLORS.gray[100]};
-  border-radius: 8px 8px 0 0;
-`;
-
-const Description = styled.div`
-  font-size: 24px;
-  color: ${COLORS.gray[600]};
-`;
 
 const MainContent = styled.section`
   padding: 25px;
@@ -171,4 +174,4 @@ const mapStateToProps = (state, ownProps) => ({
 export default connect(
   mapStateToProps,
   { runTask, abortTask }
-)(TaskDetails);
+)(TaskDetailsModal);

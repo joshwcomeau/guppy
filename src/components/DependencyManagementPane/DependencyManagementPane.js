@@ -12,8 +12,7 @@ import { COLORS } from '../../constants';
 import HoverableOutlineButton from '../HoverableOutlineButton';
 
 import Module from '../Module';
-import Modal from '../Modal';
-import AddDependency from '../AddDependency';
+import AddDependencyModal from '../AddDependencyModal';
 import Card from '../Card';
 import Button from '../Button';
 import DependencyDetails from '../DependencyDetails';
@@ -113,13 +112,10 @@ class DependencyManagementPane extends PureComponent<Props, State> {
           </MainContent>
         </Wrapper>
 
-        <Modal
-          width={620}
+        <AddDependencyModal
           isVisible={addingNewDependency}
           onDismiss={this.closeAddNewDependencyModal}
-        >
-          <AddDependency />
-        </Modal>
+        />
       </Module>
     );
   }
