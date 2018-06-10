@@ -17,9 +17,9 @@ const updateLocalStorage = value =>
  * persist it to localStorage.
  */
 export const handleStoreUpdates = function handleStoreUpdates(store) {
-  const { onboardingStatus, projects, tasks } = store.getState();
+  const { projects, tasks } = store.getState();
 
-  updateLocalStorage(JSON.stringify({ onboardingStatus, projects, tasks }));
+  updateLocalStorage(JSON.stringify({ projects, tasks }));
 };
 
 /**
