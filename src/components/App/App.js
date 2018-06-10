@@ -5,7 +5,6 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { refreshProjects, selectProject } from '../../actions';
-import readLocalProjectsFromDisk from '../../services/read-local-projects.service';
 import {
   extractProjectIdFromUrl,
   buildUrlForProjectId,
@@ -97,7 +96,15 @@ class App extends Component<Props> {
           <MainContent>
             <Switch>
               <Route exact path="/" component={DefaultComponent} />
-              <Route path="/project/:projectId" component={ProjectPage} />
+              <Route
+                path="/project/:projectId"
+                render={routerProps => (
+                  <ProjectPage
+                    key={routerProps.match.params.projectId}
+                    {...routerProps}
+                  />
+                )}
+              />
             </Switch>
           </MainContent>
         </Wrapper>
@@ -115,6 +122,8 @@ const Wrapper = styled.div`
 `;
 
 const MainContent = styled.div`
+  position: relative;
+  min-height: 100vh;
   flex: 1;
 `;
 

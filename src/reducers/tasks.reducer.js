@@ -1,4 +1,20 @@
 // @flow
+/**
+ * NOTE: I built this reducer trying to think of it as a database model.
+ * Each task has a unique ID, and is a child of a project.
+ *
+ * In practice, it's felt like a lot of trouble to keep this "flat" table
+ * of entities.
+ *
+ * When it came time to do the same thing for dependencies, I decided to go
+ * with a "nested" structure, where the top-level keys of the `dependencies`
+ * reducer are all project IDs, and it holds a simple map of the dependencies
+ * for that project
+ *
+ * It felt much simpler and easier to work with, so I should probably update
+ * this reducer to match that reducer's style. Right now they're inconsistent
+ * and that's bad.
+ */
 import produce from 'immer';
 import {
   REFRESH_PROJECTS,
@@ -212,7 +228,7 @@ export const getTaskById = (taskId: string, state: GlobalState) =>
 
 export const getTasksForProjectId = (
   projectId: string,
-  state: GlobalState
+  state: any
 ): Array<Task> =>
   Object.keys(state.tasks)
     .map(taskId => state.tasks[taskId])

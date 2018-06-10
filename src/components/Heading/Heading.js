@@ -31,7 +31,7 @@ class Heading extends Component<Props> {
 }
 
 const HeadingSmall = styled.h5`
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;

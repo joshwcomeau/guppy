@@ -30,6 +30,16 @@ export type Task = {
   logs: Array<Log>,
 };
 
+export type Dependency = {
+  name: string,
+  description: string,
+  keywords?: Array<string>,
+  version: string,
+  homepage: string,
+  license: string,
+  repository: string,
+};
+
 type AppType = 'create-react-app' | 'gatsby';
 
 /**
@@ -65,10 +75,11 @@ export type Project = {
   name: string,
   type: AppType,
   icon: string,
-  // `dependencies` is unchanged from `ProjectInternal`.
-  dependencies: {
-    [key: string]: string,
-  },
+  // `dependencies` is a "souped-up" version of the internal copy, with some
+  // additional fields, like description, homepage, repository...
+  // It also holds the specific version number used, not just an acceptable
+  // version range.
+  dependencies: Array<Dependency>,
   // `tasks` is a superset of `ProjectInternal.scripts`. Includes much more
   // info.
   tasks: Array<Task>,

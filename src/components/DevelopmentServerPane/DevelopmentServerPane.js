@@ -72,17 +72,13 @@ class DevelopmentServerPane extends PureComponent<Props> {
             <DevelopmentServerStatus status={task.status} />
 
             <DocumentationLink>
-              <ExternalLink
-                color={COLORS.blue[700]}
-                hoverColor={COLORS.blue[500]}
-                href="https://github.com/facebook/create-react-app#user-guide"
-              >
+              <ExternalLink href="https://github.com/facebook/create-react-app#user-guide">
                 View Documentation
               </ExternalLink>
             </DocumentationLink>
           </LeftSide>
           <RightSide>
-            <TerminalOutput height={300} logs={task.logs} />
+            <TerminalOutput height={300} width={550} logs={task.logs} />
           </RightSide>
         </Wrapper>
       </Module>

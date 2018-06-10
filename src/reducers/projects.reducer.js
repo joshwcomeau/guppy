@@ -1,8 +1,10 @@
 // @flow
 import { combineReducers } from 'redux';
+import { createSelector } from 'reselect';
 
 import { ADD_PROJECT, REFRESH_PROJECTS, SELECT_PROJECT } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
+import { getDependenciesForProjectId } from './dependencies.reducer';
 
 import type { Action } from 'redux';
 import type { ProjectInternal, Project } from '../types';
@@ -84,21 +86,27 @@ const prepareProjectForConsumption = (
     name: project.guppy.name,
     type: project.guppy.type,
     icon: project.guppy.icon,
-    dependencies: project.dependencies,
     tasks: getTasksForProjectId(project.guppy.id, state),
+    dependencies: getDependenciesForProjectId(project.guppy.id, state),
   };
 };
 
+export const getById = (state: GlobalState) => state.projects.byId;
+export const getSelectedProjectId = (state: GlobalState) =>
+  state.projects.selectedId;
+
+export const getInternalProjectById = (id: string, state: GlobalState) =>
+  getById(state)[id];
+
 export const getProjectsArray = (state: GlobalState) =>
+  // $FlowFixMe
   Object.values(state.projects.byId).map(project =>
+    // $FlowFixMe
     prepareProjectForConsumption(project, state)
   );
 
 export const getProjectById = (id: string, state: GlobalState) =>
   prepareProjectForConsumption(state.projects.byId[id], state);
-
-export const getSelectedProjectId = (state: GlobalState) =>
-  state.projects.selectedId;
 
 export const getSelectedProject = (state: GlobalState) => {
   const selectedId = getSelectedProjectId(state);

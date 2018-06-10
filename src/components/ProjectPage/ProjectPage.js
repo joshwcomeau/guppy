@@ -1,11 +1,12 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { extractProjectTabFromUrl } from '../../services/location.service';
 import { COLORS } from '../../constants';
+import { loadDependencyInfoFromDisk } from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -15,17 +16,26 @@ import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
 
-import type { Action } from 'redux';
 import type { Project } from '../../types';
 
 type Props = {
   project: Project,
-  selectProject: Action,
+  loadDependencyInfoFromDisk: (project: Project) => any,
   location: any, // provided by react-router
   match: any, // provided by react-router
 };
 
 class ProjectPage extends Component<Props> {
+  componentDidMount() {
+    this.getDependencyInfo();
+  }
+
+  getDependencyInfo() {
+    const { loadDependencyInfoFromDisk, project } = this.props;
+
+    loadDependencyInfoFromDisk(project);
+  }
+
   render() {
     const { project, location, match } = this.props;
 
@@ -37,35 +47,48 @@ class ProjectPage extends Component<Props> {
     }
 
     return (
-      <MainContentWrapper>
-        <Header>
+      <FadeIn>
+        <MainContentWrapper>
           <PixelShifter x={-2}>
             <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
               {project.name}
             </Heading>
           </PixelShifter>
-        </Header>
 
-        <Spacer size={30} />
+          <Spacer size={30} />
+          <DevelopmentServerPane leftSideWidth={300} />
 
-        <DevelopmentServerPane leftSideWidth={300} />
+          <Spacer size={30} />
+          <TaskRunnerPane leftSideWidth={200} />
 
-        <Spacer size={30} />
+          {project.dependencies.length > 0 && (
+            <Fragment>
+              <Spacer size={30} />
+              <DependencyManagementPane />
+            </Fragment>
+          )}
 
-        <TaskRunnerPane leftSideWidth={200} />
-        <Spacer size={30} />
-        <DependencyManagementPane />
-      </MainContentWrapper>
+          <Spacer size={60} />
+        </MainContentWrapper>
+      </FadeIn>
     );
   }
 }
 
-const Header = styled.div`
-  /* padding: 0 10px; */
+const fadeIn = keyframes`
+  from { opacity: 0 }
+  to { opacity: 1 }
+`;
+
+const FadeIn = styled.div`
+  animation: ${fadeIn} 1000ms;
 `;
 
 const mapStateToProps = state => ({
   project: getSelectedProject(state),
 });
 
-export default connect(mapStateToProps)(ProjectPage);
+export default connect(
+  mapStateToProps,
+  { loadDependencyInfoFromDisk }
+)(ProjectPage);
