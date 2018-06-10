@@ -11,7 +11,7 @@ import { capitalize } from '../../utils';
 import Module from '../Module';
 import Modal from '../Modal';
 import TaskRunnerPaneRow from '../TaskRunnerPaneRow';
-import TaskDetails from '../TaskDetails';
+import TaskDetailsModal from '../TaskDetailsModal';
 
 import type { Task } from '../../types';
 
@@ -74,13 +74,11 @@ class TaskRunnerPane extends Component<Props, State> {
           />
         ))}
 
-        <Modal
-          width={620}
+        <TaskDetailsModal
+          taskId={selectedTaskId}
           isVisible={!!selectedTaskId}
           onDismiss={this.handleDismissTaskDetails}
-        >
-          <TaskDetails taskId={selectedTaskId} />
-        </Modal>
+        />
       </Module>
     );
   }
