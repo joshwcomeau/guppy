@@ -1,60 +1,65 @@
 // @flow
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch/dom';
+import styled, { injectGlobal } from 'styled-components';
+import { SearchBox, Hits, PoweredBy } from 'react-instantsearch/dom';
+import { connectStateResults } from 'react-instantsearch/connectors';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
+import Paragraph from '../Paragraph';
+import Spacer from '../Spacer';
 import AddDependencySearchBox from '../AddDependencySearchBox';
 import AddDependencySearchResult from '../AddDependencySearchResult';
-import Spacer from '../Spacer';
 
 type Props = {
   isVisible: boolean,
   onDismiss: () => void,
+  // Provided by `connectStateResults`:
+  searchResults: {
+    query?: string,
+  },
 };
 
-type State = {
-  searchTerm: string,
-};
-
-class AddDependencyModal extends Component<Props, State> {
-  state = {
-    searchTerm: '',
-  };
-
-  updateSearchTerm = (ev: SyntheticInputEvent<*>) => {
-    this.setState({ searchTerm: ev.target.value });
-  };
-
+class AddDependencyModal extends Component<Props> {
   render() {
-    const { isVisible, onDismiss } = this.props;
-    const { searchTerm } = this.state;
+    const { isVisible, onDismiss, searchResults } = this.props;
+
+    const hasSearchQuery = searchResults && !!searchResults.query;
 
     return (
-      <InstantSearch
-        appId="OFCNCOG2CU"
-        apiKey="f54e21fa3a2a0160595bb058179bfb1e"
-        indexName="npm-search"
+      <Modal
+        width={620}
+        height={800}
+        isVisible={isVisible}
+        onDismiss={onDismiss}
       >
-        <Modal
-          width={620}
-          height={800}
-          isVisible={isVisible}
-          onDismiss={onDismiss}
-        >
-          <Wrapper>
-            <ModalHeader title="Add New Dependency" theme="blueish">
-              <AddDependencySearchBox />
-            </ModalHeader>
+        <Wrapper>
+          <ModalHeader title="Add New Dependency" theme="blueish">
+            <AddDependencySearchBox />
+          </ModalHeader>
 
-            <HitsWrapper>
+          <HitsWrapper>
+            {hasSearchQuery ? (
               <Hits hitComponent={AddDependencySearchResult} />
-            </HitsWrapper>
-            <Spacer size={25} />
-          </Wrapper>
-        </Modal>
-      </InstantSearch>
+            ) : (
+              <EmptyState>
+                <Logo>🐠</Logo>
+                <Paragraph>
+                  You can use the input above to search the Node Package Manager
+                  (NPM) registry for packages that have been published.
+                </Paragraph>
+                <Paragraph>
+                  Search by package name, description, keyword, or author.
+                </Paragraph>
+                <PoweredByWrapper>
+                  <PoweredBy />
+                </PoweredByWrapper>
+              </EmptyState>
+            )}
+          </HitsWrapper>
+          <Spacer size={25} />
+        </Wrapper>
+      </Modal>
     );
   }
 }
@@ -72,4 +77,39 @@ const HitsWrapper = styled.div`
   overflow: auto;
 `;
 
-export default AddDependencyModal;
+const EmptyState = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 100px 40px;
+  text-align: center;
+`;
+
+const Logo = styled.div`
+  font-size: 96px;
+  filter: grayscale(100%);
+`;
+
+const PoweredByWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+  text-align: center;
+`;
+
+injectGlobal`
+  .ais-PoweredBy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ais-PoweredBy-text {
+    margin-right: 10px;
+  }
+`;
+
+export default connectStateResults(AddDependencyModal);

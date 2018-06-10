@@ -12,13 +12,19 @@ import { COLORS } from '../../constants';
 
 import Label from '../Label';
 
-type Props = {};
+type Props = {
+  onChange: (ev: SyntheticEvent<*>) => void,
+};
 
 class AddDependencySearchBox extends Component<Props> {
   render() {
     return (
       <Wrapper>
-        <SearchBox autoFocus={true} placeholder="eg. redux, react-router..." />
+        <SearchBox
+          onChange={this.props.onChange}
+          autoFocus={true}
+          placeholder="eg. redux, react-router..."
+        />
       </Wrapper>
     );
   }

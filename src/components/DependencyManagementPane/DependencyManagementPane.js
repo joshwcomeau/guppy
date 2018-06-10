@@ -13,6 +13,7 @@ import HoverableOutlineButton from '../HoverableOutlineButton';
 
 import Module from '../Module';
 import AddDependencyModal from '../AddDependencyModal';
+import AddDependencySearchProvider from '../AddDependencySearchProvider';
 import Card from '../Card';
 import Button from '../Button';
 import DependencyDetails from '../DependencyDetails';
@@ -112,10 +113,12 @@ class DependencyManagementPane extends PureComponent<Props, State> {
           </MainContent>
         </Wrapper>
 
-        <AddDependencyModal
-          isVisible={addingNewDependency}
-          onDismiss={this.closeAddNewDependencyModal}
-        />
+        <AddDependencySearchProvider>
+          <AddDependencyModal
+            isVisible={addingNewDependency}
+            onDismiss={this.closeAddNewDependencyModal}
+          />
+        </AddDependencySearchProvider>
       </Module>
     );
   }
