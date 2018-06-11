@@ -27,18 +27,44 @@ type Props = {
 };
 
 type State = {
-  selectedDependency: ?Dependency,
+  selectedDependencyIndex: number,
   addingNewDependency: boolean,
 };
 
 class DependencyManagementPane extends PureComponent<Props, State> {
   state = {
-    selectedDependency: this.props.project.dependencies[0],
+    selectedDependencyIndex: 0,
     addingNewDependency: false,
   };
 
-  selectDependency = (dependency: Dependency) => {
-    this.setState({ selectedDependency: dependency });
+  componentWillReceiveProps(nextProps: Props) {
+    // If the user just deleted the last dependency, throw an error
+    // TODO: Handle this case
+    if (nextProps.project.dependencies.length === 0) {
+      throw new Error(
+        "Looks like all the dependencies were deleted. Sorry, we aren't set " +
+          'up to handle this case yet :('
+      );
+    }
+
+    // TODO: when a selected dependency is deleted, the focus shifts to the
+    // next one in the list. This is great!
+    // However, if the user clicks a different dependency while the focused one
+    // is being deleted, once the deletion finishes, it shouldn't affect the
+    // user's focus.
+    // To fix this, we'll need to check to see if one was just deleted (compare
+    // length), and then find the index of the current dependency in the new
+    // list.
+
+    // TODO: Auto-select newly-added dependencies, by finding the difference
+    // between the two lists and setting its index to selected.
+  }
+
+  selectDependency = (dependencyName: string) => {
+    const index = this.props.project.dependencies.findIndex(
+      ({ name }) => name === dependencyName
+    );
+    this.setState({ selectedDependencyIndex: index });
   };
 
   openAddNewDependencyModal = () => {
@@ -50,27 +76,29 @@ class DependencyManagementPane extends PureComponent<Props, State> {
   };
 
   render() {
-    const { dependencies } = this.props.project;
-    const { selectedDependency, addingNewDependency } = this.state;
+    const { id, dependencies } = this.props.project;
+    const { selectedDependencyIndex, addingNewDependency } = this.state;
 
     return (
       <Module title="Dependencies">
         <Wrapper>
           <DependencyList>
-            {dependencies.map(dependency => (
-              <DependencyButton
-                key={dependency.name}
-                isSelected={selectedDependency === dependency}
-                onClick={() => this.selectDependency(dependency)}
-              >
-                <DependencyName>{dependency.name}</DependencyName>
-                <DependencyVersion
-                  isSelected={selectedDependency === dependency}
+            <Dependencies>
+              {dependencies.map((dependency, index) => (
+                <DependencyButton
+                  key={dependency.name}
+                  isSelected={selectedDependencyIndex === index}
+                  onClick={() => this.selectDependency(dependency.name)}
                 >
-                  {dependency.version}
-                </DependencyVersion>
-              </DependencyButton>
-            ))}
+                  <DependencyName>{dependency.name}</DependencyName>
+                  <DependencyVersion
+                    isSelected={selectedDependencyIndex === index}
+                  >
+                    {dependency.version}
+                  </DependencyVersion>
+                </DependencyButton>
+              ))}
+            </Dependencies>
             <AddDependencyButton onClick={this.openAddNewDependencyModal}>
               <IconBase icon={plus} size={20} />
               <Spacer size={6} />
@@ -78,7 +106,10 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             </AddDependencyButton>
           </DependencyList>
           <MainContent>
-            <DependencyDetails dependency={selectedDependency} />
+            <DependencyDetails
+              projectId={id}
+              dependency={dependencies[selectedDependencyIndex]}
+            />
           </MainContent>
         </Wrapper>
 
@@ -96,10 +127,18 @@ class DependencyManagementPane extends PureComponent<Props, State> {
 
 const Wrapper = styled.div`
   display: flex;
+  max-height: 475px;
 `;
 
 const DependencyList = Card.extend`
   width: 300px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Dependencies = styled.div`
+  flex: 1;
+  overflow: auto;
 `;
 
 const DependencyButton = styled.button`
@@ -174,6 +213,9 @@ const DependencyName = styled.span`
   font-size: 18px;
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const DependencyVersion = styled.span`
@@ -187,6 +229,7 @@ const MainContent = Card.extend`
   flex: 1;
   margin-left: 15px;
   padding: 0;
+  overflow: auto;
 `;
 
 const mapStateToProps = state => ({

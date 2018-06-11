@@ -1,5 +1,11 @@
 // @flow
-import { LOAD_DEPENDENCY_INFO_FROM_DISK } from '../actions';
+import produce from 'immer';
+import {
+  LOAD_DEPENDENCY_INFO_FROM_DISK,
+  DELETE_DEPENDENCY_START,
+  DELETE_DEPENDENCY_ERROR,
+  DELETE_DEPENDENCY_FINISH,
+} from '../actions';
 
 import type { Action } from 'redux';
 import type { Dependency } from '../types';
@@ -21,6 +27,30 @@ export default (state: State = initialState, action: Action) => {
         ...state,
         [project.id]: dependencies,
       };
+    }
+
+    case DELETE_DEPENDENCY_START: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependencyName].isBeingDeleted = true;
+      });
+    }
+
+    case DELETE_DEPENDENCY_ERROR: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependencyName].isBeingDeleted = false;
+      });
+    }
+
+    case DELETE_DEPENDENCY_FINISH: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        delete draftState[projectId][dependencyName];
+      });
     }
 
     default:

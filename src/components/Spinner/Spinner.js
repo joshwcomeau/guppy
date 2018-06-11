@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import IconBase from 'react-icons-kit';
@@ -5,7 +6,14 @@ import { loader } from 'react-icons-kit/feather/loader';
 
 import { COLORS } from '../../constants';
 
-const Spinner = ({ size }) => <Icon size={size} icon={loader} />;
+type Props = {
+  size: number,
+  color?: string,
+};
+
+const Spinner = ({ size, color = COLORS.gray[500] }: Props) => (
+  <Icon size={size} color={color} icon={loader} />
+);
 
 const spin = keyframes`
   from {
@@ -19,7 +27,7 @@ const spin = keyframes`
 
 const Icon = styled(IconBase)`
   animation: ${spin} 2s linear infinite;
-  color: ${COLORS.gray[500]};
+  color: ${props => props.color};
 `;
 
 export default Spinner;

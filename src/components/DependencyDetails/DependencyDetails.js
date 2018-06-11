@@ -15,12 +15,13 @@ import DependencyDetailsTable from '../DependencyDetailsTable';
 import type { Dependency } from '../../types';
 
 type Props = {
+  projectId: string,
   dependency: Dependency,
 };
 
 class DependencyDetails extends PureComponent<Props> {
   render() {
-    const { dependency } = this.props;
+    const { projectId, dependency } = this.props;
 
     const tags =
       dependency.keywords &&
@@ -61,7 +62,10 @@ class DependencyDetails extends PureComponent<Props> {
         </VersionsWrapper>
 
         <MainContent>
-          <DependencyDetailsTable dependency={dependency} />
+          <DependencyDetailsTable
+            projectId={projectId}
+            dependency={dependency}
+          />
         </MainContent>
       </Fragment>
     );
