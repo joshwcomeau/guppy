@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled, { injectGlobal } from 'styled-components';
-import { SearchBox, Hits, PoweredBy } from 'react-instantsearch/dom';
+import { InfiniteHits } from 'react-instantsearch/dom';
 import { connectStateResults } from 'react-instantsearch/connectors';
 
 import Modal from '../Modal';
@@ -42,7 +42,7 @@ class AddDependencyModal extends Component<Props> {
           <HitsWrapper>
             <FadeOnChange changeKey={!!hasSearchQuery}>
               {hasSearchQuery ? (
-                <Hits hitComponent={AddDependencySearchResult} />
+                <InfiniteHits hitComponent={AddDependencySearchResult} />
               ) : (
                 <AddDependencyInitialScreen />
               )}
