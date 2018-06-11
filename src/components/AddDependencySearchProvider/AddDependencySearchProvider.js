@@ -11,7 +11,7 @@ class AddDependencySearchProvider extends Component<Props> {
     return (
       <InstantSearch
         appId="OFCNCOG2CU"
-        apiKey="f54e21fa3a2a0160595bb058179bfb1e"
+        apiKey="7492903b80561e70bff1359d7052b4ae"
         indexName="npm-search"
       >
         {this.props.children}

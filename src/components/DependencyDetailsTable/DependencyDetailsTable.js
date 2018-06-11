@@ -29,10 +29,10 @@ class DependencyDetailsTable extends Component<Props> {
       <Table>
         <tbody>
           <tr>
-            <Cell>
+            <FirstCell>
               <Label>Last Updated</Label>
-            </Cell>
-            <Cell>3 months ago</Cell>
+            </FirstCell>
+            <FirstCell>3 months ago</FirstCell>
           </tr>
           {dependency.license && (
             <tr>
@@ -91,6 +91,11 @@ const Cell = styled.td`
   }
 `;
 
+// TODO: Feels gross to be doing this manually when `tr:first-child td`
+// would work.
+const FirstCell = Cell.extend`
+  padding-top: 0;
+`;
 const LastCell = Cell.extend`
   padding-bottom: 0;
   border-bottom: none;

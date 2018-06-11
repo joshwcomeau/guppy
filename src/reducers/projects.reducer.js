@@ -108,6 +108,7 @@ export const getProjectsArray = (state: GlobalState) =>
 export const getProjectById = (id: string, state: GlobalState) =>
   prepareProjectForConsumption(state.projects.byId[id], state);
 
+// TODO: check the perf cost of this selector, memoize if it's non-trivial.
 export const getSelectedProject = (state: GlobalState) => {
   const selectedId = getSelectedProjectId(state);
 
@@ -122,4 +123,19 @@ export const getSelectedProject = (state: GlobalState) => {
   }
 
   return prepareProjectForConsumption(project, state);
+};
+
+export const getDependencyMapForSelectedProject = (state: GlobalState) => {
+  const projectId = getSelectedProjectId(state);
+
+  if (!projectId) {
+    return [];
+  }
+
+  const dependencies = getDependenciesForProjectId(projectId, state);
+
+  return dependencies.reduce((acc, dep) => {
+    acc[dep.name] = dep;
+    return acc;
+  }, {});
 };

@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
@@ -7,6 +8,9 @@ import { u1F4C3 as billIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C3';
 import { u1F516 as tagIcon } from 'react-icons-kit/noto_emoji_regular/u1F516';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
 import { u1F553 as clockIcon } from 'react-icons-kit/noto_emoji_regular/u1F553';
+import { check } from 'react-icons-kit/feather/check';
+
+import { getDependencyMapForSelectedProject } from '../../reducers/projects.reducer';
 
 import Heading from '../Heading';
 import Spacer from '../Spacer';
@@ -15,11 +19,17 @@ import Middot from '../Middot';
 import { COLORS } from '../../constants';
 import Button from '../Button';
 
+import type { Dependency } from '../../types';
+
 type Props = {
+  currentlyInstalledDependencies: {
+    [name: string]: Dependency,
+  },
   hit: {
     name: string,
     description: string,
-    humanDownloadsLast30Days: number,
+    downloadsLast30Days: number,
+    humanDownloadsLast30Days: string,
     githubRepo: {
       user: string,
       project: string,
@@ -45,11 +55,25 @@ const StatsItem = ({ icon, children }) => (
   </StatsItemElem>
 );
 
+const getColorForDownloadNumber = (num: number) => {
+  if (num < 5000) {
+    return COLORS.pink[700];
+  } else if (num < 50000) {
+    return COLORS.orange[500];
+  } else {
+    return COLORS.green[700];
+  }
+};
+
 class AddDependencySearchResult extends Component<Props> {
   render() {
-    const { hit } = this.props;
+    const { currentlyInstalledDependencies, hit } = this.props;
 
     const npmLink = `https://www.npmjs.org/package/${hit.name}`;
+
+    const downloadNumColor = getColorForDownloadNumber(hit.downloadsLast30Days);
+
+    const isAlreadyInstalled = !!currentlyInstalledDependencies[hit.name];
 
     return (
       <Wrapper>
@@ -61,23 +85,41 @@ class AddDependencySearchResult extends Component<Props> {
             <Spacer inline size={15} />
             <Version>v{hit.version}</Version>
           </Title>
-          <Button
-            size="small"
-            color1={COLORS.green[700]}
-            color2={COLORS.lightGreen[500]}
-            textColor={COLORS.green[700]}
-          >
-            Add To Project
-          </Button>
+          {isAlreadyInstalled ? (
+            <AlreadyInstalledWrapper>
+              <IconBase
+                icon={check}
+                size={24}
+                style={{ color: COLORS.green[500] }}
+              />{' '}
+              Already installed
+            </AlreadyInstalledWrapper>
+          ) : (
+            <Button
+              size="small"
+              color1={COLORS.green[700]}
+              color2={COLORS.lightGreen[500]}
+              textColor={COLORS.green[700]}
+            >
+              Add To Project
+            </Button>
+          )}
         </Header>
 
         <Description>{hit.description}</Description>
         <Spacer size={20} />
 
         <StatsRow>
-          <StatsItem icon={barGraphIcon}>2.3k downloads a month</StatsItem>
+          <StatsItem icon={barGraphIcon}>
+            <StatsItemHighlight style={{ color: downloadNumColor }}>
+              {hit.humanDownloadsLast30Days}
+            </StatsItemHighlight>{' '}
+            downloads a month
+          </StatsItem>
           <Middot />
-          <StatsItem icon={billIcon}>MIT License</StatsItem>
+          <StatsItem icon={billIcon}>
+            <StatsItemHighlight>{hit.license}</StatsItemHighlight> License
+          </StatsItem>
           <Middot />
           <StatsItem icon={clockIcon}>
             Last updated {moment(hit.modified).fromNow()}
@@ -144,6 +186,7 @@ const StatsItemElem = styled.span`
 
 const Description = styled.div`
   font-size: 18px;
+  margin-right: 120px;
 `;
 
 const Divider = styled.div`
@@ -158,4 +201,23 @@ const LastUpdated = styled.span`
   font-size: 0.9em;
 `;
 
-export default AddDependencySearchResult;
+const StatsItemHighlight = styled.span`
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  margin-right: 3px;
+`;
+
+const AlreadyInstalledWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 125px;
+  font-size: 15px;
+  color: ${COLORS.gray[400]};
+`;
+
+const mapStateToProps = state => ({
+  currentlyInstalledDependencies: getDependencyMapForSelectedProject(state),
+});
+
+export default connect(mapStateToProps)(AddDependencySearchResult);
