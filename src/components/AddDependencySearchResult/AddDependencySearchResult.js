@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
+import { Highlight } from 'react-instantsearch/dom';
 import { u1F4C3 as billIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C3';
 import { u1F516 as tagIcon } from 'react-icons-kit/noto_emoji_regular/u1F516';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
@@ -56,7 +57,9 @@ class AddDependencySearchResult extends Component<Props> {
         <Header>
           <Title>
             <ExternalLink href={npmLink}>
-              <Name size="small">{hit.name}</Name>
+              <Name size="small">
+                <Highlight attribute="name" hit={hit} tagName="mark" />
+              </Name>
             </ExternalLink>
             <Spacer inline size={15} />
             <Version>v{hit.version}</Version>
@@ -71,13 +74,17 @@ class AddDependencySearchResult extends Component<Props> {
           </Button>
         </Header>
 
-        <Description>{hit.description}</Description>
+        <Description>
+          <Highlight attribute="description" hit={hit} tagName="mark" />
+        </Description>
         <Spacer size={20} />
 
         <StatsRow>
-          <StatsItem icon={barGraphIcon}>2.3k downloads a month</StatsItem>
+          <StatsItem icon={barGraphIcon}>
+            {hit.humanDownloadsLast30Days} downloads a month
+          </StatsItem>
           <Middot />
-          <StatsItem icon={billIcon}>MIT License</StatsItem>
+          <StatsItem icon={billIcon}>{hit.license} License</StatsItem>
           <Middot />
           <StatsItem icon={clockIcon}>
             Last updated {moment(hit.modified).fromNow()}
