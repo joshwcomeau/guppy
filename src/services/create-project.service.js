@@ -1,6 +1,7 @@
 // @flow
-// TODO: Flow fixes
 import slug from 'slug';
+import type { ProjectType } from '../types';
+
 const prettier = window.require('prettier');
 
 const fs = window.require('fs');
@@ -8,6 +9,12 @@ const os = window.require('os');
 const childProcess = window.require('child_process');
 
 const DISABLE = false;
+
+type ProjectInfo = {
+  projectName: string,
+  projectType: ProjectType,
+  projectIcon: string,
+};
 
 /**
  * This service manages the creation of a new project.
@@ -26,10 +33,10 @@ const DISABLE = false;
  * fire multiple times, to handle updates mid-creation. Maybe an observable?
  */
 export default (
-  { projectName, projectType, projectIcon },
-  onStatusUpdate,
-  onError,
-  onComplete
+  { projectName, projectType, projectIcon }: ProjectInfo,
+  onStatusUpdate: (update: string) => void,
+  onError: (err: string) => void,
+  onComplete: (packageJson: any) => void
 ) => {
   if (DISABLE) {
     const fakeProject = {

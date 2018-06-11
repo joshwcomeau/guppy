@@ -26,7 +26,7 @@ export type Task = {
   status: TaskStatus,
   processId?: number,
   command: string,
-  timeSinceStatusChange: Date,
+  timeSinceStatusChange: ?Date,
   logs: Array<Log>,
 };
 

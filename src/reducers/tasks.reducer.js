@@ -28,7 +28,7 @@ import {
 } from '../actions';
 
 import type { Action } from 'redux';
-import type { Task } from '../types';
+import type { Project, Task } from '../types';
 
 type State = {
   [uniqueTaskId: string]: Task,
@@ -40,10 +40,12 @@ export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case REFRESH_PROJECTS: {
       return produce(state, draftState => {
-        Object.values(action.projects).forEach(project => {
-          const projectId = project.guppy.id;
+        Object.keys(action.projects).forEach(projectId => {
+          const project = action.projects[projectId];
 
-          Object.entries(project.scripts).forEach(([name, command]) => {
+          Object.keys(project.scripts).forEach(name => {
+            const command = project.scripts[name];
+
             const uniqueTaskId = buildUniqueTaskId(projectId, name);
 
             // If this task already exists, we need to be careful.
@@ -77,7 +79,9 @@ export default (state: State = initialState, action: Action) => {
       const projectId = project.guppy.id;
 
       return produce(state, draftState => {
-        Object.entries(project.scripts).forEach(([name, command]) => {
+        Object.keys(project.scripts).forEach(name => {
+          const command = project.scripts[name];
+
           const uniqueTaskId = buildUniqueTaskId(projectId, name);
 
           draftState[uniqueTaskId] = buildNewTask(
@@ -181,6 +185,9 @@ const getTaskDescription = name => {
     case 'eject': {
       return 'Permanently reveal the create-react-app configuration files';
     }
+    default: {
+      return '';
+    }
   }
 };
 
@@ -205,7 +212,12 @@ const getTaskType = name => {
 
 // TODO: A lot of this stuff shouldn't be done here :/ maybe best to resolve
 // this in an action before it hits the reducer?
-const buildNewTask = (id, projectId, name, command) => ({
+const buildNewTask = (
+  id: string,
+  projectId: string,
+  name: string,
+  command: string
+): Task => ({
   id,
   name,
   projectId,

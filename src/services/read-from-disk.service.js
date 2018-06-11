@@ -18,7 +18,7 @@ const DEFAULT_PATH = `${os.homedir()}/guppy-projects`;
  * Find all the projects managed by Guppy, and read their package.jsons.
  * NOTE: Currently only supports projects in DEFAULT_PATH. We should fix that.
  */
-export function loadGuppyProjects(fromPath = DEFAULT_PATH) {
+export function loadGuppyProjects(fromPath: string = DEFAULT_PATH) {
   const { readdirSync, statSync } = fs;
 
   let projects;
