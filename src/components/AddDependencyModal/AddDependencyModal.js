@@ -1,7 +1,11 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch/dom';
+import {
+  InstantSearch,
+  InfiniteHits,
+  Configure,
+} from 'react-instantsearch/dom';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -34,9 +38,22 @@ class AddDependencyModal extends Component<Props, State> {
     return (
       <InstantSearch
         appId="OFCNCOG2CU"
-        apiKey="f54e21fa3a2a0160595bb058179bfb1e"
+        apiKey="7492903b80561e70bff1359d7052b4ae"
         indexName="npm-search"
       >
+        <Configure
+          attributesToRetrieve={[
+            'name',
+            'version',
+            'description',
+            'modified',
+            'humanDownloadsLast30Days',
+            'license',
+            // 'owner',
+          ]}
+          attributesToHighlight={['name', 'description']}
+          hitsPerPage={10}
+        />
         <Modal
           width={620}
           height={800}
@@ -49,7 +66,9 @@ class AddDependencyModal extends Component<Props, State> {
             </ModalHeader>
 
             <HitsWrapper>
-              <Hits hitComponent={AddDependencySearchResult} />
+              {/* if you want to customise the button */}
+              {/* check out `connectInfiniteHits` for full control */}
+              <InfiniteHits hitComponent={AddDependencySearchResult} />
             </HitsWrapper>
             <Spacer size={25} />
           </Wrapper>
