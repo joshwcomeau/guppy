@@ -136,8 +136,12 @@ const DependencyList = Card.extend`
 `;
 
 const Dependencies = styled.div`
-  flex: 1;
   overflow: auto;
+  /*
+    flex-shrink is needed to ensure that the list doesn't clobber the
+    "Add New Dependency" button below.
+  */
+  flex-shrink: 8;
 `;
 
 const DependencyButton = styled.button`
@@ -188,6 +192,7 @@ const DependencyButton = styled.button`
 
 const AddDependencyButton = styled.button`
   width: 100%;
+  height: 42px;
   padding: 8px 10px;
   margin-top: 10px;
   border: 2px dashed ${COLORS.gray[300]};
