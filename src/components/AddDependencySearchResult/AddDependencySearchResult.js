@@ -1,9 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { injectGlobal } from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
+import { Highlight } from 'react-instantsearch/dom';
 import { u1F4C3 as billIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C3';
 import { u1F516 as tagIcon } from 'react-icons-kit/noto_emoji_regular/u1F516';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
@@ -214,6 +215,22 @@ const AlreadyInstalledWrapper = styled.div`
   width: 125px;
   font-size: 15px;
   color: ${COLORS.gray[400]};
+`;
+
+// TODO: I should be able to reuse the existing button component with
+// `connectInfiniteHits`
+injectGlobal`
+  .ais-InfiniteHits-loadMore {
+    padding: 10px 30px;
+    margin-top: 45px;
+    margin-left: 50%;
+    background: transparent;
+    border: 2px solid ${COLORS.blue[700]};
+    border-radius: 60px;
+    font-size: 18px;
+    transform: translateX(-50%);
+    cursor: pointer;
+  }
 `;
 
 const mapStateToProps = state => ({
