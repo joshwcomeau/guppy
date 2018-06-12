@@ -97,3 +97,11 @@ export const Z_INDICES = {
   modal: 1000,
   titlebar: 10000,
 };
+
+// NOTE: This looks private, but it's not :)
+// this is meant to be embedded in client-side code.
+export const ALGOLIA_KEYS = {
+  appId: 'OFCNCOG2CU',
+  apiKey: '7492903b80561e70bff1359d7052b4ae',
+  indexName: 'npm-search',
+};

@@ -23,8 +23,9 @@ class FadeOnChange extends PureComponent<Props, State> {
 
   componentWillReceiveProps(nextProps: Props) {
     if (this.props.changeKey !== nextProps.changeKey) {
-      // This is a pretty gross sequence of events, but this is a surprisingly
-      // tricky problem!
+      // This is a pretty gross sequence of events.
+      // TODO: Should probably use component state to sequence this, so that
+      // it can be interruptible.
       //
       // We can't simply render the props, because then the text will change
       // RIGHT AWAY, before it even starts fading away. So instead we render

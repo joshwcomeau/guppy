@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import { COLORS } from '../../constants';
 
@@ -8,17 +9,19 @@ import ExternalLink from '../ExternalLink';
 import Label from '../Label';
 import Middot from '../Middot';
 import DeleteDependencyButton from '../DeleteDependencyButton';
+import Spinner from '../Spinner';
 
 import type { Dependency } from '../../types';
 
 type Props = {
   projectId: string,
   dependency: Dependency,
+  lastUpdatedAt: number,
 };
 
 class DependencyDetailsTable extends Component<Props> {
   render() {
-    const { projectId, dependency } = this.props;
+    const { projectId, dependency, lastUpdatedAt } = this.props;
 
     const packageHref = `https://www.npmjs.org/package/${dependency.name}`;
     const githubHref =
@@ -32,7 +35,13 @@ class DependencyDetailsTable extends Component<Props> {
             <FirstCell>
               <Label>Last Updated</Label>
             </FirstCell>
-            <FirstCell>3 months ago</FirstCell>
+            <FirstCell>
+              {lastUpdatedAt ? (
+                moment(lastUpdatedAt).fromNow()
+              ) : (
+                <Spinner size={15} />
+              )}
+            </FirstCell>
           </tr>
           {dependency.license && (
             <tr>
