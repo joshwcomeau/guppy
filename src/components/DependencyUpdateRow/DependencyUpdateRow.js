@@ -62,7 +62,7 @@ class DependencyUpdateRow extends Component<Props> {
   }
 
   render() {
-    const { dependency, latestVersion, isLoadingNpmInfo } = this.props;
+    const { dependency, latestVersion } = this.props;
 
     return (
       <Wrapper>

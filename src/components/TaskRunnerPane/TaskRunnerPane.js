@@ -5,11 +5,8 @@ import { connect } from 'react-redux';
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getTasksInTaskListForProjectId } from '../../reducers/tasks.reducer';
-import { COLORS } from '../../constants';
-import { capitalize } from '../../utils';
 
 import Module from '../Module';
-import Modal from '../Modal';
 import TaskRunnerPaneRow from '../TaskRunnerPaneRow';
 import TaskDetailsModal from '../TaskDetailsModal';
 

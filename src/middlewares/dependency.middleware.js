@@ -3,7 +3,6 @@ import {
   deleteDependencyFinish,
   deleteDependencyError,
 } from '../actions';
-import { getProjectById } from '../reducers/projects.reducer';
 
 const childProcess = window.require('child_process');
 const os = window.require('os');
@@ -14,6 +13,7 @@ const os = window.require('os');
 const parentPath = `${os.homedir()}/guppy-projects`;
 
 export default store => next => action => {
+  // eslint-disable-next-line default-case
   switch (action.type) {
     case DELETE_DEPENDENCY_START: {
       const { projectId, dependencyName } = action;

@@ -6,15 +6,11 @@ import styled from 'styled-components';
 import { launchDevServer, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
-import { COLORS } from '../../constants';
-import { capitalize } from '../../utils';
 
 import Module from '../Module';
 import Card from '../Card';
-import Heading from '../Heading';
 import Toggle from '../Toggle';
 import TerminalOutput from '../TerminalOutput';
-import Paragraph from '../Paragraph';
 import ExternalLink from '../ExternalLink';
 import DevelopmentServerStatus from '../DevelopmentServerStatus';
 
@@ -100,13 +96,6 @@ const LeftSide = styled.div`
 const DocumentationLink = styled.div`
   line-height: 35px;
   text-align: center;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
 `;
 
 const Description = styled.div`

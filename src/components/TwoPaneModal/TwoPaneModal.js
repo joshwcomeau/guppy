@@ -12,8 +12,6 @@ import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
 
-import Modal from '../Modal';
-
 type Props = {
   leftPane: React$Node,
   rightPane: React$Node,

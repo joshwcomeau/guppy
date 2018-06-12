@@ -7,20 +7,16 @@ import { plus } from 'react-icons-kit/feather/plus';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 import { COLORS } from '../../constants';
-import HoverableOutlineButton from '../HoverableOutlineButton';
 
 import Module from '../Module';
 import AddDependencyModal from '../AddDependencyModal';
 import AddDependencySearchProvider from '../AddDependencySearchProvider';
 import Card from '../Card';
-import Button from '../Button';
 import DependencyDetails from '../DependencyDetails';
-import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
 
-import type { Project, Dependency } from '../../types';
+import type { Project } from '../../types';
 
 type Props = {
   project: Project,

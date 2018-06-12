@@ -103,10 +103,6 @@ export function loadProjectDependencies(
   project: ProjectInternal,
   fromPath: string = DEFAULT_PATH
 ) {
-  const { readdirSync, statSync } = fs;
-
-  let dependencies;
-
   const dependencyNames = Object.keys(project.dependencies);
 
   return new Promise((resolve, reject) => {

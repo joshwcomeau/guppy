@@ -4,16 +4,13 @@ import { connect } from 'react-redux';
 import styled, { injectGlobal } from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
-import { Highlight } from 'react-instantsearch/dom';
 import { u1F4C3 as billIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C3';
-import { u1F516 as tagIcon } from 'react-icons-kit/noto_emoji_regular/u1F516';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
 import { u1F553 as clockIcon } from 'react-icons-kit/noto_emoji_regular/u1F553';
 import { check } from 'react-icons-kit/feather/check';
 
 import { getDependencyMapForSelectedProject } from '../../reducers/projects.reducer';
 
-import Heading from '../Heading';
 import Spacer from '../Spacer';
 import ExternalLink from '../ExternalLink';
 import Middot from '../Middot';
@@ -134,13 +131,6 @@ class AddDependencySearchResult extends Component<Props> {
   }
 }
 
-const Avatar = styled.img`
-  display: block;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-`;
-
 const Wrapper = styled.div`
   padding-top: 25px;
 `;
@@ -167,12 +157,6 @@ const Version = styled.span`
   font-size: 20px;
 `;
 
-const CreatorRow = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-`;
-
 const StatsRow = styled.div`
   display: flex;
   align-items: center;
@@ -194,12 +178,6 @@ const Divider = styled.div`
   width: 100%;
   height: 1px;
   background: ${COLORS.gray[100]};
-`;
-
-const LastUpdated = styled.span`
-  padding-left: 10px;
-  color: ${COLORS.gray[500]};
-  font-size: 0.9em;
 `;
 
 const StatsItemHighlight = styled.span`

@@ -15,7 +15,7 @@ import Button from '../Button';
 import EjectButton from '../EjectButton';
 import Toggle from '../Toggle';
 
-import type { Task, TaskStatus } from '../../types';
+import type { TaskStatus } from '../../types';
 
 type Props = {
   id: string,

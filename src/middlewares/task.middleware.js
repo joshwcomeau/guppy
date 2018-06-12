@@ -3,13 +3,11 @@ import {
   ABORT_TASK,
   COMPLETE_TASK,
   LAUNCH_DEV_SERVER,
-  abortTask,
   completeTask,
   attachProcessIdToTask,
   receiveDataFromTaskExecution,
 } from '../actions';
 import { getProjectById } from '../reducers/projects.reducer';
-import { getTaskByProjectIdAndTaskName } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
 
 const childProcess = window.require('child_process');
@@ -28,6 +26,7 @@ export default store => next => action => {
 
   const { task } = action;
 
+  // eslint-disable-next-line default-case
   switch (action.type) {
     case LAUNCH_DEV_SERVER: {
       findAvailablePort()
@@ -166,7 +165,7 @@ export default store => next => action => {
 
     case ABORT_TASK: {
       const { task } = action;
-      const { projectId, processId, name } = task;
+      const { processId, name } = task;
 
       // Our child was spawned using `shell: true` to get around a quirk with
       // electron not working when specifying environment variables the

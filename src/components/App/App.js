@@ -15,7 +15,6 @@ import {
 } from '../../reducers/projects.reducer';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
-import Home from '../Home';
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
 import Titlebar from '../Titlebar';
@@ -27,7 +26,6 @@ import type { Project } from '../../types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 type Props = {
-  initializing: boolean,
   onboardingStatus: OnboardingStatus,
   selectedProject: ?Project,
   projects: Array<Project>,
@@ -82,8 +80,6 @@ class App extends Component<Props> {
   };
 
   render() {
-    const { initializing } = this.props;
-
     const DefaultComponent = IntroScreen;
 
     return (
@@ -128,7 +124,6 @@ const MainContent = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  initializing: state.initializing,
   onboardingStatus: getOnboardingStatus(state),
   projects: getProjectsArray(state),
   selectedProject: getSelectedProject(state),

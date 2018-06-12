@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { cornerUpLeft } from 'react-icons-kit/feather/cornerUpLeft';
-import { plus } from 'react-icons-kit/feather/plus';
 
 import { COLORS } from '../../constants';
 
@@ -73,11 +72,6 @@ const Heading = styled.h2`
 const Em = styled.em`
   font-style: italic;
   color: ${COLORS.purple[500]};
-`;
-
-const PlusIconWrapper = styled.span`
-  display: inline-block;
-  transform: translateY(6px);
 `;
 
 export default IntroductionBlurb;

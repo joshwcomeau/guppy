@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import styled, { injectGlobal } from 'styled-components';
+import styled from 'styled-components';
 import { InfiniteHits } from 'react-instantsearch/dom';
 import { connectStateResults } from 'react-instantsearch/connectors';
 

@@ -62,8 +62,6 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Selectors
-type GlobalState = { dependencies: State };
-
 export const getDependenciesForProjectId = (
   projectId: string,
   state: any

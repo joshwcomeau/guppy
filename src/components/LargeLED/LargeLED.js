@@ -54,8 +54,6 @@ class LargeLED extends Component<Props, State> {
 
     const OUTLINE_SIZE = size * (5.5 / 8);
 
-    const colors = getColorsForStatus(status);
-
     return (
       <Spring from={this.state.prevColors} to={this.state.colors}>
         {colors => (

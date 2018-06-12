@@ -28,7 +28,7 @@ import {
 } from '../actions';
 
 import type { Action } from 'redux';
-import type { Project, Task } from '../types';
+import type { Task } from '../types';
 
 type State = {
   [uniqueTaskId: string]: Task,
