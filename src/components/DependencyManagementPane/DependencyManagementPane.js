@@ -75,12 +75,18 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     const { id, dependencies } = this.props.project;
     const { selectedDependencyIndex, addingNewDependency } = this.state;
 
+    // When dependencies are still in the midst of being installed, it doesn't
+    // make sense to show them in the list (they don't have enough info yet).
+    const shownDependencies = dependencies.filter(
+      dependency => dependency.status !== 'installing'
+    );
+
     return (
       <Module title="Dependencies">
         <Wrapper>
           <DependencyList>
             <Dependencies>
-              {dependencies.map((dependency, index) => (
+              {shownDependencies.map((dependency, index) => (
                 <DependencyButton
                   key={dependency.name}
                   isSelected={selectedDependencyIndex === index}

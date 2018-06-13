@@ -16,7 +16,7 @@ export type Log = {
 export type TaskType = 'short-term' | 'sustained';
 
 export type TaskStatus = 'idle' | 'pending' | 'success' | 'failed';
-export type DependencyStatus = 'idle' | 'updating' | 'deleting';
+export type DependencyStatus = 'idle' | 'installing' | 'updating' | 'deleting';
 
 export type Task = {
   id: string,

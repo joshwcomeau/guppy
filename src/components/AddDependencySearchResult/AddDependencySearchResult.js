@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled, { injectGlobal } from 'styled-components';
 import moment from 'moment';
@@ -9,20 +9,29 @@ import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C
 import { u1F553 as clockIcon } from 'react-icons-kit/noto_emoji_regular/u1F553';
 import { check } from 'react-icons-kit/feather/check';
 
-import { getDependencyMapForSelectedProject } from '../../reducers/projects.reducer';
+import { addDependencyStart } from '../../actions';
+import {
+  getSelectedProjectId,
+  getDependencyMapForSelectedProject,
+} from '../../reducers/projects.reducer';
 
 import Spacer from '../Spacer';
+import Spinner from '../Spinner';
 import ExternalLink from '../ExternalLink';
 import Middot from '../Middot';
 import { COLORS } from '../../constants';
 import Button from '../Button';
 
-import type { Dependency } from '../../types';
+import type { Dependency, DependencyStatus } from '../../types';
 
 type Props = {
-  currentlyInstalledDependencies: {
-    [name: string]: Dependency,
-  },
+  projectId: string,
+  currentStatus: ?DependencyStatus,
+  addDependencyStart: (
+    projectId: string,
+    dependencyName: string,
+    version: string
+  ) => any,
   hit: {
     name: string,
     description: string,
@@ -63,15 +72,51 @@ const getColorForDownloadNumber = (num: number) => {
   }
 };
 
-class AddDependencySearchResult extends Component<Props> {
+class AddDependencySearchResult extends PureComponent<Props> {
+  renderActionArea() {
+    const { hit, projectId, currentStatus, addDependencyStart } = this.props;
+
+    if (currentStatus === 'installing') {
+      return (
+        <NoActionAvailable>
+          <Spinner size={24} />
+          <Spacer size={6} />
+          Installing...
+        </NoActionAvailable>
+      );
+    } else if (typeof currentStatus === 'string') {
+      return (
+        <NoActionAvailable>
+          <IconBase
+            icon={check}
+            size={24}
+            style={{ color: COLORS.green[500] }}
+          />
+          <Spacer size={6} />
+          Installed
+        </NoActionAvailable>
+      );
+    } else {
+      return (
+        <Button
+          size="small"
+          color1={COLORS.green[700]}
+          color2={COLORS.lightGreen[500]}
+          textColor={COLORS.green[700]}
+          onClick={() => addDependencyStart(projectId, hit.name, hit.version)}
+        >
+          Add To Project
+        </Button>
+      );
+    }
+  }
+
   render() {
-    const { currentlyInstalledDependencies, hit } = this.props;
+    const { hit } = this.props;
 
     const npmLink = `https://www.npmjs.org/package/${hit.name}`;
 
     const downloadNumColor = getColorForDownloadNumber(hit.downloadsLast30Days);
-
-    const isAlreadyInstalled = !!currentlyInstalledDependencies[hit.name];
 
     return (
       <Wrapper>
@@ -83,25 +128,7 @@ class AddDependencySearchResult extends Component<Props> {
             <Spacer inline size={15} />
             <Version>v{hit.version}</Version>
           </Title>
-          {isAlreadyInstalled ? (
-            <AlreadyInstalledWrapper>
-              <IconBase
-                icon={check}
-                size={24}
-                style={{ color: COLORS.green[500] }}
-              />{' '}
-              Already installed
-            </AlreadyInstalledWrapper>
-          ) : (
-            <Button
-              size="small"
-              color1={COLORS.green[700]}
-              color2={COLORS.lightGreen[500]}
-              textColor={COLORS.green[700]}
-            >
-              Add To Project
-            </Button>
-          )}
+          {this.renderActionArea()}
         </Header>
 
         <Description>{hit.description}</Description>
@@ -186,11 +213,11 @@ const StatsItemHighlight = styled.span`
   margin-right: 3px;
 `;
 
-const AlreadyInstalledWrapper = styled.div`
+const NoActionAvailable = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  width: 125px;
+  width: 135px;
   font-size: 15px;
   color: ${COLORS.gray[400]};
 `;
@@ -211,8 +238,23 @@ injectGlobal`
   }
 `;
 
-const mapStateToProps = state => ({
-  currentlyInstalledDependencies: getDependencyMapForSelectedProject(state),
-});
+const mapStateToProps = (state, ownProps) => {
+  const dependencyName = ownProps.hit.name;
+  const dependencyMap = getDependencyMapForSelectedProject(state);
 
-export default connect(mapStateToProps)(AddDependencySearchResult);
+  const currentStatus = dependencyMap[dependencyName]
+    ? dependencyMap[dependencyName].status
+    : null;
+
+  return {
+    projectId: getSelectedProjectId(state),
+    currentStatus,
+  };
+};
+
+const mapDispatchToProps = { addDependencyStart };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddDependencySearchResult);

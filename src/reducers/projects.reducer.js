@@ -1,7 +1,13 @@
 // @flow
 import { combineReducers } from 'redux';
+import produce from 'immer';
 
-import { ADD_PROJECT, REFRESH_PROJECTS, SELECT_PROJECT } from '../actions';
+import {
+  ADD_PROJECT,
+  ADD_DEPENDENCY_FINISH,
+  REFRESH_PROJECTS,
+  SELECT_PROJECT,
+} from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
 import { getDependenciesForProjectId } from './dependencies.reducer';
 
@@ -34,6 +40,15 @@ const byId = (state: ById = initialState.byId, action: Action) => {
         ...state,
         [action.project.guppy.id]: action.project,
       };
+    }
+
+    case ADD_DEPENDENCY_FINISH: {
+      const { projectId, dependency } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId].dependencies[dependency.name] =
+          dependency.version;
+      });
     }
 
     default:
