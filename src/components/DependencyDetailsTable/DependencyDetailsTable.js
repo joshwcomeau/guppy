@@ -75,7 +75,7 @@ class DependencyDetailsTable extends Component<Props> {
               <DeleteDependencyButton
                 projectId={projectId}
                 dependencyName={dependency.name}
-                isBeingDeleted={dependency.isBeingDeleted}
+                isBeingDeleted={dependency.status === 'deleting'}
               />
             </LastCell>
           </tr>

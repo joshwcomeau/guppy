@@ -1,7 +1,10 @@
 import {
   DELETE_DEPENDENCY_START,
+  UPDATE_DEPENDENCY_START,
   deleteDependencyFinish,
   deleteDependencyError,
+  updateDependencyFinish,
+  updateDependencyError,
 } from '../actions';
 
 const childProcess = window.require('child_process');
@@ -36,6 +39,38 @@ export default store => next => action => {
           }
 
           next(deleteDependencyFinish(projectId, dependencyName));
+        }
+      );
+      break;
+    }
+
+    case UPDATE_DEPENDENCY_START: {
+      const { projectId, dependencyName, latestVersion } = action;
+
+      // TODO: This will need to be rethought soon, when we allow for projects
+      // to live elsewhere.
+      const projectPath = `${parentPath}/${projectId}`;
+
+      // TODO: yarn?
+      childProcess.exec(
+        `npm install ${dependencyName}@${latestVersion} -SE`,
+        {
+          cwd: projectPath,
+        },
+        (error, res) => {
+          console.log({ error, res });
+          if (error) {
+            // TODO: system prompt leting the user know.
+            next(updateDependencyError(projectId, dependencyName));
+            return;
+          }
+
+          // Figure out what the installed version is by reading from the
+          // project's
+
+          next(
+            updateDependencyFinish(projectId, dependencyName, latestVersion)
+          );
         }
       );
       break;

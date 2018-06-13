@@ -24,37 +24,35 @@ class DependencyDetails extends PureComponent<Props> {
 
     return (
       <DependencyInfoFromNpm packageName={dependency.name}>
-        {({ name, latestVersion, lastUpdatedAt, isLoading }: NpmResult) =>
-          console.log(name, dependency.name) || (
-            <Fragment>
-              <Header>
-                <PixelShifter y={-4}>
-                  <HeaderText>
-                    <Name size="small">{dependency.name}</Name>
-                    <Description>{dependency.description}</Description>
-                  </HeaderText>
-                </PixelShifter>
-              </Header>
+        {({ name, latestVersion, lastUpdatedAt, isLoading }: NpmResult) => (
+          <Fragment>
+            <Header>
+              <PixelShifter y={-4}>
+                <HeaderText>
+                  <Name size="small">{dependency.name}</Name>
+                  <Description>{dependency.description}</Description>
+                </HeaderText>
+              </PixelShifter>
+            </Header>
 
-              <VersionsWrapper>
-                <DependencyUpdateRow
-                  projectId={projectId}
-                  dependency={dependency}
-                  isLoadingNpmInfo={isLoading}
-                  latestVersion={latestVersion}
-                />
-              </VersionsWrapper>
+            <VersionsWrapper>
+              <DependencyUpdateRow
+                projectId={projectId}
+                dependency={dependency}
+                isLoadingNpmInfo={isLoading}
+                latestVersion={latestVersion}
+              />
+            </VersionsWrapper>
 
-              <MainContent>
-                <DependencyDetailsTable
-                  projectId={projectId}
-                  dependency={dependency}
-                  lastUpdatedAt={lastUpdatedAt}
-                />
-              </MainContent>
-            </Fragment>
-          )
-        }
+            <MainContent>
+              <DependencyDetailsTable
+                projectId={projectId}
+                dependency={dependency}
+                lastUpdatedAt={lastUpdatedAt}
+              />
+            </MainContent>
+          </Fragment>
+        )}
       </DependencyInfoFromNpm>
     );
   }

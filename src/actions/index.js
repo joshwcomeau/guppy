@@ -33,6 +33,9 @@ export const LOAD_DEPENDENCY_INFO_FROM_DISK = 'LOAD_DEPENDENCY_INFO_FROM_DISK';
 export const DELETE_DEPENDENCY_START = 'DELETE_DEPENDENCY_START';
 export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
 export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
+export const UPDATE_DEPENDENCY_START = 'UPDATE_DEPENDENCY_START';
+export const UPDATE_DEPENDENCY_ERROR = 'UPDATE_DEPENDENCY_ERROR';
+export const UPDATE_DEPENDENCY_FINISH = 'UPDATE_DEPENDENCY_FINISH';
 
 //
 //
@@ -164,4 +167,35 @@ export const deleteDependencyFinish = (
   type: DELETE_DEPENDENCY_FINISH,
   projectId,
   dependencyName,
+});
+
+export const updateDependencyStart = (
+  projectId: string,
+  dependencyName: string,
+  latestVersion: string
+) => ({
+  type: UPDATE_DEPENDENCY_START,
+  projectId,
+  dependencyName,
+  latestVersion,
+});
+
+export const updateDependencyError = (
+  projectId: string,
+  dependencyName: string
+) => ({
+  type: UPDATE_DEPENDENCY_ERROR,
+  projectId,
+  dependencyName,
+});
+
+export const updateDependencyFinish = (
+  projectId: string,
+  dependencyName: string,
+  latestVersion: string
+) => ({
+  type: UPDATE_DEPENDENCY_FINISH,
+  projectId,
+  dependencyName,
+  latestVersion,
 });

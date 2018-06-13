@@ -16,6 +16,7 @@ export type Log = {
 export type TaskType = 'short-term' | 'sustained';
 
 export type TaskStatus = 'idle' | 'pending' | 'success' | 'failed';
+export type DependencyStatus = 'idle' | 'updating' | 'deleting';
 
 export type Task = {
   id: string,
@@ -39,8 +40,9 @@ export type Dependency = {
   license: string,
   repository: string,
   // All of the above fields are straight from the dependency's package.json.
-  // This field is custom, to track when it's being deleted:
-  isBeingDeleted?: boolean,
+  // The status field is separate, and used to show loading indicators while
+  // performing actions on the dependency.
+  status: DependencyStatus,
 };
 
 type AppType = 'create-react-app' | 'gatsby';

@@ -1,9 +1,11 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
 
+import { updateDependencyStart } from '../../actions';
 import { COLORS } from '../../constants';
 
 import Button from '../Button';
@@ -19,7 +21,11 @@ type Props = {
   dependency: Dependency,
   isLoadingNpmInfo: boolean,
   latestVersion: ?string,
-  updateDependency: (projectId: string, dependency: Dependency) => void,
+  updateDependencyStart: (
+    projectId: string,
+    dependencyName: string,
+    latestVersion: string
+  ) => void,
 };
 
 class DependencyUpdateRow extends Component<Props> {
@@ -29,10 +35,10 @@ class DependencyUpdateRow extends Component<Props> {
       dependency,
       isLoadingNpmInfo,
       latestVersion,
-      updateDependency,
+      updateDependencyStart,
     } = this.props;
 
-    if (isLoadingNpmInfo) {
+    if (isLoadingNpmInfo || !latestVersion) {
       return (
         <FadeIn duration={500}>
           <Spinner size={22} />
@@ -41,6 +47,7 @@ class DependencyUpdateRow extends Component<Props> {
     }
 
     const isUpToDate = dependency.version === latestVersion;
+    const isUpdating = dependency.status === 'updating';
 
     return isUpToDate ? (
       <UpToDate>
@@ -54,9 +61,12 @@ class DependencyUpdateRow extends Component<Props> {
         type="fill"
         color1={COLORS.green[700]}
         color2={COLORS.lightGreen[500]}
-        onClick={() => updateDependency(projectId, dependency)}
+        style={{ width: 80 }}
+        onClick={() =>
+          updateDependencyStart(projectId, dependency.name, latestVersion)
+        }
       >
-        Update
+        {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}
       </Button>
     );
   }
@@ -67,13 +77,13 @@ class DependencyUpdateRow extends Component<Props> {
     return (
       <Wrapper>
         <Col>
-          <VersionLabel>Installed Version</VersionLabel>
-          <VersionNum>{dependency.version}</VersionNum>
+          <VersionLabel>Latest Version</VersionLabel>
+          <VersionNum>{latestVersion || '--'}</VersionNum>
         </Col>
 
         <Col>
-          <VersionLabel>Latest Version</VersionLabel>
-          <VersionNum>{latestVersion || '--'}</VersionNum>
+          <VersionLabel>Installed Version</VersionLabel>
+          <VersionNum>{dependency.version}</VersionNum>
         </Col>
 
         <Col>{this.renderActionColumn()}</Col>
@@ -114,4 +124,7 @@ const UpToDate = styled.div`
   font-weight: 500;
 `;
 
-export default DependencyUpdateRow;
+export default connect(
+  null,
+  { updateDependencyStart }
+)(DependencyUpdateRow);

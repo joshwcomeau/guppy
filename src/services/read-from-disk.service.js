@@ -141,7 +141,12 @@ export function loadProjectDependencies(
               'repository',
             ]);
 
-            return callback(null, packageJsonSubset);
+            const dependency = {
+              ...packageJsonSubset,
+              status: 'idle',
+            };
+
+            return callback(null, dependency);
           }
         );
       },
