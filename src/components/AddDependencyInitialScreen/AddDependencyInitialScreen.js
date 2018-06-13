@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { PoweredBy } from 'react-instantsearch/dom';
 
 import { COLORS } from '../../constants';
 import algoliaLogoSrc from '../../assets/images/algolia-logo.png';
@@ -17,7 +16,10 @@ class AddDependencyInitialScreen extends Component<Props> {
     return (
       <EmptyState>
         <Swimming>
-          <Logo>🐠</Logo>
+          <Logo>
+            {/* eslint-disable-next-line jsx-a11y/accessible-emoji */}
+            🐠
+          </Logo>
         </Swimming>
         <Paragraph>
           You can use the input above to search the Node Package Manager (NPM)

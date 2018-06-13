@@ -2,7 +2,6 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
-import Card from '../Card';
 import Heading from '../Heading';
 
 type Props = {
@@ -26,10 +25,6 @@ class Pane extends Component<Props> {
     );
   }
 }
-
-const Wrapper = Card.extend`
-  display: flex;
-`;
 
 const Header = styled.div`
   display: flex;

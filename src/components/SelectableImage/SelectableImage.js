@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 import CircularOutline from '../CircularOutline';
-import { COLORS } from '../../constants';
 
 type Props = {
   src: string,

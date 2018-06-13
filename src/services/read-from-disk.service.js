@@ -103,10 +103,6 @@ export function loadProjectDependencies(
   project: ProjectInternal,
   fromPath: string = DEFAULT_PATH
 ) {
-  const { readdirSync, statSync } = fs;
-
-  let dependencies;
-
   const dependencyNames = Object.keys(project.dependencies);
 
   return new Promise((resolve, reject) => {
@@ -145,7 +141,12 @@ export function loadProjectDependencies(
               'repository',
             ]);
 
-            return callback(null, packageJsonSubset);
+            const dependency = {
+              ...packageJsonSubset,
+              status: 'idle',
+            };
+
+            return callback(null, dependency);
           }
         );
       },

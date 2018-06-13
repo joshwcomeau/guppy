@@ -19,10 +19,7 @@ import {
   getOnboardingStatus,
   getSidebarVisibility,
 } from '../../reducers/onboarding-status.reducer';
-import {
-  extractProjectIdFromUrl,
-  buildUrlForProjectId,
-} from '../../services/location.service';
+import { buildUrlForProjectId } from '../../services/location.service';
 
 import Spacer from '../Spacer';
 import SidebarProjectIcon from './SidebarProjectIcon';
@@ -92,10 +89,6 @@ class Sidebar extends PureComponent<Props, State> {
     }
   }
 
-  renderProjects() {
-    const { projects, onboardingStatus } = this.props;
-  }
-
   render() {
     const {
       projects,
@@ -104,7 +97,6 @@ class Sidebar extends PureComponent<Props, State> {
       onboardingStatus,
       startCreatingNewProject,
       dismissSidebarIntro,
-      selectProject,
     } = this.props;
     const { introSequenceStep } = this.state;
 

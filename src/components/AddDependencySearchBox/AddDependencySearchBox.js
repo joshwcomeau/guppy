@@ -4,13 +4,11 @@
  * Unfortunately, styling these components is tricky, and doesn't play nicely
  * with styled-components. Just gonna override the provided global styles.
  */
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styled, { injectGlobal } from 'styled-components';
 import { SearchBox } from 'react-instantsearch/dom';
 
 import { COLORS } from '../../constants';
-
-import Label from '../Label';
 
 type Props = {
   onChange: (ev: SyntheticEvent<*>) => void,

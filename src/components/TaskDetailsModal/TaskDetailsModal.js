@@ -3,9 +3,6 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
-import IconBase from 'react-icons-kit';
-import { u231B as hourglass } from 'react-icons-kit/noto_emoji_regular/u231B';
-import { u1F553 as clock } from 'react-icons-kit/noto_emoji_regular/u1F553';
 
 import { runTask, abortTask } from '../../actions';
 import { COLORS } from '../../constants';
@@ -15,7 +12,6 @@ import { getTaskById } from '../../reducers/tasks.reducer';
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
 import Toggle from '../Toggle';
-import PixelShifter from '../PixelShifter';
 import LargeLED from '../LargeLED';
 import TerminalOutput from '../TerminalOutput';
 import Spacer from '../Spacer';
@@ -93,6 +89,10 @@ class TaskDetailsModal extends PureComponent<Props> {
           </span>
         );
       }
+
+      default: {
+        throw new Error('Unrecognized status in TaskDetailsModal');
+      }
     }
   };
 
@@ -103,15 +103,7 @@ class TaskDetailsModal extends PureComponent<Props> {
       return null;
     }
 
-    const {
-      name,
-      description,
-      status,
-      processId,
-      command,
-      timeSinceStatusChange,
-      logs,
-    } = task;
+    const { name, description, status, processId, logs } = task;
 
     const isRunning = !!processId;
 

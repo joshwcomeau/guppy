@@ -5,6 +5,9 @@ import {
   DELETE_DEPENDENCY_START,
   DELETE_DEPENDENCY_ERROR,
   DELETE_DEPENDENCY_FINISH,
+  UPDATE_DEPENDENCY_START,
+  UPDATE_DEPENDENCY_ERROR,
+  UPDATE_DEPENDENCY_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -33,7 +36,7 @@ export default (state: State = initialState, action: Action) => {
       const { projectId, dependencyName } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].isBeingDeleted = true;
+        draftState[projectId][dependencyName].status = 'deleting';
       });
     }
 
@@ -41,7 +44,7 @@ export default (state: State = initialState, action: Action) => {
       const { projectId, dependencyName } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].isBeingDeleted = false;
+        draftState[projectId][dependencyName].status = 'idle';
       });
     }
 
@@ -50,6 +53,30 @@ export default (state: State = initialState, action: Action) => {
 
       return produce(state, draftState => {
         delete draftState[projectId][dependencyName];
+      });
+    }
+
+    case UPDATE_DEPENDENCY_START: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependencyName].status = 'updating';
+      });
+    }
+
+    case UPDATE_DEPENDENCY_ERROR: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependencyName].status = 'idle';
+      });
+    }
+
+    case UPDATE_DEPENDENCY_FINISH: {
+      const { projectId, dependencyName, latestVersion } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependencyName].version = latestVersion;
       });
     }
 
@@ -62,8 +89,6 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Selectors
-type GlobalState = { dependencies: State };
-
 export const getDependenciesForProjectId = (
   projectId: string,
   state: any

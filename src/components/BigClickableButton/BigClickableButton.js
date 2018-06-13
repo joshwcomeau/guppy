@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import Color from 'color';

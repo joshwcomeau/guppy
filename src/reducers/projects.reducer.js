@@ -1,6 +1,5 @@
 // @flow
 import { combineReducers } from 'redux';
-import { createSelector } from 'reselect';
 
 import { ADD_PROJECT, REFRESH_PROJECTS, SELECT_PROJECT } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';

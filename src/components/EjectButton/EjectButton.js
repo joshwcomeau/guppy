@@ -42,7 +42,7 @@ class EjectButton extends PureComponent<Props> {
   };
 
   render() {
-    const { width, height, isRunning, onClick } = this.props;
+    const { isRunning } = this.props;
 
     return (
       <BigClickableButton

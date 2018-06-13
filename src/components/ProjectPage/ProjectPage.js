@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { extractProjectTabFromUrl } from '../../services/location.service';
 import { COLORS } from '../../constants';
 import { loadDependencyInfoFromDisk } from '../../actions';
 
@@ -37,10 +36,7 @@ class ProjectPage extends Component<Props> {
   }
 
   render() {
-    const { project, location, match } = this.props;
-
-    const projectIdFromUrl = match.params.projectId;
-    const projectTabFromUrl = extractProjectTabFromUrl(location) || 'tasks';
+    const { project } = this.props;
 
     if (!project) {
       return null;

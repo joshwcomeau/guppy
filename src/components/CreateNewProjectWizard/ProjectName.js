@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
-import { COLORS } from '../../constants';
 import { generateRandomName } from '../../services/project-name.service';
 import { range, random } from '../../utils';
 

@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { InstantSearch, Configure } from 'react-instantsearch/dom';
 
+import { ALGOLIA_KEYS } from '../../constants';
+
 type Props = {
   children: React$Node,
 };
@@ -9,11 +11,7 @@ type Props = {
 class AddDependencySearchProvider extends Component<Props> {
   render() {
     return (
-      <InstantSearch
-        appId="OFCNCOG2CU"
-        apiKey="7492903b80561e70bff1359d7052b4ae"
-        indexName="npm-search"
-      >
+      <InstantSearch {...ALGOLIA_KEYS}>
         <Configure
           attributesToRetrieve={[
             'name',
@@ -23,7 +21,6 @@ class AddDependencySearchProvider extends Component<Props> {
             'humanDownloadsLast30Days',
             'license',
           ]}
-          attributesToHighlight={['name', 'description']}
           hitsPerPage={10}
         />
         {this.props.children}

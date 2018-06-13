@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
 
 import SelectableImage from '../SelectableImage';
 import { COLORS } from '../../constants';

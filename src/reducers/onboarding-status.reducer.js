@@ -48,6 +48,8 @@ export default (state: State = initialState, action: Action) => {
       if (Object.keys(action.projects).length) {
         return 'done';
       }
+
+      return state;
     }
 
     default:

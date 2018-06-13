@@ -83,13 +83,6 @@ const IconLinkContents = styled.div`
   align-items: center;
 `;
 
-const StatusLabel = styled.div`
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 500;
-  color: ${COLORS.gray[400]};
-`;
-
 const Status = styled.div`
   font-size: 28px;
   font-weight: 600;
