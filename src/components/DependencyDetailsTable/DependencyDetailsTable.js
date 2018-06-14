@@ -10,6 +10,7 @@ import Label from '../Label';
 import Middot from '../Middot';
 import DeleteDependencyButton from '../DeleteDependencyButton';
 import Spinner from '../Spinner';
+import License from '../License';
 
 import type { Dependency } from '../../types';
 
@@ -43,14 +44,16 @@ class DependencyDetailsTable extends Component<Props> {
               )}
             </FirstCell>
           </tr>
-          {dependency.license && (
-            <tr>
-              <Cell>
-                <Label>License</Label>
-              </Cell>
-              <Cell>{dependency.license}</Cell>
-            </tr>
-          )}
+
+          <tr>
+            <Cell>
+              <Label>License</Label>
+            </Cell>
+            <Cell>
+              <License license={dependency.license} />
+            </Cell>
+          </tr>
+
           <tr>
             <Cell>
               <Label>Resources</Label>

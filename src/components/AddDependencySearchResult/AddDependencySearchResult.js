@@ -14,12 +14,13 @@ import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
 } from '../../reducers/projects.reducer';
+import { COLORS } from '../../constants';
 
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import ExternalLink from '../ExternalLink';
+import License from '../License';
 import Middot from '../Middot';
-import { COLORS } from '../../constants';
 import Button from '../Button';
 
 import type { Dependency, DependencyStatus } from '../../types';
@@ -84,18 +85,6 @@ class AddDependencySearchResult extends PureComponent<Props> {
           Installing...
         </NoActionAvailable>
       );
-    } else if (typeof currentStatus === 'string') {
-      return (
-        <NoActionAvailable>
-          <IconBase
-            icon={check}
-            size={24}
-            style={{ color: COLORS.green[500] }}
-          />
-          <Spacer size={6} />
-          Installed
-        </NoActionAvailable>
-      );
     } else {
       return (
         <Button
@@ -142,9 +131,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
             downloads a month
           </StatsItem>
           <Middot />
-          <StatsItem icon={billIcon}>
-            <StatsItemHighlight>{hit.license}</StatsItemHighlight> License
-          </StatsItem>
+          <License withIcon license={hit.license} />
           <Middot />
           <StatsItem icon={clockIcon}>
             Last updated {moment(hit.modified).fromNow()}
