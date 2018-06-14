@@ -3,11 +3,11 @@ import uuid from 'uuid/v1';
 
 import {
   loadGuppyProjects,
-  loadProjectDependencies,
+  loadAllProjectDependencies,
 } from '../services/read-from-disk.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 
-import type { Project, Task } from '../types';
+import type { Project, Task, Dependency } from '../types';
 
 //
 //
@@ -36,6 +36,9 @@ export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
 export const UPDATE_DEPENDENCY_START = 'UPDATE_DEPENDENCY_START';
 export const UPDATE_DEPENDENCY_ERROR = 'UPDATE_DEPENDENCY_ERROR';
 export const UPDATE_DEPENDENCY_FINISH = 'UPDATE_DEPENDENCY_FINISH';
+export const ADD_DEPENDENCY_START = 'ADD_DEPENDENCY_START';
+export const ADD_DEPENDENCY_ERROR = 'ADD_DEPENDENCY_ERROR';
+export const ADD_DEPENDENCY_FINISH = 'ADD_DEPENDENCY_FINISH';
 
 //
 //
@@ -64,7 +67,7 @@ export const loadDependencyInfoFromDisk = (project: Project) => {
     // raw dependency information.
     const internalProject = getInternalProjectById(project.id, getState());
 
-    loadProjectDependencies(internalProject).then(dependencies => {
+    loadAllProjectDependencies(internalProject).then(dependencies => {
       dispatch({
         type: LOAD_DEPENDENCY_INFO_FROM_DISK,
         project,
@@ -198,4 +201,33 @@ export const updateDependencyFinish = (
   projectId,
   dependencyName,
   latestVersion,
+});
+
+export const addDependencyStart = (
+  projectId: string,
+  dependencyName: string,
+  version: string
+) => ({
+  type: ADD_DEPENDENCY_START,
+  projectId,
+  dependencyName,
+  version,
+});
+
+export const addDependencyError = (
+  projectId: string,
+  dependencyName: string
+) => ({
+  type: ADD_DEPENDENCY_ERROR,
+  projectId,
+  dependencyName,
+});
+
+export const addDependencyFinish = (
+  projectId: string,
+  dependency: Dependency
+) => ({
+  type: ADD_DEPENDENCY_FINISH,
+  projectId,
+  dependency,
 });

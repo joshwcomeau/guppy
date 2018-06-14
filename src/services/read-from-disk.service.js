@@ -88,18 +88,71 @@ export function loadGuppyProjects(fromPath: string = DEFAULT_PATH) {
  *   - The dependency's description
  *   - The dependency's authors or maintainers
  *   - Links to homepage / git repo
- *   - Software license (probably not super important, -shrugs-)
+ *   - Software license
  *
- * This method finds all of the `package.json` files for each of the
- * dependencies, and parses them.
+ * This method reads the package.json for a specific dependency, in a specific
+ * project.
+ *
+ * TODO: Also need to set up non-default paths for projects here.
+ */
+export function loadProjectDependency(
+  projectId: string,
+  dependencyName: string,
+  fromPath: string = DEFAULT_PATH
+) {
+  // prettier-ignore
+  const dependencyPath =
+    `${fromPath}/${projectId}/node_modules/${dependencyName}/package.json`;
+
+  return new Promise((resolve, reject) => {
+    fs.readFile(dependencyPath, 'utf8', (err, data) => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          // Interestingly, freshly-ejected packages have `babel-loader`
+          // as a dependency, but no such NPM module installed o_O.
+          // Maybe it isn't a safe bet to assume that dependency name
+          // always matches folder name inside `node_modules`?
+          // TODO: For now I'm just going to ignore these cases, but I should
+          // really figure this out!
+          return resolve(null);
+        }
+
+        return reject(err);
+      }
+
+      const packageJson = JSON.parse(data);
+
+      const packageJsonSubset = pick(packageJson, [
+        'name',
+        'description',
+        'keywords',
+        'version',
+        'homepage',
+        'license',
+        'repository',
+      ]);
+
+      const dependency = {
+        ...packageJsonSubset,
+        status: 'idle',
+      };
+
+      return resolve(dependency);
+    });
+  });
+}
+
+/**
+ * Wrapper around `loadProjectDependency` that fetches all dependencies for
+ * a specific project.
  *
  * NOTE: I wonder how this would perform on a project with 100+ top-level
  * dependencies... might need to set up a streaming service that can communicate
  * loading status if it takes more than a few hundred ms.
  *
- * TODO: Also need to set up non-default paths for projects here.
+ * TODO: Handle non-default paths
  */
-export function loadProjectDependencies(
+export function loadAllProjectDependencies(
   project: ProjectInternal,
   fromPath: string = DEFAULT_PATH
 ) {
@@ -111,44 +164,11 @@ export function loadProjectDependencies(
     asyncMap(
       dependencyNames,
       function(dependencyName, callback) {
-        return fs.readFile(
-          `${fromPath}/${
-            project.guppy.id
-          }/node_modules/${dependencyName}/package.json`,
-          'utf8',
-          (err, data) => {
-            if (err) {
-              if (err.code === 'ENOENT') {
-                // Interestingly, freshly-ejected packages have `babel-loader`
-                // as a dependency, but no such NPM module installed.
-                // Maybe it isn't a safe bet to assume that dependency name
-                // always matches folder name inside `node_modules`?
-                return callback(null, null);
-              }
+        const projectId = project.guppy.id;
 
-              return callback(err);
-            }
-
-            const packageJson = JSON.parse(data);
-
-            const packageJsonSubset = pick(packageJson, [
-              'name',
-              'description',
-              'keywords',
-              'version',
-              'homepage',
-              'license',
-              'repository',
-            ]);
-
-            const dependency = {
-              ...packageJsonSubset,
-              status: 'idle',
-            };
-
-            return callback(null, dependency);
-          }
-        );
+        loadProjectDependency(projectId, dependencyName, fromPath)
+          .then(dependency => callback(null, dependency))
+          .catch(callback);
       },
       (err, results) => {
         if (err) {

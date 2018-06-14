@@ -8,6 +8,9 @@ import {
   UPDATE_DEPENDENCY_START,
   UPDATE_DEPENDENCY_ERROR,
   UPDATE_DEPENDENCY_FINISH,
+  ADD_DEPENDENCY_START,
+  ADD_DEPENDENCY_ERROR,
+  ADD_DEPENDENCY_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -32,27 +35,40 @@ export default (state: State = initialState, action: Action) => {
       };
     }
 
-    case DELETE_DEPENDENCY_START: {
+    case ADD_DEPENDENCY_START: {
       const { projectId, dependencyName } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].status = 'deleting';
+        draftState[projectId][dependencyName] = {
+          name: dependencyName,
+          status: 'installing',
+          // All of the other fields are unknown at this point.
+          // To make life simpler, we'll set them to empty strings,
+          // rather than deal with nullable fields everywhere else.
+          description: '',
+          version: '',
+          homepage: '',
+          license: '',
+          repository: '',
+        };
       });
     }
 
-    case DELETE_DEPENDENCY_ERROR: {
+    case ADD_DEPENDENCY_ERROR: {
       const { projectId, dependencyName } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].status = 'idle';
-      });
-    }
-
-    case DELETE_DEPENDENCY_FINISH: {
-      const { projectId, dependencyName } = action;
-
-      return produce(state, draftState => {
+        // If the dependency couldn't be installed, we should remove it from
+        // state.
         delete draftState[projectId][dependencyName];
+      });
+    }
+
+    case ADD_DEPENDENCY_FINISH: {
+      const { projectId, dependency } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependency.name] = dependency;
       });
     }
 
@@ -80,6 +96,30 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
+    case DELETE_DEPENDENCY_START: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependencyName].status = 'deleting';
+      });
+    }
+
+    case DELETE_DEPENDENCY_ERROR: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        draftState[projectId][dependencyName].status = 'idle';
+      });
+    }
+
+    case DELETE_DEPENDENCY_FINISH: {
+      const { projectId, dependencyName } = action;
+
+      return produce(state, draftState => {
+        delete draftState[projectId][dependencyName];
+      });
+    }
+
     default:
       return state;
   }
@@ -99,7 +139,7 @@ export const getDependenciesForProjectId = (
     return [];
   }
 
-  return Object.keys(dependenciesForProject).map(
-    dependencyName => dependenciesForProject[dependencyName]
-  );
+  return Object.keys(dependenciesForProject)
+    .sort()
+    .map(dependencyName => dependenciesForProject[dependencyName]);
 };
