@@ -5,6 +5,7 @@ import tasks from './tasks.reducer';
 import dependencies from './dependencies.reducer';
 import modal from './modal.reducer';
 import onboardingStatus from './onboarding-status.reducer';
+import packageJsonLocked from './package-json-locked.reducer';
 
 export default combineReducers({
   projects,
@@ -12,4 +13,5 @@ export default combineReducers({
   dependencies,
   modal,
   onboardingStatus,
+  packageJsonLocked,
 });

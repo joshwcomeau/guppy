@@ -83,8 +83,8 @@ class Button extends Component<Props, State> {
     return (
       <Elem disabled={disabled} type={type} style={mutatedStyle} {...delegated}>
         <CircularOutline
-          color1={disabled ? COLORS.gray[300] : color1}
-          color2={disabled ? COLORS.gray[400] : color2}
+          color1={disabled ? COLORS.gray[400] : color1}
+          color2={disabled ? COLORS.gray[300] : color2}
           isShown={showOutline}
           animateChanges={type === 'stroke'}
         />
@@ -110,11 +110,13 @@ const ButtonBase = styled.button`
   }
 
   &:disabled {
-    background-image: linear-gradient(
+    background-image: ${props =>
+      props.type === 'fill' &&
+      `linear-gradient(
       45deg,
-      ${COLORS.gray[300]},
-      ${COLORS.gray[400]}
-    ) !important;
+      ${COLORS.gray[400]},
+      ${COLORS.gray[300]}
+    ) !important`};
   }
 `;
 

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled, { injectGlobal } from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
-import { u1F4C3 as billIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C3';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
 import { u1F553 as clockIcon } from 'react-icons-kit/noto_emoji_regular/u1F553';
 import { check } from 'react-icons-kit/feather/check';
@@ -14,6 +13,7 @@ import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
 } from '../../reducers/projects.reducer';
+import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 import { COLORS } from '../../constants';
 
 import Spacer from '../Spacer';
@@ -23,11 +23,12 @@ import License from '../License';
 import Middot from '../Middot';
 import Button from '../Button';
 
-import type { Dependency, DependencyStatus } from '../../types';
+import type { DependencyStatus } from '../../types';
 
 type Props = {
   projectId: string,
   currentStatus: ?DependencyStatus,
+  isPackageJsonLocked: boolean,
   addDependencyStart: (
     projectId: string,
     dependencyName: string,
@@ -75,7 +76,13 @@ const getColorForDownloadNumber = (num: number) => {
 
 class AddDependencySearchResult extends PureComponent<Props> {
   renderActionArea() {
-    const { hit, projectId, currentStatus, addDependencyStart } = this.props;
+    const {
+      hit,
+      projectId,
+      currentStatus,
+      isPackageJsonLocked,
+      addDependencyStart,
+    } = this.props;
 
     if (currentStatus === 'installing') {
       return (
@@ -85,13 +92,26 @@ class AddDependencySearchResult extends PureComponent<Props> {
           Installing...
         </NoActionAvailable>
       );
+    } else if (typeof currentStatus === 'string') {
+      return (
+        <NoActionAvailable>
+          <IconBase
+            icon={check}
+            size={24}
+            style={{ color: COLORS.green[500] }}
+          />
+          <Spacer size={6} />
+          Installed
+        </NoActionAvailable>
+      );
     } else {
       return (
         <Button
           size="small"
           color1={COLORS.green[700]}
           color2={COLORS.lightGreen[500]}
-          textColor={COLORS.green[700]}
+          textColor={isPackageJsonLocked ? COLORS.gray[400] : COLORS.green[700]}
+          disabled={isPackageJsonLocked}
           onClick={() => addDependencyStart(projectId, hit.name, hit.version)}
         >
           Add To Project
@@ -233,9 +253,19 @@ const mapStateToProps = (state, ownProps) => {
     ? dependencyMap[dependencyName].status
     : null;
 
+  const selectedProjectId = getSelectedProjectId(state);
+
+  if (!selectedProjectId) {
+    throw new Error('Trying to add dependencies for a deleted project?');
+  }
+
   return {
-    projectId: getSelectedProjectId(state),
     currentStatus,
+    projectId: selectedProjectId,
+    isPackageJsonLocked: getPackageJsonLockedForProjectId(
+      selectedProjectId,
+      state
+    ),
   };
 };
 
