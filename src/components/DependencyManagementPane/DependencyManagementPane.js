@@ -12,9 +12,11 @@ import { COLORS } from '../../constants';
 import Module from '../Module';
 import AddDependencyModal from '../AddDependencyModal';
 import AddDependencySearchProvider from '../AddDependencySearchProvider';
-import Card from '../Card';
 import DependencyDetails from '../DependencyDetails';
+import DependencyInstalling from '../DependencyInstalling/DependencyInstalling';
+import Card from '../Card';
 import Spacer from '../Spacer';
+import Spinner from '../Spinner';
 
 import type { Project } from '../../types';
 
@@ -41,6 +43,23 @@ class DependencyManagementPane extends PureComponent<Props, State> {
         "Looks like all the dependencies were deleted. Sorry, we aren't set " +
           'up to handle this case yet :('
       );
+    }
+
+    // If we just added a dependency, select it.
+    if (
+      nextProps.project.dependencies.length >
+      this.props.project.dependencies.length
+    ) {
+      const newDependencyIndex = nextProps.project.dependencies.findIndex(
+        dependency =>
+          !this.props.project.dependencies.some(
+            existingDependency => existingDependency.name === dependency.name
+          )
+      );
+
+      console.log({ newDependencyIndex });
+
+      this.setState({ selectedDependencyIndex: newDependencyIndex });
     }
 
     // TODO: when a selected dependency is deleted, the focus shifts to the
@@ -75,29 +94,36 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     const { id, dependencies } = this.props.project;
     const { selectedDependencyIndex, addingNewDependency } = this.state;
 
-    // When dependencies are still in the midst of being installed, it doesn't
-    // make sense to show them in the list (they don't have enough info yet).
-    const shownDependencies = dependencies.filter(
-      dependency => dependency.status !== 'installing'
-    );
+    const selectedDependency = dependencies[selectedDependencyIndex];
 
     return (
       <Module title="Dependencies">
         <Wrapper>
           <DependencyList>
             <Dependencies>
-              {shownDependencies.map((dependency, index) => (
+              {dependencies.map((dependency, index) => (
                 <DependencyButton
                   key={dependency.name}
                   isSelected={selectedDependencyIndex === index}
                   onClick={() => this.selectDependency(dependency.name)}
                 >
                   <DependencyName>{dependency.name}</DependencyName>
-                  <DependencyVersion
-                    isSelected={selectedDependencyIndex === index}
-                  >
-                    {dependency.version}
-                  </DependencyVersion>
+                  {dependency.status === 'installing' ? (
+                    <Spinner
+                      size={20}
+                      color={
+                        selectedDependencyIndex === index
+                          ? COLORS.white
+                          : undefined
+                      }
+                    />
+                  ) : (
+                    <DependencyVersion
+                      isSelected={selectedDependencyIndex === index}
+                    >
+                      {dependency.version}
+                    </DependencyVersion>
+                  )}
                 </DependencyButton>
               ))}
             </Dependencies>
@@ -108,10 +134,14 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             </AddDependencyButton>
           </DependencyList>
           <MainContent>
-            <DependencyDetails
-              projectId={id}
-              dependency={dependencies[selectedDependencyIndex]}
-            />
+            {selectedDependency.status === 'installing' ? (
+              <DependencyInstalling name={selectedDependency.name} />
+            ) : (
+              <DependencyDetails
+                projectId={id}
+                dependency={selectedDependency}
+              />
+            )}
           </MainContent>
         </Wrapper>
 
