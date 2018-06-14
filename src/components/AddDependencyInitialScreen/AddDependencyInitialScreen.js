@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
-import algoliaLogoSrc from '../../assets/images/algolia-logo.png';
 
 import Paragraph from '../Paragraph';
 import ExternalLink from '../ExternalLink';
 import Swimming from '../Swimming/Swimming';
+import AlgoliaLogo from './AlgoliaLogo';
 
 type Props = {};
 
@@ -31,7 +31,7 @@ class AddDependencyInitialScreen extends Component<Props> {
         <PoweredByWrapper>
           <ExternalLink href="https://www.algolia.com/?utm_source=guppy&amp;utm_medium=website&amp;utm_content=localhost&amp;utm_campaign=poweredby">
             <LinkText>
-              Search by <AlgoliaLogo src={algoliaLogoSrc} />
+              <AlgoliaLogo />
             </LinkText>
           </ExternalLink>
         </PoweredByWrapper>
@@ -61,11 +61,6 @@ const PoweredByWrapper = styled.div`
   left: 0;
   right: 0;
   bottom: 25px;
-`;
-
-const AlgoliaLogo = styled.img`
-  width: 100px;
-  margin-left: 8px;
 `;
 
 const LinkText = styled.div`
