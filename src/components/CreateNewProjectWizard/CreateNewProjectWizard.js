@@ -5,8 +5,8 @@ import Transition from 'react-transition-group/Transition';
 
 import {
   addProject,
-  cancelCreatingNewProject,
-  finishCreatingNewProject,
+  createNewProjectCancel,
+  createNewProjectFinish,
 } from '../../actions';
 
 import TwoPaneModal from '../TwoPaneModal';
@@ -24,8 +24,8 @@ const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 type Props = {
   isVisible: boolean,
   addProject: (project: Project) => void,
-  cancelCreatingNewProject: () => void,
-  finishCreatingNewProject: () => void,
+  createNewProjectCancel: () => void,
+  createNewProjectFinish: () => void,
 };
 
 type State = {
@@ -98,7 +98,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: Project) => {
-    this.props.finishCreatingNewProject();
+    this.props.createNewProjectFinish();
 
     window.setTimeout(() => {
       this.props.addProject(project);
@@ -110,7 +110,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   render() {
-    const { isVisible, cancelCreatingNewProject } = this.props;
+    const { isVisible, createNewProjectCancel } = this.props;
     const {
       projectName,
       projectType,
@@ -131,7 +131,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
           <TwoPaneModal
             isFolded={readyToBeBuilt}
             transitionState={transitionState}
-            onDismiss={cancelCreatingNewProject}
+            onDismiss={createNewProjectCancel}
             leftPane={
               <SummaryPane
                 currentStep={currentStep}
@@ -175,8 +175,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   addProject,
-  cancelCreatingNewProject,
-  finishCreatingNewProject,
+  createNewProjectCancel,
+  createNewProjectFinish,
 };
 
 export default connect(

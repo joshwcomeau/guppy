@@ -1,7 +1,7 @@
 // @flow
 import {
-  START_CREATING_NEW_PROJECT,
-  CANCEL_CREATING_NEW_PROJECT,
+  CREATE_NEW_PROJECT_START,
+  CREATE_NEW_PROJECT_CANCEL,
   DISMISS_SIDEBAR_INTRO,
   ADD_PROJECT,
   REFRESH_PROJECTS,
@@ -24,11 +24,11 @@ export default (state: State = initialState, action: Action) => {
   }
 
   switch (action.type) {
-    case START_CREATING_NEW_PROJECT: {
+    case CREATE_NEW_PROJECT_START: {
       return state === 'brand-new' ? 'creating-first-project' : state;
     }
 
-    case CANCEL_CREATING_NEW_PROJECT: {
+    case CREATE_NEW_PROJECT_CANCEL: {
       return state === 'creating-first-project' ? 'brand-new' : state;
     }
 

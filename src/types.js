@@ -88,4 +88,6 @@ export type Project = {
   // `tasks` is a superset of `ProjectInternal.scripts`. Includes much more
   // info.
   tasks: Array<Task>,
+  // `path` is the project's on-disk location.
+  path: string,
 };

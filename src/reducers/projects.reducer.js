@@ -10,6 +10,7 @@ import {
 } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
 import { getDependenciesForProjectId } from './dependencies.reducer';
+import { getPathForProjectId } from './paths.reducer';
 
 import type { Action } from 'redux';
 import type { ProjectInternal, Project } from '../types';
@@ -102,6 +103,7 @@ const prepareProjectForConsumption = (
     icon: project.guppy.icon,
     tasks: getTasksForProjectId(project.guppy.id, state),
     dependencies: getDependenciesForProjectId(project.guppy.id, state),
+    path: getPathForProjectId(project.guppy.id, state),
   };
 };
 

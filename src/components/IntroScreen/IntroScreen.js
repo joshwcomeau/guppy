@@ -2,28 +2,75 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { startCreatingNewProject } from '../../actions';
+import {
+  createNewProjectStart,
+  importExistingProjectStart,
+} from '../../actions';
+import { COLORS } from '../../constants';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 import Button from '../Button';
+import Spacer from '../Spacer';
+import Logo from '../Logo';
+import Swimming from '../Swimming';
+
+const { dialog } = window.require('electron').remote;
 
 type Props = {
   shouldHideContent: boolean,
-  startCreatingNewProject: () => void,
+  createNewProjectStart: () => any,
+  importExistingProjectStart: (path: string) => any,
 };
 
 class IntroScreen extends Component<Props> {
+  handleImportExisting = () => {
+    const { importExistingProjectStart } = this.props;
+
+    dialog.showOpenDialog(
+      {
+        message: 'Select the directory of an existing React app',
+        properties: ['openDirectory'],
+      },
+      paths => {
+        // The user might cancel out without selecting a directory.
+        // In that case, do nothing.
+        if (!paths) {
+          return;
+        }
+
+        // Only a single path should be selected
+        const [path] = paths;
+
+        importExistingProjectStart(path);
+      }
+    );
+  };
+
   render() {
-    const { shouldHideContent, startCreatingNewProject } = this.props;
+    const { shouldHideContent, createNewProjectStart } = this.props;
 
     return (
       <Fragment>
         <Wrapper isVisible={!shouldHideContent}>
-          <Logo>Guppy</Logo>
+          <Header>
+            <Swimming>
+              <Logo size="medium" />
+            </Swimming>
+            <AppName>Guppy</AppName>
+          </Header>
 
-          <Button size="large" onClick={() => startCreatingNewProject()}>
-            Create new React project
-          </Button>
+          <Actions>
+            <Button size="large" onClick={() => createNewProjectStart()}>
+              Create new React project
+            </Button>
+            <Spacer size={40} />
+            <div>
+              Or,{' '}
+              <TextButton onClick={this.handleImportExisting}>
+                import an existing project
+              </TextButton>
+            </div>
+          </Actions>
         </Wrapper>
       </Fragment>
     );
@@ -45,8 +92,28 @@ const Wrapper = styled.div`
   transition: opacity 500ms;
 `;
 
-const Logo = styled.div`
+const Header = styled.div`
+  text-align: center;
+`;
+
+const AppName = styled.div`
   font-size: 42px;
+  transform: translateY(-10px);
+`;
+
+const Actions = styled.div`
+  text-align: center;
+  font-size: 20px;
+`;
+
+const TextButton = styled.button`
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  padding: 0;
+  margin: 0;
+  color: ${COLORS.blue[700]};
+  font-size: inherit;
 `;
 
 const mapStateToProps = state => ({
@@ -55,5 +122,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { startCreatingNewProject }
+  { createNewProjectStart, importExistingProjectStart }
 )(IntroScreen);

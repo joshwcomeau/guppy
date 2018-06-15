@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { COLORS, Z_INDICES } from '../../constants';
 import {
   selectProject,
-  startCreatingNewProject,
+  createNewProjectStart,
   dismissSidebarIntro,
 } from '../../actions';
 import {
@@ -34,7 +34,7 @@ type Props = {
   selectedProjectId: ?string,
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
-  startCreatingNewProject: () => void,
+  createNewProjectStart: () => void,
   dismissSidebarIntro: () => void,
   selectProject: (projectId: string) => void,
   location: any, // Provided by React Router
@@ -95,7 +95,7 @@ class Sidebar extends PureComponent<Props, State> {
       selectedProjectId,
       isVisible,
       onboardingStatus,
-      startCreatingNewProject,
+      createNewProjectStart,
       dismissSidebarIntro,
     } = this.props;
     const { introSequenceStep } = this.state;
@@ -142,7 +142,7 @@ class Sidebar extends PureComponent<Props, State> {
                 ))}
                 <AddProjectButton
                   size={SIDEBAR_ICON_SIZE}
-                  onClick={startCreatingNewProject}
+                  onClick={createNewProjectStart}
                   isVisible={finishedOnboarding || introSequenceStepIndex >= 2}
                 />
               </Projects>
@@ -201,7 +201,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  startCreatingNewProject,
+  createNewProjectStart,
   dismissSidebarIntro,
   selectProject,
 };

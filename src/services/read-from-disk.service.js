@@ -5,62 +5,42 @@ import { pick } from '../utils';
 import type { ProjectInternal } from '../types';
 
 const fs = window.require('fs');
-const path = window.require('path');
-const os = window.require('os');
-
-// Guppy projects are stored in a shared parent directory.
-// The default path for this directory is `~/guppy-projects`.
-// TODO: Make this path overrideable?
-// TODO: Windows?
-const DEFAULT_PATH = `${os.homedir()}/guppy-projects`;
 
 /**
- * Find all the projects managed by Guppy, and read their package.jsons.
- * NOTE: Currently only supports projects in DEFAULT_PATH. We should fix that.
+ * Load a project's package.json
  */
-export function loadGuppyProjects(fromPath: string = DEFAULT_PATH) {
-  const { readdirSync, statSync } = fs;
+export const loadPackageJson = (path: string) => {
+  return new Promise((resolve, reject) => {
+    return fs.readFile(`${path}/package.json`, 'utf8', (err, data) => {
+      if (err) {
+        return reject(err);
+      }
 
-  let projects;
+      return resolve(JSON.parse(data));
+    });
+  });
+};
 
-  try {
-    projects = readdirSync(fromPath).filter(f =>
-      statSync(path.join(fromPath, f)).isDirectory()
-    );
-  } catch (e) {
-    // If the projects path doesn't exist, an error is thrown.
-    // This just means that we haven't yet created it though!
-    projects = [];
-  }
-
+/**
+ * Given an array of paths, load each one as a distinct Guppy project.
+ * Parses the `package.json` to find Guppy's saved info.
+ */
+export function loadGuppyProjects(paths: Array<string>) {
   return new Promise((resolve, reject) => {
     // Each project in a Guppy directory should have a package.json.
     // We'll read all the project info we need from this file.
+    // TODO: Maybe use asyncReduce to handle the output format in 1 neat step?
     asyncMap(
-      projects,
-      function(projectDirName, callback) {
-        return fs.readFile(
-          `${fromPath}/${projectDirName}/package.json`,
-          'utf8',
-          (err, data) => {
-            if (err) {
-              return callback(err);
-            }
-
-            const packageJson = JSON.parse(data);
-
-            return callback(null, packageJson);
-          }
-        );
+      paths,
+      function(path, callback) {
+        loadPackageJson(path)
+          .then(json => callback(null, json))
+          .catch(callback);
       },
       (err, results) => {
         if (err) {
           return reject(err);
         }
-
-        // TODO: It's possible the projects on disk may not have been created
-        // with Guppy. In this case, I'll need to infer the guppy ID from the
-        // `packageJson.name` field
 
         // The results will be an array of package.jsons.
         // I want a database-style map.
@@ -96,13 +76,12 @@ export function loadGuppyProjects(fromPath: string = DEFAULT_PATH) {
  * TODO: Also need to set up non-default paths for projects here.
  */
 export function loadProjectDependency(
-  projectId: string,
-  dependencyName: string,
-  fromPath: string = DEFAULT_PATH
+  projectPath: string,
+  dependencyName: string
 ) {
   // prettier-ignore
   const dependencyPath =
-    `${fromPath}/${projectId}/node_modules/${dependencyName}/package.json`;
+    `${projectPath}/node_modules/${dependencyName}/package.json`;
 
   return new Promise((resolve, reject) => {
     fs.readFile(dependencyPath, 'utf8', (err, data) => {
@@ -154,7 +133,7 @@ export function loadProjectDependency(
  */
 export function loadAllProjectDependencies(
   project: ProjectInternal,
-  fromPath: string = DEFAULT_PATH
+  projectPath: string
 ) {
   const dependencyNames = Object.keys(project.dependencies);
 
@@ -164,9 +143,7 @@ export function loadAllProjectDependencies(
     asyncMap(
       dependencyNames,
       function(dependencyName, callback) {
-        const projectId = project.guppy.id;
-
-        loadProjectDependency(projectId, dependencyName, fromPath)
+        loadProjectDependency(projectPath, dependencyName)
           .then(dependency => callback(null, dependency))
           .catch(callback);
       },

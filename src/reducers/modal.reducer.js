@@ -5,9 +5,9 @@
  * Unclear to me if it makes sense to keep this in Redux or not.
  */
 import {
-  START_CREATING_NEW_PROJECT,
-  CANCEL_CREATING_NEW_PROJECT,
-  FINISH_CREATING_NEW_PROJECT,
+  CREATE_NEW_PROJECT_START,
+  CREATE_NEW_PROJECT_CANCEL,
+  CREATE_NEW_PROJECT_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -18,11 +18,11 @@ const initialState = null;
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case START_CREATING_NEW_PROJECT:
+    case CREATE_NEW_PROJECT_START:
       return 'new-project-wizard';
 
-    case CANCEL_CREATING_NEW_PROJECT:
-    case FINISH_CREATING_NEW_PROJECT:
+    case CREATE_NEW_PROJECT_CANCEL:
+    case CREATE_NEW_PROJECT_FINISH:
       return null;
 
     default:

@@ -12,12 +12,13 @@ import type { Project, Task, Dependency } from '../types';
 //
 //
 // Action Types
-// TODO: There has to be a way with Flow to ditch these right?
+// TODO: Do this with Flow
+// https://flow.org/en/docs/react/redux/
 //
 export const REFRESH_PROJECTS = 'REFRESH_PROJECTS';
-export const START_CREATING_NEW_PROJECT = 'START_CREATING_NEW_PROJECT';
-export const CANCEL_CREATING_NEW_PROJECT = 'CANCEL_CREATING_NEW_PROJECT';
-export const FINISH_CREATING_NEW_PROJECT = 'FINISH_CREATING_NEW_PROJECT';
+export const CREATE_NEW_PROJECT_START = 'CREATE_NEW_PROJECT_START';
+export const CREATE_NEW_PROJECT_CANCEL = 'CREATE_NEW_PROJECT_CANCEL';
+export const CREATE_NEW_PROJECT_FINISH = 'CREATE_NEW_PROJECT_FINISH';
 export const ADD_PROJECT = 'ADD_PROJECT';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
@@ -39,7 +40,8 @@ export const UPDATE_DEPENDENCY_FINISH = 'UPDATE_DEPENDENCY_FINISH';
 export const DELETE_DEPENDENCY_START = 'DELETE_DEPENDENCY_START';
 export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
 export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
-
+export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
+export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 //
 //
 // Action Creators
@@ -50,8 +52,13 @@ export const addProject = (project: Project) => ({
 });
 
 export const refreshProjects = () => {
-  return (dispatch: any) => {
-    loadGuppyProjects().then(projects =>
+  return (dispatch: any, getState: any) => {
+    const { paths } = getState();
+
+    // I wish Flow would let me use Object.values =(
+    const pathValues = Object.keys(paths).map(pathKey => paths[pathKey]);
+
+    loadGuppyProjects(pathValues).then(projects =>
       dispatch({
         type: REFRESH_PROJECTS,
         projects,
@@ -67,26 +74,28 @@ export const loadDependencyInfoFromDisk = (project: Project) => {
     // raw dependency information.
     const internalProject = getInternalProjectById(project.id, getState());
 
-    loadAllProjectDependencies(internalProject).then(dependencies => {
-      dispatch({
-        type: LOAD_DEPENDENCY_INFO_FROM_DISK,
-        project,
-        dependencies,
-      });
-    });
+    loadAllProjectDependencies(internalProject, project.path).then(
+      dependencies => {
+        dispatch({
+          type: LOAD_DEPENDENCY_INFO_FROM_DISK,
+          project,
+          dependencies,
+        });
+      }
+    );
   };
 };
 
-export const startCreatingNewProject = () => ({
-  type: START_CREATING_NEW_PROJECT,
+export const createNewProjectStart = () => ({
+  type: CREATE_NEW_PROJECT_START,
 });
 
-export const cancelCreatingNewProject = () => ({
-  type: CANCEL_CREATING_NEW_PROJECT,
+export const createNewProjectCancel = () => ({
+  type: CREATE_NEW_PROJECT_CANCEL,
 });
 
-export const finishCreatingNewProject = () => ({
-  type: FINISH_CREATING_NEW_PROJECT,
+export const createNewProjectFinish = () => ({
+  type: CREATE_NEW_PROJECT_FINISH,
 });
 
 export const dismissSidebarIntro = () => ({
@@ -230,4 +239,18 @@ export const addDependencyFinish = (
   type: ADD_DEPENDENCY_FINISH,
   projectId,
   dependency,
+});
+
+export const importExistingProjectStart = (path: string) => ({
+  type: IMPORT_EXISTING_PROJECT_START,
+  path,
+});
+
+export const importExistingProjectFinish = (
+  path: string,
+  project: Project
+) => ({
+  type: IMPORT_EXISTING_PROJECT_FINISH,
+  path,
+  project,
 });

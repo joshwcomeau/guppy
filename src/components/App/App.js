@@ -80,8 +80,6 @@ class App extends Component<Props> {
   };
 
   render() {
-    const DefaultComponent = IntroScreen;
-
     return (
       <Fragment>
         <Titlebar />
@@ -91,7 +89,7 @@ class App extends Component<Props> {
 
           <MainContent>
             <Switch>
-              <Route exact path="/" component={DefaultComponent} />
+              <Route exact path="/" component={IntroScreen} />
               <Route
                 path="/project/:projectId"
                 render={routerProps => (

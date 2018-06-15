@@ -7,7 +7,6 @@ import { COLORS } from '../../constants';
 
 import Heading from '../Heading';
 import Spacer from '../Spacer';
-import Paragraph from '../Paragraph';
 
 type Props = {
   name: string,

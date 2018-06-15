@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
+import Logo from '../Logo';
 import Paragraph from '../Paragraph';
 import ExternalLink from '../ExternalLink';
 import Swimming from '../Swimming/Swimming';
@@ -16,10 +17,7 @@ class AddDependencyInitialScreen extends Component<Props> {
     return (
       <EmptyState>
         <Swimming>
-          <Logo>
-            {/* eslint-disable-next-line jsx-a11y/accessible-emoji */}
-            🐠
-          </Logo>
+          <Logo grayscale size="large" />
         </Swimming>
         <Paragraph>
           You can use the input above to search the Node Package Manager (NPM)
@@ -48,12 +46,6 @@ const EmptyState = styled.div`
   justify-content: space-around;
   padding: 100px 40px;
   text-align: center;
-`;
-
-const Logo = styled.div`
-  font-size: 96px;
-  filter: grayscale(90%);
-  cursor: default;
 `;
 
 const PoweredByWrapper = styled.div`
