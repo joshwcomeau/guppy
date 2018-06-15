@@ -26,6 +26,12 @@ type Props = {
 
 class ProjectPage extends Component<Props> {
   componentDidMount() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+
     this.getDependencyInfo();
   }
 
@@ -72,12 +78,12 @@ class ProjectPage extends Component<Props> {
 }
 
 const fadeIn = keyframes`
-  from { opacity: 0 }
+  from { opacity: 0.5 }
   to { opacity: 1 }
 `;
 
 const FadeIn = styled.div`
-  animation: ${fadeIn} 1000ms;
+  animation: ${fadeIn} 400ms;
 `;
 
 const mapStateToProps = state => ({

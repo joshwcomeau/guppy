@@ -6,7 +6,7 @@ import { u1F44C as successIcon } from 'react-icons-kit/noto_emoji_regular/u1F44C
 import { u1F31B as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F31B';
 import { u274C as failIcon } from 'react-icons-kit/noto_emoji_regular/u274C';
 
-import { COLORS } from '../../constants';
+import { COLORS, BREAKPOINTS } from '../../constants';
 import { capitalize } from '../../utils';
 
 import Card from '../Card';
@@ -142,6 +142,10 @@ const TaskDescription = styled.span`
   font-weight: 400;
   margin-left: 15px;
   color: ${COLORS.gray[500]};
+
+  @media ${BREAKPOINTS.sm} {
+    display: none;
+  }
 `;
 
 const StatusColumn = Column.extend`

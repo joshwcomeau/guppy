@@ -6,12 +6,15 @@ import styled from 'styled-components';
 import { launchDevServer, abortTask } from '../../actions';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
+import { BREAKPOINTS } from '../../constants';
 
 import Module from '../Module';
 import Card from '../Card';
 import Toggle from '../Toggle';
+import Spacer from '../Spacer';
 import TerminalOutput from '../TerminalOutput';
 import ExternalLink from '../ExternalLink';
+import OnlyOn from '../OnlyOn';
 import DevelopmentServerStatus from '../DevelopmentServerStatus';
 
 import type { Task } from '../../types';
@@ -49,7 +52,25 @@ class DevelopmentServerPane extends PureComponent<Props> {
       return 'No "start" task found. :(';
     }
 
+    // TODO: There's currently no DevelopmentServerStatus for smaller windows.
+    // Create a custom component for windows <900px wide
+
     const isRunning = task.status !== 'idle';
+
+    const description = (
+      <Description>
+        Runs a local development server that updates whenever you make changes
+        to the files.
+      </Description>
+    );
+
+    const docLink = (
+      <DocumentationLink>
+        <ExternalLink href="https://github.com/facebook/create-react-app#user-guide">
+          View Documentation
+        </ExternalLink>
+      </DocumentationLink>
+    );
 
     return (
       <Module
@@ -58,25 +79,33 @@ class DevelopmentServerPane extends PureComponent<Props> {
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
       >
-        <Wrapper>
-          <LeftSide>
-            <Description>
-              Runs a local development server that updates whenever you make
-              changes to the files.
-            </Description>
+        <OnlyOn size="mdMin">
+          <Wrapper>
+            <InfoWrapper>
+              {description}
+              <DevelopmentServerStatus status={task.status} />
+              {docLink}
+            </InfoWrapper>
+            <TerminalWrapper>
+              <TerminalOutput height={300} logs={task.logs} />
+            </TerminalWrapper>
+          </Wrapper>
+        </OnlyOn>
 
-            <DevelopmentServerStatus status={task.status} />
-
-            <DocumentationLink>
-              <ExternalLink href="https://github.com/facebook/create-react-app#user-guide">
-                View Documentation
-              </ExternalLink>
-            </DocumentationLink>
-          </LeftSide>
-          <RightSide>
-            <TerminalOutput height={300} width={550} logs={task.logs} />
-          </RightSide>
-        </Wrapper>
+        <OnlyOn size="sm">
+          <Wrapper>
+            <InfoWrapper>
+              <SmallInfoWrapper>
+                {description}
+                <Spacer size={10} />
+                {docLink}
+              </SmallInfoWrapper>
+            </InfoWrapper>
+            <TerminalWrapper>
+              <TerminalOutput height={300} logs={task.logs} />
+            </TerminalWrapper>
+          </Wrapper>
+        </OnlyOn>
       </Module>
     );
   }
@@ -84,27 +113,49 @@ class DevelopmentServerPane extends PureComponent<Props> {
 
 const Wrapper = Card.extend`
   display: flex;
+
+  @media ${BREAKPOINTS.sm} {
+    flex-direction: column;
+  }
 `;
 
-const LeftSide = styled.div`
-  width: 300px;
+const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media ${BREAKPOINTS.sm} {
+    flex-direction: row;
+  }
+
+  @media ${BREAKPOINTS.mdMin} {
+    flex: 6;
+  }
+`;
+
+const SmallInfoWrapper = styled.div`
+  display: block;
+  padding-bottom: 12px;
 `;
 
 const DocumentationLink = styled.div`
-  line-height: 35px;
-  text-align: center;
+  @media ${BREAKPOINTS.mdMin} {
+    line-height: 35px;
+    text-align: center;
+  }
 `;
 
 const Description = styled.div`
   font-size: 1.125rem;
 `;
 
-const RightSide = styled.div`
-  padding-left: 20px;
-  flex: 1;
+const TerminalWrapper = styled.div`
+  overflow: auto;
+
+  @media ${BREAKPOINTS.mdMin} {
+    flex: 11;
+    padding-left: 20px;
+  }
 `;
 
 const mapStateToProps = state => {

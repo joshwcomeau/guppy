@@ -48,7 +48,7 @@ type State = {
     | null,
 };
 
-const SIDEBAR_WIDTH = 70;
+export const SIDEBAR_WIDTH = 70;
 const SIDEBAR_OVERFLOW = 20;
 const SIDEBAR_ICON_SIZE = 45;
 

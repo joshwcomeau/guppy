@@ -5,7 +5,7 @@ import IconBase from 'react-icons-kit';
 import { externalLink } from 'react-icons-kit/feather/externalLink';
 import { settings } from 'react-icons-kit/feather/settings';
 
-import { COLORS } from '../../constants';
+import { COLORS, BREAKPOINTS } from '../../constants';
 import { capitalize } from '../../utils';
 
 import ExternalLink from '../ExternalLink';
@@ -63,13 +63,30 @@ const Wrapper = styled.div`
   align-items: center;
   border: 2px solid ${COLORS.gray[200]};
   padding: 10px;
-  margin: 20px 0;
+  margin-bottom: 20px;
   border-radius: 24px;
+
+  @media ${BREAKPOINTS.sm} {
+    flex-direction: column;
+    width: 250px;
+    text-align: center;
+  }
+
+  @media ${BREAKPOINTS.mdMin} {
+    margin-top: 20px;
+  }
 `;
 
 const StatusTextWrapper = styled.div`
   position: relative;
-  margin-left: 10px;
+
+  @media ${BREAKPOINTS.sm} {
+    margin-top: 5px;
+  }
+
+  @media ${BREAKPOINTS.mdMin} {
+    margin-left: 10px;
+  }
 `;
 
 const StatusCaption = styled.div`
