@@ -5,8 +5,8 @@ import Transition from 'react-transition-group/Transition';
 
 import {
   addProject,
-  cancelCreatingNewProject,
-  finishCreatingNewProject,
+  createNewProjectCancel,
+  createNewProjectFinish,
 } from '../../actions';
 
 import TwoPaneModal from '../TwoPaneModal';
@@ -24,8 +24,8 @@ const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 type Props = {
   isVisible: boolean,
   addProject: (project: Project) => void,
-  cancelCreatingNewProject: () => void,
-  finishCreatingNewProject: () => void,
+  createNewProjectCancel: () => void,
+  createNewProjectFinish: () => void,
 };
 
 type State = {
@@ -35,7 +35,6 @@ type State = {
   activeField: ?Field,
   status: Status,
   currentStep: Step,
-  shouldShowRandomizationHint: boolean,
 };
 
 const initialState = {
@@ -45,28 +44,10 @@ const initialState = {
   activeField: 'projectName',
   status: 'filling-in-form',
   currentStep: 'projectName',
-  shouldShowRandomizationHint: false,
 };
 
 class CreateNewProjectWizard extends PureComponent<Props, State> {
-  randomizationHintTimeoutId: number;
-
   state = initialState;
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (!this.props.isVisible && nextProps.isVisible) {
-      window.clearTimeout(this.randomizationHintTimeoutId);
-
-      this.randomizationHintTimeoutId = window.setTimeout(
-        this.enableRandomizationHint,
-        4000
-      );
-    }
-  }
-
-  componentWillUnmount() {
-    window.clearTimeout(this.randomizationHintTimeoutId);
-  }
 
   updateFieldValue = (field: Field, value: any) => {
     this.setState({ [field]: value, activeField: field });
@@ -75,9 +56,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   focusField = (field: ?Field) => {
     this.setState({ activeField: field });
   };
-
-  enableRandomizationHint = () =>
-    this.setState({ shouldShowRandomizationHint: true });
 
   handleSubmit = () => {
     const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
@@ -98,7 +76,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: Project) => {
-    this.props.finishCreatingNewProject();
+    this.props.createNewProjectFinish();
 
     window.setTimeout(() => {
       this.props.addProject(project);
@@ -110,7 +88,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   render() {
-    const { isVisible, cancelCreatingNewProject } = this.props;
+    const { isVisible, createNewProjectCancel } = this.props;
     const {
       projectName,
       projectType,
@@ -118,7 +96,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       activeField,
       status,
       currentStep,
-      shouldShowRandomizationHint,
     } = this.state;
 
     const project = { projectName, projectType, projectIcon };
@@ -131,17 +108,17 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
           <TwoPaneModal
             isFolded={readyToBeBuilt}
             transitionState={transitionState}
-            onDismiss={cancelCreatingNewProject}
+            onDismiss={createNewProjectCancel}
             leftPane={
               <SummaryPane
                 currentStep={currentStep}
                 activeField={activeField}
-                shouldShowRandomizationHint={shouldShowRandomizationHint}
               />
             }
             rightPane={
               <MainPane
                 {...project}
+                status={status}
                 activeField={activeField}
                 currentStepIndex={FORM_STEPS.indexOf(currentStep)}
                 updateFieldValue={this.updateFieldValue}
@@ -175,8 +152,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   addProject,
-  cancelCreatingNewProject,
-  finishCreatingNewProject,
+  createNewProjectCancel,
+  createNewProjectFinish,
 };
 
 export default connect(

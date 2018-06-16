@@ -8,16 +8,11 @@ import {
   receiveDataFromTaskExecution,
 } from '../actions';
 import { getProjectById } from '../reducers/projects.reducer';
+import { getPathForProjectId } from '../reducers/paths.reducer';
 import findAvailablePort from '../services/find-available-port.service';
 
 const childProcess = window.require('child_process');
-const os = window.require('os');
 const psTree = window.require('ps-tree');
-
-// When the app first loads, we need to get an index of existing projects.
-// The default path for projects is `~/guppy-projects`.
-// TODO: Make this configurable, should live in Redux!
-const parentPath = `${os.homedir()}/guppy-projects`;
 
 export default store => next => action => {
   if (!action.task) {
@@ -25,6 +20,8 @@ export default store => next => action => {
   }
 
   const { task } = action;
+
+  const projectPath = getPathForProjectId(task.projectId, store.getState());
 
   // eslint-disable-next-line default-case
   switch (action.type) {
@@ -38,7 +35,7 @@ export default store => next => action => {
                 `npm`,
                 ['run', name],
                 {
-                  cwd: `${parentPath}/${projectId}`,
+                  cwd: projectPath,
                   env: { PORT: port },
                 }
               );
@@ -58,7 +55,7 @@ export default store => next => action => {
             `PORT=${port} npm`,
             ['run', task.name],
             {
-              cwd: `${parentPath}/${task.projectId}`,
+              cwd: projectPath,
               shell: true,
             }
           );
@@ -137,7 +134,7 @@ export default store => next => action => {
         command,
         ['run', name, ...additionalArgs],
         {
-          cwd: `${parentPath}/${projectId}`,
+          cwd: projectPath,
           shell: true,
         }
       );

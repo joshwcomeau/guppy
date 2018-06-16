@@ -6,6 +6,7 @@ import rootReducer from '../reducers';
 import { handleStoreUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
 import dependencyMiddleware from '../middlewares/dependency.middleware';
+import importProjectMiddleware from '../middlewares/import-project.middleware';
 
 import DevTools from '../components/DevTools';
 
@@ -14,7 +15,12 @@ export default function configureStore(initialState: any) {
     rootReducer,
     initialState,
     compose(
-      applyMiddleware(thunk, taskMiddleware, dependencyMiddleware),
+      applyMiddleware(
+        thunk,
+        taskMiddleware,
+        dependencyMiddleware,
+        importProjectMiddleware
+      ),
       DevTools.instrument()
     )
   );

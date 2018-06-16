@@ -57,6 +57,7 @@
     "promise": "8.0.1",
     "ps-tree": "^1.1.0",
     "raf": "3.4.0",
+    "random-seed": "^0.3.0",
     "react": "^16.3.2",
     "react-dev-utils": "6.0.0-next.66cc7a90",
     "react-dom": "^16.3.2",

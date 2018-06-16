@@ -6,11 +6,7 @@ import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
-import {
-  selectProject,
-  startCreatingNewProject,
-  dismissSidebarIntro,
-} from '../../actions';
+import { selectProject, createNewProjectStart } from '../../actions';
 import {
   getProjectsArray,
   getSelectedProjectId,
@@ -34,8 +30,7 @@ type Props = {
   selectedProjectId: ?string,
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
-  startCreatingNewProject: () => void,
-  dismissSidebarIntro: () => void,
+  createNewProjectStart: () => void,
   selectProject: (projectId: string) => void,
   location: any, // Provided by React Router
 };
@@ -95,8 +90,7 @@ class Sidebar extends PureComponent<Props, State> {
       selectedProjectId,
       isVisible,
       onboardingStatus,
-      startCreatingNewProject,
-      dismissSidebarIntro,
+      createNewProjectStart,
     } = this.props;
     const { introSequenceStep } = this.state;
 
@@ -122,7 +116,6 @@ class Sidebar extends PureComponent<Props, State> {
             <Wrapper offset={`${sidebarOffsetPercentage}%`}>
               <IntroductionBlurb
                 isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
-                onDismiss={dismissSidebarIntro}
               />
 
               <Projects offset={`${firstProjectPosition}px`}>
@@ -133,6 +126,7 @@ class Sidebar extends PureComponent<Props, State> {
                         size={SIDEBAR_ICON_SIZE}
                         id={project.id}
                         name={project.name}
+                        color={project.color}
                         iconSrc={project.icon}
                         isSelected={project.id === selectedProjectId}
                       />
@@ -142,7 +136,7 @@ class Sidebar extends PureComponent<Props, State> {
                 ))}
                 <AddProjectButton
                   size={SIDEBAR_ICON_SIZE}
-                  onClick={startCreatingNewProject}
+                  onClick={createNewProjectStart}
                   isVisible={finishedOnboarding || introSequenceStepIndex >= 2}
                 />
               </Projects>
@@ -201,8 +195,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  startCreatingNewProject,
-  dismissSidebarIntro,
+  createNewProjectStart,
   selectProject,
 };
 

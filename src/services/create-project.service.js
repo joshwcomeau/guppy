@@ -1,5 +1,9 @@
 // @flow
 import slug from 'slug';
+import random from 'random-seed';
+
+import { COLORS } from '../constants';
+
 import type { ProjectType } from '../types';
 
 const prettier = window.require('prettier');
@@ -65,8 +69,7 @@ export default (
     return;
   }
 
-  // When the app first loads, we need to get an index of existing projects.
-  // The default path for projects is `~/guppy-projects`.
+  // New projects will be created in `~/guppy-projects`.
   const parentPath = `${os.homedir()}/guppy-projects`;
 
   // Create the projects directory, if this is the first time creating a
@@ -107,6 +110,10 @@ export default (
         name: projectName,
         type: projectType,
         icon: projectIcon,
+        // The project color is currently unused for freshly-created projects,
+        // however it's used for imported non-guppy projects, and it seems like
+        // a good thing to be consistent about (may be useful in other ways).
+        color: getColorForProject(projectName),
       };
 
       const prettyPrintedPackageJson = prettier.format(
@@ -122,4 +129,23 @@ export default (
       });
     });
   });
+};
+
+export const getColorForProject = (projectName: string) => {
+  const possibleProjectColors = [
+    COLORS.hotPink[700],
+    COLORS.pink[700],
+    COLORS.red[700],
+    COLORS.orange[700],
+    COLORS.green[700],
+    COLORS.teal[700],
+    COLORS.violet[700],
+    COLORS.purple[700],
+  ];
+
+  const projectColorIndex = random
+    .create(projectName)
+    .range(possibleProjectColors.length);
+
+  return possibleProjectColors[projectColorIndex];
 };

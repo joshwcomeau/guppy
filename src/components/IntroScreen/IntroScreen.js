@@ -2,28 +2,50 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { startCreatingNewProject } from '../../actions';
+import {
+  createNewProjectStart,
+  importExistingProjectStart,
+} from '../../actions';
+import { COLORS } from '../../constants';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 import Button from '../Button';
+import ImportProjectButton from '../ImportProjectButton';
+import Spacer from '../Spacer';
+import Logo from '../Logo';
+import Swimming from '../Swimming';
 
 type Props = {
   shouldHideContent: boolean,
-  startCreatingNewProject: () => void,
+  createNewProjectStart: () => any,
 };
 
 class IntroScreen extends Component<Props> {
   render() {
-    const { shouldHideContent, startCreatingNewProject } = this.props;
+    const { shouldHideContent, createNewProjectStart } = this.props;
 
     return (
       <Fragment>
         <Wrapper isVisible={!shouldHideContent}>
-          <Logo>Guppy</Logo>
+          <Header>
+            <Swimming>
+              <Logo size="medium" />
+            </Swimming>
+            <AppName>Guppy</AppName>
+          </Header>
 
-          <Button size="large" onClick={() => startCreatingNewProject()}>
-            Create new React project
-          </Button>
+          <Actions>
+            <Button size="large" onClick={() => createNewProjectStart()}>
+              Create a new web application
+            </Button>
+            <Spacer size={40} />
+            <div>
+              Or,{' '}
+              <ImportProjectButton color={COLORS.blue[700]}>
+                import an existing project
+              </ImportProjectButton>
+            </div>
+          </Actions>
         </Wrapper>
       </Fragment>
     );
@@ -45,8 +67,18 @@ const Wrapper = styled.div`
   transition: opacity 500ms;
 `;
 
-const Logo = styled.div`
+const Header = styled.div`
+  text-align: center;
+`;
+
+const AppName = styled.div`
   font-size: 42px;
+  transform: translateY(-10px);
+`;
+
+const Actions = styled.div`
+  text-align: center;
+  font-size: 20px;
 `;
 
 const mapStateToProps = state => ({
@@ -55,5 +87,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { startCreatingNewProject }
+  { createNewProjectStart, importExistingProjectStart }
 )(IntroScreen);

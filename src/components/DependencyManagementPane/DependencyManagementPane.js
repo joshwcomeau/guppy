@@ -7,7 +7,7 @@ import { plus } from 'react-icons-kit/feather/plus';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { COLORS, BREAKPOINTS } from '../../constants';
+import { COLORS } from '../../constants';
 
 import Module from '../Module';
 import AddDependencyModal from '../AddDependencyModal';
@@ -268,15 +268,6 @@ const MainContent = Card.extend`
   margin-left: 15px;
   padding: 0;
   overflow: auto;
-`;
-
-const OnLargerWindows = styled.span`
-  display: none;
-  margin-left: 4px;
-
-  @media ${BREAKPOINTS.smMin} {
-    display: inline;
-  }
 `;
 
 const mapStateToProps = state => ({

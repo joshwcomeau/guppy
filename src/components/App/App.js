@@ -59,29 +59,7 @@ class App extends Component<Props> {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    // It is expected that the user will only have 1 project at this point.
-    // If, somehow, they have two... it would be bad to accidentally send
-    // them to the wrong one. In this case, we'll let them click it from
-    // the projects sidebar.
-    const only1Project = nextProps.projects.length === 1;
-
-    if (
-      only1Project &&
-      this.props.onboardingStatus !== 'done' &&
-      nextProps.onboardingStatus === 'done'
-    ) {
-      this.forwardToProject(nextProps.projects[0]);
-    }
-  }
-
-  forwardToProject = project => {
-    this.props.history.push(buildUrlForProjectId(project.id));
-  };
-
   render() {
-    const DefaultComponent = IntroScreen;
-
     return (
       <Fragment>
         <Titlebar />
@@ -91,7 +69,7 @@ class App extends Component<Props> {
 
           <MainContent>
             <Switch>
-              <Route exact path="/" component={DefaultComponent} />
+              <Route exact path="/" component={IntroScreen} />
               <Route
                 path="/project/:projectId"
                 render={routerProps => (

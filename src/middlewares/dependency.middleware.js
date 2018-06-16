@@ -9,25 +9,20 @@ import {
   deleteDependencyFinish,
   deleteDependencyError,
 } from '../actions';
+import { getPathForProjectId } from '../reducers/paths.reducer';
 import { loadProjectDependency } from '../services/read-from-disk.service';
 
 const childProcess = window.require('child_process');
-const os = window.require('os');
 
-// When the app first loads, we need to get an index of existing projects.
-// The default path for projects is `~/guppy-projects`.
-// TODO: Make this configurable!
-const parentPath = `${os.homedir()}/guppy-projects`;
-
+//
+//
 export default store => next => action => {
   // eslint-disable-next-line default-case
   switch (action.type) {
     case ADD_DEPENDENCY_START: {
       const { projectId, dependencyName, version } = action;
 
-      // TODO: This will need to be rethought soon, when we allow for projects
-      // to live elsewhere.
-      const projectPath = `${parentPath}/${projectId}`;
+      const projectPath = getPathForProjectId(projectId, store.getState());
 
       // TODO: yarn?
       childProcess.exec(
@@ -45,7 +40,7 @@ export default store => next => action => {
 
           // We need to read the dependency from disk, to find out all our
           // standard information.
-          loadProjectDependency(projectId, dependencyName)
+          loadProjectDependency(projectPath, dependencyName)
             .then(dependency => {
               next(addDependencyFinish(projectId, dependency));
             })
@@ -62,11 +57,8 @@ export default store => next => action => {
     case UPDATE_DEPENDENCY_START: {
       const { projectId, dependencyName, latestVersion } = action;
 
-      // TODO: This will need to be rethought soon, when we allow for projects
-      // to live elsewhere.
-      const projectPath = `${parentPath}/${projectId}`;
+      const projectPath = getPathForProjectId(projectId, store.getState());
 
-      // TODO: yarn?
       childProcess.exec(
         `npm install ${dependencyName}@${latestVersion} -SE`,
         {
@@ -75,6 +67,7 @@ export default store => next => action => {
         (error, res) => {
           if (error) {
             // TODO: system prompt leting the user know.
+            console.error('Failed to update dependency', error);
             next(updateDependencyError(projectId, dependencyName));
             return;
           }
@@ -89,11 +82,8 @@ export default store => next => action => {
     case DELETE_DEPENDENCY_START: {
       const { projectId, dependencyName } = action;
 
-      // TODO: This will need to be rethought soon, when we allow for projects
-      // to live elsewhere.
-      const projectPath = `${parentPath}/${projectId}`;
+      const projectPath = getPathForProjectId(projectId, store.getState());
 
-      // TODO: yarn?
       childProcess.exec(
         `npm uninstall ${dependencyName}`,
         {
@@ -102,6 +92,7 @@ export default store => next => action => {
         (error, res) => {
           if (error) {
             // TODO: system prompt leting the user know.
+            console.error('Failed to delete dependency', error);
             next(deleteDependencyError(projectId, dependencyName));
             return;
           }

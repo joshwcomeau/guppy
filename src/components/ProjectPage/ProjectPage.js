@@ -19,7 +19,7 @@ import type { Project } from '../../types';
 
 type Props = {
   project: Project,
-  loadDependencyInfoFromDisk: (project: Project) => any,
+  loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
   location: any, // provided by react-router
   match: any, // provided by react-router
 };
@@ -38,7 +38,7 @@ class ProjectPage extends Component<Props> {
   getDependencyInfo() {
     const { loadDependencyInfoFromDisk, project } = this.props;
 
-    loadDependencyInfoFromDisk(project);
+    loadDependencyInfoFromDisk(project.id, project.path);
   }
 
   render() {

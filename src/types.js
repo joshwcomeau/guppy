@@ -69,6 +69,7 @@ export type ProjectInternal = {
     id: string,
     name: string,
     type: AppType,
+    color: string,
     icon: string,
   },
 };
@@ -80,6 +81,7 @@ export type Project = {
   name: string,
   type: AppType,
   icon: string,
+  color: string,
   // `dependencies` is a "souped-up" version of the internal copy, with some
   // additional fields, like description, homepage, repository...
   // It also holds the specific version number used, not just an acceptable
@@ -88,4 +90,6 @@ export type Project = {
   // `tasks` is a superset of `ProjectInternal.scripts`. Includes much more
   // info.
   tasks: Array<Task>,
+  // `path` is the project's on-disk location.
+  path: string,
 };

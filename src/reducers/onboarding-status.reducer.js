@@ -1,10 +1,13 @@
 // @flow
 import {
-  START_CREATING_NEW_PROJECT,
-  CANCEL_CREATING_NEW_PROJECT,
+  CREATE_NEW_PROJECT_START,
+  CREATE_NEW_PROJECT_CANCEL,
   DISMISS_SIDEBAR_INTRO,
   ADD_PROJECT,
+  IMPORT_EXISTING_PROJECT_START,
+  IMPORT_EXISTING_PROJECT_FINISH,
   REFRESH_PROJECTS,
+  SELECT_PROJECT,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -24,19 +27,22 @@ export default (state: State = initialState, action: Action) => {
   }
 
   switch (action.type) {
-    case START_CREATING_NEW_PROJECT: {
+    case CREATE_NEW_PROJECT_START:
+    case IMPORT_EXISTING_PROJECT_START: {
       return state === 'brand-new' ? 'creating-first-project' : state;
     }
 
-    case CANCEL_CREATING_NEW_PROJECT: {
+    case CREATE_NEW_PROJECT_CANCEL: {
       return state === 'creating-first-project' ? 'brand-new' : state;
     }
 
-    case ADD_PROJECT: {
+    case ADD_PROJECT:
+    case IMPORT_EXISTING_PROJECT_FINISH: {
       return state === 'creating-first-project' ? 'introducing-sidebar' : state;
     }
 
-    case DISMISS_SIDEBAR_INTRO: {
+    case DISMISS_SIDEBAR_INTRO:
+    case SELECT_PROJECT: {
       return state === 'introducing-sidebar' ? 'done' : state;
     }
 

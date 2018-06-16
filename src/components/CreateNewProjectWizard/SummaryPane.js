@@ -1,54 +1,44 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
-import IconBase from 'react-icons-kit';
-import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
-import { u1F421 as fish } from 'react-icons-kit/noto_emoji_regular/u1F421';
 
 import Paragraph from '../Paragraph';
 import FadeIn from '../FadeIn';
 import Spacer from '../Spacer';
+import Logo from '../Logo';
+import Swimming from '../Swimming';
+
+import ImportExisting from './ImportExisting';
 
 import type { Field, Step } from './types';
 
 type Props = {
   currentStep: Step,
   activeField: ?Field,
-  shouldShowRandomizationHint: boolean,
 };
 
 class SummaryPane extends PureComponent<Props> {
   renderPaneContents() {
-    const {
-      currentStep,
-      activeField,
-      shouldShowRandomizationHint,
-    } = this.props;
+    const { currentStep, activeField } = this.props;
 
     // If we're still in the first step, we want to show our intro details.
     if (currentStep === 'projectName') {
       return (
         <IntroWrapper>
           <FadeIn key="intro-t">
-            <IconBase size={96} icon={fish} />
+            <Swimming>
+              <Logo size="large" />
+            </Swimming>
+
             <Spacer size={30} />
-            <StepTitle>Welcome to Guppy!</StepTitle>
+            <StepTitle>Create new project</StepTitle>
             <Paragraph>
               Let's start by giving your new project a name.
             </Paragraph>
+
+            <Spacer size={100} />
+            <ImportExisting />
           </FadeIn>
-          {shouldShowRandomizationHint && (
-            <FadeIn key="intro-addendum">
-              <Spacer size={50} />
-              <Paragraph>
-                Can't think of anything? Click the{' '}
-                <InlineSparkles>
-                  <IconBase size={26} icon={sparkles} />
-                </InlineSparkles>{' '}
-                to generate a temporary code-name.
-              </Paragraph>
-            </FadeIn>
-          )}
         </IntroWrapper>
       );
     }
@@ -68,19 +58,6 @@ class SummaryPane extends PureComponent<Props> {
                 change this later.
               </Paragraph>
             </FadeIn>
-            <Spacer size={20} />
-
-            {shouldShowRandomizationHint && (
-              <FadeIn key="s1-2">
-                <Paragraph>
-                  Let the universe decide by using the{' '}
-                  <InlineSparkles>
-                    <IconBase size={26} icon={sparkles} />
-                  </InlineSparkles>{' '}
-                  to generate a random code-name for your project.
-                </Paragraph>
-              </FadeIn>
-            )}
           </Fragment>
         );
       }
@@ -143,11 +120,6 @@ const StepTitle = styled.h1`
 const IntroWrapper = styled.div`
   text-align: center;
   padding-top: 20px;
-`;
-
-const InlineSparkles = styled.span`
-  display: inline-block;
-  transform: translateY(5px);
 `;
 
 export default SummaryPane;
