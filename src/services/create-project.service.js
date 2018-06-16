@@ -69,8 +69,7 @@ export default (
     return;
   }
 
-  // When the app first loads, we need to get an index of existing projects.
-  // The default path for projects is `~/guppy-projects`.
+  // New projects will be created in `~/guppy-projects`.
   const parentPath = `${os.homedir()}/guppy-projects`;
 
   // Create the projects directory, if this is the first time creating a

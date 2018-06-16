@@ -9,7 +9,7 @@
  * to be tied to a specific project (the same project might exist at different
  * paths on different computers!).
  */
-import { IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
+import { ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
 
 import type { Action } from 'redux';
 
@@ -29,12 +29,13 @@ const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
+    case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
       const { path, project } = action;
 
       return {
         ...state,
-        [project.guppy.id]: path,
+        [project.guppy.id]: path || getDefaultPath(project.guppy.id),
       };
     }
 
@@ -46,6 +47,12 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 //
+// Helpers
+const getDefaultPath = projectId => `${DEFAULT_PARENT_PATH}/${projectId}`;
+
+//
+//
+//
 // Selectors
 export const getPathForProjectId = (projectId: string, state: any) =>
-  state.paths[projectId] || `${DEFAULT_PARENT_PATH}/${projectId}`;
+  state.paths[projectId] || getDefaultPath(projectId);

@@ -65,7 +65,9 @@ export const refreshProjects = () => {
           projects,
         });
       })
-      .catch(err => console.error('Oh no', err));
+      .catch(err => {
+        console.error('Could not load guppy projects', err);
+      });
   };
 };
 
