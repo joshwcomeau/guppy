@@ -64,7 +64,8 @@ const selectedId = (
   action: Action
 ) => {
   switch (action.type) {
-    case ADD_PROJECT: {
+    case ADD_PROJECT:
+    case IMPORT_EXISTING_PROJECT_FINISH: {
       return action.project.guppy.id;
     }
 

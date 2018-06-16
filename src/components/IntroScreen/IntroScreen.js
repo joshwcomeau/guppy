@@ -10,42 +10,17 @@ import { COLORS } from '../../constants';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 import Button from '../Button';
+import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
 import Swimming from '../Swimming';
 
-const { dialog } = window.require('electron').remote;
-
 type Props = {
   shouldHideContent: boolean,
   createNewProjectStart: () => any,
-  importExistingProjectStart: (path: string) => any,
 };
 
 class IntroScreen extends Component<Props> {
-  handleImportExisting = () => {
-    const { importExistingProjectStart } = this.props;
-
-    dialog.showOpenDialog(
-      {
-        message: 'Select the directory of an existing React app',
-        properties: ['openDirectory'],
-      },
-      paths => {
-        // The user might cancel out without selecting a directory.
-        // In that case, do nothing.
-        if (!paths) {
-          return;
-        }
-
-        // Only a single path should be selected
-        const [path] = paths;
-
-        importExistingProjectStart(path);
-      }
-    );
-  };
-
   render() {
     const { shouldHideContent, createNewProjectStart } = this.props;
 
@@ -61,14 +36,14 @@ class IntroScreen extends Component<Props> {
 
           <Actions>
             <Button size="large" onClick={() => createNewProjectStart()}>
-              Create new React project
+              Create a new web application
             </Button>
             <Spacer size={40} />
             <div>
               Or,{' '}
-              <TextButton onClick={this.handleImportExisting}>
+              <ImportProjectButton color={COLORS.blue[700]}>
                 import an existing project
-              </TextButton>
+              </ImportProjectButton>
             </div>
           </Actions>
         </Wrapper>
@@ -104,16 +79,6 @@ const AppName = styled.div`
 const Actions = styled.div`
   text-align: center;
   font-size: 20px;
-`;
-
-const TextButton = styled.button`
-  background: transparent;
-  border: none;
-  text-decoration: underline;
-  padding: 0;
-  margin: 0;
-  color: ${COLORS.blue[700]};
-  font-size: inherit;
 `;
 
 const mapStateToProps = state => ({

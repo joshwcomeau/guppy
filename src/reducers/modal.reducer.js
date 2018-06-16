@@ -8,6 +8,7 @@ import {
   CREATE_NEW_PROJECT_START,
   CREATE_NEW_PROJECT_CANCEL,
   CREATE_NEW_PROJECT_FINISH,
+  IMPORT_EXISTING_PROJECT_START,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -23,6 +24,7 @@ export default (state: State = initialState, action: Action) => {
 
     case CREATE_NEW_PROJECT_CANCEL:
     case CREATE_NEW_PROJECT_FINISH:
+    case IMPORT_EXISTING_PROJECT_START:
       return null;
 
     default:

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import random from 'random-seed';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';

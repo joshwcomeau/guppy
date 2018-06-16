@@ -12,7 +12,6 @@ import { getPathForProjectId } from '../reducers/paths.reducer';
 import findAvailablePort from '../services/find-available-port.service';
 
 const childProcess = window.require('child_process');
-const os = window.require('os');
 const psTree = window.require('ps-tree');
 
 export default store => next => action => {

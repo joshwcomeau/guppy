@@ -3,11 +3,14 @@ import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import importAll from 'import-all.macro';
+import IconBase from 'react-icons-kit';
+import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
 import { sampleMany } from '../../utils';
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
 
+import Paragraph from '../Paragraph';
 import FormField from '../FormField';
 import SelectableImage from '../SelectableImage';
 import ButtonWithIcon from '../ButtonWithIcon';
@@ -17,7 +20,7 @@ import FadeIn from '../FadeIn';
 import ProjectName from './ProjectName';
 import SubmitButton from './SubmitButton';
 
-import type { Field } from './types';
+import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
 
 const icons = importAll.sync('../../assets/images/icons/icon_*.jpg');
@@ -28,6 +31,7 @@ type Props = {
   projectType: ?ProjectType,
   projectIcon: ?string,
   activeField: ?Field,
+  status: Status,
   currentStepIndex: number,
   hasBeenSubmitted: boolean,
   updateFieldValue: (field: Field, value: any) => void,
@@ -35,8 +39,37 @@ type Props = {
   handleSubmit: () => void,
 };
 
-class MainPane extends PureComponent<Props> {
+type State = {
+  shouldShowRandomizationHint: boolean,
+};
+
+class MainPane extends PureComponent<Props, State> {
+  randomizationHintTimeoutId: number;
+
+  state = { shouldShowRandomizationHint: false };
+
   iconSubset = sampleMany(iconSrcs, 10);
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (
+      this.props.status !== 'filling-in-form' &&
+      nextProps.status === 'filling-in-form'
+    ) {
+      window.clearTimeout(this.randomizationHintTimeoutId);
+
+      this.randomizationHintTimeoutId = window.setTimeout(
+        this.enableRandomizationHint,
+        4000
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.randomizationHintTimeoutId);
+  }
+
+  enableRandomizationHint = () =>
+    this.setState({ shouldShowRandomizationHint: true });
 
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
@@ -58,6 +91,7 @@ class MainPane extends PureComponent<Props> {
       hasBeenSubmitted,
       handleSubmit,
     } = this.props;
+    const { shouldShowRandomizationHint } = this.state;
 
     return (
       <Fragment>
@@ -72,6 +106,19 @@ class MainPane extends PureComponent<Props> {
                 handleChange={this.updateProjectName}
                 handleSubmit={handleSubmit}
               />
+
+              {shouldShowRandomizationHint && (
+                <FadeIn key="intro-addendum">
+                  <Spacer size={50} />
+                  <Paragraph>
+                    Can't think of anything? Click the{' '}
+                    <InlineSparkles>
+                      <IconBase size={26} icon={sparkles} />
+                    </InlineSparkles>{' '}
+                    to generate a temporary code-name.
+                  </Paragraph>
+                </FadeIn>
+              )}
 
               {currentStepIndex > 0 && (
                 <FadeIn>
@@ -185,6 +232,11 @@ const SubmitButtonWrapper = styled.div`
   right: 0;
   bottom: 30px;
   text-align: center;
+`;
+
+const InlineSparkles = styled.span`
+  display: inline-block;
+  transform: translateY(5px);
 `;
 
 export default MainPane;

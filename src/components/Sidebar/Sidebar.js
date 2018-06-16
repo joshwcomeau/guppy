@@ -6,11 +6,7 @@ import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
-import {
-  selectProject,
-  createNewProjectStart,
-  dismissSidebarIntro,
-} from '../../actions';
+import { selectProject, createNewProjectStart } from '../../actions';
 import {
   getProjectsArray,
   getSelectedProjectId,
@@ -35,7 +31,6 @@ type Props = {
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
   createNewProjectStart: () => void,
-  dismissSidebarIntro: () => void,
   selectProject: (projectId: string) => void,
   location: any, // Provided by React Router
 };
@@ -96,7 +91,6 @@ class Sidebar extends PureComponent<Props, State> {
       isVisible,
       onboardingStatus,
       createNewProjectStart,
-      dismissSidebarIntro,
     } = this.props;
     const { introSequenceStep } = this.state;
 
@@ -122,7 +116,6 @@ class Sidebar extends PureComponent<Props, State> {
             <Wrapper offset={`${sidebarOffsetPercentage}%`}>
               <IntroductionBlurb
                 isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
-                onDismiss={dismissSidebarIntro}
               />
 
               <Projects offset={`${firstProjectPosition}px`}>
@@ -203,7 +196,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   createNewProjectStart,
-  dismissSidebarIntro,
   selectProject,
 };
 

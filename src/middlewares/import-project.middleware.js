@@ -1,18 +1,15 @@
 // @flow
 import {
   IMPORT_EXISTING_PROJECT_START,
-  LOAD_DEPENDENCY_INFO_FROM_DISK,
   importExistingProjectFinish,
 } from '../actions';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import {
   loadPackageJson,
   writePackageJson,
-  loadAllProjectDependencies,
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 
-const prettier = window.require('prettier');
 const { dialog } = window.require('electron').remote;
 
 // TODO: Flow types
@@ -74,23 +71,6 @@ export default (store: any) => (next: any) => (action: any) => {
           return packageJsonWithGuppy;
         })
         .then(json => writePackageJson(path, json))
-        // .then(json => {
-        //   // We need to fetch and parse dependency information.
-        //   //
-        //   // TODO: This assumes that the imported project already has all of
-        //   // its dependencies installed. I should do a quick check by importing
-        //   // all of the directory names in `node_modules` and seeing if any of
-        //   // the listed dependencies in package.json don't exist.
-        //   return loadAllProjectDependencies(json, path).then(dependencies => {
-        //     next({
-        //       type: LOAD_DEPENDENCY_INFO_FROM_DISK,
-        //       projectId: json.guppy.id,
-        //       dependencies,
-        //     });
-
-        //     return json;
-        //   });
-        // })
         .then(json => {
           next(importExistingProjectFinish(path, json));
         })

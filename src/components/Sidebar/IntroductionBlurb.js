@@ -8,16 +8,14 @@ import { COLORS } from '../../constants';
 
 import Paragraph from '../Paragraph';
 import Spacer from '../Spacer';
-import Button from '../Button';
 
 type Props = {
-  onDismiss: () => void,
   isVisible: boolean,
 };
 
 class IntroductionBlurb extends PureComponent<Props> {
   render() {
-    const { onDismiss, isVisible } = this.props;
+    const { isVisible } = this.props;
 
     return (
       <Wrapper isVisible={isVisible}>
@@ -35,9 +33,9 @@ class IntroductionBlurb extends PureComponent<Props> {
         </Paragraph>
 
         <Spacer size={20} />
-        <Button size="large" onClick={onDismiss}>
-          Got it
-        </Button>
+        <Paragraph>
+          <strong>Click on your first project to select it.</strong>
+        </Paragraph>
       </Wrapper>
     );
   }
