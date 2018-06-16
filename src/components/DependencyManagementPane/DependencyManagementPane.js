@@ -7,7 +7,7 @@ import { plus } from 'react-icons-kit/feather/plus';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { COLORS } from '../../constants';
+import { COLORS, BREAKPOINTS } from '../../constants';
 
 import Module from '../Module';
 import AddDependencyModal from '../AddDependencyModal';
@@ -17,6 +17,7 @@ import DependencyInstalling from '../DependencyInstalling/DependencyInstalling';
 import Card from '../Card';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
+import OnlyOn from '../OnlyOn';
 
 import type { Project } from '../../types';
 
@@ -56,8 +57,6 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             existingDependency => existingDependency.name === dependency.name
           )
       );
-
-      console.log({ newDependencyIndex });
 
       this.setState({ selectedDependencyIndex: newDependencyIndex });
     }
@@ -130,7 +129,10 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             <AddDependencyButton onClick={this.openAddNewDependencyModal}>
               <IconBase icon={plus} size={20} />
               <Spacer size={6} />
-              Add New Dependency
+              Add New
+              <OnlyOn size="mdMin" style={{ paddingLeft: 3 }}>
+                Dependency
+              </OnlyOn>
             </AddDependencyButton>
           </DependencyList>
           <MainContent>
@@ -162,7 +164,7 @@ const Wrapper = styled.div`
 `;
 
 const DependencyList = Card.extend`
-  width: 300px;
+  flex: 6;
   display: flex;
   flex-direction: column;
 `;
@@ -262,10 +264,19 @@ const DependencyVersion = styled.span`
 `;
 
 const MainContent = Card.extend`
-  flex: 1;
+  flex: 12;
   margin-left: 15px;
   padding: 0;
   overflow: auto;
+`;
+
+const OnLargerWindows = styled.span`
+  display: none;
+  margin-left: 4px;
+
+  @media ${BREAKPOINTS.smMin} {
+    display: inline;
+  }
 `;
 
 const mapStateToProps = state => ({

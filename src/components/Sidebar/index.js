@@ -1,1 +1,1 @@
-export { default } from "./Sidebar";
+export { default, SIDEBAR_WIDTH } from './Sidebar';
