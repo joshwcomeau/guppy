@@ -45,8 +45,6 @@ export type Dependency = {
   status: DependencyStatus,
 };
 
-type AppType = 'create-react-app' | 'gatsby';
-
 /**
  * ProjectInternal is the behind-the-scenes type used in projects.reducer.
  * This is a copy of the project's package.json (which means it may have many
@@ -68,7 +66,7 @@ export type ProjectInternal = {
   guppy: {
     id: string,
     name: string,
-    type: AppType,
+    type: ProjectType,
     color: string,
     icon: string,
   },
@@ -79,7 +77,7 @@ export type Project = {
   id: string,
   // `name` is the friendly name, with full UTF-8 character access.
   name: string,
-  type: AppType,
+  type: ProjectType,
   icon: string,
   color: string,
   // `dependencies` is a "souped-up" version of the internal copy, with some

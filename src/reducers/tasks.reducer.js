@@ -174,6 +174,10 @@ export default (state: State = initialState, action: Action) => {
 const buildUniqueTaskId = (projectId, name) => `${projectId}-${name}`;
 
 const getTaskDescription = name => {
+  // NOTE: This information is currently derivable, and it's bad to store
+  // derivable data in the reducer... but, I expect soon this info will be
+  // editable on a project-by-project basis, and so we will need to store this
+  // in the reducer.
   switch (name) {
     case 'start': {
       return 'Run a local development server';
@@ -186,6 +190,9 @@ const getTaskDescription = name => {
     }
     case 'eject': {
       return 'Permanently reveal the create-react-app configuration files';
+    }
+    case 'format': {
+      return 'Runs a formatter that tweaks your code to align with industry best-practices';
     }
     default: {
       return '';

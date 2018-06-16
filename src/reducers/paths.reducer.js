@@ -23,7 +23,7 @@ type State = {
 // At some point maybe I should make this configurable... for now, individual
 // projects can be imported from other places, but all projects created with
 // Guppy live here.
-const DEFAULT_PARENT_PATH = `${os.homedir()}/guppy-projects`;
+export const DEFAULT_PARENT_PATH = `${os.homedir()}/guppy-projects`;
 
 const initialState = {};
 
