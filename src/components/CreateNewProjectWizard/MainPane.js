@@ -6,6 +6,7 @@ import importAll from 'import-all.macro';
 import IconBase from 'react-icons-kit';
 import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
+import { COLORS } from '../../constants';
 import { sampleMany } from '../../utils';
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
@@ -50,18 +51,11 @@ class MainPane extends PureComponent<Props, State> {
 
   iconSubset = sampleMany(iconSrcs, 10);
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (
-      this.props.status !== 'filling-in-form' &&
-      nextProps.status === 'filling-in-form'
-    ) {
-      window.clearTimeout(this.randomizationHintTimeoutId);
-
-      this.randomizationHintTimeoutId = window.setTimeout(
-        this.enableRandomizationHint,
-        4000
-      );
-    }
+  componentDidMount() {
+    this.randomizationHintTimeoutId = window.setTimeout(
+      this.enableRandomizationHint,
+      4000
+    );
   }
 
   componentWillUnmount() {
@@ -107,18 +101,20 @@ class MainPane extends PureComponent<Props, State> {
                 handleSubmit={handleSubmit}
               />
 
-              {shouldShowRandomizationHint && (
-                <FadeIn key="intro-addendum">
-                  <Spacer size={50} />
-                  <Paragraph>
-                    Can't think of anything? Click the{' '}
-                    <InlineSparkles>
-                      <IconBase size={26} icon={sparkles} />
-                    </InlineSparkles>{' '}
-                    to generate a temporary code-name.
-                  </Paragraph>
-                </FadeIn>
-              )}
+              {currentStepIndex === 0 &&
+                shouldShowRandomizationHint && (
+                  <FadeIn key="intro-addendum">
+                    <Spacer size={50} />
+                    <RandomizationHint>
+                      Can't think of anything? Click the{' '}
+                      <InlineSparkles>
+                        <IconBase size={22} icon={sparkles} />
+                      </InlineSparkles>
+                      <br />
+                      above to generate a random code-name.
+                    </RandomizationHint>
+                  </FadeIn>
+                )}
 
               {currentStepIndex > 0 && (
                 <FadeIn>
@@ -237,6 +233,12 @@ const SubmitButtonWrapper = styled.div`
 const InlineSparkles = styled.span`
   display: inline-block;
   transform: translateY(5px);
+`;
+
+const RandomizationHint = styled(Paragraph)`
+  text-align: center;
+  font-size: 1rem;
+  color: ${COLORS.gray[600]};
 `;
 
 export default MainPane;
