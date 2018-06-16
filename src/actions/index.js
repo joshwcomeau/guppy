@@ -58,27 +58,32 @@ export const refreshProjects = () => {
     // I wish Flow would let me use Object.values =(
     const pathValues = Object.keys(paths).map(pathKey => paths[pathKey]);
 
-    loadGuppyProjects(pathValues).then(projects =>
-      dispatch({
-        type: REFRESH_PROJECTS,
-        projects,
+    loadGuppyProjects(pathValues)
+      .then(projects => {
+        dispatch({
+          type: REFRESH_PROJECTS,
+          projects,
+        });
       })
-    );
+      .catch(err => console.error('Oh no', err));
   };
 };
 
-export const loadDependencyInfoFromDisk = (project: Project) => {
+export const loadDependencyInfoFromDisk = (
+  projectId: string,
+  projectPath: string
+) => {
   return (dispatch: any, getState: Function) => {
     // The `project` this action receives is the "fit-for-consumption" one.
     // We need the internal version, `ProjectInternal`, so that we can see the
     // raw dependency information.
-    const internalProject = getInternalProjectById(project.id, getState());
+    const internalProject = getInternalProjectById(projectId, getState());
 
-    loadAllProjectDependencies(internalProject, project.path).then(
+    loadAllProjectDependencies(internalProject, projectPath).then(
       dependencies => {
         dispatch({
           type: LOAD_DEPENDENCY_INFO_FROM_DISK,
-          project,
+          projectId,
           dependencies,
         });
       }

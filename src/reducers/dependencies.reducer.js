@@ -27,11 +27,11 @@ const initialState = {};
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case LOAD_DEPENDENCY_INFO_FROM_DISK: {
-      const { project, dependencies } = action;
+      const { projectId, dependencies } = action;
 
       return {
         ...state,
-        [project.id]: dependencies,
+        [projectId]: dependencies,
       };
     }
 

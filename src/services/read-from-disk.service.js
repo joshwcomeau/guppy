@@ -5,6 +5,7 @@ import { pick } from '../utils';
 import type { ProjectInternal } from '../types';
 
 const fs = window.require('fs');
+const prettier = window.require('prettier');
 
 /**
  * Load a project's package.json
@@ -22,6 +23,29 @@ export const loadPackageJson = (path: string) => {
 };
 
 /**
+ * Update a project's package.json.
+ */
+export const writePackageJson = (projectPath: string, json: any) => {
+  const prettyPrintedPackageJson = prettier.format(JSON.stringify(json), {
+    parser: 'json',
+  });
+
+  return new Promise((resolve, reject) => {
+    fs.writeFile(
+      `${projectPath}/package.json`,
+      prettyPrintedPackageJson,
+      err => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(json);
+      }
+    );
+  });
+};
+
+/**
  * Given an array of paths, load each one as a distinct Guppy project.
  * Parses the `package.json` to find Guppy's saved info.
  */
@@ -33,9 +57,8 @@ export function loadGuppyProjects(paths: Array<string>) {
     asyncMap(
       paths,
       function(path, callback) {
-        loadPackageJson(path)
-          .then(json => callback(null, json))
-          .catch(callback);
+        loadPackageJson(path).then(json => callback(null, json));
+        // .catch(callback);
       },
       (err, results) => {
         if (err) {
@@ -72,8 +95,6 @@ export function loadGuppyProjects(paths: Array<string>) {
  *
  * This method reads the package.json for a specific dependency, in a specific
  * project.
- *
- * TODO: Also need to set up non-default paths for projects here.
  */
 export function loadProjectDependency(
   projectPath: string,
@@ -129,7 +150,7 @@ export function loadProjectDependency(
  * dependencies... might need to set up a streaming service that can communicate
  * loading status if it takes more than a few hundred ms.
  *
- * TODO: Handle non-default paths
+ * TODO: support devDependencies
  */
 export function loadAllProjectDependencies(
   project: ProjectInternal,

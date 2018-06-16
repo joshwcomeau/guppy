@@ -34,7 +34,7 @@ export default (state: State = initialState, action: Action) => {
 
       return {
         ...state,
-        [project.id]: path,
+        [project.guppy.id]: path,
       };
     }
 

@@ -38,7 +38,7 @@ class ProjectPage extends Component<Props> {
   getDependencyInfo() {
     const { loadDependencyInfoFromDisk, project } = this.props;
 
-    loadDependencyInfoFromDisk(project);
+    loadDependencyInfoFromDisk(project.id, project.path);
   }
 
   render() {

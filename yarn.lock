@@ -4984,7 +4984,7 @@ json-stable-stringify@^1.0.1:
   dependencies:
     jsonify "~0.0.0"
 
-json-stringify-safe@~5.0.1:
+json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
@@ -6662,6 +6662,12 @@ raf@3.4.0, raf@^3.1.0:
   resolved "https://registry.yarnpkg.com/raf/-/raf-3.4.0.tgz#a28876881b4bc2ca9117d4138163ddb80f781575"
   dependencies:
     performance-now "^2.1.0"
+
+random-seed@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/random-seed/-/random-seed-0.3.0.tgz#d945f2e1f38f49e8d58913431b8bf6bb937556cd"
+  dependencies:
+    json-stringify-safe "^5.0.1"
 
 randomatic@^3.0.0:
   version "3.0.0"

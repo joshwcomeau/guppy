@@ -1,11 +1,18 @@
 // @flow
 import {
   IMPORT_EXISTING_PROJECT_START,
+  LOAD_DEPENDENCY_INFO_FROM_DISK,
   importExistingProjectFinish,
 } from '../actions';
 import { getInternalProjectById } from '../reducers/projects.reducer';
-import { loadPackageJson } from '../services/read-from-disk.service';
+import {
+  loadPackageJson,
+  writePackageJson,
+  loadAllProjectDependencies,
+} from '../services/read-from-disk.service';
+import { getColorForProject } from '../services/create-project.service';
 
+const prettier = window.require('prettier');
 const { dialog } = window.require('electron').remote;
 
 // TODO: Flow types
@@ -32,7 +39,8 @@ export default (store: any) => (next: any) => (action: any) => {
               'Project name already exists',
               "Egad! A project with that name already exists. To work around this limitation, you can change the 'name' field in the project's package.json file."
             );
-            return;
+
+            throw new Error('project-name-already-exists');
           }
 
           const type = inferProjectType(json);
@@ -45,20 +53,46 @@ export default (store: any) => (next: any) => (action: any) => {
               'Unsupported project type',
               "Looks like the project you're trying to import isn't supported. Unfortunately, Guppy only supports projects created with create-react-app or Gatsby"
             );
+
+            throw new Error('unsupported-project-type');
           }
-          // Let's guppify this project.
-          const guppyProject = {
+
+          // Get a random colour for the project, to be used in place of an
+          // icon.
+          // TODO: Try importing the existing project's favicon as icon instead?
+          const packageJsonWithGuppy = {
             ...json,
             guppy: {
               id: json.name,
               name: json.name,
               type,
-              // TODO: Try importing the existing project's favicon as icon!
+              color: getColorForProject(json.name),
               icon: null,
             },
           };
 
-          next(importExistingProjectFinish(path, guppyProject));
+          return packageJsonWithGuppy;
+        })
+        .then(json => writePackageJson(path, json))
+        // .then(json => {
+        //   // We need to fetch and parse dependency information.
+        //   //
+        //   // TODO: This assumes that the imported project already has all of
+        //   // its dependencies installed. I should do a quick check by importing
+        //   // all of the directory names in `node_modules` and seeing if any of
+        //   // the listed dependencies in package.json don't exist.
+        //   return loadAllProjectDependencies(json, path).then(dependencies => {
+        //     next({
+        //       type: LOAD_DEPENDENCY_INFO_FROM_DISK,
+        //       projectId: json.guppy.id,
+        //       dependencies,
+        //     });
+
+        //     return json;
+        //   });
+        // })
+        .then(json => {
+          next(importExistingProjectFinish(path, json));
         })
         .catch(err => {
           console.error(err);

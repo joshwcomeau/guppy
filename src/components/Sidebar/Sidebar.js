@@ -133,6 +133,7 @@ class Sidebar extends PureComponent<Props, State> {
                         size={SIDEBAR_ICON_SIZE}
                         id={project.id}
                         name={project.name}
+                        color={project.color}
                         iconSrc={project.icon}
                         isSelected={project.id === selectedProjectId}
                       />

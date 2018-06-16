@@ -4,6 +4,7 @@ import produce from 'immer';
 
 import {
   ADD_PROJECT,
+  IMPORT_EXISTING_PROJECT_FINISH,
   ADD_DEPENDENCY_FINISH,
   REFRESH_PROJECTS,
   SELECT_PROJECT,
@@ -36,7 +37,8 @@ const byId = (state: ById = initialState.byId, action: Action) => {
       return action.projects;
     }
 
-    case ADD_PROJECT: {
+    case ADD_PROJECT:
+    case IMPORT_EXISTING_PROJECT_FINISH: {
       return {
         ...state,
         [action.project.guppy.id]: action.project,
@@ -100,6 +102,7 @@ const prepareProjectForConsumption = (
     id: project.guppy.id,
     name: project.guppy.name,
     type: project.guppy.type,
+    color: project.guppy.color,
     icon: project.guppy.icon,
     tasks: getTasksForProjectId(project.guppy.id, state),
     dependencies: getDependenciesForProjectId(project.guppy.id, state),

@@ -25,6 +25,7 @@ import {
   COMPLETE_TASK,
   ATTACH_PROCESS_ID_TO_TASK,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
+  IMPORT_EXISTING_PROJECT_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -73,7 +74,8 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
-    case ADD_PROJECT: {
+    case ADD_PROJECT:
+    case IMPORT_EXISTING_PROJECT_FINISH: {
       const { project } = action;
 
       const projectId = project.guppy.id;
