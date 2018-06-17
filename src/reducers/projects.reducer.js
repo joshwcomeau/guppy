@@ -70,7 +70,6 @@ const selectedId = (
     }
 
     case REFRESH_PROJECTS: {
-      console.log('Refreshing projects!', action);
       // It's possible that the selected project no longer exists (say if the
       // user deletes that folder and then refreshes Guppy).
       // In that case, un-select it.

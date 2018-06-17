@@ -3,7 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { externalLink } from 'react-icons-kit/feather/externalLink';
-import { settings } from 'react-icons-kit/feather/settings';
 
 import { COLORS, BREAKPOINTS } from '../../constants';
 import { capitalize } from '../../utils';
@@ -16,22 +15,28 @@ import type { TaskStatus } from '../../types';
 
 type Props = {
   status: TaskStatus,
+  port?: number,
 };
 
-const DevelopmentServerStatus = ({ status }: Props) => {
+const DevelopmentServerStatus = ({ status, port }: Props) => {
   const isRunning = status !== 'idle';
+
+  // TODO: Gatsby allows you to customize the hostname.
+  // I should probably compile this URL from a Redux selector in the Task
+  // reducer?
+  const serverUrl = port ? `http://localhost:${port}` : null;
 
   return (
     <Wrapper>
       <LargeLED status={status} />
       <StatusTextWrapper>
-        <Status>{capitalize(status)}</Status>
+        <Status>{getLabel(status)}</Status>
         <StatusCaption>
-          {isRunning ? (
+          {isRunning && (
             <ExternalLink
               color={COLORS.gray[700]}
               hoverColor={COLORS.gray[900]}
-              href="http://localhost:3000"
+              href={serverUrl}
             >
               <IconLinkContents>
                 <IconBase icon={externalLink} />
@@ -39,23 +44,20 @@ const DevelopmentServerStatus = ({ status }: Props) => {
                 Open App
               </IconLinkContents>
             </ExternalLink>
-          ) : (
-            <ExternalLink
-              color={COLORS.gray[700]}
-              hoverColor={COLORS.gray[900]}
-              href="http://localhost:3000"
-            >
-              <IconLinkContents>
-                <IconBase icon={settings} />
-                <Spacer inline size={5} />
-                Configure Server
-              </IconLinkContents>
-            </ExternalLink>
           )}
         </StatusCaption>
       </StatusTextWrapper>
     </Wrapper>
   );
+};
+
+const getLabel = (status: TaskStatus) => {
+  switch (status) {
+    case 'success':
+      return 'Running';
+    default:
+      return capitalize(status);
+  }
 };
 
 const Wrapper = styled.div`
