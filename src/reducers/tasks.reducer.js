@@ -29,7 +29,7 @@ import {
 } from '../actions';
 
 import type { Action } from 'redux';
-import type { Task } from '../types';
+import type { Task, ProjectType } from '../types';
 
 type State = {
   [uniqueTaskId: string]: Task,
@@ -111,15 +111,15 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
-    case ABORT_TASK: {
-      const { task, timestamp } = action;
+    // case ABORT_TASK: {
+    //   const { task, timestamp } = action;
 
-      return produce(state, draftState => {
-        draftState[task.id].status = 'idle';
-        draftState[task.id].timeSinceStatusChange = timestamp;
-        delete draftState[task.id].processId;
-      });
-    }
+    //   return produce(state, draftState => {
+    //     draftState[task.id].status = 'idle';
+    //     draftState[task.id].timeSinceStatusChange = timestamp;
+    //     delete draftState[task.id].processId;
+    //   });
+    // }
 
     case COMPLETE_TASK: {
       const { task, timestamp, wasSuccessful } = action;
@@ -138,10 +138,14 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case ATTACH_PROCESS_ID_TO_TASK: {
-      const { task, processId } = action;
+      const { task, processId, port } = action;
 
       return produce(state, draftState => {
         draftState[task.id].processId = processId;
+
+        if (port) {
+          draftState[task.id].port = port;
+        }
       });
     }
 
@@ -174,6 +178,10 @@ export default (state: State = initialState, action: Action) => {
 const buildUniqueTaskId = (projectId, name) => `${projectId}-${name}`;
 
 const getTaskDescription = name => {
+  // NOTE: This information is currently derivable, and it's bad to store
+  // derivable data in the reducer... but, I expect soon this info will be
+  // editable on a project-by-project basis, and so we will need to store this
+  // in the reducer.
   switch (name) {
     case 'start': {
       return 'Run a local development server';
@@ -187,15 +195,17 @@ const getTaskDescription = name => {
     case 'eject': {
       return 'Permanently reveal the create-react-app configuration files';
     }
+    case 'format': {
+      return 'Runs a formatter that tweaks your code to align with industry best-practices';
+    }
     default: {
       return '';
     }
   }
 };
 
-const isDevServerTask = name =>
+export const isDevServerTask = name =>
   // Gatsby and create-react-app use different names for the same task.
-  // TODO: Maybe I should rename `develop` to `start` in Gatsby projects?
   name === 'start' || name === 'develop';
 
 const getTaskType = name => {
@@ -258,10 +268,22 @@ export const getTasksInTaskListForProjectId = (
 
 export const getDevServerTaskForProjectId = (
   projectId: string,
+  projectType: ProjectType,
   state: GlobalState
-) =>
-  state.tasks[buildUniqueTaskId(projectId, 'start')] ||
-  state.tasks[buildUniqueTaskId(projectId, 'develop')];
+) => {
+  switch (projectType) {
+    case 'create-react-app': {
+      return state.tasks[buildUniqueTaskId(projectId, 'start')];
+    }
+
+    case 'gatsby': {
+      return state.tasks[buildUniqueTaskId(projectId, 'develop')];
+    }
+
+    default:
+      throw new Error('Unrecognized project type: ' + projectType);
+  }
+};
 
 export const getTaskByProjectIdAndTaskName = (
   projectId: string,

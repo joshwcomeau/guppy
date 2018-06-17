@@ -120,10 +120,15 @@ export const runTask = (task: Task, timestamp: Date) => ({
   timestamp,
 });
 
-export const attachProcessIdToTask = (task: Task, processId: number) => ({
+export const attachProcessIdToTask = (
+  task: Task,
+  processId: number,
+  port?: number
+) => ({
   type: ATTACH_PROCESS_ID_TO_TASK,
   task,
   processId,
+  port,
 });
 
 export const abortTask = (task: Task, timestamp: Date) => ({

@@ -2,9 +2,12 @@
 import asyncMap from 'async/map';
 
 import { pick } from '../utils';
+import { DEFAULT_PARENT_PATH } from '../reducers/paths.reducer';
+
 import type { ProjectInternal } from '../types';
 
 const fs = window.require('fs');
+const path = window.require('path');
 const prettier = window.require('prettier');
 
 /**
@@ -49,25 +52,69 @@ export const writePackageJson = (projectPath: string, json: any) => {
  * Given an array of paths, load each one as a distinct Guppy project.
  * Parses the `package.json` to find Guppy's saved info.
  */
-export function loadGuppyProjects(paths: Array<string>) {
+export function loadGuppyProjects(projectPathsInput: Array<string>) {
+  const { readdirSync, statSync } = fs;
+
+  // Create a clone of paths so we aren't mutating the provided array.
+  const projectPaths = [...projectPathsInput];
+
+  // In addition to the paths recovered from localStorage, we also want to
+  // parse the default parent path, to collect any local projects that Guppy
+  // doesn't know about
+  // (this is mainly useful for dev, so that I can clear localStorage to
+  // emulate a clean slate, but might also be useful for users who want to
+  // create projects outside of Guppy but have them managed internally)
+  try {
+    readdirSync(DEFAULT_PARENT_PATH).forEach(f => {
+      const projectPath = path.join(DEFAULT_PARENT_PATH, f);
+      const isDirectory = statSync(projectPath).isDirectory();
+
+      if (isDirectory && !projectPaths.includes(projectPath)) {
+        projectPaths.push(projectPath);
+      }
+    });
+  } catch (e) {
+    // If the default parent path doesn't exist, it'll throw an error.
+    // This is fine, though; it just means that we have
+  }
+
   return new Promise((resolve, reject) => {
     // Each project in a Guppy directory should have a package.json.
     // We'll read all the project info we need from this file.
     // TODO: Maybe use asyncReduce to handle the output format in 1 neat step?
     asyncMap(
-      paths,
+      projectPaths,
       function(path, callback) {
-        loadPackageJson(path).then(json => callback(null, json));
-        // .catch(callback);
+        loadPackageJson(path)
+          .then(json => callback(null, json))
+          .catch(err =>
+            // If the package.json couldn't be loaded, this likely means the
+            // project was deleted, and our cache is out-of-date.
+            // This isn't truly an error, it just means we need to ignore this
+            // project.
+            // TODO: Handle other errors!
+            callback(null, null)
+          );
       },
       (err, results) => {
-        if (err) {
+        // It's possible that the project was deleted since Guppy last checked.
+        // Ignore any `null` results.
+        // If the project was deleted, an exception is caught, and so `err`
+        // might not be a true error.
+        // TODO: Handle true errors tho!
+        if (!results) {
           return reject(err);
         }
 
+        // a `null` result means the project couldn't be loaded, probably
+        // because it was deleted.
+        // TODO: Maybe a warning prompt should be raised if this is the case,
+        // so that users don't wonder where the project went?
+        const validProjects = results.filter(project => !!project);
+
         // The results will be an array of package.jsons.
         // I want a database-style map.
-        const projects = results.reduce(
+        const projects = validProjects.reduce(
           (projectsMap, project) => ({
             ...projectsMap,
             [project.guppy.id]: project,

@@ -69,6 +69,21 @@ const selectedId = (
       return action.project.guppy.id;
     }
 
+    case REFRESH_PROJECTS: {
+      // It's possible that the selected project no longer exists (say if the
+      // user deletes that folder and then refreshes Guppy).
+      // In that case, un-select it.
+      const selectedProjectId = state;
+
+      if (!selectedProjectId) {
+        return state;
+      }
+
+      const selectedProjectExists = !!action.projects[selectedProjectId];
+
+      return selectedProjectExists ? state : null;
+    }
+
     case SELECT_PROJECT: {
       return action.projectId;
     }
@@ -139,7 +154,7 @@ export const getSelectedProject = (state: GlobalState) => {
   const project = state.projects.byId[selectedId];
 
   if (!project) {
-    throw new Error('Project not found for ID: ' + selectedId);
+    return null;
   }
 
   return prepareProjectForConsumption(project, state);

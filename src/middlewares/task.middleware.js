@@ -1,3 +1,4 @@
+// @flow
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -9,27 +10,39 @@ import {
 } from '../actions';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
+import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
+
+import type { Task, ProjectType } from '../types';
 
 const childProcess = window.require('child_process');
 const psTree = window.require('ps-tree');
 
-export default store => next => action => {
+export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
     return next(action);
   }
 
   const { task } = action;
 
-  const projectPath = getPathForProjectId(task.projectId, store.getState());
+  const state = store.getState();
+
+  const project = getProjectById(task.projectId, state);
+  const projectPath = getPathForProjectId(task.projectId, state);
 
   // eslint-disable-next-line default-case
   switch (action.type) {
     case LAUNCH_DEV_SERVER: {
       findAvailablePort()
         .then(port => {
+          const [instruction, ...args] = getDevServerCommand(
+            task,
+            project.type,
+            port
+          );
           /**
-           * NOTE: Ideally, we would use the following command:
+           * NOTE: A quirk in Electron means we can't use `env` to supply
+           * environment variables, as you would traditionally:
            *
               childProcess.spawn(
                 `npm`,
@@ -40,29 +53,24 @@ export default store => next => action => {
                 }
               );
            *
-           * The difference is that we're not using "shell" mode, and we're
-           * specifying the port number as an environment variable.
-           *
-           * Because of a likely bug in Electron, the `env` option for
-           * childProcess causes everything to blow up. I added a comment here:
+           * If I try to run this, I get a bunch of nonsensical errors about
+           * no commands (not even built-in ones like `ls`) existing.
+           * I added a comment here:
            * https://github.com/electron/electron/issues/3627
            *
            * As a workaround, I'm using "shell mode" to avoid having to
            * specify environment variables:
            */
 
-          const child = childProcess.spawn(
-            `PORT=${port} npm`,
-            ['run', task.name],
-            {
-              cwd: projectPath,
-              shell: true,
-            }
-          );
+          const child = childProcess.spawn(instruction, args, {
+            cwd: projectPath,
+            shell: true,
+          });
 
-          // To abort this task, we'll need access to its processId (pid).
-          // Attach it to the task.
-          next(attachProcessIdToTask(task, child.pid));
+          // Now that we have a port/processId for the server, attach it to
+          // the task. The port is used for opening the app, the pid is used
+          // to kill the process
+          next(attachProcessIdToTask(task, child.pid, port));
 
           child.stdout.on('data', data => {
             // Ok so, unfortunately, failure-to-compile is still pushed
@@ -80,8 +88,10 @@ export default store => next => action => {
           });
 
           child.on('exit', code => {
+            const wasSuccessful = code === 0 || code === null;
             const timestamp = new Date();
-            store.dispatch(completeTask(task, timestamp, code === 0));
+
+            store.dispatch(completeTask(task, timestamp, wasSuccessful));
           });
         })
         .catch(err => {
@@ -186,10 +196,9 @@ export default store => next => action => {
         // but given that we're treating `start` as its own special thing,
         // I'm realizing that it should vary depending on the task type.
         // TODO: Find a better place for this to live.
-        // TODO: How will this work with Gatsby, when the 'start' task is
-        // different?
-        const abortMessage =
-          name === 'start' ? 'Server stopped' : 'Task aborted';
+        const abortMessage = isDevServerTask(name)
+          ? 'Server stopped'
+          : 'Task aborted';
 
         next(
           receiveDataFromTaskExecution(
@@ -220,4 +229,19 @@ export default store => next => action => {
 
   // Pass all actions through
   return next(action);
+};
+
+const getDevServerCommand = (
+  task: Task,
+  projectType: ProjectType,
+  port: string
+) => {
+  switch (projectType) {
+    case 'create-react-app':
+      return [`PORT=${port} npm`, 'run', task.name];
+    case 'gatsby':
+      return ['npm', 'run', task.name, '--', `-p ${port}`];
+    default:
+      throw new Error('Unrecognized project type: ' + projectType);
+  }
 };

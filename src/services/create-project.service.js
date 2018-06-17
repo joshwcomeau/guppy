@@ -4,6 +4,8 @@ import random from 'random-seed';
 
 import { COLORS } from '../constants';
 
+import { FAKE_CRA_PROJECT } from './create-project.fixtures';
+
 import type { ProjectType } from '../types';
 
 const prettier = window.require('prettier');
@@ -12,6 +14,9 @@ const fs = window.require('fs');
 const os = window.require('os');
 const childProcess = window.require('child_process');
 
+// Change this boolean flag to skip project creation.
+// Useful when working on the flow, to avoid having to wait for a real project
+// to be created every time.
 const DISABLE = false;
 
 type ProjectInfo = {
@@ -43,29 +48,7 @@ export default (
   onComplete: (packageJson: any) => void
 ) => {
   if (DISABLE) {
-    const fakeProject = {
-      name: 'haidddd',
-      version: '0.1.0',
-      private: true,
-      dependencies: {
-        react: '^16.4.0',
-        'react-dom': '^16.4.0',
-        'react-scripts': '1.1.4',
-      },
-      scripts: {
-        start: 'react-scripts start',
-        build: 'react-scripts build',
-        test: 'react-scripts test --env=jsdom',
-        eject: 'react-scripts eject',
-      },
-      guppy: {
-        id: 'haidddd',
-        name: 'Haidddd',
-        icon: '/static/media/icon_blueorange.174c0078.jpg',
-      },
-    };
-
-    onComplete(fakeProject);
+    onComplete(FAKE_CRA_PROJECT);
     return;
   }
 
@@ -84,9 +67,7 @@ export default (
 
   const path = `${parentPath}/${id}`;
 
-  // TODO: support Gatsby
-  const instruction = 'npx';
-  const args = ['create-react-app', path];
+  const [instruction, ...args] = getBuildInstructions(projectType, path);
 
   const process = childProcess.spawn(instruction, args);
 
@@ -148,4 +129,18 @@ export const getColorForProject = (projectName: string) => {
     .range(possibleProjectColors.length);
 
   return possibleProjectColors[projectColorIndex];
+};
+
+export const getBuildInstructions = (
+  projectType: ProjectType,
+  path: string
+) => {
+  switch (projectType) {
+    case 'create-react-app':
+      return ['create-react-app', path];
+    case 'gatsby':
+      return ['gatsby', 'new', path];
+    default:
+      throw new Error('Unrecognized project type: ' + projectType);
+  }
 };

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { launchDevServer, abortTask } from '../../actions';
-import { getSelectedProjectId } from '../../reducers/projects.reducer';
+import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { BREAKPOINTS } from '../../constants';
 
@@ -57,6 +57,8 @@ class DevelopmentServerPane extends PureComponent<Props> {
 
     const isRunning = task.status !== 'idle';
 
+    console.log(task.status);
+
     const description = (
       <Description>
         Runs a local development server that updates whenever you make changes
@@ -83,7 +85,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
           <Wrapper>
             <InfoWrapper>
               {description}
-              <DevelopmentServerStatus status={task.status} />
+              <DevelopmentServerStatus status={task.status} port={task.port} />
               {docLink}
             </InfoWrapper>
             <TerminalWrapper>
@@ -159,14 +161,18 @@ const TerminalWrapper = styled.div`
 `;
 
 const mapStateToProps = state => {
-  const selectedProjectId = getSelectedProjectId(state);
+  const selectedProject = getSelectedProject(state);
 
-  if (!selectedProjectId) {
+  if (!selectedProject) {
     return { task: null };
   }
 
   return {
-    task: getDevServerTaskForProjectId(selectedProjectId, state),
+    task: getDevServerTaskForProjectId(
+      selectedProject.id,
+      selectedProject.type,
+      state
+    ),
   };
 };
 
