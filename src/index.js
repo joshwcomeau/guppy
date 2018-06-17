@@ -10,6 +10,7 @@ import App from './components/App';
 import NodeProvider from './components/NodeProvider';
 import DevTools from './components/DevTools';
 
+import 'react-tippy/dist/tippy.css';
 import './fonts.css';
 import './base.css';
 

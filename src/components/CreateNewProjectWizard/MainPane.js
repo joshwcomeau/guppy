@@ -3,6 +3,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import importAll from 'import-all.macro';
+import { Tooltip } from 'react-tippy';
 import IconBase from 'react-icons-kit';
 import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
@@ -24,7 +25,7 @@ import SubmitButton from './SubmitButton';
 import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
 
-const icons = importAll.sync('../../assets/images/icons/icon_*.jpg');
+const icons = importAll.sync('../../assets/images/icons/icon_*.*');
 const iconSrcs = Object.values(icons);
 
 type Props = {
@@ -40,14 +41,8 @@ type Props = {
   handleSubmit: () => void,
 };
 
-type State = {
-  shouldShowRandomizationHint: boolean,
-};
-
-class MainPane extends PureComponent<Props, State> {
+class MainPane extends PureComponent<Props> {
   randomizationHintTimeoutId: number;
-
-  state = { shouldShowRandomizationHint: false };
 
   iconSubset = sampleMany(iconSrcs, 10);
 
@@ -61,9 +56,6 @@ class MainPane extends PureComponent<Props, State> {
   componentWillUnmount() {
     window.clearTimeout(this.randomizationHintTimeoutId);
   }
-
-  enableRandomizationHint = () =>
-    this.setState({ shouldShowRandomizationHint: true });
 
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
@@ -85,7 +77,6 @@ class MainPane extends PureComponent<Props, State> {
       hasBeenSubmitted,
       handleSubmit,
     } = this.props;
-    const { shouldShowRandomizationHint } = this.state;
 
     return (
       <Fragment>
@@ -100,21 +91,6 @@ class MainPane extends PureComponent<Props, State> {
                 handleChange={this.updateProjectName}
                 handleSubmit={handleSubmit}
               />
-
-              {currentStepIndex === 0 &&
-                shouldShowRandomizationHint && (
-                  <FadeIn key="intro-addendum">
-                    <Spacer size={50} />
-                    <RandomizationHint>
-                      Can't think of anything? Click the{' '}
-                      <InlineSparkles>
-                        <IconBase size={22} icon={sparkles} />
-                      </InlineSparkles>
-                      <br />
-                      above to generate a random code-name.
-                    </RandomizationHint>
-                  </FadeIn>
-                )}
 
               {currentStepIndex > 0 && (
                 <FadeIn>

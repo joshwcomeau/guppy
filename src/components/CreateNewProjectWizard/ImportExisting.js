@@ -22,9 +22,11 @@ const ImportExisting = ({ isOnboarding }: Props) => {
 
   return (
     <Wrapper>
-      <IconWrapper>
-        <IconBase icon={folderPlus} size={18} />
-      </IconWrapper>
+      <ImportProjectButton>
+        <IconWrapper>
+          <IconBase icon={folderPlus} size={18} />
+        </IconWrapper>
+      </ImportProjectButton>
       <MainText>
         Already have a project you'd like to manage with Guppy?{' '}
         <ImportProjectButton color={COLORS.white}>
