@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import { Tooltip } from 'react-tippy';
 
 import { COLORS, Z_INDICES } from '../../constants';
 import { selectProject, createNewProjectStart } from '../../actions';
@@ -121,16 +122,18 @@ class Sidebar extends PureComponent<Props, State> {
               <Projects offset={`${firstProjectPosition}px`}>
                 {projects.map(project => (
                   <Fragment key={project.id}>
-                    <Link to={buildUrlForProjectId(project.id)}>
-                      <SidebarProjectIcon
-                        size={SIDEBAR_ICON_SIZE}
-                        id={project.id}
-                        name={project.name}
-                        color={project.color}
-                        iconSrc={project.icon}
-                        isSelected={project.id === selectedProjectId}
-                      />
-                    </Link>
+                    <Tooltip title={project.name} position="right">
+                      <Link to={buildUrlForProjectId(project.id)}>
+                        <SidebarProjectIcon
+                          size={SIDEBAR_ICON_SIZE}
+                          id={project.id}
+                          name={project.name}
+                          color={project.color}
+                          iconSrc={project.icon}
+                          isSelected={project.id === selectedProjectId}
+                        />
+                      </Link>
+                    </Tooltip>
                     <Spacer size={18} />
                   </Fragment>
                 ))}

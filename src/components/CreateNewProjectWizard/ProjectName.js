@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
+import { Tooltip } from 'react-tippy';
 import IconBase from 'react-icons-kit';
 import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
@@ -153,14 +154,23 @@ class ProjectName extends PureComponent<Props, State> {
             placeholder="Your Amazing Project Name"
           >
             <ButtonPositionAdjuster>
-              <HoverableOutlineButton
-                noPadding
-                onMouseDown={() => window.requestAnimationFrame(handleFocus)}
-                onClick={this.handleRandomize}
-                style={{ width: 32, height: 32 }}
+              <Tooltip
+                arrow
+                title="Generate a random code-name"
+                delay={100}
+                distance={24}
+                duration={200}
+                animation="shift"
               >
-                <IconBase size={22} icon={sparkles} />
-              </HoverableOutlineButton>
+                <HoverableOutlineButton
+                  noPadding
+                  onMouseDown={() => window.requestAnimationFrame(handleFocus)}
+                  onClick={this.handleRandomize}
+                  style={{ width: 32, height: 32 }}
+                >
+                  <IconBase size={22} icon={sparkles} />
+                </HoverableOutlineButton>
+              </Tooltip>
             </ButtonPositionAdjuster>
           </TextInput>
         </FlexWrapper>
