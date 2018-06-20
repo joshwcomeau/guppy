@@ -5,7 +5,8 @@
   "main": "src/electron-starter.js",
   "homepage": "./",
   "scripts": {
-    "start": "concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
+    "start":
+      "concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
     "start:react": "PORT=5678 BROWSER=none node scripts/start.js",
     "start:electron": "ELECTRON_START_URL=http://localhost:5678 electron .",
     "build": "node scripts/build.js",
@@ -106,17 +107,10 @@
       "last 2 firefox versions",
       "last 2 edge versions"
     ],
-    "production": [
-      ">1%",
-      "last 4 versions",
-      "Firefox ESR",
-      "not ie < 11"
-    ]
+    "production": [">1%", "last 4 versions", "Firefox ESR", "not ie < 11"]
   },
   "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
-    ],
+    "collectCoverageFrom": ["src/**/*.{js,jsx,mjs}"],
     "setupFiles": [
       "<rootDir>/config/jest/electron.js",
       "<rootDir>/config/polyfills.js"
@@ -125,16 +119,15 @@
       "**/__tests__/**/*.{js,jsx,mjs}",
       "**/?(*.)(spec|test).{js,jsx,mjs}"
     ],
-    "roots": [
-      "<rootDir>/src"
-    ],
+    "roots": ["<rootDir>/src"],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/config/jest/babelTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^.+\\.(graphql)$": "<rootDir>/config/jest/graphqlTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json|graphql)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|mjs|css|json|graphql)$)":
+        "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$",
@@ -153,5 +146,13 @@
       "jsx",
       "node"
     ]
+  },
+  "guppy": {
+    "id": "guppy",
+    "name": "guppy",
+    "type": "create-react-app",
+    "color": "#FF6D00",
+    "icon": null,
+    "createdAt": 1529502079329
   }
 }

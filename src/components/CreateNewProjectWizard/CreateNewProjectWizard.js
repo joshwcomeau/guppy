@@ -2,26 +2,30 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
+import slug from 'slug';
 
 import {
   addProject,
   createNewProjectCancel,
   createNewProjectFinish,
 } from '../../actions';
+import { getById } from '../../reducers/projects.reducer';
 
 import TwoPaneModal from '../TwoPaneModal';
 
 import MainPane from './MainPane';
 import SummaryPane from './SummaryPane';
 import BuildPane from './BuildPane';
+import Debounced from '../Debounced';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, Project } from '../../types';
+import type { ProjectType, Project, ProjectInternal } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
 type Props = {
+  projects: { [projectId: string]: ProjectInternal },
   isVisible: boolean,
   addProject: (project: Project) => void,
   createNewProjectCancel: () => void,
@@ -35,6 +39,7 @@ type State = {
   activeField: ?Field,
   status: Status,
   currentStep: Step,
+  isProjectNameTaken: boolean,
 };
 
 const initialState = {
@@ -44,17 +49,43 @@ const initialState = {
   activeField: 'projectName',
   status: 'filling-in-form',
   currentStep: 'projectName',
+  isProjectNameTaken: false,
 };
 
 class CreateNewProjectWizard extends PureComponent<Props, State> {
   state = initialState;
+  timeoutId: number;
+
+  componentWillUnmount() {
+    window.clearTimeout(this.timeoutId);
+  }
 
   updateFieldValue = (field: Field, value: any) => {
     this.setState({ [field]: value, activeField: field });
+
+    if (field === 'projectName') {
+      this.verifyProjectNameUniqueness(value);
+    }
   };
 
   focusField = (field: ?Field) => {
     this.setState({ activeField: field });
+  };
+
+  verifyProjectNameUniqueness = (name: string) => {
+    // Check to see if this name is already taken
+    const id = slug(name).toLowerCase();
+    const isAlreadyTaken = !!this.props.projects[id];
+
+    if (isAlreadyTaken) {
+      this.setState({ isProjectNameTaken: true });
+      return;
+    }
+
+    // If this update fixes the problem, unset the error status
+    if (!isAlreadyTaken && this.state.isProjectNameTaken) {
+      this.setState({ isProjectNameTaken: false });
+    }
   };
 
   handleSubmit = () => {
@@ -78,13 +109,15 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   finishBuilding = (project: Project) => {
     this.props.createNewProjectFinish();
 
-    window.setTimeout(() => {
+    this.timeoutId = window.setTimeout(() => {
       this.props.addProject(project);
 
-      window.setTimeout(() => {
-        this.setState(initialState);
-      }, 500);
+      this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);
+  };
+
+  reinitialize = () => {
+    this.setState(initialState);
   };
 
   render() {
@@ -96,6 +129,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       activeField,
       status,
       currentStep,
+      isProjectNameTaken,
     } = this.state;
 
     const project = { projectName, projectType, projectIcon };
@@ -110,10 +144,13 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
             transitionState={transitionState}
             onDismiss={createNewProjectCancel}
             leftPane={
-              <SummaryPane
-                currentStep={currentStep}
-                activeField={activeField}
-              />
+              <Debounced on={activeField} duration={40}>
+                <SummaryPane
+                  currentStep={currentStep}
+                  activeField={activeField}
+                  projectType={projectType}
+                />
+              </Debounced>
             }
             rightPane={
               <MainPane
@@ -125,6 +162,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                 focusField={this.focusField}
                 handleSubmit={this.handleSubmit}
                 hasBeenSubmitted={status !== 'filling-in-form'}
+                isProjectNameTaken={isProjectNameTaken}
               />
             }
             backface={
@@ -147,6 +185,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 }
 
 const mapStateToProps = state => ({
+  projects: getById(state),
   isVisible: state.modal === 'new-project-wizard',
 });
 

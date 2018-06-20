@@ -120,6 +120,7 @@ const prepareProjectForConsumption = (
     type: project.guppy.type,
     color: project.guppy.color,
     icon: project.guppy.icon,
+    createdAt: project.guppy.createdAt,
     tasks: getTasksForProjectId(project.guppy.id, state),
     dependencies: getDependenciesForProjectId(project.guppy.id, state),
     path: getPathForProjectId(project.guppy.id, state),
@@ -133,12 +134,15 @@ export const getSelectedProjectId = (state: GlobalState) =>
 export const getInternalProjectById = (id: string, state: GlobalState) =>
   getById(state)[id];
 
-export const getProjectsArray = (state: GlobalState) =>
+export const getProjectsArray = (state: GlobalState) => {
   // $FlowFixMe
-  Object.values(state.projects.byId).map(project =>
-    // $FlowFixMe
-    prepareProjectForConsumption(project, state)
-  );
+  return Object.values(state.projects.byId)
+    .map(project =>
+      // $FlowFixMe
+      prepareProjectForConsumption(project, state)
+    )
+    .sort((p1, p2) => (p1.createdAt < p2.createdAt ? 1 : -1));
+};
 
 export const getProjectById = (id: string, state: GlobalState) =>
   prepareProjectForConsumption(state.projects.byId[id], state);

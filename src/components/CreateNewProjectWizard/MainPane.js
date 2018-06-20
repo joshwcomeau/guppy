@@ -3,16 +3,11 @@ import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import importAll from 'import-all.macro';
-import { Tooltip } from 'react-tippy';
-import IconBase from 'react-icons-kit';
-import { u2728 as sparkles } from 'react-icons-kit/noto_emoji_regular/u2728';
 
-import { COLORS } from '../../constants';
 import { sampleMany } from '../../utils';
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
 
-import Paragraph from '../Paragraph';
 import FormField from '../FormField';
 import SelectableImage from '../SelectableImage';
 import ButtonWithIcon from '../ButtonWithIcon';
@@ -36,26 +31,14 @@ type Props = {
   status: Status,
   currentStepIndex: number,
   hasBeenSubmitted: boolean,
+  isProjectNameTaken: boolean,
   updateFieldValue: (field: Field, value: any) => void,
   focusField: (field: ?Field) => void,
   handleSubmit: () => void,
 };
 
 class MainPane extends PureComponent<Props> {
-  randomizationHintTimeoutId: number;
-
   iconSubset = sampleMany(iconSrcs, 10);
-
-  componentDidMount() {
-    this.randomizationHintTimeoutId = window.setTimeout(
-      this.enableRandomizationHint,
-      4000
-    );
-  }
-
-  componentWillUnmount() {
-    window.clearTimeout(this.randomizationHintTimeoutId);
-  }
 
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
@@ -75,6 +58,7 @@ class MainPane extends PureComponent<Props> {
       activeField,
       currentStepIndex,
       hasBeenSubmitted,
+      isProjectNameTaken,
       handleSubmit,
     } = this.props;
 
@@ -90,6 +74,7 @@ class MainPane extends PureComponent<Props> {
                 handleBlur={this.handleBlurProjectName}
                 handleChange={this.updateProjectName}
                 handleSubmit={handleSubmit}
+                isProjectNameTaken={isProjectNameTaken}
               />
 
               {currentStepIndex > 0 && (
@@ -155,6 +140,7 @@ class MainPane extends PureComponent<Props> {
         <SubmitButtonWrapper>
           <SubmitButton
             isDisabled={
+              isProjectNameTaken ||
               !projectName ||
               (currentStepIndex > 0 && !projectType) ||
               (currentStepIndex > 1 && !projectIcon)
@@ -204,17 +190,6 @@ const SubmitButtonWrapper = styled.div`
   right: 0;
   bottom: 30px;
   text-align: center;
-`;
-
-const InlineSparkles = styled.span`
-  display: inline-block;
-  transform: translateY(5px);
-`;
-
-const RandomizationHint = styled(Paragraph)`
-  text-align: center;
-  font-size: 1rem;
-  color: ${COLORS.gray[600]};
 `;
 
 export default MainPane;

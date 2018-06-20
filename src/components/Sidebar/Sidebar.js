@@ -60,6 +60,10 @@ const INTRO_SEQUENCE_STEPS = [
 // (like adding a log to a task). It might be prudent to add a selector that
 // only provides the fields necessary for the sidebar.
 class Sidebar extends PureComponent<Props, State> {
+  static defaultProps = {
+    projects: [],
+  };
+
   timeoutId: number;
   state = {
     introSequenceStep: null,

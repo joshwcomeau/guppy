@@ -70,6 +70,7 @@ export type ProjectInternal = {
     type: ProjectType,
     color: string,
     icon: string,
+    createdAt: number,
   },
 };
 
@@ -81,6 +82,7 @@ export type Project = {
   type: ProjectType,
   icon: string,
   color: string,
+  createdAt: number,
   // `dependencies` is a "souped-up" version of the internal copy, with some
   // additional fields, like description, homepage, repository...
   // It also holds the specific version number used, not just an acceptable

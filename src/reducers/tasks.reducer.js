@@ -21,7 +21,6 @@ import {
   ADD_PROJECT,
   LAUNCH_DEV_SERVER,
   RUN_TASK,
-  ABORT_TASK,
   COMPLETE_TASK,
   ATTACH_PROCESS_ID_TO_TASK,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
@@ -204,7 +203,7 @@ const getTaskDescription = name => {
   }
 };
 
-export const isDevServerTask = name =>
+export const isDevServerTask = (name: string) =>
   // Gatsby and create-react-app use different names for the same task.
   name === 'start' || name === 'develop';
 
