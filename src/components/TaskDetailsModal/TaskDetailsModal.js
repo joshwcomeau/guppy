@@ -47,12 +47,14 @@ class TaskDetailsModal extends PureComponent<Props> {
         return (
           <span>
             Task is <strong>idle</strong>.
-            <LastRunText>
-              Last run:{' '}
-              {moment(timeSinceStatusChange).format(
-                'MMMM Do, YYYY [at] h:mm a'
-              )}
-            </LastRunText>
+            {timeSinceStatusChange && (
+              <LastRunText>
+                Last run:{' '}
+                {moment(timeSinceStatusChange).format(
+                  'MMMM Do, YYYY [at] h:mm a'
+                )}
+              </LastRunText>
+            )}
           </span>
         );
       }

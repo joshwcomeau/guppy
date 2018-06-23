@@ -2,7 +2,7 @@
   "name": "guppy",
   "version": "0.1.0",
   "private": true,
-  "main": "src/electron-starter.js",
+  "main": "src/main.js",
   "homepage": "./",
   "scripts": {
     "start": "concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
@@ -153,5 +153,13 @@
       "jsx",
       "node"
     ]
+  },
+  "guppy": {
+    "id": "guppy",
+    "name": "guppy",
+    "type": "create-react-app",
+    "color": "#FF6D00",
+    "icon": null,
+    "createdAt": 1529502079329
   }
 }

@@ -21,9 +21,8 @@ import {
   ADD_PROJECT,
   LAUNCH_DEV_SERVER,
   RUN_TASK,
-  ABORT_TASK,
   COMPLETE_TASK,
-  ATTACH_PROCESS_ID_TO_TASK,
+  ATTACH_TASK_METADATA,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
   IMPORT_EXISTING_PROJECT_FINISH,
 } from '../actions';
@@ -137,7 +136,7 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
-    case ATTACH_PROCESS_ID_TO_TASK: {
+    case ATTACH_TASK_METADATA: {
       const { task, processId, port } = action;
 
       return produce(state, draftState => {
@@ -204,7 +203,7 @@ const getTaskDescription = name => {
   }
 };
 
-export const isDevServerTask = name =>
+export const isDevServerTask = (name: string) =>
   // Gatsby and create-react-app use different names for the same task.
   name === 'start' || name === 'develop';
 

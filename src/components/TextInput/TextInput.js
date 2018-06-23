@@ -1,21 +1,37 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-const TextInput = ({ children, focused, ...delegated }) => (
-  <Wrapper focused={focused}>
+type Props = {
+  isFocused: boolean,
+  hasError: boolean,
+  children: React$Node,
+};
+
+const TextInput = ({ isFocused, hasError, children, ...delegated }: Props) => (
+  <Wrapper isFocused={isFocused} hasError={hasError}>
     <InputElem {...delegated} />
     {children}
   </Wrapper>
 );
 
+const getBorderColor = (props: Props) => {
+  if (props.hasError) {
+    return COLORS.pink[500];
+  } else if (props.isFocused) {
+    return COLORS.purple[700];
+  } else {
+    return COLORS.gray[700];
+  }
+};
+
 const Wrapper = styled.div`
   width: 100%;
 
   display: flex;
-  border-bottom: 2px solid
-    ${props => (props.focused ? COLORS.purple[700] : COLORS.gray[700])};
+  border-bottom: 2px solid ${getBorderColor};
 `;
 
 const InputElem = styled.input`

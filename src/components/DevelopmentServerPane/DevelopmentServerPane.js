@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { launchDevServer, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
+import { getDocumentationLink } from '../../services/project-type-specifics';
 import { BREAKPOINTS } from '../../constants';
 
 import Module from '../Module';
@@ -17,9 +18,10 @@ import ExternalLink from '../ExternalLink';
 import OnlyOn from '../OnlyOn';
 import DevelopmentServerStatus from '../DevelopmentServerStatus';
 
-import type { Task } from '../../types';
+import type { Project, Task } from '../../types';
 
 type Props = {
+  project: Project,
   task: ?Task,
   launchDevServer: (task: Task, timestamp: Date) => void,
   abortTask: (task: Task, timestamp: Date) => void,
@@ -45,9 +47,11 @@ class DevelopmentServerPane extends PureComponent<Props> {
   };
 
   render() {
-    const { task } = this.props;
+    const { project, task } = this.props;
 
     if (!task) {
+      // This can happen if the user modifies the package.json to not have a
+      // script named `start` (or `deploy` for Gatsby projects)
       // TODO: Helpful error screen
       return 'No "start" task found. :(';
     }
@@ -56,8 +60,6 @@ class DevelopmentServerPane extends PureComponent<Props> {
     // Create a custom component for windows <900px wide
 
     const isRunning = task.status !== 'idle';
-
-    console.log(task.status);
 
     const description = (
       <Description>
@@ -68,7 +70,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
 
     const docLink = (
       <DocumentationLink>
-        <ExternalLink href="https://github.com/facebook/create-react-app#user-guide">
+        <ExternalLink href={getDocumentationLink(project.type)}>
           View Documentation
         </ExternalLink>
       </DocumentationLink>
@@ -168,6 +170,7 @@ const mapStateToProps = state => {
   }
 
   return {
+    project: selectedProject,
     task: getDevServerTaskForProjectId(
       selectedProject.id,
       selectedProject.type,

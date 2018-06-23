@@ -95,6 +95,7 @@ export default (
         // however it's used for imported non-guppy projects, and it seems like
         // a good thing to be consistent about (may be useful in other ways).
         color: getColorForProject(projectName),
+        createdAt: Date.now(),
       };
 
       const prettyPrintedPackageJson = prettier.format(

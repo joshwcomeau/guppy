@@ -5,7 +5,7 @@ import {
   COMPLETE_TASK,
   LAUNCH_DEV_SERVER,
   completeTask,
-  attachProcessIdToTask,
+  attachTaskMetadata,
   receiveDataFromTaskExecution,
 } from '../actions';
 import { getProjectById } from '../reducers/projects.reducer';
@@ -15,6 +15,7 @@ import findAvailablePort from '../services/find-available-port.service';
 
 import type { Task, ProjectType } from '../types';
 
+const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
 const psTree = window.require('ps-tree');
 
@@ -70,7 +71,9 @@ export default (store: any) => (next: any) => (action: any) => {
           // Now that we have a port/processId for the server, attach it to
           // the task. The port is used for opening the app, the pid is used
           // to kill the process
-          next(attachProcessIdToTask(task, child.pid, port));
+          next(attachTaskMetadata(task, child.pid, port));
+
+          ipcRenderer.send('addProcessId', child.pid);
 
           child.stdout.on('data', data => {
             // Ok so, unfortunately, failure-to-compile is still pushed
@@ -151,7 +154,9 @@ export default (store: any) => (next: any) => (action: any) => {
 
       // To abort this task, we'll need access to its processId (pid).
       // Attach it to the task.
-      next(attachProcessIdToTask(task, child.pid));
+      next(attachTaskMetadata(task, child.pid));
+
+      ipcRenderer.send('addProcessId', child.pid);
 
       child.stdout.on('data', data => {
         next(receiveDataFromTaskExecution(task, data.toString()));
@@ -190,6 +195,8 @@ export default (store: any) => (next: any) => (action: any) => {
 
         childProcess.spawn('kill', ['-9', ...childrenPIDs]);
 
+        ipcRenderer.send('removeProcessId', processId);
+
         // Once the children are killed, we should dispatch a notification
         // so that the terminal shows something about this update.
         // My initial thought was that all tasks would have the same message,
@@ -222,6 +229,10 @@ export default (store: any) => (next: any) => (action: any) => {
       next(
         receiveDataFromTaskExecution(task, `\u001b[32;1m${message}\u001b[0m`)
       );
+
+      if (task.processId) {
+        ipcRenderer.send('removeProcessId', task.processId);
+      }
 
       break;
     }

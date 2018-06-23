@@ -2,24 +2,29 @@
 import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
 
+import { COLORS } from '../../constants';
+
 import Paragraph from '../Paragraph';
 import FadeIn from '../FadeIn';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
 import Swimming from '../Swimming';
+import ExternalLink from '../ExternalLink';
 
 import ImportExisting from './ImportExisting';
 
+import type { ProjectType } from '../../types';
 import type { Field, Step } from './types';
 
 type Props = {
   currentStep: Step,
   activeField: ?Field,
+  projectType: ?ProjectType,
 };
 
 class SummaryPane extends PureComponent<Props> {
   renderPaneContents() {
-    const { currentStep, activeField } = this.props;
+    const { currentStep, activeField, projectType } = this.props;
 
     // If we're still in the first step, we want to show our intro details.
     if (currentStep === 'projectName') {
@@ -63,22 +68,80 @@ class SummaryPane extends PureComponent<Props> {
       }
 
       case 'projectType': {
+        let details;
+
+        switch (projectType) {
+          default: {
+            details = (
+              <Paragraph>
+                Guppy can create projects of different types. Click a type to
+                learn more about it.
+              </Paragraph>
+            );
+            break;
+          }
+          case 'create-react-app': {
+            details = (
+              <Fragment>
+                <Paragraph>
+                  <strong>Vanilla React</strong>
+                </Paragraph>
+                <Paragraph>
+                  Vanilla React projects use create-react-app, an official
+                  command-line tool built by Facebook for bootstrapping React
+                  applications.
+                </Paragraph>
+                <Paragraph>
+                  It's a fantastic general-purpose tool, and is the recommended
+                  approach if you're looking to become a skilled React
+                  developer.
+                </Paragraph>
+                <Paragraph>
+                  <ExternalLink
+                    color={COLORS.white}
+                    hoverColor={COLORS.white}
+                    href="https://github.com/facebook/create-react-app"
+                  >
+                    <strong>Learn more about create-react-app.</strong>
+                  </ExternalLink>
+                </Paragraph>
+              </Fragment>
+            );
+            break;
+          }
+          case 'gatsby': {
+            details = (
+              <Fragment>
+                <Paragraph>
+                  <strong>Gatsby</strong>
+                </Paragraph>
+                <Paragraph>
+                  Gatsby is a blazing fast static site generator for React.
+                </Paragraph>
+                <Paragraph>
+                  It's great for building blogs and personal websites, and
+                  provides amazing performance out-of-the-box. A great choice
+                  for quickly getting products built.
+                </Paragraph>
+                <Paragraph>
+                  <ExternalLink
+                    color={COLORS.white}
+                    hoverColor={COLORS.white}
+                    href="https://www.gatsbyjs.org/"
+                  >
+                    <strong>Learn more about Gatsby.</strong>
+                  </ExternalLink>
+                </Paragraph>
+              </Fragment>
+            );
+            break;
+          }
+        }
         return (
           <Fragment>
             <FadeIn key="s2t">
               <StepTitle>Project Type</StepTitle>
-              <Paragraph>
-                Guppy interfaces with several external tools to manage your
-                projects.
-              </Paragraph>
-              <Paragraph>
-                React.js uses create-react-app, a flexible development
-                environment for building web applications of all types.
-              </Paragraph>
-              <Paragraph>
-                Gatsby is a static site generator for React.js, and is an
-                awesome choice
-              </Paragraph>
+              {details}
             </FadeIn>
           </Fragment>
         );

@@ -227,3 +227,5 @@ export const getTimeOfDay = () => {
 export const hasPropChanged = (oldProps, newProps, key) => {
   return oldProps[key] !== newProps[key];
 };
+
+export const flatten = arr => Array.prototype.concat(...arr);
