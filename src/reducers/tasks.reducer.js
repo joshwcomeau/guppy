@@ -22,7 +22,7 @@ import {
   LAUNCH_DEV_SERVER,
   RUN_TASK,
   COMPLETE_TASK,
-  ATTACH_PROCESS_ID_TO_TASK,
+  ATTACH_TASK_METADATA,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
   IMPORT_EXISTING_PROJECT_FINISH,
 } from '../actions';
@@ -136,7 +136,7 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
-    case ATTACH_PROCESS_ID_TO_TASK: {
+    case ATTACH_TASK_METADATA: {
       const { task, processId, port } = action;
 
       return produce(state, draftState => {
@@ -292,8 +292,4 @@ export const getTaskByProjectIdAndTaskName = (
   const uniqueTaskId = buildUniqueTaskId(projectId, name);
 
   return state.tasks[uniqueTaskId];
-};
-
-export const getAllRunningTasks = (state: GlobalState) => {
-  return Object.values(state.tasks).filter(task => task.processId);
 };

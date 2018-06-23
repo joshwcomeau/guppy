@@ -24,7 +24,7 @@ export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
 export const RUN_TASK = 'RUN_TASK';
-export const ATTACH_PROCESS_ID_TO_TASK = 'ATTACH_PROCESS_ID_TO_TASK';
+export const ATTACH_TASK_METADATA = 'ATTACH_TASK_METADATA';
 export const ABORT_TASK = 'ABORT_TASK';
 export const COMPLETE_TASK = 'COMPLETE_TASK';
 export const RECEIVE_DATA_FROM_TASK_EXECUTION =
@@ -42,7 +42,6 @@ export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
 export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
-export const CLOSE_GUPPY = 'CLOSE_GUPPY';
 
 //
 //
@@ -122,12 +121,12 @@ export const runTask = (task: Task, timestamp: Date) => ({
   timestamp,
 });
 
-export const attachProcessIdToTask = (
+export const attachTaskMetadata = (
   task: Task,
   processId: number,
   port?: number
 ) => ({
-  type: ATTACH_PROCESS_ID_TO_TASK,
+  type: ATTACH_TASK_METADATA,
   task,
   processId,
   port,
@@ -267,8 +266,4 @@ export const importExistingProjectFinish = (
   type: IMPORT_EXISTING_PROJECT_FINISH,
   path,
   project,
-});
-
-export const closeGuppy = () => ({
-  type: CLOSE_GUPPY,
 });
