@@ -4,6 +4,7 @@ import {
   ABORT_TASK,
   COMPLETE_TASK,
   LAUNCH_DEV_SERVER,
+  CLOSE_GUPPY,
   completeTask,
   attachProcessIdToTask,
   receiveDataFromTaskExecution,
@@ -11,6 +12,7 @@ import {
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
+import { getAllRunningTasks } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
 
 import type { Task, ProjectType } from '../types';
@@ -222,6 +224,33 @@ export default (store: any) => (next: any) => (action: any) => {
       next(
         receiveDataFromTaskExecution(task, `\u001b[32;1m${message}\u001b[0m`)
       );
+
+      break;
+    }
+
+    case CLOSE_GUPPY: {
+      const tasks = getAllRunningTasks(store.getState());
+
+      // Create a promise for every task
+      const taskPromises = tasks.map(
+        task =>
+          new Promise((resolve, reject) => {
+            psTree(task.processId, (err, children) => {
+              if (err) {
+                reject(err);
+              }
+
+              const childrenPIDs = children.map(child => child.PID);
+              childProcess.spawn('kill', ['-9', ...childrenPIDs]);
+
+              resolve();
+            });
+          })
+      );
+
+      Promise.all(taskPromises).then((err, res) => {
+        console.log(err, res);
+      });
 
       break;
     }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { refreshProjects, selectProject } from '../../actions';
+import { refreshProjects, selectProject, closeGuppy } from '../../actions';
 import {
   extractProjectIdFromUrl,
   buildUrlForProjectId,
@@ -22,8 +22,10 @@ import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
 import type { Action } from 'redux';
-import type { Project } from '../../types';
+import type { Project, Task } from '../../types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
+
+const { app } = window.require('electron').remote;
 
 type Props = {
   onboardingStatus: OnboardingStatus,
@@ -31,6 +33,7 @@ type Props = {
   projects: Array<Project>,
   refreshProjects: Action,
   selectProject: Action,
+  closeGuppy: () => any,
   history: any, // Provided by `withRouter`
 };
 
@@ -41,6 +44,7 @@ class App extends Component<Props> {
       selectedProject,
       selectProject,
       refreshProjects,
+      closeGuppy,
     } = this.props;
 
     refreshProjects();
@@ -57,9 +61,26 @@ class App extends Component<Props> {
         selectProject(projectId);
       }
     });
+
+    app.on('will-quit', ev => {
+      alert('WILL-QUIT');
+      ev.preventDefault();
+
+      closeGuppy();
+    });
+
+    app.on('quit', ev => {
+      alert('QUIT');
+    });
+
+    app.on('window-all-closed', ev => {
+      alert('WINDW ALL CLOSD');
+      console.log('closed');
+    });
   }
 
   render() {
+    console.log('running', this.props.runningTasks);
     return (
       <Fragment>
         <Titlebar />
@@ -110,6 +131,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { refreshProjects, selectProject }
+    { refreshProjects, selectProject, closeGuppy }
   )(App)
 );

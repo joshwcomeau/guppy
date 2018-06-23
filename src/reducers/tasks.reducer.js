@@ -293,3 +293,7 @@ export const getTaskByProjectIdAndTaskName = (
 
   return state.tasks[uniqueTaskId];
 };
+
+export const getAllRunningTasks = (state: GlobalState) => {
+  return Object.values(state.tasks).filter(task => task.processId);
+};

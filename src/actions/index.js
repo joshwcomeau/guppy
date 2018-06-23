@@ -42,6 +42,8 @@ export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
 export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
+export const CLOSE_GUPPY = 'CLOSE_GUPPY';
+
 //
 //
 // Action Creators
@@ -265,4 +267,8 @@ export const importExistingProjectFinish = (
   type: IMPORT_EXISTING_PROJECT_FINISH,
   path,
   project,
+});
+
+export const closeGuppy = () => ({
+  type: CLOSE_GUPPY,
 });
