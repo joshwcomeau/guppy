@@ -58,7 +58,6 @@ const animalNames = [
   'narwhal',
   'fox',
   'raccoon',
-  'sugar glider',
   'camel',
   'goat',
   'jaguar',

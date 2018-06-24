@@ -45,7 +45,8 @@ class App extends Component<Props> {
 
     refreshProjects();
 
-    // TODO: Redirect if project exists
+    console.log('App mounted', selectedProject);
+
     if (selectedProject) {
       history.replace(buildUrlForProjectId(selectedProject.id));
     }

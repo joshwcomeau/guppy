@@ -1,4 +1,8 @@
 {
   "editor.formatOnSave": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/release-builds": true
+  }
 }

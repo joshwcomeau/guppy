@@ -41,6 +41,7 @@ export default (store: any) => (next: any) => (action: any) => {
             project.type,
             port
           );
+
           /**
            * NOTE: A quirk in Electron means we can't use `env` to supply
            * environment variables, as you would traditionally:
@@ -132,17 +133,12 @@ export default (store: any) => (next: any) => (action: any) => {
 
       /* Bypasses 'Are you sure?' check when ejecting CRA
        *
-       * @todo add windows support
-       *
-       * Works perfect on Linux (Ubuntu). Most likely will
-       * work great in Mac machines too. Although it
-       * will certainly fail on Windows.
+       * TODO: add windows support
        */
       const command =
         project.type === 'create-react-app' && name === 'eject'
           ? 'echo yes | npm'
           : 'npm';
-
       const child = childProcess.spawn(
         command,
         ['run', name, ...additionalArgs],
