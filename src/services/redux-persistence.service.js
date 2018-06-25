@@ -1,25 +1,31 @@
+const ElectronStore = window.require('electron-store');
+
+const electronStore = new ElectronStore();
 const REDUX_STATE_KEY = 'redux-state';
 
-/**
- * updateLocalStorage
- * When a non-null value is provided, updates local-storage with the supplied
- * value. When `null` is provided, it erases all previously-stored local-storage
- * data
- */
-const updateLocalStorage = value =>
-  value !== null
-    ? localStorage.setItem(REDUX_STATE_KEY, value)
-    : localStorage.removeItem(REDUX_STATE_KEY);
+// While debugging, it's helpful to be able to access the store.
+// This should only be used for debugging, don't write any code that uses this!
+window.electronStore = electronStore;
 
 /**
- * handleStoreUpdates
+ * updateElectronStore
+ * When a non-null value is provided, updates the electronStore with the
+ * supplied value. When `null` is provided, it erases all previously-stored data
+ */
+const updateElectronStore = value =>
+  value !== null
+    ? electronStore.set(REDUX_STATE_KEY, value)
+    : electronStore.delete(REDUX_STATE_KEY);
+
+/**
+ * handleReduxUpdates
  * Whenever the Redux store updates, we pluck out the state we care about and
  * persist it to localStorage.
  */
-export const handleStoreUpdates = function handleStoreUpdates(store) {
-  const { projects, dependencies, tasks, paths } = store.getState();
+export const handleReduxUpdates = reduxStore => {
+  const { projects, dependencies, tasks, paths } = reduxStore.getState();
 
-  updateLocalStorage(JSON.stringify({ projects, dependencies, tasks, paths }));
+  updateElectronStore(JSON.stringify({ projects, dependencies, tasks, paths }));
 };
 
 /**
@@ -28,18 +34,18 @@ export const handleStoreUpdates = function handleStoreUpdates(store) {
  */
 export const getInitialState = () => {
   const reconstructedState = JSON.parse(
-    localStorage.getItem(REDUX_STATE_KEY) || '{}'
+    electronStore.get(REDUX_STATE_KEY) || '{}'
   );
 
   // Certain components of the state should be re-initialized.
   // It doesn't matter if the last snapshot of state in the previous session
   // had a running dev-server, that server was closed when Guppy was.
   //
-  // NOTE: My initial idea was to do this in `handleStoreUpdates` so that this
+  // NOTE: My initial idea was to do this in `handleReduxUpdates` so that this
   // erroneous data was never committed to localStorage in the first place...
   // but it takes about 8ms of synchronous work time to run (in a test env with
   // only 4 projects).
-  // Given that `handleStoreUpdates` runs whenever the redux state changes,
+  // Given that `handleReduxUpdates` runs whenever the redux state changes,
   // this felt too expensive
   if (reconstructedState.tasks) {
     const scrubbedTasks = Object.keys(reconstructedState.tasks).reduce(

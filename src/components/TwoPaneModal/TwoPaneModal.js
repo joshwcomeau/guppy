@@ -16,8 +16,9 @@ type Props = {
   leftPane: React$Node,
   rightPane: React$Node,
   backface: React$Node,
-  isFolded: boolean,
   transitionState: 'entering' | 'entered' | 'exiting' | 'exited',
+  isFolded: boolean,
+  isDismissable: boolean,
   onDismiss: () => void,
 };
 
@@ -55,6 +56,12 @@ class TwoPaneModal extends PureComponent<Props, State> {
   }
 
   dismiss = () => {
+    const { isDismissable } = this.props;
+
+    if (!isDismissable) {
+      return;
+    }
+
     this.setState({ isBeingDismissed: true });
 
     this.props.onDismiss();
@@ -171,8 +178,8 @@ const PaneWrapper = styled.div.attrs({
 })`
   position: relative;
   z-index: 2;
-  width: 80%;
-  max-width: 850px;
+  width: 850px;
+  max-width: 93%;
   display: flex;
   will-change: transform;
 `;

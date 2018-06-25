@@ -3,7 +3,7 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from '../reducers';
-import { handleStoreUpdates } from '../services/redux-persistence.service';
+import { handleReduxUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
 import dependencyMiddleware from '../middlewares/dependency.middleware';
 import importProjectMiddleware from '../middlewares/import-project.middleware';
@@ -31,7 +31,7 @@ export default function configureStore(initialState: any) {
   // Some slices of the state will be persisted in local-storage,
   // such an onboarding status.
   store.subscribe(() => {
-    handleStoreUpdates(store);
+    handleReduxUpdates(store);
   });
 
   return store;

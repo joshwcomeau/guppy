@@ -18,6 +18,7 @@ import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
 import Titlebar from '../Titlebar';
+import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
@@ -45,7 +46,6 @@ class App extends Component<Props> {
 
     refreshProjects();
 
-    // TODO: Redirect if project exists
     if (selectedProject) {
       history.replace(buildUrlForProjectId(selectedProject.id));
     }
@@ -63,6 +63,7 @@ class App extends Component<Props> {
     return (
       <Fragment>
         <Titlebar />
+        <ApplicationMenu />
 
         <Wrapper>
           <Sidebar />

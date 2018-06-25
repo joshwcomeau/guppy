@@ -67,6 +67,8 @@ export default (
 
   const path = `${parentPath}/${id}`;
 
+  console.log(childProcess.execSync('npm -v'));
+
   const [instruction, ...args] = getBuildInstructions(projectType, path);
 
   const process = childProcess.spawn(instruction, args);
@@ -138,9 +140,9 @@ export const getBuildInstructions = (
 ) => {
   switch (projectType) {
     case 'create-react-app':
-      return ['create-react-app', path];
+      return ['npx', 'create-react-app', path];
     case 'gatsby':
-      return ['gatsby', 'new', path];
+      return ['npx', 'gatsby', 'new', path];
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }
