@@ -4,6 +4,7 @@ import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import importAll from 'import-all.macro';
 
+import { BREAKPOINTS } from '../../constants';
 import { sampleMany } from '../../utils';
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
@@ -182,6 +183,12 @@ const ProjectIconWrapper = styled.div`
 const SelectableImageWrapper = styled.div`
   display: inline-block;
   margin: 0px 10px 10px 0px;
+
+  @media ${BREAKPOINTS.sm} {
+    &:nth-of-type(n + 9) {
+      display: none;
+    }
+  }
 `;
 
 const SubmitButtonWrapper = styled.div`

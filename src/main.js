@@ -7,9 +7,15 @@ const path = require('path');
 const url = require('url');
 const childProcess = require('child_process');
 
+const fixPath = require('fix-path');
 const psTree = require('ps-tree');
 
-// fixPath();
+// In production, we need to use `fixPath` to let Guppy use NPM.
+// For reasons unknown, the opposite is true in development; adding this breaks
+// everything.
+if (process.env.NODE_ENV !== 'development') {
+  fixPath();
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -60,42 +66,18 @@ app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-  // We want to be a good samaritan and clean up any processes spawned.
-  // This is made slightly more complex by the fact that processes can have
-  // sub-processes (eg. running a dev server spawns a 'shell' process, but we
-  // actually want to kill the child `node` process).
-  const processKillingPromises = processIds.map(
-    processId =>
-      new Promise((resolve, reject) =>
-        psTree(processId, (err, children) => {
-          if (err) {
-            return reject(err);
-          }
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
-          if (!children || children.length === 0) {
-            return resolve();
-          }
-
-          const childrenPIDs = children.map(child => child.PID);
-
-          childProcess.spawnSync('kill', ['-9', ...childrenPIDs]);
-
-          resolve();
-        })
-      )
-  );
-
-  Promise.all(processKillingPromises)
-    .then(() => {
-      // On OS X it is common for applications and their menu bar
-      // to stay active until the user quits explicitly with Cmd + Q
-      if (process.platform !== 'darwin') {
-        app.quit();
-      }
-    })
-    .catch(err => {
-      console.error('Got error when trying to kill children', err);
-    });
+app.on('before-quit', ev => {
+  if (processIds.length) {
+    ev.preventDefault();
+    killAllRunningProcesses().then(() => app.quit());
+  }
 });
 
 app.on('activate', function() {
@@ -113,3 +95,33 @@ ipcMain.on('addProcessId', (event, processId) => {
 ipcMain.on('removeProcessId', (event, processId) => {
   processIds = processIds.filter(id => id !== processId);
 });
+
+const killAllRunningProcesses = () => {
+  const processKillingPromises = processIds.map(
+    processId =>
+      new Promise((resolve, reject) =>
+        psTree(processId, (err, children) => {
+          if (err) {
+            return reject(err);
+          }
+
+          if (!children || children.length === 0) {
+            return resolve();
+          }
+
+          const childrenPIDs = children.map(child => child.PID);
+
+          childProcess.spawnSync('kill', ['-9', ...childrenPIDs]);
+
+          // Remove this processId from the list, since it's now dead.
+          processIds.filter(id => id !== processId);
+
+          resolve();
+        })
+      )
+  );
+
+  return Promise.all(processKillingPromises).catch(err => {
+    console.error('Got error when trying to kill children', err);
+  });
+};

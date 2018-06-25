@@ -134,7 +134,10 @@ class Sidebar extends PureComponent<Props, State> {
                           name={project.name}
                           color={project.color}
                           iconSrc={project.icon}
-                          isSelected={project.id === selectedProjectId}
+                          isSelected={
+                            finishedOnboarding &&
+                            project.id === selectedProjectId
+                          }
                         />
                       </Link>
                     </Tooltip>

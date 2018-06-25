@@ -40,6 +40,8 @@ export const UPDATE_DEPENDENCY_FINISH = 'UPDATE_DEPENDENCY_FINISH';
 export const DELETE_DEPENDENCY_START = 'DELETE_DEPENDENCY_START';
 export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
 export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
+export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
+  'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 
@@ -252,6 +254,10 @@ export const addDependencyFinish = (
   type: ADD_DEPENDENCY_FINISH,
   projectId,
   dependency,
+});
+
+export const showImportExistingProjectPrompt = () => ({
+  type: SHOW_IMPORT_EXISTING_PROJECT_PROMPT,
 });
 
 export const importExistingProjectStart = (path: string) => ({

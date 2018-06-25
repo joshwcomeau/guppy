@@ -2,47 +2,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { importExistingProjectStart } from '../../actions';
+import { showImportExistingProjectPrompt } from '../../actions';
 
 import TextButton from '../TextButton';
-
-const { dialog } = window.require('electron').remote;
 
 type Props = {
   color: string,
   children: React$Node,
-  importExistingProjectStart: (path: string) => any,
+  showImportExistingProjectPrompt: () => any,
 };
 
 class ImportProjectButton extends Component<Props> {
-  handleImportExisting = () => {
-    const { importExistingProjectStart } = this.props;
-
-    dialog.showOpenDialog(
-      {
-        message: 'Select the directory of an existing React app',
-        properties: ['openDirectory'],
-      },
-      paths => {
-        // The user might cancel out without selecting a directory.
-        // In that case, do nothing.
-        if (!paths) {
-          return;
-        }
-
-        // Only a single path should be selected
-        const [path] = paths;
-
-        importExistingProjectStart(path);
-      }
-    );
-  };
-
   render() {
-    const { color, children } = this.props;
+    const { color, children, showImportExistingProjectPrompt } = this.props;
 
     return (
-      <TextButton style={{ color }} onClick={this.handleImportExisting}>
+      <TextButton style={{ color }} onClick={showImportExistingProjectPrompt}>
         {children}
       </TextButton>
     );
@@ -51,5 +26,5 @@ class ImportProjectButton extends Component<Props> {
 
 export default connect(
   null,
-  { importExistingProjectStart }
+  { showImportExistingProjectPrompt }
 )(ImportProjectButton);

@@ -67,6 +67,8 @@ export default (
 
   const path = `${parentPath}/${id}`;
 
+  console.log(childProcess.execSync('npm -v'));
+
   const [instruction, ...args] = getBuildInstructions(projectType, path);
 
   const process = childProcess.spawn(instruction, args);

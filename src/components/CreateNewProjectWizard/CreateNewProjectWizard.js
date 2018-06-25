@@ -142,6 +142,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
           <TwoPaneModal
             isFolded={readyToBeBuilt}
             transitionState={transitionState}
+            isDismissable={status !== 'building-project'}
             onDismiss={createNewProjectCancel}
             leftPane={
               <Debounced on={activeField} duration={40}>

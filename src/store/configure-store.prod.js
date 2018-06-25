@@ -3,7 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from '../reducers';
-import { handleStoreUpdates } from '../services/redux-persistence.service';
+import { handleReduxUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
 import dependencyMiddleware from '../middlewares/dependency.middleware';
 import importProjectMiddleware from '../middlewares/import-project.middleware';
@@ -20,10 +20,15 @@ export default function configureStore(initialState: any) {
     )
   );
 
+  // Allow direct access to the store, for debugging/testing
+  // Doing this in production as well for the simple reason that this app is
+  // distributed to developers, and they may want to tinker with this :)
+  window.store = store;
+
   // Commit all relevant changes to the state to localStorage, for quick
   // hydration next visit.
   store.subscribe(() => {
-    handleStoreUpdates(store);
+    handleReduxUpdates(store);
   });
 
   return store;
