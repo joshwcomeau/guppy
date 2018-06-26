@@ -5,6 +5,7 @@ import {
   loadGuppyProjects,
   loadAllProjectDependencies,
 } from '../services/read-from-disk.service';
+import { reinstallDependencies } from '../services/dependencies.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 
 import type { Project, Task, Dependency } from '../types';
@@ -74,6 +75,14 @@ export const refreshProjects = () => {
   };
 };
 
+/**
+ * This action returns a thunk that installs dependencies and then reads their
+ * info from disk.
+ *
+ * TODO: This should really have a "START" and "COMPLETE" action pair, so that
+ * we can show some loading UI while it works.
+ */
+
 export const loadDependencyInfoFromDisk = (
   projectId: string,
   projectPath: string
@@ -84,15 +93,15 @@ export const loadDependencyInfoFromDisk = (
     // raw dependency information.
     const internalProject = getInternalProjectById(projectId, getState());
 
-    loadAllProjectDependencies(internalProject, projectPath).then(
-      dependencies => {
+    reinstallDependencies(projectPath)
+      .then(() => loadAllProjectDependencies(internalProject, projectPath))
+      .then(dependencies => {
         dispatch({
           type: LOAD_DEPENDENCY_INFO_FROM_DISK,
           projectId,
           dependencies,
         });
-      }
-    );
+      });
   };
 };
 

@@ -8,11 +8,11 @@ import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
 import type { ProjectType } from '../types';
 
-const prettier = window.require('prettier');
-
 const fs = window.require('fs');
 const os = window.require('os');
 const childProcess = window.require('child_process');
+
+const prettier = window.require('prettier');
 
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
@@ -66,8 +66,6 @@ export default (
   const id = slug(projectName).toLowerCase();
 
   const path = `${parentPath}/${id}`;
-
-  console.log(childProcess.execSync('npm -v'));
 
   const [instruction, ...args] = getBuildInstructions(projectType, path);
 

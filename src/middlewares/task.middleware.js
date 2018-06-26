@@ -7,6 +7,7 @@ import {
   completeTask,
   attachTaskMetadata,
   receiveDataFromTaskExecution,
+  loadDependencyInfoFromDisk,
 } from '../actions';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
@@ -148,11 +149,13 @@ export default (store: any) => (next: any) => (action: any) => {
         }
       );
 
-      // To abort this task, we'll need access to its processId (pid).
-      // Attach it to the task.
-      next(attachTaskMetadata(task, child.pid));
-
+      // When this application exits, we want to kill this process.
+      // Send it up to the main process.
       ipcRenderer.send('addProcessId', child.pid);
+
+      // TODO: Does the renderer process still need to know about the child
+      // processId?
+      next(attachTaskMetadata(task, child.pid));
 
       child.stdout.on('data', data => {
         next(receiveDataFromTaskExecution(task, data.toString()));
@@ -228,6 +231,16 @@ export default (store: any) => (next: any) => (action: any) => {
 
       if (task.processId) {
         ipcRenderer.send('removeProcessId', task.processId);
+      }
+
+      // The `eject` task is special; after running it, its dependencies will
+      // have changed.
+      // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
+      // this instead.
+      if (task.name === 'eject') {
+        const project = getProjectById(task.projectId, store.getState());
+
+        store.dispatch(loadDependencyInfoFromDisk(project.id, project.path));
       }
 
       break;

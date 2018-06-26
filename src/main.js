@@ -96,10 +96,20 @@ ipcMain.on('removeProcessId', (event, processId) => {
   processIds = processIds.filter(id => id !== processId);
 });
 
+const killProcessId = doomedProcessId => {
+  childProcess.spawnSync('kill', ['-9', doomedProcessId]);
+
+  // Remove the parent or any children PIDs from the list of tracked
+  // IDs, since they're killed now.
+  processIds = processIds.filter(id => id !== doomedProcessId);
+};
+
 const killAllRunningProcesses = () => {
   const processKillingPromises = processIds.map(
     processId =>
-      new Promise((resolve, reject) =>
+      new Promise((resolve, reject) => {
+        killProcessId(processId);
+
         psTree(processId, (err, children) => {
           if (err) {
             return reject(err);
@@ -109,16 +119,11 @@ const killAllRunningProcesses = () => {
             return resolve();
           }
 
-          const childrenPIDs = children.map(child => child.PID);
-
-          childProcess.spawnSync('kill', ['-9', ...childrenPIDs]);
-
-          // Remove this processId from the list, since it's now dead.
-          processIds.filter(id => id !== processId);
+          children.forEach(child => killProcessId(child.PID));
 
           resolve();
-        })
-      )
+        });
+      })
   );
 
   return Promise.all(processKillingPromises).catch(err => {

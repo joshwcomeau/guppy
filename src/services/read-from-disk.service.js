@@ -8,6 +8,7 @@ import type { ProjectInternal } from '../types';
 
 const fs = window.require('fs');
 const path = window.require('path');
+
 const prettier = window.require('prettier');
 
 /**
