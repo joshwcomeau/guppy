@@ -43,7 +43,7 @@ class ModalHeader extends Component<Props> {
           {children}
         </PixelShifter>
 
-        {action}
+        <ActionWrapper>{action}</ActionWrapper>
       </Wrapper>
     );
   }
@@ -55,6 +55,10 @@ const Wrapper = styled.header`
   padding: 25px 25px 15px 25px;
   background-image: linear-gradient(15deg, ${props => props.colors.join(', ')});
   border-radius: 8px 8px 0 0;
+`;
+
+const ActionWrapper = styled.div`
+  padding-left: 10px;
 `;
 
 export default ModalHeader;
