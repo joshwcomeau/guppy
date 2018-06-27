@@ -154,7 +154,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
           <License withIcon license={hit.license} />
           <Middot />
           <StatsItem icon={clockIcon}>
-            Last updated {moment(hit.modified).fromNow()}
+            Published {moment(hit.modified).fromNow()}
           </StatsItem>
         </StatsRow>
 

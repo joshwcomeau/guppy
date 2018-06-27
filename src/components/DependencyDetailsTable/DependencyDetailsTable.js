@@ -34,7 +34,7 @@ class DependencyDetailsTable extends Component<Props> {
         <tbody>
           <tr>
             <FirstCell>
-              <Label>Last Updated</Label>
+              <Label>Last Published</Label>
             </FirstCell>
             <FirstCell>
               {lastUpdatedAt ? (
