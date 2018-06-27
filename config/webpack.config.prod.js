@@ -254,7 +254,7 @@ module.exports = {
                   presets: [
                     require.resolve('babel-preset-react-app/dependencies'),
                   ],
-                  cacheDirectory: true,
+                  cacheDirectory: false,
                   highlightCode: true,
                 },
               },
@@ -420,7 +420,7 @@ module.exports = {
       // Default number of concurrent runs: os.cpus().length - 1
       parallel: true,
       // Enable file caching
-      cache: true,
+      cache: false,
       sourceMap: shouldUseSourceMap,
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.

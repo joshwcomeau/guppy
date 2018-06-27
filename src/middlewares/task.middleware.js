@@ -169,6 +169,10 @@ export default (store: any) => (next: any) => (action: any) => {
         const timestamp = new Date();
 
         store.dispatch(completeTask(task, timestamp, code === 0));
+
+        if (task.name === 'eject') {
+          store.dispatch(loadDependencyInfoFromDisk(project.id, project.path));
+        }
       });
 
       break;
@@ -247,7 +251,8 @@ export default (store: any) => (next: any) => (action: any) => {
     }
   }
 
-  // Pass all actions through
+  // Pass all actions through, unless the function returns early (which happens
+  // when deferring the 'eject' task)
   return next(action);
 };
 

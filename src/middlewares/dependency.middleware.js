@@ -16,8 +16,6 @@ import {
   uninstallDependency,
 } from '../services/dependencies.service';
 
-const childProcess = window.require('child_process');
-
 //
 //
 export default store => next => action => {

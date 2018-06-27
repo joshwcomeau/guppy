@@ -1,7 +1,9 @@
 const ElectronStore = window.require('electron-store');
 
 const electronStore = new ElectronStore();
-const REDUX_STATE_KEY = 'redux-state';
+
+const REDUX_STATE_KEY =
+  process.env.NODE_ENV === 'development' ? 'redux-state-dev' : 'redux-state';
 
 // While debugging, it's helpful to be able to access the store.
 // This should only be used for debugging, don't write any code that uses this!

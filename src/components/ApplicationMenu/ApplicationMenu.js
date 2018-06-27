@@ -42,15 +42,16 @@ class ApplicationMenu extends Component<Props> {
           },
         ],
       },
-      {
-        label: 'Edit',
-        submenu: [
-          {
-            label: 'Delete Project',
-            click() {},
-          },
-        ],
-      },
+      // TODO: Implement "Delete Project". Super important!
+      // {
+      //   label: 'Edit',
+      //   submenu: [
+      //     {
+      //       label: 'Delete Project',
+      //       click() {},
+      //     },
+      //   ],
+      // },
       {
         label: 'View',
         submenu: [

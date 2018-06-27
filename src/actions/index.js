@@ -4,6 +4,7 @@ import uuid from 'uuid/v1';
 import {
   loadGuppyProjects,
   loadAllProjectDependencies,
+  loadPackageJson,
 } from '../services/read-from-disk.service';
 import { reinstallDependencies } from '../services/dependencies.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
@@ -45,6 +46,9 @@ export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
   'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
+// export const EJECT_PROJECT_START = 'EJECT_PROJECT_START';
+// export const EJECT_PROJECT_FINISH = 'EJECT_PROJECT_FINISH';
+// export const EJECT_PROJECT_ERROR = 'EJECT_PROJECT_ERROR';
 
 //
 //
@@ -76,8 +80,8 @@ export const refreshProjects = () => {
 };
 
 /**
- * This action returns a thunk that installs dependencies and then reads their
- * info from disk.
+ * This action figures out what dependencies are installed for a given
+ * projectId.
  *
  * TODO: This should really have a "START" and "COMPLETE" action pair, so that
  * we can show some loading UI while it works.
@@ -93,15 +97,15 @@ export const loadDependencyInfoFromDisk = (
     // raw dependency information.
     const internalProject = getInternalProjectById(projectId, getState());
 
-    reinstallDependencies(projectPath)
-      .then(() => loadAllProjectDependencies(internalProject, projectPath))
-      .then(dependencies => {
+    loadAllProjectDependencies(internalProject, projectPath).then(
+      dependencies => {
         dispatch({
           type: LOAD_DEPENDENCY_INFO_FROM_DISK,
           projectId,
           dependencies,
         });
-      });
+      }
+    );
   };
 };
 
@@ -282,3 +286,21 @@ export const importExistingProjectFinish = (
   path,
   project,
 });
+
+// export const ejectProjectStart = (task: Task, timestamp: Date) => ({
+//   type: EJECT_PROJECT_START,
+//   task,
+//   timestamp,
+// });
+
+// export const ejectProjectError = (task: Task, timestamp: Date) => ({
+//   type: EJECT_PROJECT_ERROR,
+//   task,
+//   timestamp,
+// });
+
+// export const ejectProjectFinish = (task: Task, timestamp: Date) => ({
+//   type: EJECT_PROJECT_START,
+//   task,
+//   timestamp,
+// });
