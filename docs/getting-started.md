@@ -36,7 +36,7 @@ A few years ago, creating and managing a local development environment was a big
 
 To turn the development server on, click the toggle in the top-right of the module:
 
-![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/dev-server-module.png)
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/dev-server-toggle.png)
 
 You'll see two things happen:
 
@@ -62,6 +62,14 @@ The tasks are based on the project type (Vanilla React and Gatsby projects have 
 - A button to view more information about the task
 - A toggle to start (or interrupt) the task
 
+Run a task by clicking the toggle on the right side of each task:
+
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/task-row-toggle.png)
+
+You can also run tasks from within the "View Details" panel:
+
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/task-details-toggle.png)
+
 When you toggle a task on, the status will switch to "pending". If you're curious to see what it's doing, you can click "View Details" to get a terminal output screen, much like the one the Development Server module has.
 
 When the task completes, the status will switch to "success" or "error", depending on whether the task ran into any problems. The "View Details" button is a great way to learn more about why a task might have failed.
@@ -82,11 +90,11 @@ Let's say you've realized that your applicaton needs a slider component, to sele
 
 Click the "Add New Dependency" button to search for a new dependency:
 
-[ image ]
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/add-dep-button.png)
 
 If you search for "React slider", you'll see a few options come up:
 
-[ image ]
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/search-deps.png)
 
 You can click the names of these packages to learn more about them, and decide if they solve the problem you need. You can also use the data included in the search results to inform your decision:
 
