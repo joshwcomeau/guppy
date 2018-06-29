@@ -8,11 +8,15 @@
 
 ## Installation
 
-Read the installation guide
+Installation instructions in the main README. [ADD LINK]
 
 ## Adding your first project
 
-Read the guide
+To create your first project, click "Create a new web application" at the bottom of the main screen.
+
+The wizard will guide you through selecting a name, icon, and project type.
+
+If you already have a project that you'd like to use with Guppy, you can opt to import an existing project instead. _Please be advised that this feature hasn't been rigorously tested!_ It will only work with projects created with Gatsby or create-react-app, and may in the worst case totally mess up your project's `package.json` file.
 
 ## Managing your project
 
@@ -36,7 +40,7 @@ A few years ago, creating and managing a local development environment was a big
 
 To turn the development server on, click the toggle in the top-right of the module:
 
-![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/dev-server-toggle.png)
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/images/dev-server-toggle.png)
 
 You'll see two things happen:
 
@@ -64,11 +68,11 @@ The tasks are based on the project type (Vanilla React and Gatsby projects have 
 
 Run a task by clicking the toggle on the right side of each task:
 
-![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/task-row-toggle.png)
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/images/task-row-toggle.png)
 
 You can also run tasks from within the "View Details" panel:
 
-![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/task-details-toggle.png)
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/images/task-details-toggle.png)
 
 When you toggle a task on, the status will switch to "pending". If you're curious to see what it's doing, you can click "View Details" to get a terminal output screen, much like the one the Development Server module has.
 
@@ -90,11 +94,11 @@ Let's say you've realized that your applicaton needs a slider component, to sele
 
 Click the "Add New Dependency" button to search for a new dependency:
 
-![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/add-dep-button.png)
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/images/add-dep-button.png)
 
 If you search for "React slider", you'll see a few options come up:
 
-![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/search-deps.png)
+![Development server module](https://github.com/joshwcomeau/guppy/raw/master/docs/images/search-deps.png)
 
 You can click the names of these packages to learn more about them, and decide if they solve the problem you need. You can also use the data included in the search results to inform your decision:
 

@@ -6,38 +6,40 @@
 
 There are a lot of "meta" skills around React web development that don't really have anything to do with building great web products.
 
-For example, the terminal. For those of us who didn't grow up on a unix shell, the terminal is an inscrutable box of cryptic and indecipherable commands. It's undoubtedly powerful, and a valuable skill to develop... but should it really be a pre-requisite for working with React?
+For example, the terminal. For those of us who didn't grow up on a unix shell, the terminal is an inscrutable box of cryptic and indecipherable commands. It's undoubtedly powerful, and a valuable skill to develop... but should it really be a pre-requisite for modern web development?
 
 Guppy is a desktop application designed to make it easier to get started building React web products. It provides a friendly GUI for many of the typical tasks facing React developers:
 
 - Creating new projects
 - Running a development server
-- Executing other tasks (building for production, running tests, ...)
-- Managing dependencies (searching on NPM, adding, updating)
+- Executing tasks (building for production, running tests, ...)
+- Managing dependencies (adding, updating, searching)
 
-Guppy is built for beginners - I imagine the typical user as a fresh bootcamp enrollee, or someone starting to tinker on the side. It also aims to be powerful enough to be useful for experienced developers as well, although this is a secondary priority.
+Guppy is made for beginners - folks who are just starting out with web development. We hope that it's powerful enough for advanced users as well, but we'll always prioritize the new-developer experience.
 
 ### Current Status
 
-Guppy is in pre-release development. We hope to ship an early alpha around mid-to-late June.
+This project is in early pre-release Alpha. We hope to collect feedback and eventually wind up with a rock-solid tool, but for now there may be tons of bugs and missing functionality.
 
-Some stuff that still needs to be implemented before launch:
+### Platform Support
 
-- Adding dependencies
-- Removing dependencies
-- Updating dependency version
-- Searching for dependencies (probably a very rudimentary version at first)
-- Cross-platform support (Mac, Linux, Windows)
-- Adding an icon for the project (instead of the default Electron one)
-- Support for Gatsby projects
-- Polish onboarding (add details about project types, tweak copy, add more icons, add tooltip for randomize button, ensure project name doesn't conflict)
-- Add `createdAt` field to Guppy package.json
+Right now, **Guppy only works for MacOS**. We hope to support Windows and Linux soon.
 
-Some stuff that _probably_ should come before launch, but maybe right afterwards?
+Want to help build Guppy? This is the biggest missing feature right now, and contributions would be extremely welcome.
 
-- Import project (right now it only supports projects created with Guppy)
-- Delete project
-- Better port management (sometimes tasks are spawned that are "lost", and I have to kill them through the CLI. Maybe this is just dev-related... but yeah we should definitely kill all running processes when the application quits!)
+### Installation
+
+To use Guppy, you'll first need to have a modern version of Node (a Javascript runtime) installed. [Download Node](https://nodejs.org/en/download/current/).
+
+Once Node is installed, you can [download Guppy]().
+
+That's it! Double-click Guppy to open it.
+
+> Note: In future stable releases, I hope to remove the need to download Node by using the Node runtime that comes with Guppy. I also plan to create a proper installer so that it's easy to copy Guppy to the Applications folder. Contributions welcome!
+
+### Getting Started
+
+Learn more about using Guppy in our [Getting Started guide](https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md).
 
 ### Future Vision
 

@@ -42,7 +42,6 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-console.log('ENV IS', process.env.NODE_ENV);
 export const getDefaultParentPath = () =>
   // Noticing some weird quirks when I try to use a dev project on the compiled
   // "production" app, so separating their home paths should help.
