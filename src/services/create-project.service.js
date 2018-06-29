@@ -3,15 +3,13 @@ import slug from 'slug';
 import random from 'random-seed';
 
 import { COLORS } from '../constants';
+import { getDefaultParentPath } from '../reducers/paths.reducer';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
 import type { ProjectType } from '../types';
 
-const prettier = window.require('prettier');
-
 const fs = window.require('fs');
-const os = window.require('os');
 const childProcess = window.require('child_process');
 
 // Change this boolean flag to skip project creation.
@@ -52,8 +50,7 @@ export default (
     return;
   }
 
-  // New projects will be created in `~/guppy-projects`.
-  const parentPath = `${os.homedir()}/guppy-projects`;
+  const parentPath = getDefaultParentPath();
 
   // Create the projects directory, if this is the first time creating a
   // project.
@@ -66,8 +63,6 @@ export default (
   const id = slug(projectName).toLowerCase();
 
   const path = `${parentPath}/${id}`;
-
-  console.log(childProcess.execSync('npm -v'));
 
   const [instruction, ...args] = getBuildInstructions(projectType, path);
 
@@ -100,10 +95,7 @@ export default (
         createdAt: Date.now(),
       };
 
-      const prettyPrintedPackageJson = prettier.format(
-        JSON.stringify(packageJson),
-        { parser: 'json' }
-      );
+      const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
 
       fs.writeFile(`${path}/package.json`, prettyPrintedPackageJson, err => {
         if (err) {

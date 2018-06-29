@@ -10,6 +10,7 @@ import {
   showImportExistingProjectPrompt,
 } from '../../actions';
 
+const { shell } = window.require('electron');
 const { app, process, Menu } = window.require('electron').remote;
 
 type Props = {
@@ -42,15 +43,16 @@ class ApplicationMenu extends Component<Props> {
           },
         ],
       },
-      {
-        label: 'Edit',
-        submenu: [
-          {
-            label: 'Delete Project',
-            click() {},
-          },
-        ],
-      },
+      // TODO: Implement "Delete Project". Super important!
+      // {
+      //   label: 'Edit',
+      //   submenu: [
+      //     {
+      //       label: 'Delete Project',
+      //       click() {},
+      //     },
+      //   ],
+      // },
       {
         label: 'View',
         submenu: [
@@ -63,6 +65,15 @@ class ApplicationMenu extends Component<Props> {
           { role: 'zoomout' },
           { type: 'separator' },
           { role: 'togglefullscreen' },
+        ],
+      },
+      {
+        label: 'Help',
+        submenu: [
+          {
+            label: 'Getting Started',
+            click: this.openGettingStartedDocs,
+          },
         ],
       },
     ];
@@ -88,6 +99,13 @@ class ApplicationMenu extends Component<Props> {
 
     Menu.setApplicationMenu(this.menu);
   }
+
+  openGettingStartedDocs = () => {
+    // TODO: Maybe I should store the git repo URL somewhere? Maybe it should
+    // read from package.json?
+    const baseRepoUrl = 'https://github.com/joshwcomeau/guppy';
+    shell.openExternal(`${baseRepoUrl}/docs/getting-started.md`);
+  };
 
   render() {
     return null;

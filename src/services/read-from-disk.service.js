@@ -2,13 +2,14 @@
 import asyncMap from 'async/map';
 
 import { pick } from '../utils';
-import { DEFAULT_PARENT_PATH } from '../reducers/paths.reducer';
+import { getDefaultParentPath } from '../reducers/paths.reducer';
 
 import type { ProjectInternal } from '../types';
 
 const fs = window.require('fs');
 const path = window.require('path');
-const prettier = window.require('prettier');
+
+const DEFAULT_PARENT_PATH = getDefaultParentPath();
 
 /**
  * Load a project's package.json
@@ -29,9 +30,7 @@ export const loadPackageJson = (path: string) => {
  * Update a project's package.json.
  */
 export const writePackageJson = (projectPath: string, json: any) => {
-  const prettyPrintedPackageJson = prettier.format(JSON.stringify(json), {
-    parser: 'json',
-  });
+  const prettyPrintedPackageJson = JSON.stringify(json, null, 2);
 
   return new Promise((resolve, reject) => {
     fs.writeFile(
@@ -203,38 +202,42 @@ export function loadAllProjectDependencies(
   project: ProjectInternal,
   projectPath: string
 ) {
-  const dependencyNames = Object.keys(project.dependencies);
+  // Get a fresh copy of the dependencies from the project's package.json
+  return loadPackageJson(projectPath).then(
+    packageJson =>
+      new Promise((resolve, reject) => {
+        const dependencyNames = Object.keys(packageJson.dependencies);
 
-  return new Promise((resolve, reject) => {
-    // Each project in a Guppy directory should have a package.json.
-    // We'll read all the project info we need from this file.
-    asyncMap(
-      dependencyNames,
-      function(dependencyName, callback) {
-        loadProjectDependency(projectPath, dependencyName)
-          .then(dependency => callback(null, dependency))
-          .catch(callback);
-      },
-      (err, results) => {
-        if (err) {
-          return reject(err);
-        }
+        // Each project in a Guppy directory should have a package.json.
+        // We'll read all the project info we need from this file.
+        asyncMap(
+          dependencyNames,
+          function(dependencyName, callback) {
+            loadProjectDependency(projectPath, dependencyName)
+              .then(dependency => callback(null, dependency))
+              .catch(callback);
+          },
+          (err, results) => {
+            if (err) {
+              return reject(err);
+            }
 
-        // Filter out any unloaded dependencies
-        const filteredResults = results.filter(result => result);
+            // Filter out any unloaded dependencies
+            const filteredResults = results.filter(result => result);
 
-        // The results will be an array of package.jsons.
-        // I want a database-style map.
-        const dependencies = filteredResults.reduce(
-          (dependenciesMap, dependency) => ({
-            ...dependenciesMap,
-            [dependency.name]: dependency,
-          }),
-          {}
+            // The results will be an array of package.jsons.
+            // I want a database-style map.
+            const dependencies = filteredResults.reduce(
+              (dependenciesMap, dependency) => ({
+                ...dependenciesMap,
+                [dependency.name]: dependency,
+              }),
+              {}
+            );
+
+            resolve(dependencies);
+          }
         );
-
-        resolve(dependencies);
-      }
-    );
-  });
+      })
+  );
 }

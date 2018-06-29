@@ -1,7 +1,9 @@
 const ElectronStore = window.require('electron-store');
 
 const electronStore = new ElectronStore();
-const REDUX_STATE_KEY = 'redux-state';
+
+const REDUX_STATE_KEY =
+  process.env.NODE_ENV === 'development' ? 'redux-state-dev' : 'redux-state';
 
 // While debugging, it's helpful to be able to access the store.
 // This should only be used for debugging, don't write any code that uses this!
@@ -47,11 +49,16 @@ export const getInitialState = () => {
   // only 4 projects).
   // Given that `handleReduxUpdates` runs whenever the redux state changes,
   // this felt too expensive
+  //
+  // TODO: It occurs to me that if the user closes the window, they may not be
+  // quitting the app. Maybe we do want to persist task info, so that tasks
+  // won't be interrupted when the window closes..?
   if (reconstructedState.tasks) {
     const scrubbedTasks = Object.keys(reconstructedState.tasks).reduce(
       (acc, taskId) => {
         const task = { ...reconstructedState.tasks[taskId] };
         task.status = 'idle';
+        task.processId = null;
         task.logs = [];
 
         return { ...acc, [taskId]: task };

@@ -7,6 +7,7 @@ import {
   completeTask,
   attachTaskMetadata,
   receiveDataFromTaskExecution,
+  loadDependencyInfoFromDisk,
 } from '../actions';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
@@ -148,11 +149,13 @@ export default (store: any) => (next: any) => (action: any) => {
         }
       );
 
-      // To abort this task, we'll need access to its processId (pid).
-      // Attach it to the task.
-      next(attachTaskMetadata(task, child.pid));
-
+      // When this application exits, we want to kill this process.
+      // Send it up to the main process.
       ipcRenderer.send('addProcessId', child.pid);
+
+      // TODO: Does the renderer process still need to know about the child
+      // processId?
+      next(attachTaskMetadata(task, child.pid));
 
       child.stdout.on('data', data => {
         next(receiveDataFromTaskExecution(task, data.toString()));
@@ -166,6 +169,10 @@ export default (store: any) => (next: any) => (action: any) => {
         const timestamp = new Date();
 
         store.dispatch(completeTask(task, timestamp, code === 0));
+
+        if (task.name === 'eject') {
+          store.dispatch(loadDependencyInfoFromDisk(project.id, project.path));
+        }
       });
 
       break;
@@ -230,11 +237,22 @@ export default (store: any) => (next: any) => (action: any) => {
         ipcRenderer.send('removeProcessId', task.processId);
       }
 
+      // The `eject` task is special; after running it, its dependencies will
+      // have changed.
+      // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
+      // this instead.
+      if (task.name === 'eject') {
+        const project = getProjectById(task.projectId, store.getState());
+
+        store.dispatch(loadDependencyInfoFromDisk(project.id, project.path));
+      }
+
       break;
     }
   }
 
-  // Pass all actions through
+  // Pass all actions through, unless the function returns early (which happens
+  // when deferring the 'eject' task)
   return next(action);
 };
 

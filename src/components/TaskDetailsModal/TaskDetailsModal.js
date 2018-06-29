@@ -13,6 +13,7 @@ import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
 import Toggle from '../Toggle';
 import LargeLED from '../LargeLED';
+import EjectButton from '../EjectButton';
 import TerminalOutput from '../TerminalOutput';
 import Spacer from '../Spacer';
 
@@ -113,7 +114,22 @@ class TaskDetailsModal extends PureComponent<Props> {
       <Fragment>
         <ModalHeader
           title={capitalize(name)}
-          action={<Toggle isToggled={isRunning} onToggle={this.handleToggle} />}
+          action={
+            name === 'eject' ? (
+              <EjectButton
+                width={40}
+                height={34}
+                isRunning={isRunning}
+                onClick={this.handleToggle}
+              />
+            ) : (
+              <Toggle
+                size={32}
+                isToggled={isRunning}
+                onToggle={this.handleToggle}
+              />
+            )
+          }
         >
           <Description>{description}</Description>
         </ModalHeader>

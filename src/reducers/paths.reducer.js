@@ -19,12 +19,6 @@ type State = {
   [projectId: string]: string,
 };
 
-// By default, all projects live in ~/guppy-projects
-// At some point maybe I should make this configurable... for now, individual
-// projects can be imported from other places, but all projects created with
-// Guppy live here.
-export const DEFAULT_PARENT_PATH = `${os.homedir()}/guppy-projects`;
-
 const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
@@ -48,7 +42,16 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-const getDefaultPath = projectId => `${DEFAULT_PARENT_PATH}/${projectId}`;
+console.log('ENV IS', process.env.NODE_ENV);
+export const getDefaultParentPath = () =>
+  // Noticing some weird quirks when I try to use a dev project on the compiled
+  // "production" app, so separating their home paths should help.
+  process.env.NODE_ENV === 'development'
+    ? `${os.homedir()}/guppy-projects-dev`
+    : `${os.homedir()}/guppy-projects`;
+
+export const getDefaultPath = (projectId: string) =>
+  `${getDefaultParentPath()}/${projectId}`;
 
 //
 //

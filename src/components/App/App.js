@@ -2,9 +2,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { refreshProjects, selectProject } from '../../actions';
+import { COLORS } from '../../constants';
 import {
   extractProjectIdFromUrl,
   buildUrlForProjectId,
@@ -90,10 +91,18 @@ class App extends Component<Props> {
   }
 }
 
+const fadeIn = keyframes`
+  from { opacity: 0 }
+  to { opacity: 1 }
+`;
+
 const Wrapper = styled.div`
   display: flex;
   position: relative;
   z-index: 1;
+  background: ${COLORS.gray[50]};
+
+  animation: ${fadeIn} 500ms ease-in;
 `;
 
 const MainContent = styled.div`

@@ -110,20 +110,18 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
-    // case ABORT_TASK: {
-    //   const { task, timestamp } = action;
-
-    //   return produce(state, draftState => {
-    //     draftState[task.id].status = 'idle';
-    //     draftState[task.id].timeSinceStatusChange = timestamp;
-    //     delete draftState[task.id].processId;
-    //   });
-    // }
-
     case COMPLETE_TASK: {
       const { task, timestamp, wasSuccessful } = action;
 
       return produce(state, draftState => {
+        // For the eject task, we simply want to delete this task altogether.
+        // TODO: We should probably do this in `REFRESH_PROJECTS`, which is
+        // called right after the eject task succeeds!
+        if (task.name === 'eject') {
+          delete draftState[task.id];
+          return;
+        }
+
         const nextStatus = !wasSuccessful
           ? 'failed'
           : task.type === 'short-term'
