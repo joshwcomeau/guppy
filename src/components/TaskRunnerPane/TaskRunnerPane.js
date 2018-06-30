@@ -57,7 +57,10 @@ class TaskRunnerPane extends Component<Props, State> {
     const { selectedTaskId } = this.state;
 
     return (
-      <Module title="Tasks">
+      <Module
+        title="Tasks"
+        moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#tasks"
+      >
         {tasks.map(task => (
           <TaskRunnerPaneRow
             key={task.id}

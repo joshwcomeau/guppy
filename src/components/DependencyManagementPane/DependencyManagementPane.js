@@ -96,7 +96,10 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     const selectedDependency = dependencies[selectedDependencyIndex];
 
     return (
-      <Module title="Dependencies">
+      <Module
+        title="Dependencies"
+        moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#dependencies"
+      >
         <Wrapper>
           <DependencyList>
             <Dependencies>
