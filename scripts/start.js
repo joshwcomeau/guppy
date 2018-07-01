@@ -14,6 +14,7 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
+const { exec } = require('child_process');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
@@ -31,6 +32,36 @@ const config = require('../config/webpack.config.dev');
 const createDevServerConfig = require('../config/webpackDevServer.config');
 
 const isInteractive = process.stdout.isTTY;
+
+/**
+ * Flag to check whether Electron is
+ * running already.
+ */
+let is_electron_running = false;
+
+/**
+ * Singleton-ish run of Electron
+ * Prevents multiple re-runs of Electron App
+ */
+function runElectronApp() {
+  if (is_electron_running)
+    return;
+
+  is_electron_running = true;
+
+  exec('ELECTRON_START_URL=http://localhost:5678 electron .', (err, stdout, stderr) => {
+    if (err) {
+      console.info(chalk.red('Electron app run failed: ') + stderr);
+      return;
+    }
+
+    // Clear console for brevity
+    process.stdout.write('\x1bc');
+
+    // Log output
+    console.info(stdout);
+  });
+}
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -104,12 +135,22 @@ checkBrowsers(paths.appPath)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
-      process.on(sig, function() {
+    ['SIGINT', 'SIGTERM'].forEach(function (sig) {
+      process.on(sig, function () {
         devServer.close();
         process.exit();
       });
     });
+
+    /**
+     * Hook runElectronApp() to 'done' (compile) event
+     * 
+     * Fails on error
+     */
+    if (process.env.START_ELECTRON === '1')
+      compiler.plugin('done',
+        stats => !stats.hasErrors() && runElectronApp()
+      );
   })
   .catch(err => {
     if (err && err.message) {

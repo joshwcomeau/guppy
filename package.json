@@ -10,9 +10,8 @@
     "url": "https://github.com/joshwcomeau/guppy.git"
   },
   "scripts": {
-    "start": "NODE_ENV=development concurrently --kill-others \"npm run start:react\" \"npm run start:electron\"",
+    "start": "NODE_ENV=development START_ELECTRON=1 npm run start:react",
     "start:react": "PORT=5678 BROWSER=none node scripts/start.js",
-    "start:electron": "ELECTRON_START_URL=http://localhost:5678 electron .",
     "build": "node scripts/build.js",
     "package:mac": "electron-packager . --platform=darwin --arch=x64 --icon=src/assets/icons/mac/logo.icns --prune=true --out=release-builds --overwrite",
     "package": "GENERATE_SOURCEMAP=false npm run build && npm run package:mac",
@@ -42,7 +41,6 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",
-    "concurrently": "3.5.1",
     "css-loader": "0.28.9",
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
