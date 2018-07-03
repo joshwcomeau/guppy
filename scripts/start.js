@@ -37,17 +37,17 @@ const isInteractive = process.stdout.isTTY;
  * Flag to check whether Electron is
  * running already.
  */
-let is_electron_running = false;
+let isElectronRunning = false;
 
 /**
  * Singleton-ish run of Electron
  * Prevents multiple re-runs of Electron App
  */
 function runElectronApp() {
-  if (is_electron_running)
+  if (isElectronRunning)
     return;
 
-  is_electron_running = true;
+  isElectronRunning = true;
 
   exec('ELECTRON_START_URL=http://localhost:5678 electron .', (err, stdout, stderr) => {
     if (err) {
