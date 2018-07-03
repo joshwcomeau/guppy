@@ -147,10 +147,9 @@ checkBrowsers(paths.appPath)
      * 
      * Fails on error
      */
-    if (process.env.START_ELECTRON === '1')
-      compiler.plugin('done',
-        stats => !stats.hasErrors() && runElectronApp()
-      );
+    compiler.plugin('done',
+      stats => !stats.hasErrors() && runElectronApp()
+    );
   })
   .catch(err => {
     if (err && err.message) {
