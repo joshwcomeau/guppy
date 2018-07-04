@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development npm run start:react",
-    "start:react": "PORT=5678 BROWSER=none node scripts/start.js",
+    "start:react": "BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
     "package:mac": "electron-packager . --platform=darwin --arch=x64 --icon=src/assets/icons/mac/logo.icns --prune=true --out=release-builds --overwrite",
     "package": "GENERATE_SOURCEMAP=false npm run build && npm run package:mac",

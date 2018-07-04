@@ -33,6 +33,10 @@ const createDevServerConfig = require('../config/webpackDevServer.config');
 
 const isInteractive = process.stdout.isTTY;
 
+// Tools like Cloud9 rely on this.
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+
 /**
  * Flag to check whether Electron is
  * running already.
@@ -49,28 +53,26 @@ function runElectronApp() {
 
   isElectronRunning = true;
 
-  exec('ELECTRON_START_URL=http://localhost:5678 electron .', (err, stdout, stderr) => {
-    if (err) {
-      console.info(chalk.red('Electron app run failed: ') + stderr);
-      return;
+  exec(`ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`,
+    (err, stdout, stderr) => {
+      if (err) {
+        console.info(chalk.red('Electron app run failed: ') + stderr);
+        return;
+      }
+
+      // Clear console for brevity
+      process.stdout.write('\x1bc');
+
+      // Log output
+      console.info(stdout);
     }
-
-    // Clear console for brevity
-    process.stdout.write('\x1bc');
-
-    // Log output
-    console.info(stdout);
-  });
+  );
 }
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
 }
-
-// Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
 
 if (process.env.HOST) {
   console.info(
