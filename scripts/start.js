@@ -14,6 +14,7 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
+const { exec } = require('child_process');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
@@ -32,14 +33,46 @@ const createDevServerConfig = require('../config/webpackDevServer.config');
 
 const isInteractive = process.stdout.isTTY;
 
+// Tools like Cloud9 rely on this.
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+
+/**
+ * Flag to check whether Electron is
+ * running already.
+ */
+let isElectronRunning = false;
+
+/**
+ * Singleton-ish run of Electron
+ * Prevents multiple re-runs of Electron App
+ */
+function runElectronApp() {
+  if (isElectronRunning)
+    return;
+
+  isElectronRunning = true;
+
+  exec(`ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`,
+    (err, stdout, stderr) => {
+      if (err) {
+        console.info(chalk.red('Electron app run failed: ') + stderr);
+        return;
+      }
+
+      // Clear console for brevity
+      process.stdout.write('\x1bc');
+
+      // Log output
+      console.info(stdout);
+    }
+  );
+}
+
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
 }
-
-// Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
 
 if (process.env.HOST) {
   console.info(
@@ -104,12 +137,21 @@ checkBrowsers(paths.appPath)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
-      process.on(sig, function() {
+    ['SIGINT', 'SIGTERM'].forEach(function (sig) {
+      process.on(sig, function () {
         devServer.close();
         process.exit();
       });
     });
+
+    /**
+     * Hook runElectronApp() to 'done' (compile) event
+     * 
+     * Fails on error
+     */
+    compiler.plugin('done',
+      stats => !stats.hasErrors() && runElectronApp()
+    );
   })
   .catch(err => {
     if (err && err.message) {
