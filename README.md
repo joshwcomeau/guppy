@@ -2,8 +2,6 @@
 
 ### A friendly application manager and task runner for React.js
 
-> This is a temporary README and should be rewritten pre-launch
-
 There are a lot of "meta" skills around React web development that don't really have anything to do with building great web products.
 
 For example, the terminal. For those of us who didn't grow up on a unix shell, the terminal is an inscrutable box of cryptic and indecipherable commands. It's undoubtedly powerful, and a valuable skill to develop... but should it really be a pre-requisite for modern web development?
@@ -17,9 +15,17 @@ Guppy is a desktop application designed to make it easier to get started buildin
 
 Guppy is made for beginners - folks who are just starting out with web development. We hope that it's powerful enough for advanced users as well, but we'll always prioritize the new-developer experience.
 
+### Download
+
+[Download Guppy]()
+
+For more information on setup, see [Installation](#installation) below.
+
 ### Current Status
 
 This project is in early pre-release Alpha. We hope to collect feedback and eventually wind up with a rock-solid tool, but for now there may be tons of bugs and missing functionality.
+
+This is a side-project worked on during spare time, and no guarantees are made about timely updates and bug fixes.
 
 ### Platform Support
 
@@ -33,7 +39,7 @@ To use Guppy, you'll first need to have a modern version of Node (a Javascript r
 
 Once Node is installed, you can [download Guppy]().
 
-That's it! Double-click Guppy to open it.
+Double-click the downloaded executable to open Guppy.
 
 > Note: In future stable releases, I hope to remove the need to download Node by using the Node runtime that comes with Guppy. I also plan to create a proper installer so that it's easy to copy Guppy to the Applications folder. Contributions welcome!
 
@@ -55,20 +61,8 @@ I'd also like to see Guppy become far more useful for educating users about web 
 
 ### How it works
 
-Guppy is an electron application that secretly runs terminal commands for you in the background. It uses **create-react-app**, with support coming soon for other project types, like Gatsby and Next.
+Guppy is an electron application that secretly runs terminal commands for you in the background. It uses **create-react-app** and **gatsby-cli**. Support could conceivably be added for Next, and other project types (including non-React ones)
 
-Guppy adds a new key to your `package.json` to store project-related information. It also reads from `package.json` to figure out the current dependencies, and see which tasks are available (via `scripts`).
+Guppy adds a new top-level key to your `package.json` to store project-related information. It also reads from `package.json` to figure out the current dependencies, and see which tasks are available (via `scripts`).
 
-Originally, Guppy was going to be much more agnostic about project type. I had imagined that it would treat every `script` as a task, and they'd all work exactly the same way. I realized that this isn't very helpful, though; the tasks you want to perform are radically different, and should be treated as such!
-
-For example, the common script for running a development server is `start`. This is a long-running task, though, and extremely important for local development. Guppy separates it in the UI to have its own module. I can also imagine doing this for all of the built-in scripts, so that only user-defined scripts are treated generically.
-
-### Code Organization
-
-This project uses React and Redux. I'm also experimenting with holding most logic in "services". These are just modules (in `src/services`) that manage specific things, like creating a project, finding an available port, or helping provide routing info. They're essentially helper modules, but all geared around specifc tasks.
-
-A lot of the task-running logic lives in `middlewares/task.middleware.js`. This may move into a service at some point.
-
-### Temporary development notes
-
-This project is a create-react-app project, using Electron. I followed the instructions at https://medium.freecodecamp.org/building-an-electron-application-with-create-react-app-97945861647c (well, mostly; instead of using Foreman, I used concurrently, and came up with my own scripts strategy. But overall I mostly followed that blog post).
+Guppy has intelligent modules built around task types. For example, the dev server is no ordinary task, it's one that ought to be running throughout your time working on the project, and so it's given its own module at the top of the page.

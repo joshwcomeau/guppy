@@ -1,0 +1,4 @@
+- Fix tests
+- Add prettier script
+- on-commit hook
+- Check that all the docs make sense
