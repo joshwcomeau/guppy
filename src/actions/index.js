@@ -46,9 +46,6 @@ export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
   'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
-// export const EJECT_PROJECT_START = 'EJECT_PROJECT_START';
-// export const EJECT_PROJECT_FINISH = 'EJECT_PROJECT_FINISH';
-// export const EJECT_PROJECT_ERROR = 'EJECT_PROJECT_ERROR';
 
 //
 //
@@ -67,7 +64,7 @@ export const refreshProjects = () => {
     const pathValues = Object.keys(paths).map(pathKey => paths[pathKey]);
 
     loadGuppyProjects(pathValues)
-      .then(projects => {
+      .then((projects: { [id: string]: Project }) => {
         dispatch({
           type: REFRESH_PROJECTS,
           projects,

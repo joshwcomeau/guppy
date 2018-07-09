@@ -13,22 +13,22 @@ describe('Tasks reducer', () => {
     test('captures task data from new projects', () => {
       const action = {
         type: REFRESH_PROJECTS,
-        projects: [
-          {
+        projects: {
+          foo: {
             name: 'foo',
             guppy: { id: 'foo' },
             scripts: {
               start: 'react-scripts start',
             },
           },
-          {
+          bar: {
             name: 'bar',
             guppy: { id: 'bar' },
             scripts: {
               start: 'react-scripts start',
             },
           },
-          {
+          baz: {
             name: 'baz',
             guppy: { id: 'baz' },
             scripts: {
@@ -36,7 +36,7 @@ describe('Tasks reducer', () => {
               build: 'react-scripts build',
             },
           },
-        ],
+        },
       };
 
       // Get the initial state (should just be a {})
@@ -45,36 +45,48 @@ describe('Tasks reducer', () => {
       const actualState = reducer(initialState, action);
       const expectedState = {
         'foo-start': {
+          id: 'foo-start',
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
+          description: 'Run a local development server',
           status: 'idle',
           timeSinceStatusChange: null,
-          logs: null,
+          logs: [],
+          type: 'sustained',
         },
         'bar-start': {
+          id: 'bar-start',
           projectId: 'bar',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
+          description: 'Run a local development server',
           status: 'idle',
           timeSinceStatusChange: null,
-          logs: null,
+          logs: [],
+          type: 'sustained',
         },
         'baz-start': {
+          id: 'baz-start',
           projectId: 'baz',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
+          description: 'Run a local development server',
           status: 'idle',
           timeSinceStatusChange: null,
-          logs: null,
+          logs: [],
+          type: 'sustained',
         },
         'baz-build': {
+          id: 'baz-build',
           projectId: 'baz',
           name: 'build',
-          taskCommand: 'react-scripts build',
+          command: 'react-scripts build',
+          description: 'Bundle your project for production',
           status: 'idle',
           timeSinceStatusChange: null,
-          logs: null,
+          logs: [],
+          type: 'short-term',
         },
       };
 
@@ -108,7 +120,7 @@ describe('Tasks reducer', () => {
         'foo-start': {
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'idle',
           timeSinceStatusChange: timestamp,
           logs: 'sample output',
@@ -120,7 +132,7 @@ describe('Tasks reducer', () => {
         'foo-start': {
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start --some-flag=true',
+          command: 'react-scripts start --some-flag=true',
           status: 'idle',
           timeSinceStatusChange: timestamp,
           logs: 'sample output',
@@ -128,10 +140,10 @@ describe('Tasks reducer', () => {
         'bar-start': {
           projectId: 'bar',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'idle',
           timeSinceStatusChange: null,
-          logs: null,
+          logs: [],
         },
       };
 
@@ -158,7 +170,7 @@ describe('Tasks reducer', () => {
         'foo-start': {
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'idle',
           timeSinceStatusChange: timestamp,
           logs: 'sample output',
@@ -170,7 +182,7 @@ describe('Tasks reducer', () => {
         'foo-start': {
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'idle',
           timeSinceStatusChange: timestamp,
           logs: 'sample output',
@@ -178,10 +190,10 @@ describe('Tasks reducer', () => {
         'bar-start': {
           projectId: 'bar',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'idle',
           timeSinceStatusChange: null,
-          logs: null,
+          logs: [],
         },
       };
 
@@ -195,14 +207,14 @@ describe('Tasks reducer', () => {
         'foo-start': {
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'idle',
           timeSinceStatusChange: null,
         },
         'foo-build': {
           projectId: 'foo',
           name: 'build',
-          taskCommand: 'react-scripts build',
+          command: 'react-scripts build',
           status: 'idle',
           timeSinceStatusChange: null,
         },
@@ -221,14 +233,14 @@ describe('Tasks reducer', () => {
         'foo-start': {
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'running',
           timeSinceStatusChange: timestamp,
         },
         'foo-build': {
           projectId: 'foo',
           name: 'build',
-          taskCommand: 'react-scripts build',
+          command: 'react-scripts build',
           status: 'idle',
           timeSinceStatusChange: null,
         },
@@ -244,14 +256,14 @@ describe('Tasks reducer', () => {
         'foo-start': {
           projectId: 'foo',
           name: 'start',
-          taskCommand: 'react-scripts start',
+          command: 'react-scripts start',
           status: 'running',
           timeSinceStatusChange: null,
         },
         'foo-build': {
           projectId: 'foo',
           name: 'build',
-          taskCommand: 'react-scripts build',
+          command: 'react-scripts build',
           status: 'running',
           timeSinceStatusChange: null,
         },
@@ -284,14 +296,14 @@ describe('Tasks reducer', () => {
           'foo-start': {
             projectId: 'foo',
             name: 'start',
-            taskCommand: 'react-scripts start',
+            command: 'react-scripts start',
             status: 'idle',
             timeSinceStatusChange: timestamp,
           },
           'foo-build': {
             projectId: 'foo',
             name: 'build',
-            taskCommand: 'react-scripts build',
+            command: 'react-scripts build',
             status: 'running',
             timeSinceStatusChange: null,
           },
