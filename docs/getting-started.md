@@ -2,13 +2,13 @@
 
 > Guppy is a companion tool that aims to totally replace the terminal, so that newcomers to the field aren't burdened with a whole other skillset they need to learn before they can get started building cool things.
 >
-> It's currently in Alpha, which means that we're still a long way from fully realizing that dream. You may run into bugs, and it's only compatible with certain types of projects, and certain operating systems.
+> It's currently in pre-release Alpha, which means that we're still a long way from fully realizing that dream. You may run into bugs, and it may not be compatible with your existing projects or operating system.
 >
-> Apologies in advance for any trouble you run into. Please leave feedback!
+> Apologies in advance for any trouble you run into! Contributions welcome.
 
 ## Installation
 
-Installation instructions in the main README. [ADD LINK]
+Installation instructions in the [README](https://github.com/joshwcomeau/guppy/blob/master/README.md#installation).
 
 ## Adding your first project
 
@@ -16,7 +16,9 @@ To create your first project, click "Create a new web application" at the bottom
 
 The wizard will guide you through selecting a name, icon, and project type.
 
-If you already have a project that you'd like to use with Guppy, you can opt to import an existing project instead. _Please be advised that this feature hasn't been rigorously tested!_ It will only work with projects created with Gatsby or create-react-app, and may in the worst case totally mess up your project's `package.json` file.
+If you already have a project that you'd like to use with Guppy, you can opt to import an existing project instead. _Please be advised that this feature hasn't been rigorously tested!_ It will only work with projects created with Gatsby or create-react-app, and in the worst case it could potentially mess up your project's `package.json` file. To play it safe, make sure that your project is managed with source-control, so that you can easily reset it if anything goes wrong.
+
+For more information on the project-creation process, please see our [Adding a Project](https://github.com/joshwcomeau/guppy/blob/master/docs/adding-a-project.md) doc.
 
 ## Managing your project
 
