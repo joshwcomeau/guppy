@@ -1,4 +1,4 @@
-# Getting Started with Guppy
+# Adding a Project
 
 > Guppy is a companion tool that aims to totally replace the terminal, so that newcomers to the field aren't burdened with a whole other skillset they need to learn before they can get started building cool things.
 >
@@ -8,13 +8,18 @@
 
 ## Installation
 
-Read the [Installation Guide](todo) to get the application downloaded and running.
+Installation instructions in the [README](https://github.com/joshwcomeau/guppy/blob/master/README.md#installation).
 
 ## Your First Project
 
 Guppy works on a per-project basis: each project has its own area in Guppy's interface. So, the first thing we need is a project to work on!
 
 The intro screen presents two options: "Create a new web application" and "import an existing project".
+
+You can also access these options at any time through the application menu:
+
+- `File -> Create New Project` (keyboard shortcut: `⌘N`)
+- `File -> Import Existing Project` (keyboard shortcut: `⌘I`)
 
 ### Creating a New Project
 
@@ -24,17 +29,17 @@ The wizard will guide you through the process, but this guide will add some addi
 
 #### Project Name
 
-Your project name can be whatever you want! Special characters are cool. So are emoji 🎉 give it whatever name you want.
+Your project name can be whatever you'd like! Special characters are cool. So are emoji 🎉.
 
-There is currently no way to change the project name from within Guppy, but you can always [modify the package.json](todo) to use a different name.
+> There is currently no way to change the project name from within Guppy, but you can always modify the project's package.json to use a different name.
 
 #### Project Type
 
 There are currently 2 types of supported projects: Vanilla React, and Gatsby.
 
-**Vanilla React** is a minimal yet fully-ready-to-go solution for getting started with React development. It uses [create-react-app]() behind the scenes, a tool built by Facebook, and has become the standard way that new applications are created, for beginners and experienced developers alike.
+**Vanilla React** is a minimal yet fully-ready-to-go solution for getting started with React development. It uses [create-react-app](https://github.com/facebook/create-react-app) behind the scenes, a tool built by Facebook, and has become the standard way that new applications are created, for beginners and experienced developers alike.
 
-**Gatsby** is an amazing project that strives to be a static site generator, somewhat like Jekyll. It does a bunch of powerful performance optimizations, so the site you build is lightning-quick. It also has a vibrant community behind it! If you're building a static site (eg. a blog, something informational), it can be a huge productivity boost.
+[**Gatsby**](https://www.gatsbyjs.org/) is a supercharged static site generator that does a bunch of optimizations to be lightning quick. It also has a vibrant community behind it! If you're building a static site (eg. a blog, something informational), it can be a huge productivity boost.
 
 > NOTE: Gatsby has a wide array of "starters" for different usecases, but Guppy doesn't support them yet. We'll add this in a future update, but for now it might be best to create the product through a terminal and then import it into Guppy. See [their official docs](https://www.gatsbyjs.org/tutorial/part-one/#check-your-development-environment) for more information.
 
@@ -46,4 +51,18 @@ Ultimately, the project type you choose depends on your goals. Some thoughts:
 
 - Are you looking to build a blog, landing page, or other content-based product? "Gatsby" can save you a ton of time, and is likely the best choice.
 
-####
+#### Project Icon
+
+When you have multiple projects, it's helpful to have a quick, visual way to tell them apart. Your project's icon is useful for jumping around quickly in Guppy.
+
+Note that this icon is not intended to be used within your application, it's simply for Guppy administration.
+
+> In the future, we'll add the ability to use the project's favicon, or upload your own photo. For now, though, we're afraid the only choices are a handful of royalty-free shots.
+
+### Importing an Existing Project
+
+If you've built a create-react-app or Gatsby project outside of Gatsby, you may be able to import it to use within Guppy.
+
+Guppy will save a reference to that project, so that the next time you open Guppy, that project is remembered. If the project's path on the disk changes, like if you move it to another directory, you'll need to re-import it, but all of the settings will be saved (we store this information in your project's package.json, so Guppy will always recognize it when it's re-imported, even if it's on another computer!).
+
+To import a project, use the option in the menu at `File -> Import Existing Project` (keyboard shortcut: `⌘I`).
