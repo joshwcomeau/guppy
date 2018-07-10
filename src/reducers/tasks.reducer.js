@@ -15,6 +15,7 @@
  * this reducer to match that reducer's style. Right now they're inconsistent
  * and that's bad.
  */
+
 import produce from 'immer';
 import {
   REFRESH_PROJECTS,
@@ -174,7 +175,7 @@ export default (state: State = initialState, action: Action) => {
 // Helpers
 const buildUniqueTaskId = (projectId, name) => `${projectId}-${name}`;
 
-export const getTaskDescription = name => {
+export const getTaskDescription = (name: string) => {
   // NOTE: This information is currently derivable, and it's bad to store
   // derivable data in the reducer... but, I expect soon this info will be
   // editable on a project-by-project basis, and so we will need to store this
