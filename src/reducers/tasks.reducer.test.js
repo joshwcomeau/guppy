@@ -6,11 +6,13 @@ import {
   COMPLETE_TASK,
 } from '../actions';
 
-import reducer from './tasks.reducer';
+import reducer, { getTaskDescription } from './tasks.reducer';
 
 describe('Tasks reducer', () => {
   describe(REFRESH_PROJECTS, () => {
     test('captures task data from new projects', () => {
+      const initialState = reducer(undefined, {});
+
       const action = {
         type: REFRESH_PROJECTS,
         projects: {
@@ -39,9 +41,6 @@ describe('Tasks reducer', () => {
         },
       };
 
-      // Get the initial state (should just be a {})
-      const initialState = reducer(undefined, {});
-
       const actualState = reducer(initialState, action);
       const expectedState = {
         'foo-start': {
@@ -49,7 +48,7 @@ describe('Tasks reducer', () => {
           projectId: 'foo',
           name: 'start',
           command: 'react-scripts start',
-          description: 'Run a local development server',
+          description: getTaskDescription('start'),
           status: 'idle',
           timeSinceStatusChange: null,
           logs: [],
@@ -60,7 +59,7 @@ describe('Tasks reducer', () => {
           projectId: 'bar',
           name: 'start',
           command: 'react-scripts start',
-          description: 'Run a local development server',
+          description: getTaskDescription('start'),
           status: 'idle',
           timeSinceStatusChange: null,
           logs: [],
@@ -71,7 +70,7 @@ describe('Tasks reducer', () => {
           projectId: 'baz',
           name: 'start',
           command: 'react-scripts start',
-          description: 'Run a local development server',
+          description: getTaskDescription('start'),
           status: 'idle',
           timeSinceStatusChange: null,
           logs: [],
@@ -82,7 +81,7 @@ describe('Tasks reducer', () => {
           projectId: 'baz',
           name: 'build',
           command: 'react-scripts build',
-          description: 'Bundle your project for production',
+          description: getTaskDescription('build'),
           status: 'idle',
           timeSinceStatusChange: null,
           logs: [],
@@ -94,56 +93,70 @@ describe('Tasks reducer', () => {
     });
 
     test("doesn't overwrite existing task data, other than command", () => {
+      const timestamp = new Date();
+      const logs = [{ text: 'Thing happened', id: '1' }];
+
+      const initialState = {
+        'foo-start': {
+          id: 'foo-start',
+          projectId: 'foo',
+          name: 'start',
+          // By default, our initial state has the default command for `start`
+          command: 'react-scripts start',
+          description: getTaskDescription('start'),
+          status: 'idle',
+          timeSinceStatusChange: timestamp,
+          logs,
+          type: 'sustained',
+        },
+      };
+
       const action = {
         type: REFRESH_PROJECTS,
-        projects: [
-          {
+        projects: {
+          foo: {
             name: 'foo',
             guppy: { id: 'foo' },
             scripts: {
+              // The action updates the script to have a flag:
               start: 'react-scripts start --some-flag=true',
             },
           },
-          {
+          // We're also adding in a new project, just to make sure that
+          // additional projects can be added at the same time.
+          bar: {
             name: 'bar',
             guppy: { id: 'bar' },
             scripts: {
               start: 'react-scripts start',
             },
           },
-        ],
-      };
-
-      const timestamp = new Date();
-
-      const initialState = {
-        'foo-start': {
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
-          logs: 'sample output',
         },
       };
 
       const actualState = reducer(initialState, action);
       const expectedState = {
         'foo-start': {
+          id: 'foo-start',
           projectId: 'foo',
           name: 'start',
           command: 'react-scripts start --some-flag=true',
+          description: getTaskDescription('start'),
           status: 'idle',
           timeSinceStatusChange: timestamp,
-          logs: 'sample output',
+          logs,
+          type: 'sustained',
         },
         'bar-start': {
+          id: 'bar-start',
           projectId: 'bar',
           name: 'start',
           command: 'react-scripts start',
+          description: getTaskDescription('start'),
           status: 'idle',
           timeSinceStatusChange: null,
           logs: [],
+          type: 'sustained',
         },
       };
 
@@ -153,6 +166,22 @@ describe('Tasks reducer', () => {
 
   describe(ADD_PROJECT, () => {
     it('generates initial task data for a new project', () => {
+      const timestamp = new Date();
+
+      const initialState = {
+        'foo-start': {
+          id: 'foo-start',
+          projectId: 'foo',
+          name: 'start',
+          command: 'react-scripts start',
+          description: getTaskDescription('start'),
+          status: 'idle',
+          timeSinceStatusChange: timestamp,
+          logs: [],
+          type: 'sustained',
+        },
+      };
+
       const action = {
         type: ADD_PROJECT,
         project: {
@@ -164,36 +193,29 @@ describe('Tasks reducer', () => {
         },
       };
 
-      const timestamp = new Date();
-
-      const initialState = {
-        'foo-start': {
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
-          logs: 'sample output',
-        },
-      };
-
       const actualState = reducer(initialState, action);
       const expectedState = {
         'foo-start': {
+          id: 'foo-start',
           projectId: 'foo',
           name: 'start',
           command: 'react-scripts start',
+          description: getTaskDescription('start'),
           status: 'idle',
           timeSinceStatusChange: timestamp,
-          logs: 'sample output',
+          logs: [],
+          type: 'sustained',
         },
         'bar-start': {
+          id: 'bar-start',
           projectId: 'bar',
           name: 'start',
           command: 'react-scripts start',
+          description: getTaskDescription('start'),
           status: 'idle',
           timeSinceStatusChange: null,
           logs: [],
+          type: 'sustained',
         },
       };
 
@@ -203,46 +225,66 @@ describe('Tasks reducer', () => {
 
   describe(RUN_TASK, () => {
     test('marks a task as running', () => {
+      const mainTask = {
+        id: 'foo-start',
+        projectId: 'foo',
+        name: 'start',
+        command: 'react-scripts start',
+        description: getTaskDescription('start'),
+        status: 'idle',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'sustained',
+      };
+
       const initialState = {
-        'foo-start': {
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          status: 'idle',
-          timeSinceStatusChange: null,
-        },
+        'foo-start': mainTask,
         'foo-build': {
+          id: 'foo-build',
           projectId: 'foo',
           name: 'build',
           command: 'react-scripts build',
+          description: getTaskDescription('build'),
           status: 'idle',
           timeSinceStatusChange: null,
+          logs: [],
+          type: 'short-term',
         },
       };
 
+      // Running a task means that it updates the `timeSinceStatusChange`.
+      // Pass a timestamp along with the action.
       const timestamp = new Date();
+
       const action = {
         type: RUN_TASK,
-        projectId: 'foo',
-        name: 'start',
+        task: mainTask,
         timestamp,
       };
 
       const actualState = reducer(initialState, action);
       const expectedState = {
         'foo-start': {
+          id: 'foo-start',
           projectId: 'foo',
           name: 'start',
           command: 'react-scripts start',
-          status: 'running',
+          description: getTaskDescription('start'),
+          status: 'success',
           timeSinceStatusChange: timestamp,
+          logs: [],
+          type: 'sustained',
         },
         'foo-build': {
+          id: 'foo-build',
           projectId: 'foo',
           name: 'build',
           command: 'react-scripts build',
+          description: getTaskDescription('build'),
           status: 'idle',
           timeSinceStatusChange: null,
+          logs: [],
+          type: 'short-term',
         },
       };
 
@@ -250,67 +292,143 @@ describe('Tasks reducer', () => {
     });
   });
 
-  describe(`ABORT_TASK and COMPLETE_TASK`, () => {
-    test('marks a task as idle', () => {
+  describe(COMPLETE_TASK, () => {
+    test('marks a task as idle, on success', () => {
+      const mainTask = {
+        id: 'foo-start',
+        projectId: 'foo',
+        name: 'start',
+        command: 'react-scripts start',
+        description: getTaskDescription('start'),
+        status: 'success',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'sustained',
+      };
+
+      const otherTask = {
+        id: 'foo-build',
+        projectId: 'foo',
+        name: 'build',
+        command: 'react-scripts build',
+        description: getTaskDescription('build'),
+        status: 'pending',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'short-term',
+      };
+
       const initialState = {
-        'foo-start': {
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          status: 'running',
-          timeSinceStatusChange: null,
-        },
-        'foo-build': {
-          projectId: 'foo',
-          name: 'build',
-          command: 'react-scripts build',
-          status: 'running',
-          timeSinceStatusChange: null,
-        },
+        'foo-start': mainTask,
+        'foo-build': otherTask,
       };
 
       const timestamp = new Date();
 
-      // Both ABORT and COMPLETE have the same effect on the state.
-      // They're distinct since they have different implications in terms of
-      // middleware, but we aren't testing the side-effects of actual
-      // task-running.
-      const actions = [
-        {
-          type: ABORT_TASK,
-          projectId: 'foo',
-          name: 'start',
-          timestamp,
-        },
-        {
-          type: COMPLETE_TASK,
-          projectId: 'foo',
-          name: 'start',
-          timestamp,
-        },
-      ];
+      const action = {
+        type: COMPLETE_TASK,
+        task: mainTask,
+        timestamp,
+      };
 
-      actions.forEach(action => {
-        const actualState = reducer(initialState, action);
-        const expectedState = {
-          'foo-start': {
-            projectId: 'foo',
-            name: 'start',
-            command: 'react-scripts start',
-            status: 'idle',
-            timeSinceStatusChange: timestamp,
-          },
-          'foo-build': {
-            projectId: 'foo',
-            name: 'build',
-            command: 'react-scripts build',
-            status: 'running',
-            timeSinceStatusChange: null,
-          },
-        };
+      const actualState = reducer(initialState, action);
+      const expectedState = {
+        'foo-start': {
+          ...mainTask,
+          status: 'failed',
+          timeSinceStatusChange: timestamp,
+        },
+        'foo-build': otherTask,
+      };
 
-        expect(actualState).toEqual(expectedState);
-      });
+      expect(actualState).toEqual(expectedState);
+    });
+
+    test('marks a task as failed, on failure', () => {
+      const mainTask = {
+        id: 'foo-start',
+        projectId: 'foo',
+        name: 'start',
+        command: 'react-scripts start',
+        description: getTaskDescription('start'),
+        status: 'success',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'sustained',
+      };
+
+      const otherTask = {
+        id: 'foo-build',
+        projectId: 'foo',
+        name: 'build',
+        command: 'react-scripts build',
+        description: getTaskDescription('build'),
+        status: 'pending',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'short-term',
+      };
+
+      const initialState = {
+        'foo-start': mainTask,
+        'foo-build': otherTask,
+      };
+
+      const timestamp = new Date();
+
+      const action = {
+        type: COMPLETE_TASK,
+        task: mainTask,
+        timestamp,
+      };
+
+      const actualState = reducer(initialState, action);
+      const expectedState = {
+        'foo-start': {
+          ...mainTask,
+          status: 'failed',
+          timeSinceStatusChange: timestamp,
+        },
+        'foo-build': otherTask,
+      };
+
+      expect(actualState).toEqual(expectedState);
+    });
+  });
+});
+
+describe('Tasks reducer - helpers', () => {
+  describe('getTaskDescription', () => {
+    test('start', () => {
+      expect(getTaskDescription('start')).toBe(
+        'Run a local development server'
+      );
+    });
+
+    test('build', () => {
+      expect(getTaskDescription('build')).toBe(
+        'Bundle your project for production'
+      );
+    });
+
+    test('test', () => {
+      expect(getTaskDescription('test')).toBe('Run the automated tests');
+    });
+
+    test('eject', () => {
+      expect(getTaskDescription('eject')).toBe(
+        'Permanently reveal the create-react-app configuration files'
+      );
+    });
+
+    test('format', () => {
+      expect(getTaskDescription('format')).toBe(
+        'Runs a formatter that tweaks your code to align with industry best-practices'
+      );
+    });
+
+    test('unrecognized', () => {
+      expect(getTaskDescription('gfsagsdgsdfgsd')).toBe('');
     });
   });
 });
