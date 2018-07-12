@@ -1,5 +1,5 @@
 {
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "search.exclude": {
     "**/node_modules": true,
