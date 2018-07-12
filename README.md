@@ -41,7 +41,7 @@ Want to help build Guppy? This is the biggest missing feature right now, and con
 
 ### Installation
 
-To use Guppy, you'll first need to have a modern version of Node (a Javascript runtime) installed. [Download Node](https://nodejs.org/en/download/current/).
+To use Guppy, you'll first need to have a modern version of Node (a Javascript runtime) installed. [Download Node](https://nodejs.org/en/download/current/). The "Current" version is recommended over LTS due to a bug in NPM 5.6.0 that can corrupt dependencies.
 
 Once Node is installed, you can [download Guppy]() (TODO: Add link).
 

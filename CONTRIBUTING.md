@@ -44,7 +44,7 @@ npm run package
 
 The result will be in the `release-builds` folder.
 
-### Testing and Linting
+### Testing and Type-Checking
 
 Unfortunately, very little of Guppy is currently tested.
 
@@ -52,6 +52,12 @@ We hope to add more tests in the meantime, as well as add CI integration to run 
 
 ```
 npm run test
+```
+
+This project uses Flow, and the types can be checked with:
+
+```
+npm run flow
 ```
 
 This project uses Prettier, this should be run automatically on commit.
