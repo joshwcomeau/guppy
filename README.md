@@ -21,7 +21,7 @@ Guppy is made for beginners - folks who are just starting out with web developme
 
 ### Download
 
-[Download Guppy]() (TODO: Add link)
+[Download Guppy](https://github.com/joshwcomeau/guppy/releases/download/v0.0.1/Guppy-MacOS.zip)
 
 For more information on setup, see [Installation](#installation) below.
 
@@ -43,7 +43,7 @@ Want to help build Guppy? This is the biggest missing feature right now, and con
 
 To use Guppy, you'll first need to have a modern version of Node (a Javascript runtime) installed. [Download Node](https://nodejs.org/en/download/current/). The "Current" version is recommended over LTS due to a bug in NPM 5.6.0 that can corrupt dependencies.
 
-Once Node is installed, you can [download Guppy]() (TODO: Add link).
+Once Node is installed, you can [download Guppy](https://github.com/joshwcomeau/guppy/releases/download/v0.0.1/Guppy-MacOS.zip)
 
 Double-click the downloaded executable to open Guppy.
 
