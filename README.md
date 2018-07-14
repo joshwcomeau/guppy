@@ -12,18 +12,12 @@ Guppy is a free-to-use desktop application designed to make it easier to get sta
 
 - Creating new projects
 - Running a development server
-- Executing tasks (building for production, running tests, ...)
+- Executing tasks (building for production, running tests)
 - Managing dependencies (adding, updating, searching)
 
 Guppy is made for beginners - folks who are just starting out with web development. We hope that it's powerful enough for advanced users as well, but we'll always prioritize the new-developer experience. We'll never charge money for Guppy, it'll always be free-to-use.
 
 > **NOTE**: This is _super early pre-release alpha_. Truthfully it's probably not ready for beginner usage yet (there may be frustrating bugs, plus it only runs on MacOS). The goal is to build a community of folks to work on this and create something truly useful and wonderful for beginners.
-
-### Download
-
-[Download Guppy](https://github.com/joshwcomeau/guppy/releases/download/v0.0.1/Guppy-MacOS.zip)
-
-For more information on setup, see [Installation](#installation) below.
 
 ### Current Status
 
@@ -37,7 +31,7 @@ Also, important to note: this is a side-project worked on during spare time. We 
 
 Right now, **Guppy only works for MacOS**. We hope to support Windows and Linux soon.
 
-Want to help build Guppy? This is the biggest missing feature right now, and contributions would be extremely welcome.
+Want to help build Guppy? This is the biggest missing feature right now, and contributions would be extremely welcome. [Here's the relevant issue](https://github.com/joshwcomeau/guppy/issues/27)
 
 ### Installation
 
@@ -45,9 +39,9 @@ To use Guppy, you'll first need to have a modern version of Node (a Javascript r
 
 Once Node is installed, you can [download Guppy](https://github.com/joshwcomeau/guppy/releases/download/v0.0.1/Guppy-MacOS.zip)
 
-Double-click the downloaded executable to open Guppy.
+Double-click the downloaded executable to open Guppy. You may need to right-click and select "Open" if MacOS complains about the fact that this was downloaded from the internet.
 
-> Note: In future stable releases, I hope to remove the need to download Node by using the Node runtime that comes with Guppy. I also plan to create a proper installer so that it's easy to copy Guppy to the Applications folder. Contributions welcome!
+> Note: In future stable releases, I hope to remove the need to download Node by using the Node runtime that comes with Guppy (see [#44](https://github.com/joshwcomeau/guppy/issues/44)). I also plan to create a proper installer so that it's easy to copy Guppy to the Applications folder (see [#26](https://github.com/joshwcomeau/guppy/issues/26)). Contributions welcome!
 
 ### Getting Started
 
