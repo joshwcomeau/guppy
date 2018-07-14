@@ -46,6 +46,7 @@ export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
   'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
+export const SHOW_PROJECT_IN_FINDER = 'SHOW_PROJECT_IN_FINDER';
 
 //
 //
@@ -282,6 +283,11 @@ export const importExistingProjectFinish = (
   type: IMPORT_EXISTING_PROJECT_FINISH,
   path,
   project,
+});
+
+export const showProjectInFinder = (path: string) => ({
+  type: SHOW_PROJECT_IN_FINDER,
+  path,
 });
 
 // export const ejectProjectStart = (task: Task, timestamp: Date) => ({

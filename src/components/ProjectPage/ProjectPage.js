@@ -6,7 +6,7 @@ import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
-import { loadDependencyInfoFromDisk } from '../../actions';
+import { loadDependencyInfoFromDisk, showProjectInFinder } from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -15,12 +15,14 @@ import Spacer from '../Spacer';
 import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
+import TextButton from '../TextButton';
 
 import type { Project } from '../../types';
 
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
+  showProjectInFinder: (path: string) => any,
   location: any, // provided by react-router
   match: any, // provided by react-router
   history: any, // provided by withRouter HOC
@@ -61,7 +63,7 @@ class ProjectPage extends Component<Props> {
   }
 
   render() {
-    const { project } = this.props;
+    const { project, showProjectInFinder } = this.props;
 
     if (!project) {
       return null;
@@ -75,7 +77,9 @@ class ProjectPage extends Component<Props> {
               {project.name}
             </Heading>
           </PixelShifter>
-
+          <TextButton onClick={() => showProjectInFinder(project.path)}>
+            Show in Finder
+          </TextButton>
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />
 
@@ -112,6 +116,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { loadDependencyInfoFromDisk }
+    { loadDependencyInfoFromDisk, showProjectInFinder }
   )(ProjectPage)
 );
