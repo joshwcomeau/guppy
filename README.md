@@ -27,13 +27,9 @@ Want to help build something great for newcomers? We're actively looking for con
 
 Also, important to note: this is a side-project worked on during spare time. We appreciate any bug reports, but realistically we may not be able to fix issues in a timely manner (feel free to contribute fixes though!)
 
-### Platform Support
+### Installation
 
 Right now, **Guppy only works for MacOS**. We hope to support Windows and Linux soon.
-
-Want to help build Guppy? This is the biggest missing feature right now, and contributions would be extremely welcome. [Here's the relevant issue](https://github.com/joshwcomeau/guppy/issues/27)
-
-### Installation
 
 To use Guppy, you'll first need to have a modern version of Node (a Javascript runtime) installed. [Download Node](https://nodejs.org/en/download/current/). The "Current" version is recommended over LTS due to a bug in NPM 5.6.0 that can corrupt dependencies.
 
