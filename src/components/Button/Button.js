@@ -104,6 +104,7 @@ const ButtonBase = styled.button`
   align-items: center;
   cursor: pointer;
   outline: none;
+  color: ${COLORS.gray[900]};
 
   &:not(:disabled):active rect {
     stroke-width: 4;
