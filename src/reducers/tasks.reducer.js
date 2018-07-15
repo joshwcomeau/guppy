@@ -26,6 +26,7 @@ import {
   ATTACH_TASK_METADATA,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
   IMPORT_EXISTING_PROJECT_FINISH,
+  CLEAR_CONSOLE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -108,6 +109,14 @@ export default (state: State = initialState, action: Action) => {
 
         draftState[task.id].status = nextStatus;
         draftState[task.id].timeSinceStatusChange = timestamp;
+      });
+    }
+
+    case CLEAR_CONSOLE: {
+      const { task } = action;
+
+      return produce(state, draftState => {
+        draftState[task.id].logs = [];
       });
     }
 

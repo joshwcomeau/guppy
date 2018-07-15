@@ -14,12 +14,19 @@ type Props = {
   title: string,
   moreInfoHref: string,
   primaryActionChildren: React$Node,
+  extraButtons: React$Node,
   children: React$Node,
 };
 
 class Pane extends Component<Props> {
   render() {
-    const { title, moreInfoHref, primaryActionChildren, children } = this.props;
+    const {
+      title,
+      moreInfoHref,
+      primaryActionChildren,
+      extraButtons,
+      children,
+    } = this.props;
 
     return (
       <Fragment>
@@ -36,6 +43,7 @@ class Pane extends Component<Props> {
               </HelpButton>
             )}
           </Heading>
+          <ActionWrapper>{extraButtons}</ActionWrapper>
           <ActionWrapper>{primaryActionChildren}</ActionWrapper>
         </Header>
         {children}

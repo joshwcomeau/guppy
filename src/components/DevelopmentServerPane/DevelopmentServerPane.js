@@ -3,15 +3,16 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { launchDevServer, abortTask } from '../../actions';
+import { launchDevServer, clearConsole, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getDocumentationLink } from '../../services/project-type-specifics';
-import { BREAKPOINTS } from '../../constants';
+import { BREAKPOINTS, COLORS } from '../../constants';
 
 import Module from '../Module';
 import Card from '../Card';
 import Toggle from '../Toggle';
+import Button from '../Button';
 import Spacer from '../Spacer';
 import TerminalOutput from '../TerminalOutput';
 import ExternalLink from '../ExternalLink';
@@ -23,6 +24,7 @@ import type { Project, Task } from '../../types';
 type Props = {
   project: Project,
   task: ?Task,
+  clearConsole: (task: Task) => void,
   launchDevServer: (task: Task, timestamp: Date) => void,
   abortTask: (task: Task, timestamp: Date) => void,
 };
@@ -44,6 +46,16 @@ class DevelopmentServerPane extends PureComponent<Props> {
     } else {
       abortTask(task, timestamp);
     }
+  };
+
+  handleClear = () => {
+    const { task, clearConsole } = this.props;
+
+    if (!task) {
+      return;
+    }
+
+    clearConsole(task);
   };
 
   render() {
@@ -80,6 +92,17 @@ class DevelopmentServerPane extends PureComponent<Props> {
       <Module
         title="Development Server"
         moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#development-server"
+        extraButtons={
+          <Button
+            size="small"
+            color1={COLORS.red[700]}
+            color2={COLORS.red[500]}
+            textColor={COLORS.red[700]}
+            onClick={this.handleClear}
+          >
+            Clear
+          </Button>
+        }
         primaryActionChildren={
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
@@ -180,7 +203,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { launchDevServer, abortTask };
+const mapDispatchToProps = { launchDevServer, abortTask, clearConsole };
 
 export default connect(
   mapStateToProps,
