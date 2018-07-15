@@ -29,9 +29,9 @@ ReactDOM.render(
         <Fragment>
           <App />
           <DevTools />
-        </Fragment>{' '}
-      </Router>{' '}
-    </NodeProvider>{' '}
+        </Fragment>
+      </Router>
+    </NodeProvider>
   </Provider>,
   root
 );
