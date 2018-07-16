@@ -59,13 +59,8 @@ export const getDefaultParentPath = () => {
       encoding: 'utf8',
     }
   );
-  const winDocumentsPath = winDocumentsRegRecord
-    .split('   ')
-    [winDocumentsRegRecord.split('   ').length - 1].replace(
-      '%USERPROFILE%\\',
-      ''
-    )
-    .replace(/\s/g, '');
+  // prettier-ignore
+  const winDocumentsPath = winDocumentsRegRecord.split('   ')[winDocumentsRegRecord.split('   ').length - 1].replace('%USERPROFILE%\\', '').replace(/\s/g, '');
   const homedir = isWin
     ? path.join(os.homedir(), winDocumentsPath)
     : os.homedir();
