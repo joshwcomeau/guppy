@@ -61,7 +61,7 @@ Note that this icon is not intended to be used within your application, it's sim
 
 ### Importing an Existing Project
 
-If you've built a create-react-app or Gatsby project outside of Gatsby, you may be able to import it to use within Guppy.
+If you've built a create-react-app or Gatsby project outside of Guppy, you may be able to import it to use within Guppy.
 
 Guppy will save a reference to that project, so that the next time you open Guppy, that project is remembered. If the project's path on the disk changes, like if you move it to another directory, you'll need to re-import it, but all of the settings will be saved (we store this information in your project's package.json, so Guppy will always recognize it when it's re-imported, even if it's on another computer!).
 
