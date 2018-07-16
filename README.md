@@ -43,6 +43,14 @@ Double-click the downloaded executable to open Guppy. You may need to right-clic
 
 Learn more about using Guppy in our [Getting Started guide](https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md).
 
+### Internationalization
+
+Unfortunately, Guppy is only available in English right now. Internationalization is being tracked in [#66](https://github.com/joshwcomeau/guppy/issues/66), although truthfully it's pretty far in the horizon.
+
+In the meantime, some folks have started translating the docs into different languages! So, while the app is English-only, at least the docs are translated:
+
+[![china](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/China.png) **中文/Chinese**](https://github.com/chinanf-boy/guppy-docs-zh)
+
 ### How it works
 
 Guppy is an electron application that secretly runs terminal commands for you in the background. It uses **create-react-app** and **gatsby-cli**. Support could conceivably be added for Next, and other project types (including non-React ones)
