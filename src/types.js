@@ -32,6 +32,11 @@ export type Task = {
   logs: Array<Log>,
 };
 
+export type Repository = {
+  type: string,
+  url: string,
+};
+
 export type Dependency = {
   name: string,
   description: string,
@@ -39,7 +44,7 @@ export type Dependency = {
   version: string,
   homepage: string,
   license: string,
-  repository: string,
+  repository: Repository,
   // All of the above fields are straight from the dependency's package.json.
   // The status field is separate, and used to show loading indicators while
   // performing actions on the dependency.
