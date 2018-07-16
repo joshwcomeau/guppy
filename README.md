@@ -43,6 +43,14 @@ Double-click the downloaded executable to open Guppy. You may need to right-clic
 
 Learn more about using Guppy in our [Getting Started guide](https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md).
 
+### Internationalization
+
+Unfortunately, Guppy is only available in English right now. Internationalization is being tracked in [#66](https://github.com/joshwcomeau/guppy/issues/66), although truthfully it's pretty far in the horizon.
+
+In the meantime, some folks have started translating the docs into different languages! So, while the app is English-only, at least the docs are translated:
+
+[![china](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/China.png) **中文/Chinese**](https://github.com/chinanf-boy/guppy-docs-zh)
+
 ### How it works
 
 Guppy is an electron application that secretly runs terminal commands for you in the background. It uses **create-react-app** and **gatsby-cli**. Support could conceivably be added for Next, and other project types (including non-React ones)
@@ -64,3 +72,7 @@ The first big change I'd like to see is better support for common dev tools like
 - Dependencies should be easy to update. I imagine an "update core dependencies" button that updates react, react-dom, and any associated packages, with built-in codemod support. I imagine it being able to find security problems (via [`npm audit`](https://docs.npmjs.com/getting-started/running-a-security-audit)).
 
 I'd also like to see Guppy become far more useful for educating users about web development. The philosophy of Guppy is that anybody can learn web development, and it should provide resources to help learners along. Guppy has full access to the project code and settings, and so I wonder if there are opportunities to suggest solutions to problems the user runs into... I don't have any concrete ideas yet, but it's interesting to think about.
+
+### Chat
+
+Come hang out with us [on Gitter](https://gitter.im/guppy-gui/Lobby)!

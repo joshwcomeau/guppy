@@ -19,7 +19,7 @@ Visit the [issue tracker](https://github.com/joshwcomeau/guppy/issues) to find a
 Fork, then clone the repo:
 
 ```
-git clone https://github.com/your-username/redux.git
+git clone https://github.com/your-username/guppy.git
 ```
 
 ### Running
