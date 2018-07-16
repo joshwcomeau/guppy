@@ -13,14 +13,13 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
+import { isWin } from '../services/platform.services';
 
 import type { Task, ProjectType } from '../types';
 
 const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
 const psTree = window.require('ps-tree');
-const os = window.require('os');
-const isWin = /^win/.test(os.platform());
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
@@ -97,8 +96,8 @@ export default (store: any) => (next: any) => (action: any) => {
           child.on('exit', code => {
             // For Windows Support
             // Windows sends code 1 (I guess its because we foce kill??)
-            const successfullCode = isWin ? 1 : 0;
-            const wasSuccessful = code === successfullCode || code === null;
+            const successfulCode = isWin ? 1 : 0;
+            const wasSuccessful = code === successfulCode || code === null;
             const timestamp = new Date();
 
             store.dispatch(completeTask(task, timestamp, wasSuccessful));
@@ -163,12 +162,10 @@ export default (store: any) => (next: any) => (action: any) => {
       next(attachTaskMetadata(task, child.pid));
 
       child.stdout.on('data', data => {
-        console.log('data stdout', data, task);
         next(receiveDataFromTaskExecution(task, data.toString()));
       });
 
       child.stderr.on('data', data => {
-        console.log('data stdin', data, task);
         next(receiveDataFromTaskExecution(task, data.toString()));
       });
 

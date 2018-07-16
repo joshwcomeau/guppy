@@ -5,6 +5,8 @@ import random from 'random-seed';
 import { COLORS } from '../constants';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
 
+import { isWin } from './platform.services';
+
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
 import type { ProjectType } from '../types';
@@ -12,8 +14,6 @@ import type { ProjectType } from '../types';
 const fs = window.require('fs');
 const childProcess = window.require('child_process');
 const path = window.require('path');
-const os = window.require('os');
-const isWin = /^win/.test(os.platform());
 
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
