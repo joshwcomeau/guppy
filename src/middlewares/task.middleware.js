@@ -19,6 +19,8 @@ import type { Task, ProjectType } from '../types';
 const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
 const psTree = window.require('ps-tree');
+const os = window.require('os');
+const isWin = /^win/.test(os.platform());
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
@@ -93,7 +95,10 @@ export default (store: any) => (next: any) => (action: any) => {
           });
 
           child.on('exit', code => {
-            const wasSuccessful = code === 0 || code === null;
+            // For Windows Support
+            // Windows sends code 1 (I guess its because we foce kill??)
+            const successfullCode = isWin ? 1 : 0;
+            const wasSuccessful = code === successfullCode || code === null;
             const timestamp = new Date();
 
             store.dispatch(completeTask(task, timestamp, wasSuccessful));
@@ -158,10 +163,12 @@ export default (store: any) => (next: any) => (action: any) => {
       next(attachTaskMetadata(task, child.pid));
 
       child.stdout.on('data', data => {
+        console.log('data stdout', data, task);
         next(receiveDataFromTaskExecution(task, data.toString()));
       });
 
       child.stderr.on('data', data => {
+        console.log('data stdin', data, task);
         next(receiveDataFromTaskExecution(task, data.toString()));
       });
 
@@ -182,30 +189,15 @@ export default (store: any) => (next: any) => (action: any) => {
       const { task } = action;
       const { processId, name } = task;
 
-      // Our child was spawned using `shell: true` to get around a quirk with
-      // electron not working when specifying environment variables the
-      // "correct" way (see comment above).
-      //
-      // Because of that, `child.pid` refers to the `sh` command that spawned
-      // the actual Node process, and so we need to use `psTree` to build a
-      // tree of descendent children and kill them that way.
-      psTree(processId, (err, children) => {
-        if (err) {
-          console.error('Could not gather process children:', err);
-        }
-
-        const childrenPIDs = children.map(child => child.PID);
-
-        childProcess.spawn('kill', ['-9', ...childrenPIDs]);
-
+      if (isWin) {
+        // For Windows Support
+        // On Windows there is only one process so no need for psTree (see below)
+        // We use /f for focefully terminate process because it ask for confirmation
+        // We use /t to kill all child processes
+        // More info https://ss64.com/nt/taskkill.html
+        childProcess.spawn('taskkill', ['/pid', processId, '/f', '/t']);
         ipcRenderer.send('removeProcessId', processId);
 
-        // Once the children are killed, we should dispatch a notification
-        // so that the terminal shows something about this update.
-        // My initial thought was that all tasks would have the same message,
-        // but given that we're treating `start` as its own special thing,
-        // I'm realizing that it should vary depending on the task type.
-        // TODO: Find a better place for this to live.
         const abortMessage = isDevServerTask(name)
           ? 'Server stopped'
           : 'Task aborted';
@@ -216,7 +208,43 @@ export default (store: any) => (next: any) => (action: any) => {
             `\u001b[31;1m${abortMessage}\u001b[0m`
           )
         );
-      });
+      } else {
+        // Our child was spawned using `shell: true` to get around a quirk with
+        // electron not working when specifying environment variables the
+        // "correct" way (see comment above).
+        //
+        // Because of that, `child.pid` refers to the `sh` command that spawned
+        // the actual Node process, and so we need to use `psTree` to build a
+        // tree of descendent children and kill them that way.
+        psTree(processId, (err, children) => {
+          if (err) {
+            console.error('Could not gather process children:', err);
+          }
+
+          const childrenPIDs = children.map(child => child.PID);
+
+          childProcess.spawn('kill', ['-9', ...childrenPIDs]);
+
+          ipcRenderer.send('removeProcessId', processId);
+
+          // Once the children are killed, we should dispatch a notification
+          // so that the terminal shows something about this update.
+          // My initial thought was that all tasks would have the same message,
+          // but given that we're treating `start` as its own special thing,
+          // I'm realizing that it should vary depending on the task type.
+          // TODO: Find a better place for this to live.
+          const abortMessage = isDevServerTask(name)
+            ? 'Server stopped'
+            : 'Task aborted';
+
+          next(
+            receiveDataFromTaskExecution(
+              task,
+              `\u001b[31;1m${abortMessage}\u001b[0m`
+            )
+          );
+        });
+      }
 
       break;
     }
@@ -261,9 +289,12 @@ const getDevServerCommand = (
   projectType: ProjectType,
   port: string
 ) => {
+  let command;
   switch (projectType) {
     case 'create-react-app':
-      return [`PORT=${port} npm`, 'run', task.name];
+      // For Windows Support
+      command = isWin ? `set PORT=${port} && npm` : `PORT=${port} npm`;
+      return [command, 'run', task.name];
     case 'gatsby':
       return ['npm', 'run', task.name, '--', `-p ${port}`];
     default:
