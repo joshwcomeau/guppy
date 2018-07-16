@@ -1,3 +1,4 @@
+const childProcess = window.require('child_process');
 const os = window.require('os');
 const path = window.require('path');
 
@@ -19,7 +20,7 @@ export const getWindowsHomeDir = () => {
   );
 
   const winDocPathArray = winDocumentsRegRecord.split(' ');
-  const winDocPath = winDocumentsPathArray[winDocPathArray.length - 1]
+  const winDocPath = winDocPathArray[winDocPathArray.length - 1]
     .replace('%USERPROFILE%\\', '')
     .replace(/\s/g, '');
   return path.join(os.homedir(), winDocPath);
