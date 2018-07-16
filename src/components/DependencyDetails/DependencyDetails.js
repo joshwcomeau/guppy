@@ -80,7 +80,7 @@ const Name = styled(Heading)`
 const Description = styled.div`
   font-size: 20px;
   font-weight: 400;
-  color: ${COLORS.gray[300]};
+  color: ${COLORS.transparentWhite[300]};
   -webkit-font-smoothing: antialiased;
 `;
 
