@@ -13,7 +13,10 @@ import { ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
 
 import type { Action } from 'redux';
 
+const childProcess = window.require('child_process');
+const path = window.require('path');
 const os = window.require('os');
+const isWin = /^win/.test(os.platform());
 
 type State = {
   [projectId: string]: string,
@@ -42,12 +45,34 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-export const getDefaultParentPath = () =>
+export const getDefaultParentPath = () => {
   // Noticing some weird quirks when I try to use a dev project on the compiled
   // "production" app, so separating their home paths should help.
-  process.env.NODE_ENV === 'development'
-    ? `${os.homedir()}/guppy-projects-dev`
-    : `${os.homedir()}/guppy-projects`;
+
+  // For Windows Support
+  // Documents folder is much better place for project folders (Most programs use it as a default save location)
+  // Since there is a chance of being moved or users language might be differet we are reading the value from Registery
+  // There might be a better solution but this seems ok so far
+  const winDocumentsRegRecord = childProcess.execSync(
+    'REG QUERY "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders" /v Personal',
+    {
+      encoding: 'utf8',
+    }
+  );
+  const winDocumentsPath = winDocumentsRegRecord
+    .split('   ')
+    [winDocumentsRegRecord.split('   ').length - 1].replace(
+      '%USERPROFILE%\\',
+      ''
+    )
+    .replace(/\s/g, '');
+  const homedir = isWin
+    ? path.join(os.homedir(), winDocumentsPath)
+    : os.homedir();
+  return process.env.NODE_ENV === 'development'
+    ? path.join(homedir, '/guppy-projects-dev')
+    : path.join(homedir, '/guppy-projects');
+};
 
 export const getDefaultPath = (projectId: string) =>
   `${getDefaultParentPath()}/${projectId}`;

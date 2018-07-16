@@ -48,25 +48,28 @@ let isElectronRunning = false;
  * Prevents multiple re-runs of Electron App
  */
 function runElectronApp() {
-  if (isElectronRunning)
-    return;
+  if (isElectronRunning) return;
 
   isElectronRunning = true;
-
-  exec(`ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`,
-    (err, stdout, stderr) => {
-      if (err) {
-        console.info(chalk.red('Electron app run failed: ') + stderr);
-        return;
-      }
-
-      // Clear console for brevity
-      process.stdout.write('\x1bc');
-
-      // Log output
-      console.info(stdout);
+  // For Windows Support
+  // Here cross-env can be used but
+  // since its not that big of a control I checked manually
+  // Maybe some env variable like `isWin` can be passed to the procces for easy use???
+  const command = /^win/.test(process.platform)
+    ? `set ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} && electron .`
+    : `ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`;
+  exec(command, (err, stdout, stderr) => {
+    if (err) {
+      console.info(chalk.red('Electron app run failed: ') + stderr);
+      return;
     }
-  );
+
+    // Clear console for brevity
+    process.stdout.write('\x1bc');
+
+    // Log output
+    console.info(stdout);
+  });
 }
 
 // Warn and crash if required files are missing
@@ -137,8 +140,8 @@ checkBrowsers(paths.appPath)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    ['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
+    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
+      process.on(sig, function() {
         devServer.close();
         process.exit();
       });
@@ -146,12 +149,10 @@ checkBrowsers(paths.appPath)
 
     /**
      * Hook runElectronApp() to 'done' (compile) event
-     * 
+     *
      * Fails on error
      */
-    compiler.plugin('done',
-      stats => !stats.hasErrors() && runElectronApp()
-    );
+    compiler.plugin('done', stats => !stats.hasErrors() && runElectronApp());
   })
   .catch(err => {
     if (err && err.message) {
