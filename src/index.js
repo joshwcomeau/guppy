@@ -16,6 +16,25 @@ import { COLORS } from './constants';
 import './fonts.css';
 import './base.css';
 
+// Set global styles
+// NOTE: There are also baseline styles in `src/base.css`. These are just the
+// subset that require variables.
+injectGlobal`
+  html,
+  body,
+  input,
+  button,
+  select,
+  option {
+    /* This is important for MacOS Mojave's dark mode */
+    color: ${COLORS.gray[900]};
+  }
+
+  body {
+    background: ${COLORS.gray[50]};
+  }
+`;
+
 const initialState = getInitialState();
 
 const store = configureStore(initialState);
@@ -35,20 +54,3 @@ ReactDOM.render(
   </Provider>,
   root
 );
-
-injectGlobal`
-  html,
-  body,
-  input,
-  button,
-  select,
-  option {
-    color: ${COLORS.gray[900]};
-    font-family: 'Futura PT';
-  }
-
-  body {
-    background: ${COLORS.gray[50]};
-    color: ${COLORS.gray[900]};
-  }
-`;
