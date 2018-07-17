@@ -4,6 +4,7 @@ import {
   IMPORT_EXISTING_PROJECT_START,
   importExistingProjectStart,
   importExistingProjectFinish,
+  importExistingProjectError,
 } from '../actions';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import {
@@ -119,6 +120,8 @@ export default (store: any) => (next: any) => (action: any) => {
               break;
             }
           }
+
+          next(importExistingProjectError());
         });
 
       return;

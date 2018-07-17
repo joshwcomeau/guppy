@@ -5,6 +5,7 @@ import {
   DISMISS_SIDEBAR_INTRO,
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_START,
+  IMPORT_EXISTING_PROJECT_ERROR,
   IMPORT_EXISTING_PROJECT_FINISH,
   REFRESH_PROJECTS,
   SELECT_PROJECT,
@@ -32,6 +33,7 @@ export default (state: State = initialState, action: Action) => {
       return state === 'brand-new' ? 'creating-first-project' : state;
     }
 
+    case IMPORT_EXISTING_PROJECT_ERROR:
     case CREATE_NEW_PROJECT_CANCEL: {
       return state === 'creating-first-project' ? 'brand-new' : state;
     }
