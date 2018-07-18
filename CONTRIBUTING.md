@@ -26,7 +26,7 @@ git clone https://github.com/your-username/guppy.git
 
 #### Local development
 
-To get started, install all of Guppy's dependencies with [yarn](https://yarnpkg.com/en/docs/getting-started). While you can also use npm for this,we use a `yarn.lock` file to keep everyone's dependecy versions consistent.
+To get started, install all of Guppy's dependencies with [yarn](https://yarnpkg.com/en/docs/getting-started). While you can also use npm for this, we use a `yarn.lock` file to keep everyone's dependecy versions consistent.
 
 ```
 yarn install
