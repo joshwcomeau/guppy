@@ -4,9 +4,7 @@ import uuid from 'uuid/v1';
 import {
   loadGuppyProjects,
   loadAllProjectDependencies,
-  loadPackageJson,
 } from '../services/read-from-disk.service';
-import { reinstallDependencies } from '../services/dependencies.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 
 import type { Project, Task, Dependency } from '../types';
