@@ -4,18 +4,18 @@
 
 ![Guppy project screen](https://github.com/joshwcomeau/guppy/raw/master/docs/images/main-image.png)
 
+Guppy is a free-to-use desktop application designed to make it easier to start building React web products. 
+
 There are a lot of "meta" skills around React web development that don't really have anything to do with building great web products.
 
-For example, the terminal. For those of us who didn't grow up on a unix shell, the terminal is an inscrutable box of cryptic and indecipherable commands. It's undoubtedly powerful, and a valuable skill to develop... but should it really be a pre-requisite for modern web development?
-
-Guppy is a free-to-use desktop application designed to make it easier to get started building React web products. It provides a friendly GUI for many of the typical tasks facing React developers:
-
+For example, the terminal. For those of us who didn't grow up on a unix shell, the terminal is an inscrutable box of cryptic and indecipherable commands. It's undoubtedly powerful, and a valuable skill to develop... but should it really be a pre-requisite for modern web development? Whereas, Guppy provides a friendly GUI for many of the typical tasks facing React developers:
 - Creating new projects
 - Running a development server
 - Executing tasks (building for production, running tests)
 - Managing dependencies (adding, updating, searching)
 
-Guppy is made for beginners - folks who are just starting out with web development. We hope that it's powerful enough for advanced users as well, but we'll always prioritize the new-developer experience. We'll never charge money for Guppy, it'll always be free-to-use.
+Guppy is made for beginners - folks who are just starting out with web development. We hope that it's powerful enough for advanced users as well, but we'll always prioritize the new-developer experience. Guppy will always be free-to-use.
+
 
 > **NOTE**: This is _super early pre-release alpha_. Truthfully it's probably not ready for beginner usage yet (there may be frustrating bugs, plus it only runs on MacOS). The goal is to build a community of folks to work on this and create something truly useful and wonderful for beginners.
 
