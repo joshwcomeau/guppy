@@ -26,20 +26,26 @@ git clone https://github.com/your-username/guppy.git
 
 #### Local development
 
-You can get started developing locally by running the `start` task:
+To get started, install all of Guppy's dependencies with [yarn](https://yarnpkg.com/en/docs/getting-started). While you can also use npm for this, we use a `yarn.lock` file to keep everyone's dependecy versions consistent.
 
 ```
-npm run start
+yarn install
+```
+
+Next, run the `start` task to get the app running locally:
+
+```
+yarn start
 ```
 
 This should open an Electron window with the application running.
 
 In development, all projects are created at `~/guppy-projects-dev`
 
-You can build a MacOS executable by running:
+You can build a macOS executable by running:
 
 ```
-npm run package
+yarn package
 ```
 
 The result will be in the `release-builds` folder.
@@ -51,16 +57,20 @@ Unfortunately, very little of Guppy is currently tested.
 We hope to add more tests in the meantime, as well as add CI integration to run tests on push, but for now you can run the tests with:
 
 ```
-npm run test
+yarn test
 ```
 
 This project uses Flow, and the types can be checked with:
 
 ```
-npm run flow
+yarn flow
 ```
 
-This project uses Prettier, this should be run automatically on commit.
+This project uses Prettier, this should be run automatically on commit. That step requires that you have yarn installed.
+
+### Debugging
+
+To help you debug, you can open the chromium developer tools inside the running Electron instance from the `View` menu. You can also open the redux developer tools with <kbd>ctrl</kbd>+<kbd>h</kbd> and close them with <kbd>ctrl</kbd>+<kbd>q</kbd>.
 
 ### Docs
 
