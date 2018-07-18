@@ -92,17 +92,6 @@ class DevelopmentServerPane extends PureComponent<Props> {
       <Module
         title="Development Server"
         moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#development-server"
-        extraButtons={
-          <Button
-            size="small"
-            color1={COLORS.red[700]}
-            color2={COLORS.red[500]}
-            textColor={COLORS.red[700]}
-            onClick={this.handleClear}
-          >
-            Clear
-          </Button>
-        }
         primaryActionChildren={
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
@@ -115,6 +104,20 @@ class DevelopmentServerPane extends PureComponent<Props> {
               {docLink}
             </InfoWrapper>
             <TerminalWrapper>
+              <ButtonWrapper>
+                <Title>Server Logs</Title>
+                <ButtonStrip>
+                  <Button
+                    size="small"
+                    color1={COLORS.red[700]}
+                    color2={COLORS.red[500]}
+                    textColor={COLORS.red[700]}
+                    onClick={this.handleClear}
+                  >
+                    Clear
+                  </Button>
+                </ButtonStrip>
+              </ButtonWrapper>
               <TerminalOutput height={300} logs={task.logs} />
             </TerminalWrapper>
           </Wrapper>
@@ -184,6 +187,20 @@ const TerminalWrapper = styled.div`
     flex: 11;
     padding-left: 20px;
   }
+`;
+
+const ButtonWrapper = styled.label`
+  display: flex;
+`;
+
+const ButtonStrip = styled.div`
+  padding: 5px;
+  margin-left: auto;
+`;
+
+const Title = styled.div`
+  line-height: 38px;
+  font-size: 150%;
 `;
 
 const mapStateToProps = state => {

@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import {
   createNewProjectStart,
   showImportExistingProjectPrompt,
+  clearConsole,
 } from '../../actions';
 
 const { shell } = window.require('electron');
@@ -16,6 +17,7 @@ const { app, process, Menu } = window.require('electron').remote;
 type Props = {
   createNewProjectStart: () => any,
   showImportExistingProjectPrompt: () => any,
+  clearConsole: () => any,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -25,6 +27,7 @@ class ApplicationMenu extends Component<Props> {
     const {
       createNewProjectStart,
       showImportExistingProjectPrompt,
+      clearConsole,
     } = this.props;
 
     const template = [
@@ -105,6 +108,7 @@ class ApplicationMenu extends Component<Props> {
 const mapDispatchToProps = {
   createNewProjectStart,
   showImportExistingProjectPrompt,
+  clearConsole,
 };
 
 export default connect(
