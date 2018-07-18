@@ -210,15 +210,18 @@ export const delay = duration =>
 export const getTimeOfDay = () => {
   const now = new Date();
   const hourOfDay = now.getHours();
-  let dayType = 'night';
-  if (hourOfDay <= 11) {
-    dayType = 'morning';
+
+  if (hourOfDay <= 4) {
+    return 'night';
+  } else if (hourOfDay <= 11) {
+    return 'morning';
   } else if (hourOfDay <= 17) {
-    dayType = 'afternoon';
+    return 'afternoon';
   } else if (hourOfDay <= 21) {
-    dayType = 'evening';
-  } 
-  return dayType;
+    return 'evening';
+  } else {
+    return 'night';
+  }
 };
 
 export const hasPropChanged = (oldProps, newProps, key) => {
