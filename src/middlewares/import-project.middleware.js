@@ -134,23 +134,27 @@ export default (store: any) => (next: any) => (action: any) => {
 };
 
 const inferProjectType = json => {
-  const dependencyNames = Object.keys(json.dependencies);
+  // Make sure to check for the existance of dependencies
+  // because sometimes package.json only has devDependencies
+  if (json.dependencies) {
+    const dependencyNames = Object.keys(json.dependencies);
 
-  if (dependencyNames.includes('gatsby')) {
-    return 'gatsby';
-  } else if (dependencyNames.includes('react-scripts')) {
-    return 'create-react-app';
-  }
+    if (dependencyNames.includes('gatsby')) {
+      return 'gatsby';
+    } else if (dependencyNames.includes('react-scripts')) {
+      return 'create-react-app';
+    }
 
-  // An ejected create-react-app won't have `react-scripts`.
-  // So it actually becomes kinda hard to figure out what kind of project it is!
-  // One strong clue is that it will have `eslint-config-react-app` as a
-  // dependency... this isn't foolproof since a user could easily uninstall
-  // that dependency, but it'll work for now.
-  // In the future, could also check the `config` dir for the standard React
-  // scripts
-  if (dependencyNames.includes('eslint-config-react-app')) {
-    return 'create-react-app';
+    // An ejected create-react-app won't have `react-scripts`.
+    // So it actually becomes kinda hard to figure out what kind of project it is!
+    // One strong clue is that it will have `eslint-config-react-app` as a
+    // dependency... this isn't foolproof since a user could easily uninstall
+    // that dependency, but it'll work for now.
+    // In the future, could also check the `config` dir for the standard React
+    // scripts
+    if (dependencyNames.includes('eslint-config-react-app')) {
+      return 'create-react-app';
+    }
   }
 
   return null;
