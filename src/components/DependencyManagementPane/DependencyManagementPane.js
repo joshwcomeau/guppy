@@ -263,7 +263,9 @@ const DependencyVersion = styled.span`
   padding-left: 10px;
   font-size: 16px;
   color: ${props =>
-    props.isSelected ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'};
+    props.isSelected
+      ? COLORS.transparentWhite[400]
+      : COLORS.transparentBlack[400]}};
 `;
 
 const MainContent = Card.extend`
