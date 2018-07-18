@@ -16,10 +16,12 @@ describe('dependencies reducer', () => {
   it('should return initial state', () => {
     expect(reducer(undefined, {})).toEqual({});
   });
+
   it(`should handle ${LOAD_DEPENDENCY_INFO_FROM_DISK}`, () => {
     const prevState = {
       baz: {},
     };
+
     const action = {
       type: LOAD_DEPENDENCY_INFO_FROM_DISK,
       projectId: 'foo',
