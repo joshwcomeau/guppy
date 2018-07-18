@@ -175,7 +175,7 @@ const Wrapper = styled.div`
 const Header = styled.header`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
 `;
 
 const Title = styled.div``;
@@ -245,6 +245,11 @@ injectGlobal`
     font-size: 18px;
     transform: translateX(-50%);
     cursor: pointer;
+    &--disabled {
+      color: #ccc;
+      border-color: #ccc;
+      cursor: default;
+    }
   }
   .ais-Highlight-highlighted {
     background: none;
