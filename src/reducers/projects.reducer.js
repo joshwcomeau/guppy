@@ -19,6 +19,7 @@ import type { ProjectInternal, Project } from '../types';
 type ById = {
   [key: string]: ProjectInternal,
 };
+
 type SelectedId = ?string;
 
 type State = {
@@ -26,7 +27,7 @@ type State = {
   selectedId: SelectedId,
 };
 
-const initialState = {
+export const initialState = {
   byId: {},
   selectedId: null,
 };
@@ -95,9 +96,6 @@ const selectedId = (
 
 export default combineReducers({ byId, selectedId });
 
-//
-//
-//
 // Selectors
 type GlobalState = { projects: State };
 
