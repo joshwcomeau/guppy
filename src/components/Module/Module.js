@@ -14,7 +14,6 @@ type Props = {
   title: string,
   moreInfoHref: string,
   primaryActionChildren: React$Node,
-  extraButtons: React$Node,
   children: React$Node,
 };
 

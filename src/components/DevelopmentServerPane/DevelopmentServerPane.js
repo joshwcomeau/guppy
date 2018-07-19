@@ -13,6 +13,7 @@ import Module from '../Module';
 import Card from '../Card';
 import Toggle from '../Toggle';
 import Button from '../Button';
+import Heading from '../Heading';
 import Spacer from '../Spacer';
 import TerminalOutput from '../TerminalOutput';
 import ExternalLink from '../ExternalLink';
@@ -104,7 +105,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
               {docLink}
             </InfoWrapper>
             <TerminalWrapper>
-              <ButtonWrapper>
+              <PanelHeading size="small">
                 <Title>Server Logs</Title>
                 <ButtonStrip>
                   <Button
@@ -117,7 +118,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
                     Clear
                   </Button>
                 </ButtonStrip>
-              </ButtonWrapper>
+              </PanelHeading>
               <TerminalOutput height={300} logs={task.logs} />
             </TerminalWrapper>
           </Wrapper>
@@ -189,7 +190,7 @@ const TerminalWrapper = styled.div`
   }
 `;
 
-const ButtonWrapper = styled.label`
+const PanelHeading = styled(Heading)`
   display: flex;
 `;
 
@@ -199,8 +200,7 @@ const ButtonStrip = styled.div`
 `;
 
 const Title = styled.div`
-  line-height: 38px;
-  font-size: 150%;
+  line-height: 45px;
 `;
 
 const mapStateToProps = state => {
