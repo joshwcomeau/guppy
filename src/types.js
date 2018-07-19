@@ -18,6 +18,12 @@ export type TaskType = 'short-term' | 'sustained';
 export type TaskStatus = 'idle' | 'pending' | 'success' | 'failed';
 export type DependencyStatus = 'idle' | 'installing' | 'updating' | 'deleting';
 
+export type Notification = {
+  title: string,
+  message: string,
+  progress?: number, // 0 < progress < 1
+};
+
 export type Task = {
   id: string,
   projectId: string,

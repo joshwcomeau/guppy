@@ -7,7 +7,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 
-import type { Project, Task, Dependency } from '../types';
+import type { Project, Task, Notification, Dependency } from '../types';
 
 //
 //
@@ -45,6 +45,9 @@ export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_ERROR = 'IMPORT_EXISTING_PROJECT_ERROR';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
+export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
+export const UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION';
+export const DELETE_NOTIFICATION = 'DELETE_NOTIFICATION';
 
 //
 //
@@ -286,6 +289,42 @@ export const importExistingProjectFinish = (
   path,
   project,
 });
+
+export const showNotification = (
+  notificationId: string,
+  notification: Notification
+) => ({
+  type: ADD_NOTIFICATION,
+  notificationId,
+  ...notification,
+});
+
+export const updateNotification = (
+  notificationId: string,
+  notification: Notification
+) => ({
+  type: UPDATE_NOTIFICATION,
+  notificationId,
+  ...notification,
+});
+
+export const deleteNotification = (notificationId: string) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: UPDATE_NOTIFICATION,
+      notificationId,
+      message: 'Done!',
+    });
+    setTimeout(
+      () =>
+        dispatch({
+          type: DELETE_NOTIFICATION,
+          notificationId,
+        }),
+      2000
+    );
+  };
+};
 
 // export const ejectProjectStart = (task: Task, timestamp: Date) => ({
 //   type: EJECT_PROJECT_START,

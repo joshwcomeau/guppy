@@ -8,6 +8,8 @@ import {
   updateDependencyError,
   deleteDependencyFinish,
   deleteDependencyError,
+  showNotification,
+  deleteNotification,
 } from '../actions';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { loadProjectDependency } from '../services/read-from-disk.service';
@@ -24,11 +26,20 @@ export default store => next => action => {
     case ADD_DEPENDENCY_START: {
       const { projectId, dependencyName, version } = action;
 
+      const notificationId = `${projectId}-install-${dependencyName}`;
+      store.dispatch(
+        showNotification(notificationId, {
+          title: 'Installing dependency...',
+          message: `${dependencyName}@${version}`,
+        })
+      );
+
       const projectPath = getPathForProjectId(projectId, store.getState());
 
       installDependency(projectPath, dependencyName, version)
         .then(() => loadProjectDependency(projectPath, dependencyName))
         .then(dependency => {
+          store.dispatch(deleteNotification(notificationId));
           next(addDependencyFinish(projectId, dependency));
         })
         .catch(err => {

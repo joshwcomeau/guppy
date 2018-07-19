@@ -21,6 +21,7 @@ import Sidebar from '../Sidebar';
 import Titlebar from '../Titlebar';
 import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
+import NotificationWindow from '../NotificationWindow';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
 import type { Action } from 'redux';
@@ -85,6 +86,7 @@ class App extends Component<Props> {
           </MainContent>
         </Wrapper>
 
+        <NotificationWindow />
         <CreateNewProjectWizard />
       </Fragment>
     );
