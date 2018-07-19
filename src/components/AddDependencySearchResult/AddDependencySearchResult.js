@@ -136,17 +136,18 @@ class AddDependencySearchResult extends PureComponent<Props> {
           hit,
         });
 
-        return highlights.map(
-          part =>
-            part.isHighlighted ? (
-              <mark
-                className="ais-Highlight-highlighted"
-                dangerouslySetInnerHTML={{ __html: part.value }}
-              />
-            ) : (
-              <span dangerouslySetInnerHTML={{ __html: part.value }} />
-            )
-        );
+        return highlights.map(part => {
+          const unescaped = (new DOMParser().parseFromString(
+            part.value,
+            'text/html'
+          ): any).body.textContent;
+
+          return part.isHighlighted ? (
+            <mark className="ais-Highlight-highlighted">{unescaped}</mark>
+          ) : (
+            <span>{unescaped}</span>
+          );
+        });
       }
     );
 
@@ -155,9 +156,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
         <Header>
           <Title>
             <ExternalLink href={npmLink}>
-              <Name size="small">
-                <CustomHighlight attribute="name" hit={hit} />
-              </Name>
+              <Name size="small">{hit.name}</Name>
             </ExternalLink>
             <Spacer inline size={15} />
             <Version>v{hit.version}</Version>
@@ -271,7 +270,9 @@ injectGlobal`
     cursor: pointer;
   }
   .ais-Highlight-highlighted {
-    background: orange;
+    background: none;
+    color: inherit;
+    font-weight: 700;
   }
 `;
 
