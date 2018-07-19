@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import styled, { injectGlobal } from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
+import { connectHighlight } from 'react-instantsearch/connectors';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
 import { u1F553 as clockIcon } from 'react-icons-kit/noto_emoji_regular/u1F553';
 import { check } from 'react-icons-kit/feather/check';
@@ -127,12 +128,36 @@ class AddDependencySearchResult extends PureComponent<Props> {
 
     const downloadNumColor = getColorForDownloadNumber(hit.downloadsLast30Days);
 
+    const CustomHighlight = connectHighlight(
+      ({ highlight, attribute, hit, highlightProperty }) => {
+        const highlights = highlight({
+          highlightProperty: '_highlightResult',
+          attribute,
+          hit,
+        });
+
+        return highlights.map(
+          part =>
+            part.isHighlighted ? (
+              <mark
+                className="ais-Highlight-highlighted"
+                dangerouslySetInnerHTML={{ __html: part.value }}
+              />
+            ) : (
+              <span dangerouslySetInnerHTML={{ __html: part.value }} />
+            )
+        );
+      }
+    );
+
     return (
       <Wrapper>
         <Header>
           <Title>
             <ExternalLink href={npmLink}>
-              <Name size="small">{hit.name}</Name>
+              <Name size="small">
+                <CustomHighlight attribute="name" hit={hit} />
+              </Name>
             </ExternalLink>
             <Spacer inline size={15} />
             <Version>v{hit.version}</Version>
@@ -140,7 +165,9 @@ class AddDependencySearchResult extends PureComponent<Props> {
           {this.renderActionArea()}
         </Header>
 
-        <Description>{hit.description}</Description>
+        <Description>
+          <CustomHighlight attribute="description" hit={hit} />
+        </Description>
         <Spacer size={20} />
 
         <StatsRow>
@@ -242,6 +269,9 @@ injectGlobal`
     font-size: 18px;
     transform: translateX(-50%);
     cursor: pointer;
+  }
+  .ais-Highlight-highlighted {
+    background: orange;
   }
 `;
 
