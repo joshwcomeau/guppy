@@ -10,7 +10,6 @@ import TextInput from '../TextInput';
 import Button from '../Button';
 import ProgressStep from './ProgressStep';
 import { COLORS } from '../../constants';
-import ButtonToggleGroup from '../ButtonToggleGroup/ButtonToggleGroup';
 
 const buildSteps = [
   'creating-parent-directory',
