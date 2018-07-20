@@ -128,6 +128,8 @@ class AddDependencySearchResult extends PureComponent<Props> {
 
     const downloadNumColor = getColorForDownloadNumber(hit.downloadsLast30Days);
 
+    // We have to use a custom highlight
+    // to unescape the html
     const CustomHighlight = connectHighlight(
       ({ highlight, attribute, hit, highlightProperty }) => {
         const highlights = highlight({
@@ -136,16 +138,21 @@ class AddDependencySearchResult extends PureComponent<Props> {
           hit,
         });
 
-        return highlights.map(part => {
+        return highlights.map((part, i) => {
+          // Run the parser on each of the parts
           const unescaped = (new DOMParser().parseFromString(
             part.value,
             'text/html'
           ): any).body.textContent;
 
+          // If the part is highlighted, wrap in <mark> for the highlight
+          // Otherwise just render the part in a <span>
           return part.isHighlighted ? (
-            <mark className="ais-Highlight-highlighted">{unescaped}</mark>
+            <mark key={i} className="ais-Highlight-highlighted">
+              {unescaped}
+            </mark>
           ) : (
-            <span>{unescaped}</span>
+            <span key={i}>{unescaped}</span>
           );
         });
       }
@@ -156,7 +163,9 @@ class AddDependencySearchResult extends PureComponent<Props> {
         <Header>
           <Title>
             <ExternalLink href={npmLink}>
-              <Name size="small">{hit.name}</Name>
+              <Name size="small">
+                <CustomHighlight attribute="name" hit={hit} />
+              </Name>
             </ExternalLink>
             <Spacer inline size={15} />
             <Version>v{hit.version}</Version>
@@ -272,7 +281,9 @@ injectGlobal`
   .ais-Highlight-highlighted {
     background: none;
     color: inherit;
+    font-style: italic;
     font-weight: 700;
+    margin-right: 4px;
   }
 `;
 
