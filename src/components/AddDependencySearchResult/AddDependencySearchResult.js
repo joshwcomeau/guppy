@@ -22,6 +22,7 @@ import ExternalLink from '../ExternalLink';
 import License from '../License';
 import Middot from '../Middot';
 import Button from '../Button';
+import CustomHighlight from '../CustomHighlight';
 
 import type { DependencyStatus } from '../../types';
 
@@ -140,7 +141,9 @@ class AddDependencySearchResult extends PureComponent<Props> {
           {this.renderActionArea()}
         </Header>
 
-        <Description>{hit.description}</Description>
+        <Description>
+          <CustomHighlight attribute="description" hit={hit} />
+        </Description>
         <Spacer size={20} />
 
         <StatsRow>
@@ -242,6 +245,11 @@ injectGlobal`
     font-size: 18px;
     transform: translateX(-50%);
     cursor: pointer;
+  }
+  .ais-Highlight-highlighted {
+    background: none;
+    color: inherit;
+    font-weight: 700;
   }
 `;
 
