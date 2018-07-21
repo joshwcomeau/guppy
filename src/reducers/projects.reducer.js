@@ -123,7 +123,7 @@ const prepareProjectForConsumption = (
     createdAt: project.guppy.createdAt,
     tasks: getTasksForProjectId(project.guppy.id, state),
     dependencies: getDependenciesForProjectId(project.guppy.id, state),
-    path: getPathForProjectId(project.guppy.id, state),
+    path: getPathForProjectId(state, project.guppy.id),
   };
 };
 

@@ -30,7 +30,7 @@ export default (store: any) => (next: any) => (action: any) => {
   const state = store.getState();
 
   const project = getProjectById(task.projectId, state);
-  const projectPath = getPathForProjectId(task.projectId, state);
+  const projectPath = getPathForProjectId(state, task.projectId);
 
   // eslint-disable-next-line default-case
   switch (action.type) {
