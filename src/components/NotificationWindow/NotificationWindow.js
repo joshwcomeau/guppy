@@ -1,20 +1,48 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import FadeIn from '../FadeIn';
+import SlideIn from '../SlideIn';
 import Card from '../Card';
 import NotificationList from '../NotificationList';
 
-type Props = {};
+type Props = {
+  notifications: Object,
+};
 
 class NotificationWindow extends Component<Props> {
+  initialRender: boolean;
+
+  constructor(props, context) {
+    super(props, context);
+    this.initialRender = true;
+  }
+
+  componentDidMount() {
+    this.initialRender = false;
+  }
+
   render() {
+    const { notifications } = this.props;
+    const out = Object.keys(notifications).length === 0;
+
+    // this.initialRender will be true only during the first render - if during the
+    // first render there are no notifications, don't render the SlideIn animation
+    // because it will flash in a blank window
     return (
       <Overlay>
-        <Container>
-          <NotificationList />
-        </Container>
+        {this.initialRender && out ? null : (
+          <SlideIn out={out}>
+            <FadeIn out={out}>
+              <Container>
+                <NotificationList />
+              </Container>
+            </FadeIn>
+          </SlideIn>
+        )}
       </Overlay>
     );
   }
@@ -41,6 +69,11 @@ const Container = styled(Card)`
   overflow: hidden;
   padding: 0;
   pointer-events: auto;
+  width: 450px;
 `;
 
-export default NotificationWindow;
+const mapStateToProps = state => ({
+  notifications: state.notifications,
+});
+
+export default connect(mapStateToProps)(NotificationWindow);

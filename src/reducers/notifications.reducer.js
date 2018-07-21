@@ -11,24 +11,19 @@ type State = {
   [uniqueNotificationId: string]: Notification,
 };
 
-const initialState = {
-  abc123: {
-    title: 'Notification title',
-    message: 'Notification message content',
-    progress: 0.5,
-  },
-};
+const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case ADD_NOTIFICATION:
     case UPDATE_NOTIFICATION:
+      const existing = state[action.notificationId];
       return {
         ...state,
         [action.notificationId]: {
-          title: action.title,
-          message: action.message,
-          progress: action.progress,
+          title: action.title || existing.title,
+          message: action.message || existing.message,
+          progress: undefined,
         },
       };
     case DELETE_NOTIFICATION:
