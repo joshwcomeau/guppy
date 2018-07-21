@@ -49,7 +49,7 @@ export default (state: State = initialState, action: Action) => {
           version: '',
           homepage: '',
           license: '',
-          repository: '',
+          repository: { type: '', url: '' },
         };
       });
     }

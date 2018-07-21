@@ -4,6 +4,7 @@ import {
   IMPORT_EXISTING_PROJECT_START,
   importExistingProjectStart,
   importExistingProjectFinish,
+  importExistingProjectError,
 } from '../actions';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import {
@@ -119,6 +120,8 @@ export default (store: any) => (next: any) => (action: any) => {
               break;
             }
           }
+
+          next(importExistingProjectError());
         });
 
       return;
@@ -131,6 +134,13 @@ export default (store: any) => (next: any) => (action: any) => {
 };
 
 const inferProjectType = json => {
+  // Some projects only have devDependencies.
+  // If this is the case, we can bail early, since no supported project types
+  // avoid having `dependencies`.
+  if (!json.dependencies) {
+    return null;
+  }
+
   const dependencyNames = Object.keys(json.dependencies);
 
   if (dependencyNames.includes('gatsby')) {

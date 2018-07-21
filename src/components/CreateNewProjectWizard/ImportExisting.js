@@ -51,14 +51,14 @@ const IconWrapper = styled.div`
   align-items: center;
   border: 2px solid rgba(255, 255, 255, 0.75);
   border-radius: 50%;
-  color: rgba(255, 255, 255, 0.75);
+  color: ${COLORS.transparentWhite[300]};
 `;
 
 const MainText = styled.div`
   flex: 1;
   text-align: left;
   margin-left: 10px;
-  color: rgba(255, 255, 255, 0.75);
+  color: ${COLORS.transparentWhite[300]};
 `;
 
 const mapStateToProps = state => ({

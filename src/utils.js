@@ -229,3 +229,14 @@ export const hasPropChanged = (oldProps, newProps, key) => {
 };
 
 export const flatten = arr => Array.prototype.concat(...arr);
+
+// This function takes a string input and parses the output
+// to ensure to all html is rendered safely to the dom,
+// and any trailing spaces are preserved from their original text
+export const safeEscapeString = (val: string) =>
+  (new DOMParser().parseFromString(
+    // Wrapping the text in a span ensures textContent keeps the spaces
+    // from the original text intact (span isn't rendered in the DOM)
+    `<span>${val}</span>`,
+    'text/html'
+  ): any).body.textContent;

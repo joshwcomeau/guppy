@@ -25,9 +25,15 @@ class DependencyDetailsTable extends Component<Props> {
     const { projectId, dependency, lastUpdatedAt } = this.props;
 
     const packageHref = `https://www.npmjs.org/package/${dependency.name}`;
-    const githubHref =
-      dependency.repository &&
-      `https://www.github.com/${dependency.repository}`;
+    let githubHref;
+    try {
+      let githubURL = new URL(dependency.repository.url);
+      githubURL.protocol = 'https';
+      githubHref = githubURL.href;
+    } catch (e) {
+      // If no repo URL is specified in package.json or parsing failed for another reason.
+      // Nothing needs to be done because githubHref will be undefined, hiding the link.
+    }
 
     return (
       <Table>
@@ -60,8 +66,10 @@ class DependencyDetailsTable extends Component<Props> {
             </Cell>
             <Cell>
               <ExternalLink href={packageHref}>NPM</ExternalLink>
-              <Middot />
-              <ExternalLink href={githubHref}>GitHub</ExternalLink>
+              {githubHref && <Middot />}
+              {githubHref && (
+                <ExternalLink href={githubHref}>GitHub</ExternalLink>
+              )}
               {dependency.homepage && <Middot />}
               {dependency.homepage && (
                 <ExternalLink href={dependency.homepage}>
