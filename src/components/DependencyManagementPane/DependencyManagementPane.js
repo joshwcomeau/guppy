@@ -61,6 +61,17 @@ class DependencyManagementPane extends PureComponent<Props, State> {
       this.setState({ selectedDependencyIndex: newDependencyIndex });
     }
 
+    // If the last dependency was deleted, we need to shift focus to the new last dependency
+    // in the list.
+    if (
+      this.state.selectedDependencyIndex ===
+      nextProps.project.dependencies.length
+    ) {
+      this.setState({
+        selectedDependencyIndex: nextProps.project.dependencies.length - 1,
+      });
+    }
+
     // TODO: when a selected dependency is deleted, the focus shifts to the
     // next one in the list. This is great!
     // However, if the user clicks a different dependency while the focused one
