@@ -1,3 +1,5 @@
+# URL State Duplication
+
 > This is a document I wrote mainly for myself, to remind me why I have a somewhat unorthodox setup to manage the "selected project" state.
 
 In most apps, the URL is the state of truth for the ID of a thing.
