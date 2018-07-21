@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled, { injectGlobal } from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
-import { connectHighlight } from 'react-instantsearch/connectors';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
 import { u1F553 as clockIcon } from 'react-icons-kit/noto_emoji_regular/u1F553';
 import { check } from 'react-icons-kit/feather/check';
@@ -23,6 +22,7 @@ import ExternalLink from '../ExternalLink';
 import License from '../License';
 import Middot from '../Middot';
 import Button from '../Button';
+import CustomHighlight from '../CustomHighlight';
 
 import type { DependencyStatus } from '../../types';
 
@@ -128,44 +128,12 @@ class AddDependencySearchResult extends PureComponent<Props> {
 
     const downloadNumColor = getColorForDownloadNumber(hit.downloadsLast30Days);
 
-    // We have to use a custom highlight
-    // to unescape the html
-    const CustomHighlight = connectHighlight(
-      ({ highlight, attribute, hit, highlightProperty }) => {
-        const highlights = highlight({
-          highlightProperty: '_highlightResult',
-          attribute,
-          hit,
-        });
-
-        return highlights.map((part, i) => {
-          // Run the parser on each of the parts
-          const unescaped = (new DOMParser().parseFromString(
-            `<span>${part.value}</span>`,
-            'text/html'
-          ): any).body.textContent;
-
-          // If the part is highlighted, wrap in <mark> for the highlight
-          // Otherwise just render the part in a <span>
-          return part.isHighlighted ? (
-            <mark key={i} className="ais-Highlight-highlighted">
-              {unescaped}
-            </mark>
-          ) : (
-            <span key={i}>{unescaped}</span>
-          );
-        });
-      }
-    );
-
     return (
       <Wrapper>
         <Header>
           <Title>
             <ExternalLink href={npmLink}>
-              <Name size="small">
-                <CustomHighlight attribute="name" hit={hit} />
-              </Name>
+              <Name size="small">{hit.name}</Name>
             </ExternalLink>
             <Spacer inline size={15} />
             <Version>v{hit.version}</Version>
