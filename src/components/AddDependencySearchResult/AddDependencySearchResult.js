@@ -132,7 +132,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
       <Wrapper>
         <Header>
           <Title>
-            <ExternalLink display={'inline'} href={npmLink}>
+            <ExternalLink display="inline" href={npmLink}>
               <Name size="small">{hit.name}</Name>
             </ExternalLink>
             <Spacer inline size={15} />
