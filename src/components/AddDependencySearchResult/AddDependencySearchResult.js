@@ -141,7 +141,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
         return highlights.map((part, i) => {
           // Run the parser on each of the parts
           const unescaped = (new DOMParser().parseFromString(
-            part.value,
+            `<span>${part.value}</span>`,
             'text/html'
           ): any).body.textContent;
 
@@ -281,9 +281,7 @@ injectGlobal`
   .ais-Highlight-highlighted {
     background: none;
     color: inherit;
-    font-style: italic;
     font-weight: 700;
-    margin-right: 4px;
   }
 `;
 
