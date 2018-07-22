@@ -18,6 +18,23 @@ export const installDependency = (
   });
 };
 
+export const installDependencies = (
+  projectPath: string,
+  dependencies: Array<{ dependencyName: string, version: string }>
+) => {
+  return new Promise((resolve, reject) => {
+    childProcess.exec(
+      `npm install ${dependencies
+        .map(({ dependencyName, version }) => `${dependencyName}@${version}`)
+        .join(' ')} -SE`,
+      { cwd: projectPath },
+      (err, res) => {
+        err ? reject(err) : resolve(res);
+      }
+    );
+  });
+};
+
 export const uninstallDependency = (
   projectPath: string,
   dependencyName: string
@@ -25,6 +42,21 @@ export const uninstallDependency = (
   return new Promise((resolve, reject) => {
     childProcess.exec(
       `npm uninstall ${dependencyName}`,
+      { cwd: projectPath },
+      (err, res) => {
+        err ? reject(err) : resolve(res);
+      }
+    );
+  });
+};
+
+export const uninstallDependencies = (
+  projectPath: string,
+  dependencies: Array<string>
+) => {
+  return new Promise((resolve, reject) => {
+    childProcess.exec(
+      `npm uninstall ${dependencies.join(' ')}`,
       { cwd: projectPath },
       (err, res) => {
         err ? reject(err) : resolve(res);

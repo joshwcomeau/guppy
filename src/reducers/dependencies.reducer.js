@@ -11,6 +11,12 @@ import {
   ADD_DEPENDENCY_START,
   ADD_DEPENDENCY_ERROR,
   ADD_DEPENDENCY_FINISH,
+  ADD_DEPENDENCIES_START,
+  ADD_DEPENDENCIES_ERROR,
+  ADD_DEPENDENCIES_FINISH,
+  DELETE_DEPENDENCIES_START,
+  DELETE_DEPENDENCIES_ERROR,
+  DELETE_DEPENDENCIES_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -118,6 +124,47 @@ export default (state: State = initialState, action: Action) => {
       return produce(state, draftState => {
         delete draftState[projectId][dependencyName];
       });
+    }
+
+    case ADD_DEPENDENCIES_START: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        // this action name is a bit of a misnomer, since this block
+        // is used for both adding AND updating dependencies (otherwise,
+        // we wouldn't be able to batch installs/updates with a single
+        // `npm install` command
+      });
+    }
+
+    case ADD_DEPENDENCIES_ERROR: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {});
+    }
+
+    case ADD_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {});
+    }
+
+    case DELETE_DEPENDENCIES_START: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {});
+    }
+
+    case DELETE_DEPENDENCIES_ERROR: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {});
+    }
+
+    case DELETE_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {});
     }
 
     default:

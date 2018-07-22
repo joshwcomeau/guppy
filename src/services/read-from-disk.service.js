@@ -189,6 +189,33 @@ export function loadProjectDependency(
 }
 
 /**
+ * Wrapper around `loadProjectDependency` that fetches all dependencies in
+ * a given set.
+ */
+export function loadProjectDependencies(
+  projectPath: string,
+  dependencies: Array<string>
+) {
+  return new Promise((resolve, reject) => {
+    asyncMap(
+      dependencies,
+      function(dependencyName, callback) {
+        loadProjectDependency(projectPath, dependencyName)
+          .then(dependency => callback(null, dependency))
+          .catch(callback);
+      },
+      (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(results);
+      }
+    );
+  });
+}
+
+/**
  * Wrapper around `loadProjectDependency` that fetches all dependencies for
  * a specific project.
  *
