@@ -12,12 +12,14 @@ type Props = {
   color: string,
   hoverColor?: string,
   showUnderline: boolean,
+  display: string,
 };
 
 class ExternalLink extends Component<Props> {
   static defaultProps = {
     color: COLORS.blue[700],
     hoverColor: COLORS.blue[500],
+    display: 'inline-block',
   };
 
   handleClick = (ev: SyntheticMouseEvent<*>) => {
@@ -28,10 +30,11 @@ class ExternalLink extends Component<Props> {
   };
 
   render() {
-    const { href, color, hoverColor, children } = this.props;
+    const { href, color, hoverColor, children, display } = this.props;
 
     return (
       <Anchor
+        style={{ display }}
         href={href}
         color={color}
         hoverColor={hoverColor}
@@ -45,7 +48,6 @@ class ExternalLink extends Component<Props> {
 
 const Anchor = styled.a`
   position: relative;
-  display: inline-block;
   text-decoration: none;
   color: ${props => props.color};
 

@@ -132,7 +132,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
       <Wrapper>
         <Header>
           <Title>
-            <ExternalLink href={npmLink}>
+            <ExternalLink display="inline" href={npmLink}>
               <Name size="small">{hit.name}</Name>
             </ExternalLink>
             <Spacer inline size={15} />
@@ -175,7 +175,7 @@ const Wrapper = styled.div`
 const Header = styled.header`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
 `;
 
 const Title = styled.div``;
@@ -245,6 +245,9 @@ injectGlobal`
     font-size: 18px;
     transform: translateX(-50%);
     cursor: pointer;
+    &--disabled {
+      display: none;
+    }
   }
   .ais-Highlight-highlighted {
     background: none;

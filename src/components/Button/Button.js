@@ -105,6 +105,7 @@ const ButtonBase = styled.button`
   cursor: pointer;
   outline: none;
   color: ${COLORS.gray[900]};
+  white-space: nowrap;
 
   &:not(:disabled):active rect {
     stroke-width: 4;
