@@ -9,6 +9,7 @@
     "type": "git",
     "url": "https://github.com/joshwcomeau/guppy.git"
   },
+  "license": "ISC",
   "scripts": {
     "start": "NODE_ENV=development npm run start:react",
     "start:react": "BROWSER=none node scripts/start.js",
