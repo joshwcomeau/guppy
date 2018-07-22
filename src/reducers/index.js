@@ -6,7 +6,6 @@ import notifications from './notifications.reducer';
 import dependencies from './dependencies.reducer';
 import modal from './modal.reducer';
 import onboardingStatus from './onboarding-status.reducer';
-import packageJsonLocked from './package-json-locked.reducer';
 import paths from './paths.reducer';
 
 export default combineReducers({
@@ -16,6 +15,5 @@ export default combineReducers({
   dependencies,
   modal,
   onboardingStatus,
-  packageJsonLocked,
   paths,
 });
