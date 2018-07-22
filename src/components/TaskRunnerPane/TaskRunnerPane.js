@@ -56,6 +56,16 @@ class TaskRunnerPane extends Component<Props, State> {
     const { tasks } = this.props;
     const { selectedTaskId } = this.state;
 
+    // It's possible that this task is deleted while the modal is open;
+    // This can happen when ejecting the project while viewing the output,
+    // since the CRA 'eject' task removes itself after completing (a project can
+    // only be ejected once)
+    // TODO: Remove this logic once 'eject' has its own module, and isn't
+    // considered a generic task.
+    const selectedTaskExists = tasks.find(task => task.id === selectedTaskId);
+
+    console.log({ selectedTaskExists, tasks, selectedTaskId });
+
     return (
       <Module
         title="Tasks"
@@ -74,11 +84,13 @@ class TaskRunnerPane extends Component<Props, State> {
           />
         ))}
 
-        <TaskDetailsModal
-          taskId={selectedTaskId}
-          isVisible={!!selectedTaskId}
-          onDismiss={this.handleDismissTaskDetails}
-        />
+        {selectedTaskExists && (
+          <TaskDetailsModal
+            taskId={selectedTaskId}
+            isVisible={!!selectedTaskId}
+            onDismiss={this.handleDismissTaskDetails}
+          />
+        )}
       </Module>
     );
   }
