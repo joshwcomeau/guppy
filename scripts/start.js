@@ -16,6 +16,7 @@ require('../config/env');
 
 const { exec } = require('child_process');
 const chalk = require('chalk');
+const path = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const clearConsole = require('react-dev-utils/clearConsole');
@@ -52,24 +53,30 @@ function runElectronApp() {
 
   isElectronRunning = true;
   // For Windows Support
-  // Here cross-env can be used but
-  // since its not that big of a control I checked manually
-  // Maybe some env variable like `isWin` can be passed to the procces for easy use???
-  const command = /^win/.test(process.platform)
-    ? `set ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} && electron .`
-    : `ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`;
-  exec(command, (err, stdout, stderr) => {
-    if (err) {
-      console.info(chalk.red('Electron app run failed: ') + stderr);
-      return;
+  const envPATHS = process.env.PATH.split(';');
+  envPATHS.push(path.join(__dirname, '../node_modules', '.bin'));
+  const newPATHS = envPATHS.join(';');
+  exec(
+    `electron${/^win/.test(process.platform) ? '.cmd' : ''} .`,
+    {
+      env: {
+        PATH: newPATHS,
+        ELECTRON_START_URL: `http://localhost:${DEFAULT_PORT}`,
+      },
+    },
+    (err, stdout, stderr) => {
+      if (err) {
+        console.info(chalk.red('Electron app run failed: ') + stderr);
+        return;
+      }
+
+      // Clear console for brevity
+      process.stdout.write('\x1bc');
+
+      // Log output
+      console.info(stdout);
     }
-
-    // Clear console for brevity
-    process.stdout.write('\x1bc');
-
-    // Log output
-    console.info(stdout);
-  });
+  );
 }
 
 // Warn and crash if required files are missing

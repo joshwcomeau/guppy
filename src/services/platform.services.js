@@ -1,12 +1,13 @@
 const childProcess = window.require('child_process');
 const os = window.require('os');
 const path = window.require('path');
+const { remote } = window.require('electron');
 
 // Returns true if the OS is Windows
-export const isWin = () => /^win/.test(os.platform());
+export const isWin = (): boolean => /^win/.test(os.platform());
 
 // Returns path to the users Documents direactory
-export const getWindowsHomeDir = () => {
+export const getWindowsHomeDir = (): string => {
   // For Windows Support
   // Documents folder is much better place for project folders (Most programs use it as a default save location)
   // Since there is a chance of being moved or users language might be differet we are reading the value from Registery
@@ -26,5 +27,14 @@ export const getWindowsHomeDir = () => {
   return path.join(os.homedir(), winDocPath);
 };
 
-// Placeholder for command formatter
-export const formatCommandForPlatform = () => {};
+// Returns formatted command for Windows
+export const formatCommandForPlatform = (command: string): string =>
+  isWin() ? `${command}.cmd` : command;
+
+// Returns PATH for Windows
+export const getPathForPlatform = (): string =>
+  isWin()
+    ? `${remote.app.getPath(
+        'appData'
+      )}\\npm;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Yarn\\bin`
+    : '';

@@ -13,7 +13,11 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
-import { isWin } from '../services/platform.services';
+import {
+  isWin,
+  formatCommandForPlatform,
+  getPathForPlatform,
+} from '../services/platform.services';
 
 import type { Task, ProjectType } from '../types';
 
@@ -38,7 +42,7 @@ export default (store: any) => (next: any) => (action: any) => {
     case LAUNCH_DEV_SERVER: {
       findAvailablePort()
         .then(port => {
-          const [instruction, ...args] = getDevServerCommand(
+          const { commandArgs, commandEnv } = getDevServerArguments(
             task,
             project.type,
             port
@@ -66,10 +70,17 @@ export default (store: any) => (next: any) => (action: any) => {
            * specify environment variables:
            */
 
-          const child = childProcess.spawn(instruction, args, {
-            cwd: projectPath,
-            shell: true,
-          });
+          const child = childProcess.spawn(
+            formatCommandForPlatform('npm'),
+            commandArgs,
+            {
+              cwd: projectPath,
+              env: {
+                ...commandEnv,
+                PATH: getPathForPlatform(),
+              },
+            }
+          );
 
           // Now that we have a port/processId for the server, attach it to
           // the task. The port is used for opening the app, the pid is used
@@ -140,16 +151,19 @@ export default (store: any) => (next: any) => (action: any) => {
        *
        * TODO: add windows support
        */
-      const command =
-        project.type === 'create-react-app' && name === 'eject'
-          ? 'echo yes | npm'
-          : 'npm';
+      console.log('Task: ', action.task);
+      // const command =
+      //   project.type === 'create-react-app' && name === 'eject'
+      //     ? 'echo yes | npm'
+      //     : 'npm';
       const child = childProcess.spawn(
-        command,
+        formatCommandForPlatform('npm'),
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,
-          shell: true,
+          env: {
+            PATH: getPathForPlatform(),
+          },
         }
       );
 
@@ -162,6 +176,13 @@ export default (store: any) => (next: any) => (action: any) => {
       next(attachTaskMetadata(task, child.pid));
 
       child.stdout.on('data', data => {
+        const isEjectPrompt = data
+          .toString()
+          .includes('Are you sure you want to eject? This action is permanent');
+
+        if (isEjectPrompt) {
+          sendCommandToProcess(child, 'y');
+        }
         next(receiveDataFromTaskExecution(task, data.toString()));
       });
 
@@ -281,20 +302,26 @@ export default (store: any) => (next: any) => (action: any) => {
   return next(action);
 };
 
-const getDevServerCommand = (
+const getDevServerArguments = (
   task: Task,
   projectType: ProjectType,
   port: string
 ) => {
-  let command;
   switch (projectType) {
     case 'create-react-app':
-      // For Windows Support
-      command = isWin ? `set PORT=${port} && npm` : `PORT=${port} npm`;
-      return [command, 'run', task.name];
+      return { commandArgs: ['run', task.name], commandEnv: { PORT: port } };
     case 'gatsby':
-      return ['npm', 'run', task.name, '--', `-p ${port}`];
+      return {
+        commandArgs: ['run', task.name, '--', `-p ${port}`],
+        commandEnv: {},
+      };
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }
+};
+
+const sendCommandToProcess = (child: any, command: string) => {
+  // Commands have to be suffixed with '\n' to signal that the command is
+  // ready to be sent. Same as a regular command + hitting the enter key.
+  child.stdin.write(`${command}\n`);
 };

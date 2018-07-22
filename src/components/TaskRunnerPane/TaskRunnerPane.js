@@ -27,6 +27,21 @@ class TaskRunnerPane extends Component<Props, State> {
     selectedTaskId: null,
   };
 
+  static getDerivedStateFromProps(props, state) {
+    // It's possible that this task is deleted while the modal is open;
+    // For example, This can happen when ejecting the project, since the
+    // create-react-app "eject" task removes itself upon completion.
+    const selectedTaskExists = props.tasks.some(
+      task => task.id === state.selectedTaskId
+    );
+
+    if (!selectedTaskExists) {
+      return { selectedTaskId: null };
+    }
+
+    return null;
+  }
+
   handleToggleTask = taskId => {
     const { tasks, runTask, abortTask } = this.props;
 
