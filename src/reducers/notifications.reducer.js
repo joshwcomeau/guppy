@@ -17,19 +17,22 @@ export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case ADD_NOTIFICATION:
     case UPDATE_NOTIFICATION:
-      const existing = state[action.notificationId];
+      const existing = state[action.notificationId] || {};
       return {
         ...state,
         [action.notificationId]: {
           title: action.title || existing.title,
           message: action.message || existing.message,
-          progress: undefined,
+          progress: action.progress || existing.progress,
+          complete: action.complete || existing.complete,
         },
       };
+
     case DELETE_NOTIFICATION:
       const filteredState = { ...state };
       delete filteredState[action.notificationId];
       return filteredState;
+
     default:
       return state;
   }

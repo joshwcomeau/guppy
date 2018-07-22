@@ -64,7 +64,10 @@ class NotificationList extends Component<Props, State> {
     const notificationEntries = Object.entries(notifications);
     return (
       <Fragment>
-        <Scroller innerRef={scrollerRef => (this.scrollerRef = scrollerRef)}>
+        <Scroller
+          interactive={notificationEntries.length > 0}
+          innerRef={scrollerRef => (this.scrollerRef = scrollerRef)}
+        >
           <PageButton
             style={{ top: 20 }}
             onClick={this.pageUp}
@@ -100,6 +103,7 @@ class NotificationList extends Component<Props, State> {
 }
 
 const Scroller = styled.div`
+  pointer-events: ${props => (props.interactive ? 'auto' : 'none')};
   height: 80px;
   overflow: hidden;
   &::-webkit-scrollbar {

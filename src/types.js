@@ -22,6 +22,8 @@ export type Notification = {
   title: string,
   message: string,
   progress?: number, // 0 < progress < 1
+  complete?: boolean,
+  error?: boolean,
 };
 
 export type Task = {
