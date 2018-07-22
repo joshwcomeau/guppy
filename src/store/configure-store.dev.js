@@ -10,7 +10,6 @@ import importProjectMiddleware from '../middlewares/import-project.middleware';
 import rootSaga from '../sagas';
 
 import DevTools from '../components/DevTools';
-import logger from 'redux-logger';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -23,8 +22,7 @@ export default function configureStore(initialState: any) {
         thunk,
         taskMiddleware,
         importProjectMiddleware,
-        sagaMiddleware,
-        logger
+        sagaMiddleware
       ),
       DevTools.instrument()
     )
