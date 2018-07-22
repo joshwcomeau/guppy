@@ -29,8 +29,8 @@ export default (store: any) => (next: any) => (action: any) => {
 
   const state = store.getState();
 
-  const project = getProjectById(task.projectId, state);
-  const projectPath = getPathForProjectId(task.projectId, state);
+  const project = getProjectById(state, task.projectId);
+  const projectPath = getPathForProjectId(state, task.projectId);
 
   // eslint-disable-next-line default-case
   switch (action.type) {
@@ -114,7 +114,7 @@ export default (store: any) => (next: any) => (action: any) => {
     case RUN_TASK: {
       const { projectId, name } = action.task;
 
-      const project = getProjectById(projectId, store.getState());
+      const project = getProjectById(store.getState(), projectId);
 
       // TEMPORARY HACK
       // By default, create-react-app runs tests in interactive watch mode.
@@ -242,7 +242,7 @@ export default (store: any) => (next: any) => (action: any) => {
       // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
       // this instead.
       if (task.name === 'eject') {
-        const project = getProjectById(task.projectId, store.getState());
+        const project = getProjectById(store.getState(), task.projectId);
 
         store.dispatch(loadDependencyInfoFromDisk(project.id, project.path));
       }

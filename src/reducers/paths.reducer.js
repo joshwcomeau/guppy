@@ -56,5 +56,5 @@ export const getDefaultPath = (projectId: string) =>
 //
 //
 // Selectors
-export const getPathForProjectId = (projectId: string, state: any) =>
+export const getPathForProjectId = (state: any, projectId: string) =>
   state.paths[projectId] || getDefaultPath(projectId);

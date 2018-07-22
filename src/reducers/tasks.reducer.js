@@ -245,29 +245,29 @@ const buildNewTask = (
 // Selectors
 type GlobalState = { tasks: State };
 
-export const getTaskById = (taskId: string, state: GlobalState) =>
+export const getTaskById = (state: GlobalState, taskId: string) =>
   state.tasks[taskId];
 
 export const getTasksForProjectId = (
-  projectId: string,
-  state: any
+  state: any,
+  projectId: string
 ): Array<Task> =>
   Object.keys(state.tasks)
     .map(taskId => state.tasks[taskId])
     .filter(task => task.projectId === projectId);
 
 export const getTasksInTaskListForProjectId = (
-  projectId: string,
-  state: GlobalState
+  state: GlobalState,
+  projectId: string
 ) =>
-  getTasksForProjectId(projectId, state).filter(
+  getTasksForProjectId(state, projectId).filter(
     task => !isDevServerTask(task.name)
   );
 
 export const getDevServerTaskForProjectId = (
+  state: GlobalState,
   projectId: string,
-  projectType: ProjectType,
-  state: GlobalState
+  projectType: ProjectType
 ) => {
   switch (projectType) {
     case 'create-react-app': {
@@ -284,9 +284,9 @@ export const getDevServerTaskForProjectId = (
 };
 
 export const getTaskByProjectIdAndTaskName = (
+  state: GlobalState,
   projectId: string,
-  name: string,
-  state: GlobalState
+  name: string
 ) => {
   const uniqueTaskId = buildUniqueTaskId(projectId, name);
 

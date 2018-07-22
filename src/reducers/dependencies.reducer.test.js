@@ -407,11 +407,11 @@ describe('getDependenciesForProjectId selector', () => {
   };
 
   it('should return empty array if project has not dependencies', () => {
-    expect(getDependenciesForProjectId('baz', state)).toEqual([]);
+    expect(getDependenciesForProjectId(state, 'baz')).toEqual([]);
   });
 
   it('should return array of dependencies if they exists', () => {
-    expect(getDependenciesForProjectId('foo', state)).toEqual([
+    expect(getDependenciesForProjectId(state, 'foo')).toEqual([
       {
         name: 'react',
         status: 'idle',

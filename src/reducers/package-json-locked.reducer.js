@@ -87,6 +87,6 @@ export default (state: State = initialState, action: Action) => {
 //
 // Selectors
 export const getPackageJsonLockedForProjectId = (
-  projectId: string,
-  state: any
+  state: any,
+  projectId: string
 ) => state.packageJsonLocked[projectId];

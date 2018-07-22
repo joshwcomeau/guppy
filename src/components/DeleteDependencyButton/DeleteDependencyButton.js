@@ -74,8 +74,8 @@ class DeleteDependencyButton extends PureComponent<Props> {
 
 const mapStateToProps = (state, ownProps) => ({
   isPackageJsonLocked: getPackageJsonLockedForProjectId(
-    ownProps.projectId,
-    state
+    state,
+    ownProps.projectId
   ),
 });
 
