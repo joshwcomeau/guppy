@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { deleteDependencyStart } from '../../actions';
 import { COLORS } from '../../constants';
-import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 
 import Button from '../Button';
 import Spinner from '../Spinner';
@@ -17,7 +16,6 @@ type Props = {
   dependencyName: string,
   isBeingDeleted?: boolean,
   // From redux:
-  isPackageJsonLocked: boolean,
   deleteDependencyStart: (projectId: string, dependencyName: string) => any,
 };
 
@@ -49,7 +47,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
   };
 
   render() {
-    const { isBeingDeleted, isPackageJsonLocked } = this.props;
+    const { isBeingDeleted } = this.props;
     return (
       <Button
         size="small"
@@ -57,7 +55,6 @@ class DeleteDependencyButton extends PureComponent<Props> {
         color1={COLORS.pink[300]}
         color2={COLORS.red[500]}
         onClick={this.handleClick}
-        disabled={isPackageJsonLocked}
         style={{ width: 75 }}
       >
         {isBeingDeleted ? (
@@ -72,14 +69,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  isPackageJsonLocked: getPackageJsonLockedForProjectId(
-    ownProps.projectId,
-    state
-  ),
-});
-
 export default connect(
-  mapStateToProps,
+  null,
   { deleteDependencyStart }
 )(DeleteDependencyButton);

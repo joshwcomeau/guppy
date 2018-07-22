@@ -18,6 +18,10 @@
  *
  * Every project has its own package.json, and they shouldn't block each other.
  * So this is on a per-project basis.
+ *
+ * UPDATE 7/21/2018: Instead of blocking the UI while the package.json is locked,
+ * actions that require write access will instead be queued and then executed in
+ * series.
  */
 import {
   REFRESH_PROJECTS,
