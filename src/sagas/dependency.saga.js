@@ -2,7 +2,6 @@
 
 import { select, call, put, cancel, takeEvery } from 'redux-saga/effects';
 import { getPathForProjectId } from '../reducers/paths.reducer';
-import { getPackageJsonLockedForProjectId } from '../reducers/package-json-locked.reducer';
 import {
   loadProjectDependency,
   loadProjectDependencies,
@@ -47,17 +46,49 @@ import {
   failNotification,
 } from '../actions';
 
+// Since redux-saga is intended to handle side-effects of actions,
+// all sagas are run *after* all reducers, even though they are
+// incorporated into redux as a middleware. As such, we cannot rely
+// on a store-based check for whether or not a package.json is locked,
+// as any locking actions will lock it in the store before our saga
+// has a chance to check if it is locked or not. As such, we must handle
+// monitoring the lock status within the saga, so we can control the
+// order of checking.
+//
+// NOTE: the previous reducer added false entries for new projects on
+// addition and for all projects after a refresh, but undefined is
+// falsey and has the same effect so I elected not to add an extra
+// saga for these actions.
+const lock: {
+  [projectId: string]: boolean,
+} = {};
+
+// The queue is split out into subqueues per project. Each subqueue item
+// denotes its action (add/delete), the persistent notification's ID
+// for updating its progress in the UI, and a list of dependencies to
+// be installed/removed by that action.
 const queue: {
   [projectId: string]: Array<{
     action: string,
     notificationId: string,
-    dependencies: Array<{ dependencyName: string, version?: string }>,
+    dependencies: Array<{
+      dependencyName: string,
+      version?: string,
+      updating?: boolean,
+    }>,
   }>,
 } = {};
 
 function* addDependency({ projectId, dependencyName, version }) {
-  if (getPackageJsonLockedForProjectId(projectId)) {
-    yield call(enqueue, { projectId, dependencyName, version });
+  console.log('lock:', lock);
+  console.log('queue:', queue);
+  if (!(yield call(requestPackageJsonLockForProjectId, projectId))) {
+    yield call(enqueue, {
+      action: 'install',
+      projectId,
+      dependencyName,
+      version,
+    });
     yield cancel();
   } else {
     const notificationId = `${projectId}-install-${dependencyName}`;
@@ -87,8 +118,16 @@ function* addDependency({ projectId, dependencyName, version }) {
 }
 
 function* updateDependency({ projectId, dependencyName, latestVersion }) {
-  if (getPackageJsonLockedForProjectId(projectId)) {
-    yield call(enqueue, { projectId, dependencyName, version: latestVersion });
+  console.log('lock:', lock);
+  console.log('queue:', queue);
+  if (!(yield call(requestPackageJsonLockForProjectId, projectId))) {
+    yield call(enqueue, {
+      action: 'install',
+      projectId,
+      dependencyName,
+      version: latestVersion,
+      updating: true,
+    });
     yield cancel();
   } else {
     const notificationId = `${projectId}-update-${dependencyName}`;
@@ -115,8 +154,10 @@ function* updateDependency({ projectId, dependencyName, latestVersion }) {
 }
 
 function* deleteDependency({ projectId, dependencyName }) {
-  if (getPackageJsonLockedForProjectId(projectId)) {
-    yield call(enqueue, { projectId, dependencyName });
+  console.log('lock:', lock);
+  console.log('queue:', queue);
+  if (!(yield call(requestPackageJsonLockForProjectId, projectId))) {
+    yield call(enqueue, { action: 'uninstall', projectId, dependencyName });
     yield cancel();
   } else {
     const notificationId = `${projectId}-delete-${dependencyName}`;
@@ -141,61 +182,71 @@ function* deleteDependency({ projectId, dependencyName }) {
 }
 
 function* addDependencies({ projectId, notificationId, dependencies }) {
-  // update notification
-  // get projectPath
-  // call installDependencies
-  // handle success notification
-  // handle success finish
-  // handle failure notification
-  // handle failure error
+  yield put(
+    updateNotification(notificationId, { title: 'Installing dependencies...' })
+  );
+
+  const projectPath = yield select(getPathForProjectId, projectId);
+  try {
+    yield call(installDependencies, projectPath, dependencies);
+    const installedDependencies = yield call(
+      loadProjectDependencies,
+      projectPath,
+      dependencies
+    );
+    yield put(completeNotification(notificationId));
+    yield put(addDependenciesFinish(projectId, installedDependencies));
+  } catch (err) {
+    yield put(failNotification(notificationId, err));
+    yield put(addDependenciesError(projectId, dependencies));
+  }
 }
 
 function* deleteDependencies({ projectId, notificationId, dependencies }) {
-  // update notification
-  // get projectPath
-  // call uninstallDependencies
-  // handle success notification
-  // handle success finish
-  // handle failure notification
-  // handle failure error
+  yield put(
+    updateNotification(notificationId, { title: 'Deleting dependencies...' })
+  );
+
+  const projectPath = yield select(getPathForProjectId, projectId);
+  try {
+    yield call(uninstallDependencies, projectPath, dependencies);
+    yield put(completeNotification(notificationId));
+    yield put(deleteDependenciesFinish(projectId, dependencies));
+  } catch (err) {
+    yield put(failNotification(notificationId, err));
+    yield put(deleteDependenciesError(projectId, dependencies));
+  }
 }
 
-function* enqueue({ type: actionType, projectId, dependencyName, version }) {
+function requestPackageJsonLockForProjectId(projectId) {
+  if (lock[projectId]) return false;
+
+  lock[projectId] = true;
+  return true;
+}
+
+function* enqueue({ action, projectId, dependencyName, version }) {
   // If a package.json-locking function is already underway, queue
   // this action up to be fired next in series. If there are already
   // queued actions of the same type, append this action's information
   // to that action so they can all be processed as a single command.
-  const pendingAction =
-    actionType === DELETE_DEPENDENCY_START ? 'remove' : 'install';
   const projectQueue = queue[projectId] || [];
 
-  let queueIndex = projectQueue.findIndex(q => q.action === pendingAction);
-  if (queueIndex === -1) {
+  let queueIndex = projectQueue.findIndex(q => q.action === action);
+  const canCompound = queueIndex !== -1;
+
+  if (!canCompound) {
     const notificationId = `${projectId}-queue-${Date.now()}`;
     projectQueue.push({
-      action: pendingAction,
+      action: action,
       notificationId,
       dependencies: [],
     });
     queueIndex = projectQueue.length - 1;
     yield put(
       showNotification(notificationId, {
-        title: `Dependencies queued for ${pendingAction}...`,
-        message: `${dependencyName}@${version}`,
-      })
-    );
-  } else {
-    const queueAction = projectQueue[queueIndex];
-    yield put(
-      updateNotification(queueAction.notificationId, {
-        message: queueAction.dependencies
-          .map(
-            dependency =>
-              `${dependencyName}${
-                dependency.version ? '@' + dependency.version : ''
-              }`
-          )
-          .join(', '),
+        title: `Dependencies queued for ${action}...`,
+        message: `${dependencyName}${version ? '@' + version : ''}`,
       })
     );
   }
@@ -205,12 +256,34 @@ function* enqueue({ type: actionType, projectId, dependencyName, version }) {
     version,
   });
   queue[projectId] = projectQueue;
+
+  if (canCompound) {
+    const queueAction = projectQueue[queueIndex];
+    yield put(
+      updateNotification(queueAction.notificationId, {
+        message: queueAction.dependencies
+          .map(
+            dependency =>
+              `${dependency.dependencyName}${
+                dependency.version ? '@' + dependency.version : ''
+              }`
+          )
+          .join(', '),
+      })
+    );
+  }
 }
 
-function* dequeue(projectId) {
-  // As soon a package.json-locking function completes, remove the next
-  // set of pending dependencies for that project off the queue and dispatch
-  // an action to run them.
+function* dequeue({ projectId }) {
+  console.log('lock:', lock);
+  console.log('queue:', queue);
+
+  // As soon a package.json-locking function completes, unlock the
+  // corresponding package.json.
+  lock[projectId] = false;
+
+  // Attempt to remove the next set of pending dependencies for that
+  // project from the queue and dispatch an action to run them.
   if (queue[projectId] && queue[projectId].length > 0) {
     const nextAction = queue[projectId].shift();
     const actionCreator =

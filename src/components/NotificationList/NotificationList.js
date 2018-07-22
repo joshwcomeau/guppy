@@ -45,7 +45,10 @@ class NotificationList extends Component<Props, State> {
     pageIndex: 0,
   };
 
-  // this is bad and I should feel bad but I don't know what else to do
+  // TODO: convert this to getDerivedStateFromProps
+  // TODO: the logic here is incomplete - I have not determined all
+  // corner cases yet, but off the top of my head I know this is wrong
+  // for moving from 2 notifications to 1, as it sets the index to 0.
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.state.pageIndex >= Object.keys(nextProps.notifications).length) {
       this.setState({

@@ -26,10 +26,10 @@ class Notification extends Component<NotificationType> {
           <Spacer size={4} />
         )}
         <InnerContainer>
-          <div>
-            <Heading size="small">{title}</Heading>
+          <Description>
+            <XSmallHeading>{title}</XSmallHeading>
             <span style={{ color: COLORS.gray[500] }}>{message}</span>
-          </div>
+          </Description>
           <Action
             style={{
               color: complete
@@ -53,6 +53,13 @@ class Notification extends Component<NotificationType> {
   }
 }
 
+// TODO: Notifications are currently set at a fixed height of 80px.
+// However, queued dependency install/removal and error messages may
+// both contain well over a single line of pertinent information, so
+// we should figure out some way to have their height adjust accordingly.
+// This isn't as simple as it sounds, however, since the paging system
+// used in NotificationList relies on each Notification's content being
+// a constant height.
 const Container = styled.div`
   width: 100%;
   height: 80px;
@@ -64,6 +71,19 @@ const InnerContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 10px 15px 10px 42px;
+`;
+
+const Description = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: space-between;
+`;
+
+// TODO: Is it worth merging this size into the base Heading class
+// as a variant for size="xsmall"?
+const XSmallHeading = styled(Heading)`
+  font-size: 20px;
 `;
 
 const Action = styled.div`

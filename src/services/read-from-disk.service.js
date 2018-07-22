@@ -194,12 +194,12 @@ export function loadProjectDependency(
  */
 export function loadProjectDependencies(
   projectPath: string,
-  dependencies: Array<string>
+  dependencies: Array<{ dependencyName: string }>
 ) {
   return new Promise((resolve, reject) => {
     asyncMap(
       dependencies,
-      function(dependencyName, callback) {
+      function({ dependencyName }, callback) {
         loadProjectDependency(projectPath, dependencyName)
           .then(dependency => callback(null, dependency))
           .catch(callback);

@@ -106,6 +106,8 @@ class AddDependencySearchResult extends PureComponent<Props> {
         </NoActionAvailable>
       );
     } else {
+      // TODO: while a dependency is actively installing/deleting, all other
+      // 'Add To Project' buttons lose their green outline...?
       return (
         <Button
           size="small"
