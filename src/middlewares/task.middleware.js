@@ -277,7 +277,7 @@ const getDevServerCommand = (
   }
 };
 
-const sendCommandToProcess = (child: any, command) => {
+const sendCommandToProcess = (child: any, command: string) => {
   // Commands have to be suffixed with '\n' to signal that the command is
   // ready to be sent. Same as a regular command + hitting the enter key.
   child.stdin.write(`${command}\n`);
