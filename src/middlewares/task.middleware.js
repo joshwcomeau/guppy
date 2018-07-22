@@ -307,6 +307,7 @@ const getDevServerArguments = (
   projectType: ProjectType,
   port: string
 ) => {
+  let command;
   switch (projectType) {
     case 'create-react-app':
       return { commandArgs: ['run', task.name], commandEnv: { PORT: port } };
