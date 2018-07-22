@@ -76,3 +76,11 @@ I'd also like to see Guppy become far more useful for educating users about web 
 ### Chat
 
 Come hang out with us [on Gitter](https://gitter.im/guppy-gui/Lobby)!
+
+### Contributing
+
+Guppy has an active community of contributors and collaborators that enjoy working together to continuously improve the application's form and function. Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms. If you would like to get involved, have a look at our [Contributing Guide](CONTRIBUTING.md)!
+
+### License
+
+[ISC](LICENSE.md), Copyright 2018 Joshua Comeau
