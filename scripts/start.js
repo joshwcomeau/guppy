@@ -16,6 +16,7 @@ require('../config/env');
 
 const { exec } = require('child_process');
 const chalk = require('chalk');
+const path = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const clearConsole = require('react-dev-utils/clearConsole');
@@ -48,12 +49,21 @@ let isElectronRunning = false;
  * Prevents multiple re-runs of Electron App
  */
 function runElectronApp() {
-  if (isElectronRunning)
-    return;
+  if (isElectronRunning) return;
 
   isElectronRunning = true;
-
-  exec(`ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`,
+  // For Windows Support
+  const envPATHS = process.env.PATH.split(';');
+  envPATHS.push(path.join(__dirname, '../node_modules', '.bin'));
+  const newPATHS = envPATHS.join(';');
+  exec(
+    `electron${/^win/.test(process.platform) ? '.cmd' : ''} .`,
+    {
+      env: {
+        PATH: newPATHS,
+        ELECTRON_START_URL: `http://localhost:${DEFAULT_PORT}`,
+      },
+    },
     (err, stdout, stderr) => {
       if (err) {
         console.info(chalk.red('Electron app run failed: ') + stderr);
@@ -137,8 +147,8 @@ checkBrowsers(paths.appPath)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    ['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
+    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
+      process.on(sig, function() {
         devServer.close();
         process.exit();
       });
@@ -146,12 +156,10 @@ checkBrowsers(paths.appPath)
 
     /**
      * Hook runElectronApp() to 'done' (compile) event
-     * 
+     *
      * Fails on error
      */
-    compiler.plugin('done',
-      stats => !stats.hasErrors() && runElectronApp()
-    );
+    compiler.plugin('done', stats => !stats.hasErrors() && runElectronApp());
   })
   .catch(err => {
     if (err && err.message) {

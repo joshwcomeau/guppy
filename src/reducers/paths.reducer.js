@@ -10,9 +10,11 @@
  * paths on different computers!).
  */
 import { ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
+import { getWindowsHomeDir, isWin } from '../services/platform.services';
 
 import type { Action } from 'redux';
 
+const path = window.require('path');
 const os = window.require('os');
 
 type State = {
@@ -42,12 +44,16 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-export const getDefaultParentPath = () =>
+export const getDefaultParentPath = () => {
   // Noticing some weird quirks when I try to use a dev project on the compiled
   // "production" app, so separating their home paths should help.
-  process.env.NODE_ENV === 'development'
-    ? `${os.homedir()}/guppy-projects-dev`
-    : `${os.homedir()}/guppy-projects`;
+
+  const homedir = isWin ? getWindowsHomeDir() : os.homedir();
+
+  return process.env.NODE_ENV === 'development'
+    ? path.join(homedir, '/guppy-projects-dev')
+    : path.join(homedir, '/guppy-projects');
+};
 
 export const getDefaultPath = (projectId: string) =>
   `${getDefaultParentPath()}/${projectId}`;
