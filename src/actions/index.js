@@ -91,7 +91,7 @@ export const loadDependencyInfoFromDisk = (
     // The `project` this action receives is the "fit-for-consumption" one.
     // We need the internal version, `ProjectInternal`, so that we can see the
     // raw dependency information.
-    const internalProject = getInternalProjectById(projectId, getState());
+    const internalProject = getInternalProjectById(getState(), projectId);
 
     loadAllProjectDependencies(internalProject, projectPath).then(
       dependencies => {

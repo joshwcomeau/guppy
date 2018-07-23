@@ -130,8 +130,8 @@ export default (state: State = initialState, action: Action) => {
 //
 // Selectors
 export const getDependenciesForProjectId = (
-  projectId: string,
-  state: any
+  state: any,
+  projectId: string
 ): Array<Dependency> => {
   const dependenciesForProject = state.dependencies[projectId];
 
