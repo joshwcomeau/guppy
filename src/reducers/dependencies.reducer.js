@@ -11,6 +11,12 @@ import {
   ADD_DEPENDENCY_START,
   ADD_DEPENDENCY_ERROR,
   ADD_DEPENDENCY_FINISH,
+  ADD_DEPENDENCIES_START,
+  ADD_DEPENDENCIES_ERROR,
+  ADD_DEPENDENCIES_FINISH,
+  DELETE_DEPENDENCIES_START,
+  DELETE_DEPENDENCIES_ERROR,
+  DELETE_DEPENDENCIES_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -117,6 +123,91 @@ export default (state: State = initialState, action: Action) => {
 
       return produce(state, draftState => {
         delete draftState[projectId][dependencyName];
+      });
+    }
+
+    case ADD_DEPENDENCIES_START: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        // this action name is a bit of a misnomer, since this block
+        // is used for both adding AND updating dependencies (otherwise,
+        // we wouldn't be able to batch installs/updates with a single
+        // `npm install` command
+
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.dependencyName] = {
+            name: dependency.dependencyName,
+            status: dependency.updating ? 'updating' : 'installing',
+            // If we're installing a new dependency, set all other
+            // fields to empty strings to prevent issues with nullable
+            // values. Otherwise we're updating, so don't overwrite
+            // anything else.
+            ...(dependency.updating
+              ? {}
+              : {
+                  description: '',
+                  version: '',
+                  homepage: '',
+                  license: '',
+                  repository: '',
+                }),
+          };
+        });
+      });
+    }
+
+    case ADD_DEPENDENCIES_ERROR: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        dependencies.forEach(dependency => {
+          if (dependency.updating) {
+            draftState[projectId][dependency.dependencyName].status = 'idle';
+          } else {
+            delete draftState[projectId][dependency.dependencyName];
+          }
+        });
+      });
+    }
+
+    case ADD_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.name] = dependency;
+        });
+      });
+    }
+
+    case DELETE_DEPENDENCIES_START: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.dependencyName].status = 'deleting';
+        });
+      });
+    }
+
+    case DELETE_DEPENDENCIES_ERROR: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.dependencyName].status = 'idle';
+        });
+      });
+    }
+
+    case DELETE_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        dependencies.forEach(dependency => {
+          delete draftState[projectId][dependency.dependencyName];
+        });
       });
     }
 

@@ -7,7 +7,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 
-import type { Project, Task, Dependency } from '../types';
+import type { Project, Task, Notification, Dependency } from '../types';
 
 //
 //
@@ -34,17 +34,26 @@ export const LOAD_DEPENDENCY_INFO_FROM_DISK = 'LOAD_DEPENDENCY_INFO_FROM_DISK';
 export const ADD_DEPENDENCY_START = 'ADD_DEPENDENCY_START';
 export const ADD_DEPENDENCY_ERROR = 'ADD_DEPENDENCY_ERROR';
 export const ADD_DEPENDENCY_FINISH = 'ADD_DEPENDENCY_FINISH';
+export const ADD_DEPENDENCIES_START = 'ADD_DEPENDENCIES_START';
+export const ADD_DEPENDENCIES_ERROR = 'ADD_DEPENDENCIES_ERROR';
+export const ADD_DEPENDENCIES_FINISH = 'ADD_DEPENDENCIES_FINISH';
 export const UPDATE_DEPENDENCY_START = 'UPDATE_DEPENDENCY_START';
 export const UPDATE_DEPENDENCY_ERROR = 'UPDATE_DEPENDENCY_ERROR';
 export const UPDATE_DEPENDENCY_FINISH = 'UPDATE_DEPENDENCY_FINISH';
 export const DELETE_DEPENDENCY_START = 'DELETE_DEPENDENCY_START';
 export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
 export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
+export const DELETE_DEPENDENCIES_START = 'DELETE_DEPENDENCIES_START';
+export const DELETE_DEPENDENCIES_ERROR = 'DELETE_DEPENDENCIES_ERROR';
+export const DELETE_DEPENDENCIES_FINISH = 'DELETE_DEPENDENCIES_FINISH';
 export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
   'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_ERROR = 'IMPORT_EXISTING_PROJECT_ERROR';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
+export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
+export const UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION';
+export const DELETE_NOTIFICATION = 'DELETE_NOTIFICATION';
 
 //
 //
@@ -205,6 +214,35 @@ export const deleteDependencyFinish = (
   dependencyName,
 });
 
+export const deleteDependenciesStart = (
+  projectId: string,
+  notificationId: string,
+  dependencies: Array<{ dependencyName: string }>
+) => ({
+  type: DELETE_DEPENDENCIES_START,
+  projectId,
+  notificationId,
+  dependencies,
+});
+
+export const deleteDependenciesError = (
+  projectId: string,
+  dependencies: Array<{ dependencyName: string }>
+) => ({
+  type: DELETE_DEPENDENCIES_ERROR,
+  projectId,
+  dependencies,
+});
+
+export const deleteDependenciesFinish = (
+  projectId: string,
+  dependencies: Array<{ dependencyName: string }>
+) => ({
+  type: DELETE_DEPENDENCIES_FINISH,
+  projectId,
+  dependencies,
+});
+
 export const updateDependencyStart = (
   projectId: string,
   dependencyName: string,
@@ -265,6 +303,35 @@ export const addDependencyFinish = (
   dependency,
 });
 
+export const addDependenciesStart = (
+  projectId: string,
+  notificationId: string,
+  dependencies: Array<{ dependencyName: string, version: string }>
+) => ({
+  type: ADD_DEPENDENCIES_START,
+  projectId,
+  notificationId,
+  dependencies,
+});
+
+export const addDependenciesError = (
+  projectId: string,
+  dependencies: Array<string>
+) => ({
+  type: ADD_DEPENDENCIES_ERROR,
+  projectId,
+  dependencies,
+});
+
+export const addDependenciesFinish = (
+  projectId: string,
+  dependencies: Array<Dependency>
+) => ({
+  type: ADD_DEPENDENCIES_FINISH,
+  projectId,
+  dependencies,
+});
+
 export const showImportExistingProjectPrompt = () => ({
   type: SHOW_IMPORT_EXISTING_PROJECT_PROMPT,
 });
@@ -286,6 +353,64 @@ export const importExistingProjectFinish = (
   path,
   project,
 });
+
+export const showNotification = (
+  notificationId: string,
+  notification: Notification
+) => ({
+  type: ADD_NOTIFICATION,
+  notificationId,
+  ...notification,
+});
+
+export const updateNotification = (
+  notificationId: string,
+  notification: {
+    title?: string,
+    message?: string,
+    progress?: number,
+    complete?: boolean,
+    error?: boolean,
+  }
+) => ({
+  type: UPDATE_NOTIFICATION,
+  notificationId,
+  ...notification,
+});
+
+export const deleteNotification = (notificationId: string) => ({
+  type: DELETE_NOTIFICATION,
+  notificationId,
+});
+
+export const failNotification = (
+  notificationId: string,
+  errorMessage: string
+) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: UPDATE_NOTIFICATION,
+      notificationId,
+      message: errorMessage,
+      progress: undefined,
+      error: true,
+    });
+    setTimeout(() => dispatch(deleteNotification(notificationId)), 5000);
+  };
+};
+
+export const completeNotification = (notificationId: string) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: UPDATE_NOTIFICATION,
+      notificationId,
+      message: 'Done!',
+      progress: undefined,
+      complete: true,
+    });
+    setTimeout(() => dispatch(deleteNotification(notificationId)), 2000);
+  };
+};
 
 // export const ejectProjectStart = (task: Task, timestamp: Date) => ({
 //   type: EJECT_PROJECT_START,

@@ -7,7 +7,6 @@ import { check } from 'react-icons-kit/feather/check';
 
 import { updateDependencyStart } from '../../actions';
 import { COLORS } from '../../constants';
-import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 
 import Button from '../Button';
 import Label from '../Label';
@@ -23,7 +22,6 @@ type Props = {
   isLoadingNpmInfo: boolean,
   latestVersion: ?string,
   // From redux:
-  isPackageJsonLocked: boolean,
   updateDependencyStart: (
     projectId: string,
     dependencyName: string,
@@ -39,7 +37,6 @@ class DependencyUpdateRow extends Component<Props> {
       isLoadingNpmInfo,
       latestVersion,
       updateDependencyStart,
-      isPackageJsonLocked,
     } = this.props;
 
     if (isLoadingNpmInfo || !latestVersion) {
@@ -66,7 +63,6 @@ class DependencyUpdateRow extends Component<Props> {
         color1={COLORS.green[700]}
         color2={COLORS.lightGreen[500]}
         style={{ width: 80 }}
-        disabled={isPackageJsonLocked}
         onClick={() =>
           updateDependencyStart(projectId, dependency.name, latestVersion)
         }
@@ -129,14 +125,7 @@ const UpToDate = styled.div`
   font-weight: 500;
 `;
 
-const mapStateToProps = (state, ownProps) => ({
-  isPackageJsonLocked: getPackageJsonLockedForProjectId(
-    ownProps.projectId,
-    state
-  ),
-});
-
 export default connect(
-  mapStateToProps,
+  null,
   { updateDependencyStart }
 )(DependencyUpdateRow);
