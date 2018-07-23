@@ -1,8 +1,9 @@
 {
-  "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "search.exclude": {
     "**/node_modules": true,
     "**/release-builds": true
-  }
+  },
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": false
 }
