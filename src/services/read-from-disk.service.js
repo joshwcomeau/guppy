@@ -144,7 +144,8 @@ export function loadGuppyProjects(projectPathsInput: Array<string>) {
  */
 export function loadProjectDependency(
   projectPath: string,
-  dependencyName: string
+  dependencyName: string,
+  devDeps: Array<string>
 ) {
   // prettier-ignore
   const dependencyPath =
@@ -181,6 +182,12 @@ export function loadProjectDependency(
       const dependency = {
         ...packageJsonSubset,
         status: 'idle',
+        // If the name of the package is present in the devDeps array
+        // then its location is devDependencies
+        location:
+          devDeps && devDeps.includes(packageJsonSubset.name)
+            ? 'devDependencies'
+            : 'dependencies',
       };
 
       return resolve(dependency);
@@ -195,8 +202,6 @@ export function loadProjectDependency(
  * NOTE: I wonder how this would perform on a project with 100+ top-level
  * dependencies... might need to set up a streaming service that can communicate
  * loading status if it takes more than a few hundred ms.
- *
- * TODO: support devDependencies
  */
 export function loadAllProjectDependencies(
   project: ProjectInternal,
@@ -206,14 +211,24 @@ export function loadAllProjectDependencies(
   return loadPackageJson(projectPath).then(
     packageJson =>
       new Promise((resolve, reject) => {
-        const dependencyNames = Object.keys(packageJson.dependencies);
+        // Check for existence of both dependencies and devDependencies
+        // We can reasonably assume all projects have dependencies
+        // but some may not have devDependencies
+        const deps = Object.keys(packageJson.dependencies);
+        const devDeps = packageJson.devDependencies
+          ? Object.keys(packageJson.devDependencies)
+          : [];
+
+        // If devDeps exists, add to dependencyNames, otherwise don't
+        const dependencyNames = devDeps ? [...deps, ...devDeps] : [...deps];
 
         // Each project in a Guppy directory should have a package.json.
         // We'll read all the project info we need from this file.
         asyncMap(
           dependencyNames,
           function(dependencyName, callback) {
-            loadProjectDependency(projectPath, dependencyName)
+            // We pass in devDeps to run a location check
+            loadProjectDependency(projectPath, dependencyName, devDeps)
               .then(dependency => callback(null, dependency))
               .catch(callback);
           },

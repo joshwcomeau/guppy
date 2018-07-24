@@ -46,9 +46,10 @@ export type Dependency = {
   license: string,
   repository: Repository,
   // All of the above fields are straight from the dependency's package.json.
-  // The status field is separate, and used to show loading indicators while
-  // performing actions on the dependency.
+  // The status/location fields are separate, and used to show loading indicators while
+  // performing actions on the dependency, and whether or not it's a devDependency.
   status: DependencyStatus,
+  location: string,
 };
 
 /**
