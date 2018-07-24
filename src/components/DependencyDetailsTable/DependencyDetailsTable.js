@@ -40,15 +40,28 @@ class DependencyDetailsTable extends Component<Props> {
         <tbody>
           <tr>
             <FirstCell>
-              <Label>Last Published</Label>
+              <Label>Location</Label>
             </FirstCell>
             <FirstCell>
+              <DependencyLocationLabel
+                isDevDependency={dependency.location === 'devDependencies'}
+              >
+                {dependency.location}
+              </DependencyLocationLabel>
+            </FirstCell>
+          </tr>
+
+          <tr>
+            <Cell>
+              <Label>Last Published</Label>
+            </Cell>
+            <Cell>
               {lastUpdatedAt ? (
                 moment(lastUpdatedAt).fromNow()
               ) : (
                 <Spinner size={15} />
               )}
-            </FirstCell>
+            </Cell>
           </tr>
 
           <tr>
@@ -78,6 +91,7 @@ class DependencyDetailsTable extends Component<Props> {
               )}
             </Cell>
           </tr>
+
           <tr>
             <LastCell>
               <Label style={{ color: COLORS.pink[500] }}>Danger Zone</Label>
@@ -109,6 +123,13 @@ const Cell = styled.td`
     width: 150px;
     color: ${COLORS.gray[600]};
   }
+`;
+
+const DependencyLocationLabel = styled.span`
+  padding: 5px;
+  color: ${COLORS.white};
+  background-color: ${props =>
+    props.isDevDependency ? COLORS.orange[700] : COLORS.blue[700]};
 `;
 
 // TODO: Feels gross to be doing this manually when `tr:first-child td`
