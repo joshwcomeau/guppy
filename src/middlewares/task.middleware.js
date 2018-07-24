@@ -29,11 +29,7 @@ export default (store: any) => (next: any) => (action: any) => {
 
   const state = store.getState();
 
-<<<<<<< HEAD
   const project = getProjectById(state, task.projectId);
-=======
-  const project = getProjectById(task.projectId, state);
->>>>>>> replace dependency middleware with redux-saga and tests for it
   const projectPath = getPathForProjectId(state, task.projectId);
 
   // eslint-disable-next-line default-case

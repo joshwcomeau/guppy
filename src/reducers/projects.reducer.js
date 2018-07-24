@@ -121,13 +121,8 @@ const prepareProjectForConsumption = (
     color: project.guppy.color,
     icon: project.guppy.icon,
     createdAt: project.guppy.createdAt,
-<<<<<<< HEAD
     tasks: getTasksForProjectId(state, project.guppy.id),
     dependencies: getDependenciesForProjectId(state, project.guppy.id),
-=======
-    tasks: getTasksForProjectId(project.guppy.id, state),
-    dependencies: getDependenciesForProjectId(project.guppy.id, state),
->>>>>>> replace dependency middleware with redux-saga and tests for it
     path: getPathForProjectId(state, project.guppy.id),
   };
 };
