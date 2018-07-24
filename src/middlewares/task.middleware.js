@@ -132,16 +132,8 @@ export default (store: any) => (next: any) => (action: any) => {
         additionalArgs.push('--', '--coverage');
       }
 
-      /* Bypasses 'Are you sure?' check when ejecting CRA
-       *
-       * TODO: add windows support
-       */
-      const command =
-        project.type === 'create-react-app' && name === 'eject'
-          ? 'echo yes | npm'
-          : 'npm';
       const child = childProcess.spawn(
-        command,
+        'npm',
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,
@@ -158,6 +150,20 @@ export default (store: any) => (next: any) => (action: any) => {
       next(attachTaskMetadata(task, child.pid));
 
       child.stdout.on('data', data => {
+        // The 'eject' task prompts the user, to ask if they're sure.
+        // We can bypass this prompt, as our UI already has an alert that
+        // confirms this action.
+        // TODO: Eject deserves its own Redux action, to avoid cluttering up
+        // this generic "RUN_TASK" action.
+        // TODO: Is there a way to "future-proof" this, in case the CRA
+        // confirmation copy changes?
+        const isEjectPrompt = data
+          .toString()
+          .includes('Are you sure you want to eject? This action is permanent');
+
+        if (isEjectPrompt) {
+          sendCommandToProcess(child, 'y');
+        }
         next(receiveDataFromTaskExecution(task, data.toString()));
       });
 
@@ -269,4 +275,10 @@ const getDevServerCommand = (
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }
+};
+
+const sendCommandToProcess = (child: any, command: string) => {
+  // Commands have to be suffixed with '\n' to signal that the command is
+  // ready to be sent. Same as a regular command + hitting the enter key.
+  child.stdin.write(`${command}\n`);
 };
