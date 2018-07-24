@@ -5,7 +5,6 @@ import createSagaMiddleware from 'redux-saga';
 
 import rootReducer from '../reducers';
 import { handleReduxUpdates } from '../services/redux-persistence.service';
-import taskMiddleware from '../middlewares/task.middleware';
 import rootSaga from '../sagas';
 
 import DevTools from '../components/DevTools';
@@ -17,7 +16,7 @@ export default function configureStore(initialState: any) {
     rootReducer,
     initialState,
     compose(
-      applyMiddleware(thunk, taskMiddleware, sagaMiddleware),
+      applyMiddleware(thunk, sagaMiddleware),
       DevTools.instrument()
     )
   );
