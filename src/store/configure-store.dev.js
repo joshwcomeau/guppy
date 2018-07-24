@@ -1,14 +1,17 @@
 // @flow
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 
 import rootReducer from '../reducers';
 import { handleReduxUpdates } from '../services/redux-persistence.service';
-import taskMiddleware from '../middlewares/task.middleware';
 import dependencyMiddleware from '../middlewares/dependency.middleware';
 import importProjectMiddleware from '../middlewares/import-project.middleware';
+import rootSaga from '../sagas';
 
 import DevTools from '../components/DevTools';
+
+const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState: any) {
   const store = createStore(
@@ -17,13 +20,15 @@ export default function configureStore(initialState: any) {
     compose(
       applyMiddleware(
         thunk,
-        taskMiddleware,
         dependencyMiddleware,
-        importProjectMiddleware
+        importProjectMiddleware,
+        sagaMiddleware
       ),
       DevTools.instrument()
     )
   );
+
+  sagaMiddleware.run(rootSaga);
 
   // Allow direct access to the store, for debugging/testing
   window.store = store;
