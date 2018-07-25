@@ -145,7 +145,7 @@ export function loadGuppyProjects(projectPathsInput: Array<string>) {
 export function loadProjectDependency(
   projectPath: string,
   dependencyName: string,
-  devDeps: Array<string>
+  dependencyLocation: 'dependencies' | 'devDependencies'
 ) {
   // prettier-ignore
   const dependencyPath =
@@ -182,12 +182,7 @@ export function loadProjectDependency(
       const dependency = {
         ...packageJsonSubset,
         status: 'idle',
-        // If the name of the package is present in the devDeps array
-        // then its location is devDependencies
-        location:
-          devDeps && devDeps.includes(packageJsonSubset.name)
-            ? 'devDependencies'
-            : 'dependencies',
+        location: dependencyLocation,
       };
 
       return resolve(dependency);
@@ -215,20 +210,25 @@ export function loadAllProjectDependencies(
         // We can reasonably assume all projects have dependencies
         // but some may not have devDependencies
         const deps = Object.keys(packageJson.dependencies);
-        const devDeps = packageJson.devDependencies
-          ? Object.keys(packageJson.devDependencies)
-          : [];
-
-        // If devDeps exists, add to dependencyNames, otherwise don't
-        const dependencyNames = devDeps ? [...deps, ...devDeps] : [...deps];
+        const devDeps = Object.keys(packageJson.devDependencies || []);
+        const dependencyNames = [...deps, ...devDeps];
 
         // Each project in a Guppy directory should have a package.json.
         // We'll read all the project info we need from this file.
         asyncMap(
           dependencyNames,
           function(dependencyName, callback) {
-            // We pass in devDeps to run a location check
-            loadProjectDependency(projectPath, dependencyName, devDeps)
+            // If the name of the package is present in the devDeps array
+            // then its location is devDependencies
+            const dependencyLocation = devDeps.includes(dependencyName)
+              ? 'devDependencies'
+              : 'dependencies';
+
+            loadProjectDependency(
+              projectPath,
+              dependencyName,
+              dependencyLocation
+            )
               .then(dependency => callback(null, dependency))
               .catch(callback);
           },

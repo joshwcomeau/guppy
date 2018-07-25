@@ -23,6 +23,7 @@ type Props = {
 class DependencyDetailsTable extends Component<Props> {
   render() {
     const { projectId, dependency, lastUpdatedAt } = this.props;
+    const { location = 'dependencies' } = dependency;
 
     const packageHref = `https://www.npmjs.org/package/${dependency.name}`;
     let githubHref;
@@ -44,9 +45,9 @@ class DependencyDetailsTable extends Component<Props> {
             </FirstCell>
             <FirstCell>
               <DependencyLocationLabel
-                isDevDependency={dependency.location === 'devDependencies'}
+                isDevDependency={location === 'devDependencies'}
               >
-                {dependency.location}
+                {location}
               </DependencyLocationLabel>
             </FirstCell>
           </tr>
@@ -126,10 +127,12 @@ const Cell = styled.td`
 `;
 
 const DependencyLocationLabel = styled.span`
-  padding: 5px;
-  color: ${COLORS.white};
   background-color: ${props =>
     props.isDevDependency ? COLORS.orange[700] : COLORS.blue[700]};
+  border-radius: 4px;
+  color: ${COLORS.white};
+  font-size: 14px;
+  padding: 5px 10px;
 `;
 
 // TODO: Feels gross to be doing this manually when `tr:first-child td`
