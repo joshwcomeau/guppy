@@ -21,7 +21,7 @@ describe('Location Service', () => {
         pathname: '/some/path',
       };
 
-      expect(extractSelectedTaskFromUrl(locationExample)).toEqual(null);
+      expect(extractProjectIdFromUrl(locationExample)).toEqual(null);
     });
   });
 
@@ -35,7 +35,7 @@ describe('Location Service', () => {
         pathname: '/some/path',
       };
 
-      expect(extractSelectedTaskFromUrl(locationExample)).toEqual(null);
+      expect(extractProjectTabFromUrl(locationExample)).toEqual(null);
     });
   });
 
