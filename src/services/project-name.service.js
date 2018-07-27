@@ -63,7 +63,7 @@ const pseudoAdjectives = [
   'ice',
 ];
 
-const prefixes = [...adjectives, ...pseudoAdjectives];
+export const prefixes = [...adjectives, ...pseudoAdjectives];
 
 const animalNames = [
   'cat',
@@ -176,4 +176,4 @@ const miscNouns = [
   'thing',
 ];
 
-const suffixes = [...animalNames, ...objects, ...miscNouns];
+export const suffixes = [...animalNames, ...objects, ...miscNouns];
