@@ -57,7 +57,10 @@ Object {
       "homepage": "",
       "license": "",
       "name": "redux",
-      "repository": "",
+      "repository": Object {
+        "type": "",
+        "url": "",
+      },
       "status": "installing",
       "version": "",
     },
