@@ -1,3 +1,4 @@
+import { PACKAGE_MANAGER } from './package-manager.service';
 const childProcess = window.require('child_process');
 const os = window.require('os');
 const path = window.require('path');
@@ -38,3 +39,5 @@ export const getPathForPlatform = (): string =>
         'appData'
       )}\\npm;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Yarn\\bin`
     : '';
+
+export const PACKAGE_MANAGER_CMD = formatCommandForPlatform(PACKAGE_MANAGER);
