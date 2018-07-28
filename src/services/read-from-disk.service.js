@@ -4,7 +4,7 @@ import asyncMap from 'async/map';
 import { pick } from '../utils';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
 
-import type { ProjectInternal } from '../types';
+import type { DependencyLocation, ProjectInternal } from '../types';
 
 const fs = window.require('fs');
 const path = window.require('path');
@@ -145,7 +145,7 @@ export function loadGuppyProjects(projectPathsInput: Array<string>) {
 export function loadProjectDependency(
   projectPath: string,
   dependencyName: string,
-  dependencyLocation: 'dependencies' | 'devDependencies'
+  dependencyLocation: DependencyLocation = 'dependencies'
 ) {
   // prettier-ignore
   const dependencyPath =

@@ -23,7 +23,6 @@ type Props = {
 class DependencyDetailsTable extends Component<Props> {
   render() {
     const { projectId, dependency, lastUpdatedAt } = this.props;
-    const { location = 'dependencies' } = dependency;
 
     const packageHref = `https://www.npmjs.org/package/${dependency.name}`;
     let githubHref;
@@ -45,9 +44,9 @@ class DependencyDetailsTable extends Component<Props> {
             </FirstCell>
             <FirstCell>
               <DependencyLocationLabel
-                isDevDependency={location === 'devDependencies'}
+                isDevDependency={dependency.location === 'devDependencies'}
               >
-                {location}
+                {dependency.location}
               </DependencyLocationLabel>
             </FirstCell>
           </tr>
