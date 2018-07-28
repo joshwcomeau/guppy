@@ -20,6 +20,7 @@ import {
 } from '../services/platform.services';
 
 import type { Task, ProjectType } from '../types';
+import { PACKAGE_MANAGER } from '../services/package-manager.service';
 
 const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
@@ -71,7 +72,7 @@ export default (store: any) => (next: any) => (action: any) => {
            */
 
           const child = childProcess.spawn(
-            formatCommandForPlatform('npm'),
+            formatCommandForPlatform(PACKAGE_MANAGER),
             commandArgs,
             {
               cwd: projectPath,
@@ -157,7 +158,7 @@ export default (store: any) => (next: any) => (action: any) => {
       //     ? 'echo yes | npm'
       //     : 'npm';
       const child = childProcess.spawn(
-        formatCommandForPlatform('npm'),
+        formatCommandForPlatform(PACKAGE_MANAGER),
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,

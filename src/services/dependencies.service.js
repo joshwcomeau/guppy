@@ -1,4 +1,5 @@
 // @flow
+import packageMan from './package-manager.service';
 const childProcess = window.require('child_process');
 
 export const installDependency = (
@@ -7,9 +8,8 @@ export const installDependency = (
   version: string
 ) => {
   return new Promise((resolve, reject) => {
-    // TODO: yarn?
     childProcess.exec(
-      `npm install ${dependencyName}@${version} -SE`,
+      `${packageMan.addDependencyCommand()} ${dependencyName}@${version} -SE`,
       { cwd: projectPath },
       (err, res) => {
         err ? reject(err) : resolve(res);
@@ -24,7 +24,7 @@ export const uninstallDependency = (
 ) => {
   return new Promise((resolve, reject) => {
     childProcess.exec(
-      `npm uninstall ${dependencyName}`,
+      `${packageMan.removeDependencyCommand()} ${dependencyName}`,
       { cwd: projectPath },
       (err, res) => {
         err ? reject(err) : resolve(res);
@@ -35,8 +35,12 @@ export const uninstallDependency = (
 
 export const reinstallDependencies = (projectPath: string) => {
   return new Promise((resolve, reject) => {
-    childProcess.exec('npm install', { cwd: projectPath }, (err, res) => {
-      err ? reject(err) : resolve(res);
-    });
+    childProcess.exec(
+      packageMan.addDependencyCommand(),
+      { cwd: projectPath },
+      (err, res) => {
+        err ? reject(err) : resolve(res);
+      }
+    );
   });
 };
