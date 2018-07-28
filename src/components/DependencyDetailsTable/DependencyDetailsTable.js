@@ -11,6 +11,7 @@ import Middot from '../Middot';
 import DeleteDependencyButton from '../DeleteDependencyButton';
 import Spinner from '../Spinner';
 import License from '../License';
+import HelpButton from '../HelpButton';
 
 import type { Dependency } from '../../types';
 
@@ -40,7 +41,13 @@ class DependencyDetailsTable extends Component<Props> {
         <tbody>
           <tr>
             <FirstCell>
-              <Label>Location</Label>
+              <Label>
+                Location
+                <HelpButton
+                  size={16}
+                  href="https://github.com/joshwcomeau/guppy/blob/dependenciesExplanationDocs/docs/understanding-dependencies.md#dependencies-vs-devdependencies"
+                />
+              </Label>
             </FirstCell>
             <FirstCell>
               <DependencyLocationLabel

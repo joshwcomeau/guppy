@@ -1,14 +1,9 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
-import IconBase from 'react-icons-kit';
-import { u2753 as questionMarkIcon } from 'react-icons-kit/noto_emoji_regular/u2753';
-
-import { COLORS } from '../../constants';
 
 import Heading from '../Heading';
-
-const { shell } = window.require('electron');
+import HelpButton from '../HelpButton';
 
 type Props = {
   title: string,
@@ -26,15 +21,7 @@ class Pane extends Component<Props> {
         <Header>
           <Heading>
             {title}
-            {moreInfoHref && (
-              <HelpButton
-                onClick={() => {
-                  shell.openExternal(moreInfoHref);
-                }}
-              >
-                <IconBase icon={questionMarkIcon} />
-              </HelpButton>
-            )}
+            {moreInfoHref && <HelpButton href={moreInfoHref} />}
           </Heading>
           <ActionWrapper>{primaryActionChildren}</ActionWrapper>
         </Header>
@@ -49,25 +36,6 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-`;
-
-const HelpButton = styled.button`
-  margin-left: 15px;
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  border-radius: 50%;
-  color: ${COLORS.white};
-  background: ${COLORS.gray[500]};
-  padding: 0;
-  cursor: pointer;
-
-  &:hover {
-    background: ${COLORS.blue[700]};
-  }
 `;
 
 const ActionWrapper = styled.div``;
