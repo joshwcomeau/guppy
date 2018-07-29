@@ -45,6 +45,7 @@ export default (state: State = initialState, action: Action) => {
           // All of the other fields are unknown at this point.
           // To make life simpler, we'll set them to empty strings,
           // rather than deal with nullable fields everywhere else.
+          location: 'dependencies',
           description: '',
           version: '',
           homepage: '',

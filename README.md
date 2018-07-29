@@ -83,4 +83,4 @@ Guppy has an active community of contributors and collaborators that enjoy worki
 
 ### License
 
-[ISC](LICENSE.md), Copyright 2018 Joshua Comeau
+[ISC](LICENSE.md), Copyright 2018-present Joshua Comeau

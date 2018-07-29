@@ -17,6 +17,7 @@ export type TaskType = 'short-term' | 'sustained';
 
 export type TaskStatus = 'idle' | 'pending' | 'success' | 'failed';
 export type DependencyStatus = 'idle' | 'installing' | 'updating' | 'deleting';
+export type DependencyLocation = 'dependencies' | 'devDependencies';
 
 export type Task = {
   id: string,
@@ -46,9 +47,11 @@ export type Dependency = {
   license: string,
   repository: Repository,
   // All of the above fields are straight from the dependency's package.json.
-  // The status field is separate, and used to show loading indicators while
-  // performing actions on the dependency.
+  // The following two are derived values:
+  // `status` is used to show loading indicators while performing actions on the dependency
   status: DependencyStatus,
+  // `location` refers to where the dependency lives in the host project
+  location: DependencyLocation,
 };
 
 /**
