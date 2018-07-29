@@ -107,6 +107,7 @@ export default (
   });
 };
 
+// Exported so that getColorForProject can be tested
 export const possibleProjectColors = [
   COLORS.hotPink[700],
   COLORS.pink[700],

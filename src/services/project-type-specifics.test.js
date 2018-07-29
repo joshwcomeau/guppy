@@ -3,16 +3,14 @@ import { getDocumentationLink } from './project-type-specifics';
 import type { ProjectType } from '../types';
 
 describe('getDocumentationLink', () => {
-  it('should get the documentation link for React', () => {
-    expect(getDocumentationLink('create-react-app')).toEqual(
-      'https://github.com/facebook/create-react-app#user-guide'
-    );
-  });
+  it('should get the documentation links by project type', () => {
+    const gatsbyString = getDocumentationLink('gatsby');
+    const createReactAppString = getDocumentationLink('create-react-app');
 
-  it('should get the documentation link for Gatsby', () => {
-    expect(getDocumentationLink('gatsby')).toEqual(
-      'https://www.gatsbyjs.org/docs/'
-    );
+    expect(typeof gatsbyString).toEqual('string');
+    expect(typeof createReactAppString).toEqual('string');
+
+    expect(gatsbyString).not.toBe(createReactAppString);
   });
 
   it('should throw an exception if passed a project type that is not defined', () => {
@@ -20,6 +18,10 @@ describe('getDocumentationLink', () => {
 
     expect(() => getDocumentationLink(unknownProjectType)).toThrowError(
       `Unrecognized project type: ${unknownProjectType}`
+    );
+
+    expect(() => getDocumentationLink()).toThrowError(
+      'Unrecognized project type: undefined'
     );
   });
 });
