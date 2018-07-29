@@ -107,18 +107,19 @@ export default (
   });
 };
 
-export const getColorForProject = (projectName: string) => {
-  const possibleProjectColors = [
-    COLORS.hotPink[700],
-    COLORS.pink[700],
-    COLORS.red[700],
-    COLORS.orange[700],
-    COLORS.green[700],
-    COLORS.teal[700],
-    COLORS.violet[700],
-    COLORS.purple[700],
-  ];
+// Exported so that getColorForProject can be tested
+export const possibleProjectColors = [
+  COLORS.hotPink[700],
+  COLORS.pink[700],
+  COLORS.red[700],
+  COLORS.orange[700],
+  COLORS.green[700],
+  COLORS.teal[700],
+  COLORS.violet[700],
+  COLORS.purple[700],
+];
 
+export const getColorForProject = (projectName: string) => {
   const projectColorIndex = random
     .create(projectName)
     .range(possibleProjectColors.length);

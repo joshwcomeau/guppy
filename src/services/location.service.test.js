@@ -12,7 +12,7 @@ describe('Location Service', () => {
   };
 
   describe('extractProjectIdFromUrl', () => {
-    test('should extract the project ID from the URL', () => {
+    it('should extract the project ID from the URL', () => {
       expect(extractProjectIdFromUrl(stubLocation)).toEqual('some-project-id');
     });
 
@@ -54,14 +54,14 @@ describe('Location Service', () => {
   });
 
   describe('buildUrlForProjectId', () => {
-    test('should return the correct project url based on the project ID', () => {
+    it('should return the correct project url based on the project ID', () => {
       expect(buildUrlForProjectId('some-project-id')).toEqual(
         '/project/some-project-id'
       );
     });
   });
   describe('buildUrlForProjectTask', () => {
-    test('should return the correct task url based on the project ID and task name', () => {
+    it('should return the correct task url based on the project ID and task name', () => {
       expect(
         buildUrlForProjectTask('some-project-id', 'some-task-name')
       ).toEqual('/project/some-project-id/tasks/some-task-name');
