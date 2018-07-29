@@ -13,10 +13,10 @@ const PACKAGE_MANAGERS = {
 };
 
 export const addDependencyCommand = (): string =>
-  `${PACKAGE_MANAGER_CMD} ${PACKAGE_MANAGERS[PACKAGE_MANAGER].add}`;
+  PACKAGE_MANAGERS[PACKAGE_MANAGER].add;
 
 export const removeDependencyCommand = (): string =>
-  `${PACKAGE_MANAGER_CMD} ${PACKAGE_MANAGERS[PACKAGE_MANAGER].remove}`;
+  PACKAGE_MANAGERS[PACKAGE_MANAGER].remove;
 
 export default {
   addDependencyCommand,
