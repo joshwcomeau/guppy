@@ -6,7 +6,6 @@ import createSagaMiddleware from 'redux-saga';
 import rootReducer from '../reducers';
 import { handleReduxUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
-import importProjectMiddleware from '../middlewares/import-project.middleware';
 import rootSaga from '../sagas';
 
 import DevTools from '../components/DevTools';

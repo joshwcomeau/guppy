@@ -6,7 +6,6 @@ import createSagaMiddleware from 'redux-saga';
 import rootReducer from '../reducers';
 import { handleReduxUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
-import importProjectMiddleware from '../middlewares/import-project.middleware';
 import rootSaga from '../sagas';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -15,12 +14,7 @@ export default function configureStore(initialState: any) {
   const store = createStore(
     rootReducer,
     initialState,
-    applyMiddleware(
-      thunk,
-      taskMiddleware,
-      importProjectMiddleware,
-      sagaMiddleware
-    )
+    applyMiddleware(thunk, taskMiddleware, sagaMiddleware)
   );
 
   sagaMiddleware.run(rootSaga);
