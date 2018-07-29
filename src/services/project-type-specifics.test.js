@@ -19,9 +19,5 @@ describe('getDocumentationLink', () => {
     expect(() => getDocumentationLink(unknownProjectType)).toThrowError(
       `Unrecognized project type: ${unknownProjectType}`
     );
-
-    expect(() => getDocumentationLink()).toThrowError(
-      'Unrecognized project type: undefined'
-    );
   });
 });
