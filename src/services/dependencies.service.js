@@ -1,5 +1,4 @@
 // @flow
-import packageMan from './package-manager.service';
 import { PACKAGE_MANAGER_CMD } from './platform.services';
 const childProcess = window.require('child_process');
 
@@ -41,11 +40,7 @@ export const installDependency = (
     // no arrow function so we can use function arguments to pass
     const child = spawnProcess(
       PACKAGE_MANAGER_CMD,
-      [
-        packageMan.addDependencyCommand(),
-        `${dependencyName}@${version}`,
-        '-SE',
-      ],
+      ['add', `${dependencyName}@${version}`, '-SE'],
       projectPath,
       arguments
     );
@@ -59,7 +54,7 @@ export const uninstallDependency = (
   return new Promise(function(resolve, reject) {
     const child = spawnProcess(
       PACKAGE_MANAGER_CMD,
-      [packageMan.removeDependencyCommand(), dependencyName],
+      ['remove', dependencyName],
       projectPath,
       arguments
     );
@@ -70,7 +65,7 @@ export const reinstallDependencies = (projectPath: string) => {
   return new Promise(function(resolve, reject) {
     const child = spawnProcess(
       PACKAGE_MANAGER_CMD,
-      [packageMan.addDependencyCommand()],
+      ['install'],
       projectPath,
       arguments
     );

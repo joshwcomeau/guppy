@@ -1,4 +1,4 @@
-import { PACKAGE_MANAGER } from './package-manager.service';
+import { PACKAGE_MANAGER } from '../config/app';
 const childProcess = window.require('child_process');
 const os = window.require('os');
 const path = window.require('path');
