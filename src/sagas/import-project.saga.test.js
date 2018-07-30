@@ -44,18 +44,20 @@ describe('import-project saga', () => {
     });
   });
 
-  test('showImportDialog saga', () => {
-    const saga = showImportDialog();
-    expect(saga.next().value).toEqual(
-      call([dialog, 'showOpenDialog'], {
-        message: 'Select the directory of an existing React app',
-        properties: ['openDirectory'],
-      })
-    );
-    expect(saga.next(['path/to/project']).value).toEqual(
-      call(handlePathInput, ['path/to/project'])
-    );
-    expect(saga.next().done).toBe(true);
+  describe('showImportDialog saga', () => {
+    it('should show import dialog to user', () => {
+      const saga = showImportDialog();
+      expect(saga.next().value).toEqual(
+        call(dialog.showOpenDialog, {
+          message: 'Select the directory of an existing React app',
+          properties: ['openDirectory'],
+        })
+      );
+      expect(saga.next(['path/to/project']).value).toEqual(
+        call(handlePathInput, ['path/to/project'])
+      );
+      expect(saga.next().done).toBe(true);
+    });
   });
 
   describe('handleImportError saga', () => {
@@ -64,7 +66,7 @@ describe('import-project saga', () => {
       const saga = handleImportError(error);
       expect(saga.next().value).toEqual(
         call(
-          [dialog, 'showErrorBox'],
+          dialog.showErrorBox,
           'Project name already exists',
           "Egad! A project with that name already exists. Are you sure it hasn't already been imported?"
         )
@@ -77,7 +79,7 @@ describe('import-project saga', () => {
       const saga = handleImportError(error);
       expect(saga.next().value).toEqual(
         call(
-          [dialog, 'showErrorBox'],
+          dialog.showErrorBox,
           'Unsupported project type',
           "Looks like the project you're trying to import isn't supported. Unfortunately, Guppy only supports projects created with create-react-app or Gatsby"
         )
@@ -88,10 +90,10 @@ describe('import-project saga', () => {
     it('should handle any other errors', () => {
       const error = new Error('unknown error');
       const saga = handleImportError(error);
-      expect(saga.next().value).toEqual(call([console, 'error'], error));
+      expect(saga.next().value).toEqual(call(console.error, error));
       expect(saga.next().value).toEqual(
         call(
-          [dialog, 'showErrorBox'],
+          dialog.showErrorBox,
           'Unknown error',
           'An unknown error has occurred. Sorry about that! Details have been printed to the console.'
         )
@@ -159,7 +161,6 @@ describe('import-project saga', () => {
     });
 
     it('should import project', () => {
-      global.Date = { now: () => 1532809641976 };
       const saga = importProject(startAction);
       const jsonWithGuppy = {
         ...json,
@@ -172,6 +173,8 @@ describe('import-project saga', () => {
           createdAt: 1532809641976,
         },
       };
+      const spyOnDate = jest.spyOn(Date, 'now');
+      spyOnDate.mockReturnValue(1532809641976);
 
       expect(saga.next().value).toEqual(
         call(loadPackageJson, 'path/to/project')
@@ -190,6 +193,7 @@ describe('import-project saga', () => {
         put(importExistingProjectFinish('path/to/project', jsonWithGuppy))
       );
       expect(saga.next().done).toBe(true);
+      spyOnDate.mockRestore();
     });
   });
 

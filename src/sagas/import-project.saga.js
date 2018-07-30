@@ -1,4 +1,8 @@
+// @flow
+import type { Saga } from 'redux-saga';
+import type { Action } from 'redux';
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
+
 import {
   importExistingProjectStart,
   importExistingProjectFinish,
@@ -12,6 +16,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
+import type { ProjectType } from '../types';
 
 const { dialog } = window.require('electron').remote;
 
@@ -19,7 +24,7 @@ const { dialog } = window.require('electron').remote;
  * Handle path to project
  * @param {Array<string>} paths
  */
-export function* handlePathInput(paths) {
+export function* handlePathInput(paths: Array<string>): Saga<void> {
   // The user might cancel out without selecting a directory.
   // In that case, do nothing.
   if (!paths) yield cancel();
@@ -32,8 +37,8 @@ export function* handlePathInput(paths) {
 /**
  * Show import dialog
  */
-export function* showImportDialog() {
-  const paths = yield call([dialog, 'showOpenDialog'], {
+export function* showImportDialog(): Saga<void> {
+  const paths = yield call(dialog.showOpenDialog, {
     message: 'Select the directory of an existing React app',
     properties: ['openDirectory'],
   });
@@ -44,11 +49,11 @@ export function* showImportDialog() {
  * Show alert with error message that depends from error type
  * @param {Error} err
  */
-export function* handleImportError(err) {
+export function* handleImportError(err: Error): Saga<void> {
   switch (err.message) {
     case 'project-name-already-exists': {
       yield call(
-        [dialog, 'showErrorBox'],
+        dialog.showErrorBox,
         'Project name already exists',
         "Egad! A project with that name already exists. Are you sure it hasn't already been imported?"
       );
@@ -57,7 +62,7 @@ export function* handleImportError(err) {
 
     case 'unsupported-project-type': {
       yield call(
-        [dialog, 'showErrorBox'],
+        dialog.showErrorBox,
         'Unsupported project type',
         "Looks like the project you're trying to import isn't supported. Unfortunately, Guppy only supports projects created with create-react-app or Gatsby"
       );
@@ -65,9 +70,9 @@ export function* handleImportError(err) {
     }
 
     default: {
-      yield call([console, 'error'], err);
+      yield call(console.error, err);
       yield call(
-        [dialog, 'showErrorBox'],
+        dialog.showErrorBox,
         'Unknown error',
         'An unknown error has occurred. Sorry about that! Details have been printed to the console.'
       );
@@ -76,7 +81,7 @@ export function* handleImportError(err) {
   }
 }
 
-export function* importProject({ path }) {
+export function* importProject({ path }: Action): Saga<void> {
   try {
     // Let's load the basic project info for the path specified, if possible.
     const json = yield call(loadPackageJson, path);
@@ -86,14 +91,18 @@ export function* importProject({ path }) {
     // In the future, maybe I can attach a suffix like `-copy`, but for
     // now I'll just reject it outright.
     const isAlredyExist = yield select(getInternalProjectById, projectId);
-    if (isAlredyExist) throw new Error('project-name-already-exists');
+    if (isAlredyExist) {
+      throw new Error('project-name-already-exists');
+    }
 
     // Guppy only supports create-react-app and Gatsby projects atm.
     // Hopefully one day, arbitrary projects will have first-class
     // support... but for now, I'm prioritizing an A+ experience for
     // supported project types.
     const type = yield call(inferProjectType, json);
-    if (!type) throw new Error('unsupported-project-type');
+    if (!type) {
+      throw new Error('unsupported-project-type');
+    }
 
     // Get a random color for the project, to be used in place of an
     // icon.
@@ -124,7 +133,9 @@ export function* importProject({ path }) {
   }
 }
 
-export const inferProjectType = json => {
+export const inferProjectType = (json: {
+  [string]: any,
+}): ProjectType | null => {
   // Some projects only have devDependencies.
   // If this is the case, we can bail early, since no supported project types
   // avoid having `dependencies`.
@@ -154,7 +165,7 @@ export const inferProjectType = json => {
   return null;
 };
 
-export default function* rootSaga() {
+export default function* rootSaga(): Saga<void> {
   yield takeEvery(SHOW_IMPORT_EXISTING_PROJECT_PROMPT, showImportDialog);
   yield takeEvery(IMPORT_EXISTING_PROJECT_START, importProject);
 }
