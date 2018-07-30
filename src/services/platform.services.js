@@ -40,4 +40,8 @@ export const getPathForPlatform = (): string =>
       )}\\npm;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Yarn\\bin`
     : '';
 
-export const PACKAGE_MANAGER_CMD = formatCommandForPlatform(PACKAGE_MANAGER);
+export const PACKAGE_MANAGER_CMD = path.join(
+  remote.app.getAppPath(),
+  './node_modules/yarn/bin',
+  formatCommandForPlatform(PACKAGE_MANAGER)
+);
