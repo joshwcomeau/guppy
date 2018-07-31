@@ -15,7 +15,7 @@ import Spacer from '../Spacer';
 import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
-
+import ProjectConfigurationButton from '../ProjectConfigurationButton';
 import type { Project } from '../../types';
 
 type Props = {
@@ -75,7 +75,7 @@ class ProjectPage extends Component<Props> {
               {project.name}
             </Heading>
           </PixelShifter>
-
+          <ProjectConfigurationButton project={project} />
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />
 
