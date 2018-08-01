@@ -45,7 +45,7 @@ class DependencyDetailsTable extends Component<Props> {
                 Location
                 <HelpButton
                   size={16}
-                  href="https://github.com/joshwcomeau/guppy/blob/dependenciesExplanationDocs/docs/understanding-dependencies.md#dependencies-vs-devdependencies"
+                  href="https://github.com/joshwcomeau/guppy/blob/master/docs/understanding-package.json.md#dependencies-vs-devdependencies"
                 />
               </Label>
             </FirstCell>
