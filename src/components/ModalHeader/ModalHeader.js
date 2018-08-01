@@ -29,8 +29,11 @@ class ModalHeader extends Component<Props> {
 
     return (
       <Wrapper colors={colors}>
-        <PixelShifter y={-5}>
-          <PixelShifter x={-1}>
+        <PixelShifter y={-5} reason="line-height fix">
+          <PixelShifter
+            x={-1}
+            reason="Align left edge of header with subheader"
+          >
             <Heading
               style={{
                 color: theme === 'standard' ? COLORS.gray[900] : COLORS.white,

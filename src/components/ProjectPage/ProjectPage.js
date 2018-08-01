@@ -70,7 +70,10 @@ class ProjectPage extends Component<Props> {
     return (
       <FadeIn>
         <MainContentWrapper>
-          <PixelShifter x={-2}>
+          <PixelShifter
+            x={-2}
+            reason="Align left edge of title with the modules on page"
+          >
             <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
               {project.name}
             </Heading>

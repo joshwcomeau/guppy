@@ -61,7 +61,10 @@ class DeleteDependencyButton extends PureComponent<Props> {
         style={{ width: 75 }}
       >
         {isBeingDeleted ? (
-          <PixelShifter y={2}>
+          <PixelShifter
+            y={2}
+            reason="visually center the spinner within the button"
+          >
             <Spinner size={18} color={COLORS.white} />
           </PixelShifter>
         ) : (
