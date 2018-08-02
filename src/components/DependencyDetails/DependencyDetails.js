@@ -27,7 +27,10 @@ class DependencyDetails extends PureComponent<Props> {
         {({ name, latestVersion, lastUpdatedAt, isLoading }: NpmResult) => (
           <Fragment>
             <Header>
-              <PixelShifter y={-4}>
+              <PixelShifter
+                y={-4}
+                reason="Optical symmetry between top and left edge of parent"
+              >
                 <HeaderText>
                   <Name size="small">{dependency.name}</Name>
                   <Description>{dependency.description}</Description>
