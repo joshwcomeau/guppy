@@ -54,7 +54,7 @@ For example, many developers find it worthwhile to write automated tests. Tests 
 
 For React applications, a common test library is jest. Jest is an external dependency, but it's not one we want to include in our application code; our users don't need to run the tests, it's only necessary during development. So we can add it to `devDependencies`, as a way to indicate to other developers that this dependency is only useful for development.
 
-Note: For modern web applications, like the ones created with Guppy, the difference between `dependencies` and `devDependencies` is semantic. There is no functional difference between the two. This is because applications only bundle the dependencies *actively used* in the project. Simply installing a dependency, whether to `dependencies` or `devDependencies`, doesn't affect the code sent to your users, unless you use that dependency in the application.
+**Note:** For modern web applications, like the ones created with Guppy, the difference between `dependencies` and `devDependencies` is semantic. There is no functional difference between the two. This is because applications only bundle the dependencies *actively used* in the project. Simply installing a dependency, whether to `dependencies` or `devDependencies`, doesn't affect the code sent to your users, unless you use that dependency in the application.
 
 For further reading, please see the [npm docs](https://docs.npmjs.com/files/package.json#dependencies).
 
@@ -80,4 +80,8 @@ When working with the NPM command utility, though, there are special symbols tha
 
 When installing dependencies with `npm install react`, you'll notice that the dependency in package.json has a caret prefix: `^16.4.0`. The caret means that it will pull the latest *minor version*. This means that if you reinstall dependencies a year from now, and the newest version is 16.7.5, it'll grab that version. But if there's been a major version bump to 17.0.0, it'll stick with the latest 16.x.x release.
 
-There are other symbols available corresponding to different ranges. The tilde will match the most recent minor version. For example, `~1.2.3` will match all 1.2.x versions but will skip 1.3.0. `>=` means any version more than or equal will satisfy. There are many more ranges available. For further reading, please visit the [NPM docs](https://docs.npmjs.com/misc/semver#advanced-range-syntax).
+There are other symbols available corresponding to different ranges. The tilde will match the most recent minor version. For example, `~1.2.3` will match all 1.2.x versions but will not select 1.3.0 or higher. `>=` means any version more than or equal will satisfy. There are many more ranges available. For further reading, please visit the [NPM docs](https://docs.npmjs.com/misc/semver#advanced-range-syntax).
+
+### NPM 5.x.x
+
+In version 5 and above, NPM introduced the `package-lock.json`. This will be generated for you by default every time a dependency is initially installed (`npm install <dependency>`) or `npm install` is run. The file describes the exact dependency tree that was generated, and ensures that any following installs will generate identical trees, regardless of any range symbols.
