@@ -278,12 +278,10 @@ const getTaskType = name => {
 // TODO: A lot of this stuff shouldn't be done here :/ maybe best to resolve
 // this in an action before it hits the reducer?
 const buildNewTask = (
-  id: string,
   projectId: string,
   name: string,
   command: string
 ): Task => ({
-  id,
   name,
   projectId,
   command,
