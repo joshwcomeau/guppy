@@ -285,16 +285,15 @@ const buildNewTask = (
 // Selectors
 type GlobalState = { tasks: State };
 
-export const getTaskById = (state: GlobalState, taskId: string) =>
-  state.tasks[taskId];
+export const getTaskById = (state: GlobalState, projectId: string, name: string) =>
+  state.tasks[projectId][name];
 
 export const getTasksForProjectId = (
   state: any,
   projectId: string
 ): Array<Task> =>
-  Object.keys(state.tasks)
-    .map(taskId => state.tasks[taskId])
-    .filter(task => task.projectId === projectId);
+  Object.keys(state.tasks[projectId])
+    .map(name => state.tasks[projectId][taskId])
 
 export const getTasksInTaskListForProjectId = (
   state: GlobalState,
