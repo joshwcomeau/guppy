@@ -327,7 +327,5 @@ export const getTaskByProjectIdAndTaskName = (
   projectId: string,
   name: string
 ) => {
-  const uniqueTaskId = buildUniqueTaskId(projectId, name);
-
-  return state.tasks[uniqueTaskId];
+  return state.tasks[projectId][name];
 };
