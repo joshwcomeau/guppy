@@ -310,11 +310,11 @@ export const getDevServerTaskForProjectId = (
 ) => {
   switch (projectType) {
     case 'create-react-app': {
-      return state.tasks[buildUniqueTaskId(projectId, 'start')];
+      return state.tasks[projectId].start;
     }
 
     case 'gatsby': {
-      return state.tasks[buildUniqueTaskId(projectId, 'develop')];
+      return state.tasks[projectId].develop;
     }
 
     default:
