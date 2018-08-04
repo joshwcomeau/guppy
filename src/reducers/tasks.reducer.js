@@ -217,8 +217,6 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-const buildUniqueTaskId = (projectId, name) => `${projectId}-${name}`;
-
 export const getTaskDescription = (name: string) => {
   // NOTE: This information is currently derivable, and it's bad to store
   // derivable data in the reducer... but, I expect soon this info will be
