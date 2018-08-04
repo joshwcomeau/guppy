@@ -35,7 +35,9 @@ import type { Action } from 'redux';
 import type { Task, ProjectType } from '../types';
 
 type State = {
-  [uniqueTaskId: string]: Task,
+  [projectId: string]: {
+    [taskName: string]: Task,
+  },
 };
 
 export const initialState = {};
