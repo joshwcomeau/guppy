@@ -25,6 +25,7 @@ import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
 const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
 const psTree = window.require('ps-tree');
+const fs = window.require('fs');
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
@@ -76,6 +77,7 @@ export default (store: any) => (next: any) => (action: any) => {
             env: {
               ...commandEnv,
               PATH: getPathForPlatform(),
+              FORCE_COLOR: true,
             },
           });
 
@@ -91,7 +93,6 @@ export default (store: any) => (next: any) => (action: any) => {
             // through stdout, not stderr. We want that message specifically
             // to trigger an error state, and so we need to parse it.
             const text = data.toString();
-
             const isError = text.includes('Failed to compile.');
 
             next(receiveDataFromTaskExecution(task, text, isError));

@@ -15,7 +15,7 @@ import Spacer from '../Spacer';
 import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
-import ProjectConfigurationButton from '../ProjectConfigurationButton';
+import SettingsButton from '../SettingsButton';
 import type { Project } from '../../types';
 
 type Props = {
@@ -60,6 +60,10 @@ class ProjectPage extends Component<Props> {
     }
   }
 
+  openSettingsModal = () => {
+    console.log('open modal with redux');
+  };
+
   render() {
     const { project } = this.props;
 
@@ -75,7 +79,7 @@ class ProjectPage extends Component<Props> {
               {project.name}
             </Heading>
           </PixelShifter>
-          <ProjectConfigurationButton project={project} />
+          <SettingsButton action={this.openSettingsModal} />
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />
 
