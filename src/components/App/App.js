@@ -1,10 +1,12 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
+import ReactRedux, { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
 import { refreshProjects, selectProject, hideModal } from '../../actions';
+import type { HideModalAction } from '../../actions';
+
 import { COLORS } from '../../constants';
 import {
   extractProjectIdFromUrl,
@@ -31,6 +33,7 @@ import type { State as OnboardingStatus } from '../../reducers/onboarding-status
 
 const MODALS = {
   ProjectConfiguration: require('../ProjectConfigurationModal').default,
+  'new-project-wizard': require('../CreateNewProjectWizard').default, // Todo: rename new-project-wizard to CreateNewProjectWizard
 };
 
 type Props = {
@@ -40,7 +43,9 @@ type Props = {
   refreshProjects: Action,
   selectProject: Action,
   history: any, // Provided by `withRouter`
-  hideModal: func,
+  hideModal: () => HideModalAction,
+  isVisible: boolean,
+  ModalContent: Object,
 };
 
 class App extends Component<Props> {
@@ -69,6 +74,7 @@ class App extends Component<Props> {
 
   render() {
     const { isVisible, ModalContent, hideModal } = this.props;
+    console.log('Test', ModalContent);
     return (
       <Fragment>
         <Titlebar />
@@ -93,7 +99,10 @@ class App extends Component<Props> {
           </MainContent>
         </Wrapper>
 
-        <CreateNewProjectWizard />
+        {/* <CreateNewProjectWizard /> 
+          --> moved to ModalContent
+          Todo: Check width of modal --> seams not as wide as before
+        */}
         <Modal isVisible={isVisible} onDismiss={hideModal}>
           {ModalContent && <ModalContent />}
         </Modal>

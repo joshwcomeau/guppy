@@ -34,6 +34,7 @@ type Props = {
   height?: number,
   onDismiss: () => void,
   children: React$Node,
+  ModalContent: React$Node,
 };
 
 type State = {

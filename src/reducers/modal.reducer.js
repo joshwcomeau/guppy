@@ -9,6 +9,8 @@ import {
   CREATE_NEW_PROJECT_CANCEL,
   CREATE_NEW_PROJECT_FINISH,
   IMPORT_EXISTING_PROJECT_START,
+  SHOW_MODAL,
+  HIDE_MODAL,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -23,13 +25,13 @@ export default (state: State = initialState, action: Action) => {
     case CREATE_NEW_PROJECT_START:
       return 'new-project-wizard';
 
-    case 'SHOW_MODAL':
+    case SHOW_MODAL:
       return action.modal;
 
     case CREATE_NEW_PROJECT_CANCEL:
     case CREATE_NEW_PROJECT_FINISH:
     case IMPORT_EXISTING_PROJECT_START:
-    case 'HIDE_MODAL':
+    case HIDE_MODAL:
       return null;
 
     default:

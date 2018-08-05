@@ -8,7 +8,14 @@ import { edit2 } from 'react-icons-kit/feather/edit2';
 import importAll from 'import-all.macro';
 import { sampleMany } from '../../utils';
 
-import { runTask, abortTask, hideModal } from '../../actions';
+import {
+  runTask,
+  abortTask,
+  hideModal,
+  changeProjectName,
+} from '../../actions';
+import type { HideModalAction, ChangeProjectNameAction } from '../../actions';
+
 import { COLORS, BREAKPOINTS } from '../../constants';
 import { capitalize } from '../../utils';
 import { getTaskById } from '../../reducers/tasks.reducer';
@@ -28,14 +35,18 @@ import FadeIn from '../FadeIn';
 
 import type { Task, Project } from '../../types';
 
-const icons = importAll.sync('../../assets/images/icons/icon_*.*');
-const iconSrcs = Object.values(icons);
+const icons: Array<mixed> = importAll.sync(
+  '../../assets/images/icons/icon_*.*'
+);
+const iconSrcs: string[] = Object.values(icons).map(src => String(src));
 const path = window.require('path');
 
 type Props = {
   project: Project,
   isVisible: boolean,
   onDismiss: () => void,
+  hideModal: () => HideModalAction,
+  changeProjectName: () => ChangeProjectNameAction,
   // From Redux:
   // task: Task,
   // runTask: (task: Task, timestamp: Date) => any,
@@ -45,12 +56,14 @@ type Props = {
 type State = {
   newName: string,
   projectIcon: string,
+  activeField: string,
 };
 
 class ProjectConfigurationModal extends Component<Props, State> {
   state = {
     newName: this.props.project.name,
     projectIcon: this.props.project.icon,
+    activeField: 'projectName',
   };
 
   //iconSubset = sampleMany(iconSrcs, 10);
@@ -60,11 +73,14 @@ class ProjectConfigurationModal extends Component<Props, State> {
 
   saveSettings = () => {
     // check if settings changed
+    const { hideModal, changeProjectName, project } = this.props;
+    const { newName } = this.state;
     console.log('Rename project folder (if name changed)');
     console.log('update store with new name');
 
+    changeProjectName(newName);
     // finally hide settings after saving
-    this.props.hideModal();
+    hideModal();
   };
 
   changeProjectname = e => {
@@ -74,20 +90,27 @@ class ProjectConfigurationModal extends Component<Props, State> {
     });
   };
 
-  updateProjectIcon = src => {
+  updateProjectIcon = (src: string) => {
     this.setState(prevState => ({
       ...prevState,
       projectIcon: src,
     }));
   };
 
+  setActive = (name: string) => {
+    this.setState(state => ({
+      ...state,
+      activeField: name,
+    }));
+  };
+
   render() {
     const { project } = this.props;
+    const { activeField } = this.state;
 
     console.log('render modal', project);
     const { name } = project;
     const { projectIcon } = this.state;
-    const activeField = 'projectIcon';
 
     // NOTE: No isVisible check as this is used as the ModalContent component --> maybe rename the component so this is clear
     return (
@@ -97,12 +120,20 @@ class ProjectConfigurationModal extends Component<Props, State> {
         </ModalHeader>
 
         <MainContent>
-          <h1>Project name</h1>
-          <input
-            type="text"
-            value={this.state.newName}
-            onChange={this.changeProjectname}
-          />
+          <pre>{JSON.stringify(this.state, null, 2)}</pre>
+          <FormField
+            label="Project name"
+            focusOnClick={false}
+            isFocused={activeField === 'projectName'}
+          >
+            <input
+              type="text"
+              onFocus={() => this.setActive('projectName')}
+              value={this.state.newName}
+              onChange={this.changeProjectname}
+              autoFocus
+            />
+          </FormField>
           <Spacer size={25} />
           <FadeIn>
             <FormField
@@ -111,12 +142,12 @@ class ProjectConfigurationModal extends Component<Props, State> {
               isFocused={activeField === 'projectIcon'}
             >
               <ProjectIconWrapper>
-                {iconSrcs.map(src => (
+                {iconSrcs.map((src: string) => (
                   <SelectableImageWrapper key={src}>
                     <SelectableImage
                       src={src}
                       size={60}
-                      onClick={() => this.updateProjectIcon(src)}
+                      onClick={() => this.updateProjectIcon(String(src))}
                       status={
                         projectIcon === null
                           ? 'default'
@@ -188,5 +219,5 @@ const mapStateToProps = (state, ownProps) => ({
 
 export default connect(
   mapStateToProps,
-  { runTask, abortTask, hideModal }
+  { runTask, abortTask, hideModal, changeProjectName }
 )(ProjectConfigurationModal);

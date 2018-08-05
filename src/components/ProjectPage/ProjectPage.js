@@ -7,6 +7,7 @@ import styled, { keyframes } from 'styled-components';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
 import { loadDependencyInfoFromDisk, showModal } from '../../actions';
+import type { ShowModalAction } from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -24,7 +25,7 @@ type Props = {
   location: any, // provided by react-router
   match: any, // provided by react-router
   history: any, // provided by withRouter HOC
-  showModal: func,
+  showModal: string => ShowModalAction,
 };
 
 class ProjectPage extends Component<Props> {

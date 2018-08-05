@@ -11,10 +11,6 @@ import type { Project, Task, Dependency } from '../types';
 
 //
 //
-// Action Types
-export type ShowModalAction = { type: 'SHOW_MODAL', modal: string };
-export type HideModalAction = { type: 'HIDE_MODAL' };
-type Action = ShowModalAction | HideModalAction;
 
 // TODO: Do this with Flow
 // https://flow.org/en/docs/react/redux/
@@ -24,6 +20,7 @@ export const CREATE_NEW_PROJECT_START = 'CREATE_NEW_PROJECT_START';
 export const CREATE_NEW_PROJECT_CANCEL = 'CREATE_NEW_PROJECT_CANCEL';
 export const CREATE_NEW_PROJECT_FINISH = 'CREATE_NEW_PROJECT_FINISH';
 export const ADD_PROJECT = 'ADD_PROJECT';
+export const SHOW_MODAL = 'SHOW_MODAL';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
@@ -49,6 +46,35 @@ export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_ERROR = 'IMPORT_EXISTING_PROJECT_ERROR';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
+
+// project config related actions
+export const CHANGE_PROJECT_NAME = 'CHANGE_PROJECT_NAME';
+export const CHANGE_PROJECT_ICON = 'CHANGE_PROJECT_ICON';
+export const CHANGE_PROJECT_NAME_FINISHED = 'CHANGE_PROJECT_NAME_FINISHED';
+
+// Action Types
+export type ShowModalAction = { type: SHOW_MODAL, modal: string };
+export type HideModalAction = { type: HIDE_MODAL };
+export type ChangeProjectNameAction = {
+  type: CHANGE_PROJECT_NAME,
+  name: string,
+};
+export type ChangeProjectIconAction = {
+  type: CHANGE_PROJECT_ICON,
+  iconSrc: string,
+};
+
+export type ChangeProjectNameFinishedAction = {
+  type: CHANGE_PROJECT_NAME_FINISHED,
+  project: Project,
+};
+
+export type Action =
+  | ShowModalAction
+  | HideModalAction
+  | ChangeProjectNameAction
+  | ChangeProjectIconAction
+  | ChangeProjectNameFinishedAction;
 
 //
 //
@@ -292,12 +318,32 @@ export const importExistingProjectFinish = (
 });
 
 export const showModal = (modal: string): ShowModalAction => ({
-  type: 'SHOW_MODAL',
+  type: SHOW_MODAL,
   modal: modal,
 });
 
 export const hideModal = (modal: string): HideModalAction => ({
-  type: 'HIDE_MODAL',
+  type: HIDE_MODAL,
+});
+
+// project settings related actions
+
+export const changeProjectName = (name: string): ChangeProjectNameAction => ({
+  type: CHANGE_PROJECT_NAME,
+  name,
+});
+export const changeProjectNameFinished = (
+  project: Project
+): ChangeProjectNameFinishedAction => ({
+  type: CHANGE_PROJECT_NAME_FINISHED,
+  project,
+});
+
+export const changeProjectIcon = (
+  iconSrc: string
+): ChangeProjectIconAction => ({
+  type: CHANGE_PROJECT_ICON,
+  iconSrc,
 });
 // export const ejectProjectStart = (task: Task, timestamp: Date) => ({
 //   type: EJECT_PROJECT_START,

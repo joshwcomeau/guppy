@@ -7,6 +7,7 @@ import { handleReduxUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
 import dependencyMiddleware from '../middlewares/dependency.middleware';
 import importProjectMiddleware from '../middlewares/import-project.middleware';
+import projectMiddleware from '../middlewares/project.middleware';
 
 import DevTools from '../components/DevTools';
 
@@ -19,7 +20,8 @@ export default function configureStore(initialState: any) {
         thunk,
         taskMiddleware,
         dependencyMiddleware,
-        importProjectMiddleware
+        importProjectMiddleware,
+        projectMiddleware
       ),
       DevTools.instrument()
     )
