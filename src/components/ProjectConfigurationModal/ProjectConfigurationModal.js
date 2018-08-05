@@ -8,10 +8,11 @@ import { edit2 } from 'react-icons-kit/feather/edit2';
 import importAll from 'import-all.macro';
 import { sampleMany } from '../../utils';
 
-import { runTask, abortTask } from '../../actions';
+import { runTask, abortTask, hideModal } from '../../actions';
 import { COLORS, BREAKPOINTS } from '../../constants';
 import { capitalize } from '../../utils';
 import { getTaskById } from '../../reducers/tasks.reducer';
+import { getSelectedProject } from '../../reducers/projects.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -46,20 +47,24 @@ type State = {
   projectIcon: string,
 };
 
-class ProjectSettingsModal extends Component<Props, State> {
+class ProjectConfigurationModal extends Component<Props, State> {
   state = {
     newName: this.props.project.name,
     projectIcon: this.props.project.icon,
   };
 
-  iconSubset = sampleMany(iconSrcs, 10);
+  //iconSubset = sampleMany(iconSrcs, 10);
   //   .unshift(
   //     importAll.sync(this.props.project.icon)
   // );
 
-  handleRename = () => {
-    console.log('Rename project folder');
+  saveSettings = () => {
+    // check if settings changed
+    console.log('Rename project folder (if name changed)');
     console.log('update store with new name');
+
+    // finally hide settings after saving
+    this.props.hideModal();
   };
 
   changeProjectname = e => {
@@ -76,18 +81,15 @@ class ProjectSettingsModal extends Component<Props, State> {
     }));
   };
 
-  renderContents() {
-    const { project, isVisible } = this.props;
-
-    if (!isVisible) {
-      return null;
-    }
+  render() {
+    const { project } = this.props;
 
     console.log('render modal', project);
     const { name } = project;
     const { projectIcon } = this.state;
     const activeField = 'projectIcon';
 
+    // NOTE: No isVisible check as this is used as the ModalContent component --> maybe rename the component so this is clear
     return (
       <Fragment>
         <ModalHeader title="Project settings">
@@ -95,15 +97,12 @@ class ProjectSettingsModal extends Component<Props, State> {
         </ModalHeader>
 
         <MainContent>
-          <h1>Change project name</h1>
+          <h1>Project name</h1>
           <input
             type="text"
             value={this.state.newName}
             onChange={this.changeProjectname}
           />
-          <Button icon={<IconBase icon={edit2} />} onClick={this.handleRename}>
-            Rename
-          </Button>
           <Spacer size={25} />
           <FadeIn>
             <FormField
@@ -112,7 +111,7 @@ class ProjectSettingsModal extends Component<Props, State> {
               isFocused={activeField === 'projectIcon'}
             >
               <ProjectIconWrapper>
-                {this.iconSubset.map(src => (
+                {iconSrcs.map(src => (
                   <SelectableImageWrapper key={src}>
                     <SelectableImage
                       src={src}
@@ -130,20 +129,16 @@ class ProjectSettingsModal extends Component<Props, State> {
                 ))}
               </ProjectIconWrapper>
             </FormField>
+            <Button
+              icon={<IconBase icon={edit2} />}
+              onClick={this.saveSettings}
+            >
+              Save
+            </Button>
           </FadeIn>
           {/*todo add icon pickert from create new wizard here and select current icon */}
         </MainContent>
       </Fragment>
-    );
-  }
-
-  render() {
-    const { isVisible, onDismiss } = this.props;
-
-    return (
-      <Modal width={620} isVisible={isVisible} onDismiss={onDismiss}>
-        {this.renderContents()}
-      </Modal>
     );
   }
 }
@@ -188,9 +183,10 @@ const LastRunText = styled.span`
 
 const mapStateToProps = (state, ownProps) => ({
   task: getTaskById(ownProps.taskId, state),
+  project: getSelectedProject(state),
 });
 
 export default connect(
   mapStateToProps,
-  { runTask, abortTask }
-)(ProjectSettingsModal);
+  { runTask, abortTask, hideModal }
+)(ProjectConfigurationModal);

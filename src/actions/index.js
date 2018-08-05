@@ -12,6 +12,10 @@ import type { Project, Task, Dependency } from '../types';
 //
 //
 // Action Types
+export type ShowModalAction = { type: 'SHOW_MODAL', modal: string };
+export type HideModalAction = { type: 'HIDE_MODAL' };
+type Action = ShowModalAction | HideModalAction;
+
 // TODO: Do this with Flow
 // https://flow.org/en/docs/react/redux/
 //
@@ -287,6 +291,14 @@ export const importExistingProjectFinish = (
   project,
 });
 
+export const showModal = (modal: string): ShowModalAction => ({
+  type: 'SHOW_MODAL',
+  modal: modal,
+});
+
+export const hideModal = (modal: string): HideModalAction => ({
+  type: 'HIDE_MODAL',
+});
 // export const ejectProjectStart = (task: Task, timestamp: Date) => ({
 //   type: EJECT_PROJECT_START,
 //   task,

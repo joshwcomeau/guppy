@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
-import { refreshProjects, selectProject } from '../../actions';
+import { refreshProjects, selectProject, hideModal } from '../../actions';
 import { COLORS } from '../../constants';
 import {
   extractProjectIdFromUrl,
@@ -22,10 +22,16 @@ import Titlebar from '../Titlebar';
 import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
+// import SettingsModal from '../SettingsModal';
+import Modal from '../Modal';
 
 import type { Action } from 'redux';
 import type { Project } from '../../types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
+
+const MODALS = {
+  ProjectConfiguration: require('../ProjectConfigurationModal').default,
+};
 
 type Props = {
   onboardingStatus: OnboardingStatus,
@@ -34,6 +40,7 @@ type Props = {
   refreshProjects: Action,
   selectProject: Action,
   history: any, // Provided by `withRouter`
+  hideModal: func,
 };
 
 class App extends Component<Props> {
@@ -61,6 +68,7 @@ class App extends Component<Props> {
   }
 
   render() {
+    const { isVisible, ModalContent, hideModal } = this.props;
     return (
       <Fragment>
         <Titlebar />
@@ -86,6 +94,9 @@ class App extends Component<Props> {
         </Wrapper>
 
         <CreateNewProjectWizard />
+        <Modal isVisible={isVisible} onDismiss={hideModal}>
+          {ModalContent && <ModalContent />}
+        </Modal>
       </Fragment>
     );
   }
@@ -115,11 +126,13 @@ const mapStateToProps = state => ({
   onboardingStatus: getOnboardingStatus(state),
   projects: getProjectsArray(state),
   selectedProject: getSelectedProject(state),
+  isVisible: !!state.modal,
+  ModalContent: state.modal && MODALS[state.modal],
 });
 
 export default withRouter(
   connect(
     mapStateToProps,
-    { refreshProjects, selectProject }
+    { refreshProjects, selectProject, hideModal }
   )(App)
 );

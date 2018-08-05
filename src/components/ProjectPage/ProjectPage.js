@@ -6,7 +6,7 @@ import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
-import { loadDependencyInfoFromDisk } from '../../actions';
+import { loadDependencyInfoFromDisk, showModal } from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -24,6 +24,7 @@ type Props = {
   location: any, // provided by react-router
   match: any, // provided by react-router
   history: any, // provided by withRouter HOC
+  showModal: func,
 };
 
 class ProjectPage extends Component<Props> {
@@ -62,6 +63,7 @@ class ProjectPage extends Component<Props> {
 
   openSettingsModal = () => {
     console.log('open modal with redux');
+    this.props.showModal('ProjectConfiguration');
   };
 
   render() {
@@ -74,12 +76,14 @@ class ProjectPage extends Component<Props> {
     return (
       <FadeIn>
         <MainContentWrapper>
-          <PixelShifter x={-2}>
-            <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
-              {project.name}
-            </Heading>
-          </PixelShifter>
-          <SettingsButton action={this.openSettingsModal} />
+          <FlexRow>
+            <PixelShifter x={-2}>
+              <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
+                {project.name}
+              </Heading>
+            </PixelShifter>
+            <SettingsButton action={this.openSettingsModal} />
+          </FlexRow>
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />
 
@@ -100,6 +104,12 @@ class ProjectPage extends Component<Props> {
   }
 }
 
+const FlexRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const fadeIn = keyframes`
   from { opacity: 0.5 }
   to { opacity: 1 }
@@ -116,6 +126,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { loadDependencyInfoFromDisk }
+    { loadDependencyInfoFromDisk, showModal }
   )(ProjectPage)
 );

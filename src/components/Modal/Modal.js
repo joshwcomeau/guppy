@@ -64,7 +64,14 @@ class Modal extends PureComponent<Props, State> {
   }
 
   render() {
-    const { isVisible, width, height, onDismiss, children } = this.props;
+    const {
+      isVisible,
+      width,
+      height,
+      onDismiss,
+      children,
+      ModalContent,
+    } = this.props;
     const { outdatedChildren } = this.state;
 
     return (
@@ -81,7 +88,6 @@ class Modal extends PureComponent<Props, State> {
               transitionState === 'entering' || transitionState === 'exiting';
 
             const translateY = transitionState === 'entered' ? 0 : 50;
-
             return (
               <Motion
                 style={{
