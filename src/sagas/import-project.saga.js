@@ -18,7 +18,9 @@ import { getColorForProject } from '../services/create-project.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import type { ProjectType } from '../types';
 
-const { dialog } = window.require('electron').remote;
+const { showOpenDialog, showErrorBox } = window.require(
+  'electron'
+).remote.dialog;
 
 /**
  * Handle path to project
@@ -38,7 +40,7 @@ export function* handlePathInput(paths: Array<string>): Saga<void> {
  * Show import dialog
  */
 export function* showImportDialog(): Saga<void> {
-  const paths = yield call(dialog.showOpenDialog, {
+  const paths = yield call(showOpenDialog, {
     message: 'Select the directory of an existing React app',
     properties: ['openDirectory'],
   });
@@ -53,7 +55,7 @@ export function* handleImportError(err: Error): Saga<void> {
   switch (err.message) {
     case 'project-name-already-exists': {
       yield call(
-        dialog.showErrorBox,
+        showErrorBox,
         'Project name already exists',
         "Egad! A project with that name already exists. Are you sure it hasn't already been imported?"
       );
@@ -62,7 +64,7 @@ export function* handleImportError(err: Error): Saga<void> {
 
     case 'unsupported-project-type': {
       yield call(
-        dialog.showErrorBox,
+        showErrorBox,
         'Unsupported project type',
         "Looks like the project you're trying to import isn't supported. Unfortunately, Guppy only supports projects created with create-react-app or Gatsby"
       );
@@ -70,9 +72,9 @@ export function* handleImportError(err: Error): Saga<void> {
     }
 
     default: {
-      yield call(console.error, err);
+      yield call([console, console.error], err);
       yield call(
-        dialog.showErrorBox,
+        showErrorBox,
         'Unknown error',
         'An unknown error has occurred. Sorry about that! Details have been printed to the console.'
       );
@@ -90,8 +92,8 @@ export function* importProject({ path }: Action): Saga<void> {
     // Check to see if we already have a project with this ID.
     // In the future, maybe I can attach a suffix like `-copy`, but for
     // now I'll just reject it outright.
-    const isAlredyExist = yield select(getInternalProjectById, projectId);
-    if (isAlredyExist) {
+    const alreadyExists = yield select(getInternalProjectById, projectId);
+    if (alreadyExists) {
       throw new Error('project-name-already-exists');
     }
 

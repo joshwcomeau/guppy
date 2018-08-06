@@ -26,7 +26,9 @@ jest.mock('electron', () => ({
 }));
 
 describe('import-project saga', () => {
-  const { dialog } = window.require('electron').remote;
+  const { showOpenDialog, showErrorBox } = window.require(
+    'electron'
+  ).remote.dialog;
 
   describe('handlePathInput saga', () => {
     it('should do nothing if argument paths is undefined', () => {
@@ -48,7 +50,7 @@ describe('import-project saga', () => {
     it('should show import dialog to user', () => {
       const saga = showImportDialog();
       expect(saga.next().value).toEqual(
-        call(dialog.showOpenDialog, {
+        call(showOpenDialog, {
           message: 'Select the directory of an existing React app',
           properties: ['openDirectory'],
         })
@@ -66,7 +68,7 @@ describe('import-project saga', () => {
       const saga = handleImportError(error);
       expect(saga.next().value).toEqual(
         call(
-          dialog.showErrorBox,
+          showErrorBox,
           'Project name already exists',
           "Egad! A project with that name already exists. Are you sure it hasn't already been imported?"
         )
@@ -79,7 +81,7 @@ describe('import-project saga', () => {
       const saga = handleImportError(error);
       expect(saga.next().value).toEqual(
         call(
-          dialog.showErrorBox,
+          showErrorBox,
           'Unsupported project type',
           "Looks like the project you're trying to import isn't supported. Unfortunately, Guppy only supports projects created with create-react-app or Gatsby"
         )
@@ -90,10 +92,10 @@ describe('import-project saga', () => {
     it('should handle any other errors', () => {
       const error = new Error('unknown error');
       const saga = handleImportError(error);
-      expect(saga.next().value).toEqual(call(console.error, error));
+      expect(saga.next().value).toEqual(call([console, console.error], error));
       expect(saga.next().value).toEqual(
         call(
-          dialog.showErrorBox,
+          showErrorBox,
           'Unknown error',
           'An unknown error has occurred. Sorry about that! Details have been printed to the console.'
         )
