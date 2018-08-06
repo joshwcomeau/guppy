@@ -1,6 +1,7 @@
 // @flow
 import {
   SHOW_IMPORT_EXISTING_PROJECT_PROMPT,
+  SHOW_PROJECT_IN_FINDER,
   IMPORT_EXISTING_PROJECT_START,
   importExistingProjectStart,
   importExistingProjectFinish,
@@ -13,7 +14,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 
-const { dialog } = window.require('electron').remote;
+const { dialog, shell } = window.require('electron').remote;
 
 // TODO: Flow types
 export default (store: any) => (next: any) => (action: any) => {
@@ -43,7 +44,10 @@ export default (store: any) => (next: any) => (action: any) => {
 
       return;
     }
-
+    case SHOW_PROJECT_IN_FINDER: {
+      shell.showItemInFolder(action.path);
+      return;
+    }
     case IMPORT_EXISTING_PROJECT_START: {
       const { path } = action;
 
