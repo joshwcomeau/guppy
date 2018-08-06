@@ -44,7 +44,8 @@
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",
-    "yarn": "1.9.2"
+    "yarn": "1.9.2",
+    "redux-saga": "0.16.0"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-rc.1",
