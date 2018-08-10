@@ -82,6 +82,7 @@ export default (store: any) => (next: any) => (action: any) => {
               type,
               color: getColorForProject(json.name),
               icon: null,
+              isImported: true, // TODO: Is there a way to detect imported projects?
               createdAt: Date.now(),
             },
           };

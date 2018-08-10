@@ -34,7 +34,6 @@ type Props = {
   height?: number,
   onDismiss: () => void,
   children: React$Node,
-  ModalContent: React$Node,
 };
 
 type State = {
@@ -65,14 +64,7 @@ class Modal extends PureComponent<Props, State> {
   }
 
   render() {
-    const {
-      isVisible,
-      width,
-      height,
-      onDismiss,
-      children,
-      ModalContent,
-    } = this.props;
+    const { isVisible, width, height, onDismiss, children } = this.props;
     const { outdatedChildren } = this.state;
 
     return (

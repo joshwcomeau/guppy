@@ -26,6 +26,7 @@ import {
   ATTACH_TASK_METADATA,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
   IMPORT_EXISTING_PROJECT_FINISH,
+  SAVE_PROJECT_SETTINGS_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';

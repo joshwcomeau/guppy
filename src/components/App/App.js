@@ -5,7 +5,6 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
 import { refreshProjects, selectProject, hideModal } from '../../actions';
-import type { HideModalAction } from '../../actions';
 
 import { COLORS } from '../../constants';
 import {
@@ -24,17 +23,11 @@ import Titlebar from '../Titlebar';
 import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
-// import SettingsModal from '../SettingsModal';
-import Modal from '../Modal';
+import ProjectConfigurationModal from '../ProjectConfigurationModal';
 
 import type { Action } from 'redux';
 import type { Project } from '../../types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
-
-const MODALS = {
-  ProjectConfiguration: require('../ProjectConfigurationModal').default,
-  'new-project-wizard': require('../CreateNewProjectWizard').default, // Todo: rename new-project-wizard to CreateNewProjectWizard
-};
 
 type Props = {
   onboardingStatus: OnboardingStatus,
@@ -43,7 +36,7 @@ type Props = {
   refreshProjects: Action,
   selectProject: Action,
   history: any, // Provided by `withRouter`
-  hideModal: () => HideModalAction,
+  hideModal: () => void,
   isVisible: boolean,
   ModalContent: Object,
 };
@@ -73,8 +66,6 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { isVisible, ModalContent, hideModal } = this.props;
-    console.log('Test', ModalContent);
     return (
       <Fragment>
         <Titlebar />
@@ -99,13 +90,8 @@ class App extends Component<Props> {
           </MainContent>
         </Wrapper>
 
-        {/* <CreateNewProjectWizard /> 
-          --> moved to ModalContent
-          Todo: Check width of modal --> seams not as wide as before
-        */}
-        <Modal isVisible={isVisible} onDismiss={hideModal}>
-          {ModalContent && <ModalContent />}
-        </Modal>
+        <CreateNewProjectWizard />
+        <ProjectConfigurationModal />
       </Fragment>
     );
   }
@@ -131,17 +117,17 @@ const MainContent = styled.div`
   flex: 1;
 `;
 
-const mapStateToProps = state => ({
-  onboardingStatus: getOnboardingStatus(state),
-  projects: getProjectsArray(state),
-  selectedProject: getSelectedProject(state),
-  isVisible: !!state.modal,
-  ModalContent: state.modal && MODALS[state.modal],
-});
+const mapStateToProps = state => {
+  return {
+    onboardingStatus: getOnboardingStatus(state),
+    projects: getProjectsArray(state),
+    selectedProject: getSelectedProject(state),
+  };
+};
 
 export default withRouter(
   connect(
     mapStateToProps,
-    { refreshProjects, selectProject, hideModal }
+    { refreshProjects, selectProject }
   )(App)
 );

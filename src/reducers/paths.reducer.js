@@ -56,7 +56,7 @@ export const getDefaultParentPath = () => {
 };
 
 export const getDefaultPath = (projectId: string) =>
-  `${getDefaultParentPath()}/${projectId}`;
+  path.join(getDefaultParentPath(), projectId);
 
 //
 //

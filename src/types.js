@@ -76,6 +76,7 @@ export type ProjectInternal = {
     color: string,
     icon: string,
     createdAt: number,
+    isImported: boolean,
   },
 };
 

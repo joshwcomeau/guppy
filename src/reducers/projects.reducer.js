@@ -7,6 +7,7 @@ import {
   IMPORT_EXISTING_PROJECT_FINISH,
   ADD_DEPENDENCY_FINISH,
   REFRESH_PROJECTS,
+  SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
 } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
@@ -54,6 +55,21 @@ const byId = (state: ById = initialState.byId, action: Action) => {
       });
     }
 
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      let newState = {
+        ...state,
+        [action.project.guppy.id]: {
+          ...action.project,
+        },
+      };
+
+      if (action.oldProjectId !== action.project.guppy.id) {
+        // remove old project id --> renamed to new id
+        delete newState[action.oldProjectId];
+      }
+      return newState;
+    }
+
     default:
       return state;
   }
@@ -73,6 +89,7 @@ const selectedId = (
       // It's possible that the selected project no longer exists (say if the
       // user deletes that folder and then refreshes Guppy).
       // In that case, un-select it.
+      // console.log('test', state);
       const selectedProjectId = state;
 
       if (!selectedProjectId) {
@@ -86,6 +103,10 @@ const selectedId = (
 
     case SELECT_PROJECT: {
       return action.projectId;
+    }
+
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      return action.project.id;
     }
 
     default:
@@ -135,12 +156,14 @@ export const getInternalProjectById = (id: string, state: GlobalState) =>
   getById(state)[id];
 
 export const getProjectsArray = (state: GlobalState) => {
+  // console.log('get projects', state.projects);
   // $FlowFixMe
   return Object.values(state.projects.byId)
-    .map(project =>
+    .map(project => {
+      // console.log('map project', project);
       // $FlowFixMe
-      prepareProjectForConsumption(project, state)
-    )
+      return prepareProjectForConsumption(project, state);
+    })
     .sort((p1, p2) => (p1.createdAt < p2.createdAt ? 1 : -1));
 };
 

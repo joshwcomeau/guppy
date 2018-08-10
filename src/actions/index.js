@@ -7,7 +7,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 
-import type { Project, Task, Dependency } from '../types';
+import type { Project, Task, Dependency, ProjectInternal } from '../types';
 
 //
 //
@@ -48,33 +48,9 @@ export const IMPORT_EXISTING_PROJECT_ERROR = 'IMPORT_EXISTING_PROJECT_ERROR';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 
 // project config related actions
-export const CHANGE_PROJECT_NAME = 'CHANGE_PROJECT_NAME';
-export const CHANGE_PROJECT_ICON = 'CHANGE_PROJECT_ICON';
-export const CHANGE_PROJECT_NAME_FINISHED = 'CHANGE_PROJECT_NAME_FINISHED';
-
-// Action Types
-export type ShowModalAction = { type: SHOW_MODAL, modal: string };
-export type HideModalAction = { type: HIDE_MODAL };
-export type ChangeProjectNameAction = {
-  type: CHANGE_PROJECT_NAME,
-  name: string,
-};
-export type ChangeProjectIconAction = {
-  type: CHANGE_PROJECT_ICON,
-  iconSrc: string,
-};
-
-export type ChangeProjectNameFinishedAction = {
-  type: CHANGE_PROJECT_NAME_FINISHED,
-  project: Project,
-};
-
-export type Action =
-  | ShowModalAction
-  | HideModalAction
-  | ChangeProjectNameAction
-  | ChangeProjectIconAction
-  | ChangeProjectNameFinishedAction;
+export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
+export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
+export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
 
 //
 //
@@ -317,34 +293,32 @@ export const importExistingProjectFinish = (
   project,
 });
 
-export const showModal = (modal: string): ShowModalAction => ({
+export const showModal = (modal: string) => ({
   type: SHOW_MODAL,
   modal: modal,
 });
 
-export const hideModal = (modal: string): HideModalAction => ({
+export const hideModal = (modal: string) => ({
   type: HIDE_MODAL,
 });
 
 // project settings related actions
 
-export const changeProjectName = (name: string): ChangeProjectNameAction => ({
-  type: CHANGE_PROJECT_NAME,
+export const saveProjectSettingsStart = (name: string, icon: string) => ({
+  type: SAVE_PROJECT_SETTINGS_START,
   name,
-});
-export const changeProjectNameFinished = (
-  project: Project
-): ChangeProjectNameFinishedAction => ({
-  type: CHANGE_PROJECT_NAME_FINISHED,
-  project,
+  icon,
 });
 
-export const changeProjectIcon = (
-  iconSrc: string
-): ChangeProjectIconAction => ({
-  type: CHANGE_PROJECT_ICON,
-  iconSrc,
+export const saveProjectSettingsFinish = (
+  project: ProjectInternal,
+  oldProjectId: string
+) => ({
+  type: SAVE_PROJECT_SETTINGS_FINISH,
+  project,
+  oldProjectId,
 });
+
 // export const ejectProjectStart = (task: Task, timestamp: Date) => ({
 //   type: EJECT_PROJECT_START,
 //   task,

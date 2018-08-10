@@ -7,7 +7,6 @@ import styled, { keyframes } from 'styled-components';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
 import { loadDependencyInfoFromDisk, showModal } from '../../actions';
-import type { ShowModalAction } from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -25,7 +24,7 @@ type Props = {
   location: any, // provided by react-router
   match: any, // provided by react-router
   history: any, // provided by withRouter HOC
-  showModal: string => ShowModalAction,
+  showModal: string => void,
 };
 
 class ProjectPage extends Component<Props> {
@@ -64,7 +63,7 @@ class ProjectPage extends Component<Props> {
 
   openSettingsModal = () => {
     console.log('open modal with redux');
-    this.props.showModal('ProjectConfiguration');
+    this.props.showModal('project-configuration');
   };
 
   render() {
