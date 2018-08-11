@@ -47,6 +47,7 @@ function createWindow() {
     require('electron-debug')({ showDevTools: true });
 
     const ChromeLens = {
+      // ID of the extension (https://chrome.google.com/webstore/detail/chromelens/idikgljglpfilbhaboonnpnnincjhjkd)
       id: 'idikgljglpfilbhaboonnpnnincjhjkd',
       electron: '>=1.2.1',
     };
