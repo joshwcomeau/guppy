@@ -20,6 +20,7 @@ import {
 } from '../services/platform.services';
 
 import type { Task, ProjectType } from '../types';
+import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
 
 const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
@@ -70,17 +71,13 @@ export default (store: any) => (next: any) => (action: any) => {
            * specify environment variables:
            */
 
-          const child = childProcess.spawn(
-            formatCommandForPlatform('npm'),
-            commandArgs,
-            {
-              cwd: projectPath,
-              env: {
-                ...commandEnv,
-                PATH: getPathForPlatform(),
-              },
-            }
-          );
+          const child = childProcess.spawn(PACKAGE_MANAGER_CMD, commandArgs, {
+            cwd: projectPath,
+            env: {
+              ...commandEnv,
+              PATH: getPathForPlatform(),
+            },
+          });
 
           // Now that we have a port/processId for the server, attach it to
           // the task. The port is used for opening the app, the pid is used
@@ -157,7 +154,7 @@ export default (store: any) => (next: any) => (action: any) => {
       //     ? 'echo yes | npm'
       //     : 'npm';
       const child = childProcess.spawn(
-        formatCommandForPlatform('npm'),
+        PACKAGE_MANAGER_CMD,
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,
