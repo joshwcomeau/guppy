@@ -150,6 +150,14 @@ export default (state: State = initialState, action: Action) => {
     case RECEIVE_DATA_FROM_TASK_EXECUTION: {
       const { task, text, isError, logId } = action;
 
+      if (task.name === 'eject' && !state[task.id]) {
+        // When ejecting a CRA project, the `eject` task is removed from the
+        // project, since it's a 1-time operation.
+        // TODO: We should avoid sending this action, we don't need to capture
+        // output for a deleted task
+        return state;
+      }
+
       return produce(state, draftState => {
         draftState[task.id].logs.push({ id: logId, text });
 

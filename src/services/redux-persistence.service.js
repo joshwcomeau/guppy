@@ -8,7 +8,6 @@ const REDUX_STATE_KEY =
 // While debugging, it's helpful to be able to access the store.
 // This should only be used for debugging, don't write any code that uses this!
 window.electronStore = electronStore;
-
 /**
  * updateElectronStore
  * When a non-null value is provided, updates the electronStore with the

@@ -11,8 +11,8 @@
   },
   "license": "ISC",
   "scripts": {
-    "start": "NODE_ENV=development npm run start:react",
-    "start:react": "BROWSER=none node scripts/start.js",
+    "start": "cross-env NODE_ENV=development npm run start:react",
+    "start:react": "cross-env BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
     "package:mac": "electron-packager . --platform=darwin --arch=x64 --icon=src/assets/icons/mac/logo.icns --prune=true --out=release-builds --overwrite",
     "package:linux": "electron-packager . --platform=linux --prune=true --out=release-builds --overwrite",
@@ -51,6 +51,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",
+    "cross-env": "^5.2.0",
     "css-loader": "0.28.9",
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
