@@ -21,7 +21,8 @@
     "flow": "flow",
     "prettier": "prettier --write",
     "detect-port": "./node_modules/detect-port-alt/bin/detect-port 3000",
-    "precommit": "yarn run flow && lint-staged"
+    "precommit": "yarn run flow && lint-staged",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "lint-staged": {
     "*.js": [
@@ -38,12 +39,13 @@
     "yarn": "^1.9.2"
   },
   "devDependencies": {
-    "@babel/core": "7.0.0-beta.44",
+    "@babel/core": "^7.0.0-rc.1",
     "@babel/runtime": "7.0.0-beta.44",
+    "@storybook/react": "^3.4.10",
     "ansi-to-html": "^0.6.4",
     "async": "2.6.1",
     "autoprefixer": "7.2.5",
-    "babel-core": "7.0.0-bridge.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "8.2.2",
     "babel-jest": "22.1.0",
     "babel-loader": "8.0.0-beta.0",
