@@ -1,5 +1,14 @@
 {
   "presets": [
     "react-app"
+  ],
+  "plugins": [
+    [
+      "babel-plugin-react-docgen",
+      {
+        "DOC_GEN_COLLECTION_NAME": "STORYBOOK_REACT_CLASSES",
+        "resolver": "findAllExportedComponentDefinitions"
+      }
+    ]
   ]
 }

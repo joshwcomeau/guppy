@@ -110,6 +110,7 @@
     "resolve": "1.6.0",
     "sass-loader": "7.0.0",
     "slug": "0.9.1",
+    "storybook-addon-props": "^3.0.4",
     "style-loader": "0.19.1",
     "styled-components": "3.2.6",
     "svgr": "1.8.1",
