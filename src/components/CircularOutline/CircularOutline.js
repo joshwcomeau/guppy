@@ -101,7 +101,7 @@ class RoundedOutline extends Component<Props, State> {
     const { color1, color2, strokeWidth, isShown, animateChanges } = this.props;
     const { width, height, pathLength, finishedAllMountingSteps } = this.state;
 
-    const svgId = `${color1}-${color2}`;
+    const svgId = `${color1.replace('#', '')}-${color2.replace('#', '')}`;
 
     const dashOffset = isShown ? 0 : pathLength;
 
