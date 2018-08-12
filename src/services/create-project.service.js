@@ -5,7 +5,7 @@ import random from 'random-seed';
 import { COLORS } from '../constants';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
 
-import { isWin } from './platform.services';
+import { formatCommandForPlatform } from './platform.services';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
@@ -144,7 +144,7 @@ export const getBuildInstructions = (
   // For Windows Support
   // Windows tries to run command as a script rather than on a cmd
   // To force it we add *.cmd to the commands
-  const command = isWin ? 'npx.cmd' : 'npx';
+  const command = formatCommandForPlatform('npx');
   switch (projectType) {
     case 'create-react-app':
       return [command, 'create-react-app', path];
