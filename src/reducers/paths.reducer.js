@@ -48,7 +48,7 @@ export const getDefaultParentPath = () => {
   // Noticing some weird quirks when I try to use a dev project on the compiled
   // "production" app, so separating their home paths should help.
 
-  const homedir = isWin ? getWindowsHomeDir() : os.homedir();
+  const homedir = isWin() ? getWindowsHomeDir() : os.homedir();
 
   return process.env.NODE_ENV === 'development'
     ? path.join(homedir, '/guppy-projects-dev')
