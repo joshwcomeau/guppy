@@ -13,11 +13,7 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
-import {
-  isWin,
-  formatCommandForPlatform,
-  getPathForPlatform,
-} from '../services/platform.services';
+import { isWin, getPathForPlatform } from '../services/platform.services';
 
 import type { Task, ProjectType } from '../types';
 import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
@@ -104,7 +100,7 @@ export default (store: any) => (next: any) => (action: any) => {
           child.on('exit', code => {
             // For Windows Support
             // Windows sends code 1 (I guess its because we foce kill??)
-            const successfulCode = isWin ? 1 : 0;
+            const successfulCode = isWin() ? 1 : 0;
             const wasSuccessful = code === successfulCode || code === null;
             const timestamp = new Date();
 
@@ -311,7 +307,6 @@ const getDevServerArguments = (
   projectType: ProjectType,
   port: string
 ) => {
-  let command;
   switch (projectType) {
     case 'create-react-app':
       return { commandArgs: ['run', task.name], commandEnv: { PORT: port } };
