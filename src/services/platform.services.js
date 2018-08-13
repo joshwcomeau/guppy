@@ -37,7 +37,7 @@ export const getPathForPlatform = (): string =>
   isWin()
     ? `${remote.app.getPath(
         'appData'
-      )}\\npm;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Yarn\\bin`
+      )}\\npm;C:\\Program Files\\nodejs`
     : '';
 
 export const PACKAGE_MANAGER_CMD = path.join(
