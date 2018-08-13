@@ -4,6 +4,7 @@ jest.mock('../reducers/paths.reducer.js', () => ({
   getDefaultParentPath: jest.fn(),
 }));
 
+// eslint-disable-next-line import/first
 import {
   possibleProjectColors,
   getColorForProject,
