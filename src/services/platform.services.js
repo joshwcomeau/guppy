@@ -1,8 +1,8 @@
+import * as childProcess from 'child_process';
+import * as os from 'os';
+import * as path from 'path';
+import { remote } from 'electron';
 import { PACKAGE_MANAGER } from '../config/app';
-const childProcess = window.require('child_process');
-const os = window.require('os');
-const path = window.require('path');
-const { remote } = window.require('electron');
 
 // Returns true if the OS is Windows
 export const isWin = (): boolean => /^win/.test(os.platform());
