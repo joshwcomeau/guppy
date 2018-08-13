@@ -37,29 +37,28 @@ function createWindow() {
     icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
   });
 
-  if (process.env.NODE_ENV === 'development') {
-    const {
-      default: installExtension,
-      REACT_DEVELOPER_TOOLS,
-      REACT_PERF,
-    } = require('electron-devtools-installer');
+  // set up some chrome extensions
+  const {
+    default: installExtension,
+    REACT_DEVELOPER_TOOLS,
+    REACT_PERF,
+  } = require('electron-devtools-installer');
 
-    require('electron-debug')({ showDevTools: true });
+  require('electron-debug')({ showDevTools: true });
 
-    const ChromeLens = {
-      // ID of the extension (https://chrome.google.com/webstore/detail/chromelens/idikgljglpfilbhaboonnpnnincjhjkd)
-      id: 'idikgljglpfilbhaboonnpnnincjhjkd',
-      electron: '>=1.2.1',
-    };
+  const ChromeLens = {
+    // ID of the extension (https://chrome.google.com/webstore/detail/chromelens/idikgljglpfilbhaboonnpnnincjhjkd)
+    id: 'idikgljglpfilbhaboonnpnnincjhjkd',
+    electron: '>=1.2.1',
+  };
 
-    const extensions = [REACT_DEVELOPER_TOOLS, REACT_PERF, ChromeLens];
+  const extensions = [REACT_DEVELOPER_TOOLS, REACT_PERF, ChromeLens];
 
-    for (const extension of extensions) {
-      try {
-        installExtension(extension);
-      } catch (e) {
-        console.log(e);
-      }
+  for (const extension of extensions) {
+    try {
+      installExtension(extension);
+    } catch (e) {
+      console.log(e);
     }
   }
 
