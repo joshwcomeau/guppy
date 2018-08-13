@@ -82,7 +82,7 @@ class ApplicationMenu extends Component<Props> {
             click: this.openGettingStartedDocs,
           },
           {
-            label: 'Report an issue',
+            label: 'Report an Issue',
             click: this.openReportIssue,
           },
         ],
