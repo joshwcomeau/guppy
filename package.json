@@ -19,6 +19,7 @@
     "package": "GENERATE_SOURCEMAP=false npm run build && npm run package:mac && npm run package:linux",
     "test": "node scripts/test.js --env=node",
     "flow": "flow",
+    "lint": "eslint .",
     "prettier": "prettier --write",
     "detect-port": "./node_modules/detect-port-alt/bin/detect-port 3000",
     "precommit": "yarn run flow && lint-staged"
@@ -26,6 +27,7 @@
   "lint-staged": {
     "*.js": [
       "npm run prettier",
+      "eslint",
       "git add"
     ]
   },
