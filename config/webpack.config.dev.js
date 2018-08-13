@@ -13,6 +13,9 @@ const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+// List of packages not to bundle and just fall back to `require()`
+const externals = ['ps-tree', 'electron-store'];
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -347,14 +350,14 @@ module.exports = {
   // Set the target as `electron-renderer` so that packages provided by electron
   // such as fs, path, electron are ignored by webpack
   target: 'electron-renderer',
-  externals: {
-    'ps-tree': {
-      commonjs: 'ps-tree',
-    },
-    'electron-store': {
-      commonjs: 'electron-store',
-    },
-  },
+  externals: [
+    function(context, request, callback) {
+      if (externals.indexOf(request) !== -1) {
+        return callback(null, 'commonjs ' + request);
+      }
+      callback();
+    }
+  ],
   // Turn off performance hints during development because we don't do any
   // splitting or minification in interest of speed. These warnings become
   // cumbersome.
