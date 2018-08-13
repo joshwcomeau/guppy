@@ -35,10 +35,10 @@ export const formatCommandForPlatform = (command: string): string =>
 // Returns PATH for Windows
 export const getPathForPlatform = (): string =>
   isWin()
-    ? `${remote.app.getPath(
-        'appData'
-      )}\\npm;C:\\Program Files\\nodejs`
-    : '';
+    ? {
+        PATH: `${remote.app.getPath('appData')}\\npm;C:\\Program Files\\nodejs`,
+      }
+    : undefined;
 
 export const PACKAGE_MANAGER_CMD = path.join(
   remote.app.getAppPath(),

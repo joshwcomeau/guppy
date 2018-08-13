@@ -71,7 +71,7 @@ export default (store: any) => (next: any) => (action: any) => {
             cwd: projectPath,
             env: {
               ...commandEnv,
-              PATH: getPathForPlatform(),
+              ...getPathForPlatform(),
             },
           });
 
@@ -154,9 +154,8 @@ export default (store: any) => (next: any) => (action: any) => {
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,
-          env: {
-            PATH: getPathForPlatform(),
-          },
+          // note if env. is undefined it will be ignored
+          env: getPathForPlatform(),
         }
       );
 
