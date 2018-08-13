@@ -13,6 +13,9 @@ const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+// List of packages not to bundle and just fall back to `require()`
+const externals = ['ps-tree', 'electron-store'];
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -125,7 +128,6 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -158,7 +160,6 @@ module.exports = {
               baseConfig: {
                 extends: [require.resolve('eslint-config-react-app')],
               },
-              
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -195,7 +196,6 @@ module.exports = {
               {
                 loader: require.resolve('babel-loader'),
                 options: {
-                  
                   presets: [require.resolve('babel-preset-react-app')],
                   plugins: [
                     [
@@ -347,15 +347,17 @@ module.exports = {
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   ],
-  // Some libraries import Node modules but don't use them in the browser.
-  // Tell Webpack to provide empty mocks for them so importing them works.
-  node: {
-    dgram: 'empty',
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    child_process: 'empty',
-  },
+  // Set the target as `electron-renderer` so that packages provided by electron
+  // such as fs, path, electron are ignored by webpack
+  target: 'electron-renderer',
+  externals: [
+    function(context, request, callback) {
+      if (externals.indexOf(request) !== -1) {
+        return callback(null, 'commonjs ' + request);
+      }
+      callback();
+    }
+  ],
   // Turn off performance hints during development because we don't do any
   // splitting or minification in interest of speed. These warnings become
   // cumbersome.

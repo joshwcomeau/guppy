@@ -1,4 +1,4 @@
-const ElectronStore = window.require('electron-store');
+import ElectronStore from 'electron-store';
 
 const electronStore = new ElectronStore();
 

@@ -1,5 +1,5 @@
 // @flow
-const childProcess = window.require('child_process');
+import * as childProcess from 'child_process';
 
 export const installDependency = (
   projectPath: string,

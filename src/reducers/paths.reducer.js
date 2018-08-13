@@ -9,11 +9,10 @@
  * to be tied to a specific project (the same project might exist at different
  * paths on different computers!).
  */
+import * as os from 'os';
 import { ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
 
 import type { Action } from 'redux';
-
-const os = window.require('os');
 
 type State = {
   [projectId: string]: string,
