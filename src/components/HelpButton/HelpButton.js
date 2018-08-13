@@ -3,10 +3,9 @@ import React from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { u2753 as questionMarkIcon } from 'react-icons-kit/noto_emoji_regular/u2753';
+import { shell } from 'electron';
 
 import { COLORS } from '../../constants';
-
-const { shell } = window.require('electron');
 
 type Props = {
   size?: number,

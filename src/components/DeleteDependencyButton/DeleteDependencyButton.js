@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
 
 import { deleteDependencyStart } from '../../actions';
 import { COLORS } from '../../constants';
@@ -10,7 +11,7 @@ import Button from '../Button';
 import Spinner from '../Spinner';
 import PixelShifter from '../PixelShifter';
 
-const { dialog } = window.require('electron').remote;
+const { dialog } = remote;
 
 type Props = {
   projectId: string,

@@ -1,4 +1,7 @@
 // @flow
+import { ipcRenderer } from 'electron';
+import * as childProcess from 'child_process';
+import psTree from 'ps-tree';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -15,10 +18,6 @@ import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
 
 import type { Task, ProjectType } from '../types';
-
-const { ipcRenderer } = window.require('electron');
-const childProcess = window.require('child_process');
-const psTree = window.require('ps-tree');
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {

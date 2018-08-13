@@ -1,6 +1,8 @@
 // @flow
 import slug from 'slug';
 import random from 'random-seed';
+import * as fs from 'fs';
+import * as childProcess from 'child_process';
 
 import { COLORS } from '../constants';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
@@ -8,9 +10,6 @@ import { getDefaultParentPath } from '../reducers/paths.reducer';
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
 import type { ProjectType } from '../types';
-
-const fs = window.require('fs');
-const childProcess = window.require('child_process');
 
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project

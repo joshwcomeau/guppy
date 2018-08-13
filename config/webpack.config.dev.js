@@ -125,7 +125,6 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -158,7 +157,6 @@ module.exports = {
               baseConfig: {
                 extends: [require.resolve('eslint-config-react-app')],
               },
-              
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -195,7 +193,6 @@ module.exports = {
               {
                 loader: require.resolve('babel-loader'),
                 options: {
-                  
                   presets: [require.resolve('babel-preset-react-app')],
                   plugins: [
                     [
@@ -347,14 +344,16 @@ module.exports = {
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   ],
-  // Some libraries import Node modules but don't use them in the browser.
-  // Tell Webpack to provide empty mocks for them so importing them works.
-  node: {
-    dgram: 'empty',
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    child_process: 'empty',
+  // Set the target as `electron-renderer` so that packages provided by electron
+  // such as fs, path, electron are ignored by webpack
+  target: 'electron-renderer',
+  externals: {
+    'ps-tree': {
+      commonjs: 'ps-tree',
+    },
+    'electron-store': {
+      commonjs: 'electron-store',
+    },
   },
   // Turn off performance hints during development because we don't do any
   // splitting or minification in interest of speed. These warnings become
