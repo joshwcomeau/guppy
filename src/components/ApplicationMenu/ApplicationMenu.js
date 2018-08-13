@@ -18,6 +18,10 @@ type Props = {
   showImportExistingProjectPrompt: () => any,
 };
 
+// TODO: Maybe I should store the git repo URL somewhere? Maybe it should
+// read from package.json?
+const baseRepoUrl = 'https://github.com/joshwcomeau/guppy';
+
 class ApplicationMenu extends Component<Props> {
   menu: any;
 
@@ -34,12 +38,12 @@ class ApplicationMenu extends Component<Props> {
           {
             label: 'Create New Project',
             click: createNewProjectStart,
-            accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
+            accelerator: 'CmdOrCtrl+N',
           },
           {
             label: 'Import Existing Project',
             click: showImportExistingProjectPrompt,
-            accelerator: process.platform === 'darwin' ? 'Cmd+I' : 'Ctrl+I',
+            accelerator: 'CmdOrCtrl+I',
           },
         ],
       },
@@ -77,6 +81,10 @@ class ApplicationMenu extends Component<Props> {
             label: 'Getting Started',
             click: this.openGettingStartedDocs,
           },
+          {
+            label: 'Report an issue',
+            click: this.openReportIssue,
+          },
         ],
       },
     ];
@@ -104,10 +112,11 @@ class ApplicationMenu extends Component<Props> {
   }
 
   openGettingStartedDocs = () => {
-    // TODO: Maybe I should store the git repo URL somewhere? Maybe it should
-    // read from package.json?
-    const baseRepoUrl = 'https://github.com/joshwcomeau/guppy';
     shell.openExternal(`${baseRepoUrl}/docs/getting-started.md`);
+  };
+
+  openReportIssue = () => {
+    shell.openExternal(`${baseRepoUrl}/issues/new`);
   };
 
   render() {
