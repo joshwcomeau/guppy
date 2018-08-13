@@ -38,6 +38,8 @@ const isInteractive = process.stdout.isTTY;
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
+const IS_WIN = /^win/.test(process.platform);
+
 /**
  * Flag to check whether Electron is
  * running already.
@@ -56,11 +58,14 @@ function runElectronApp() {
   const envPATHS = process.env.PATH.split(';');
   envPATHS.push(path.join(__dirname, '../node_modules', '.bin'));
   const newPATHS = envPATHS.join(';');
+
+  const electronCommand = IS_WIN ? 'electron.cmd' : 'electron';
+
   exec(
-    `electron${/^win/.test(process.platform) ? '.cmd' : ''} .`,
+    `${electronCommand} .`,
     {
       env: {
-        PATH: newPATHS,
+        PATH: IS_WIN ? newPATHS : process.env.PATH,
         ELECTRON_START_URL: `http://localhost:${DEFAULT_PORT}`,
       },
     },
