@@ -50,25 +50,15 @@ let isElectronRunning = false;
  * Singleton-ish run of Electron
  * Prevents multiple re-runs of Electron App
  */
-function runElectronApp() {
+function runElectronApp(port) {
   if (isElectronRunning) return;
 
   isElectronRunning = true;
-  // For Windows Support
-  const envPATHS = process.env.PATH.split(';');
-  envPATHS.push(path.join(__dirname, '../node_modules', '.bin'));
-  const newPATHS = envPATHS.join(';');
-
+  process.env['ELECTRON_START_URL'] = process.env['ELECTRON_START_URL'] || `http://localhost:${port}`;
   const electronCommand = IS_WIN ? 'electron.cmd' : 'electron';
 
   exec(
     `${electronCommand} .`,
-    {
-      env: {
-        PATH: IS_WIN ? newPATHS : process.env.PATH,
-        ELECTRON_START_URL: `http://localhost:${DEFAULT_PORT}`,
-      },
-    },
     (err, stdout, stderr) => {
       if (err) {
         console.info(chalk.red('Electron app run failed: ') + stderr);
@@ -164,7 +154,7 @@ checkBrowsers(paths.appPath)
      *
      * Fails on error
      */
-    compiler.plugin('done', stats => !stats.hasErrors() && runElectronApp());
+    compiler.plugin('done', stats => !stats.hasErrors() && runElectronApp(port));
   })
   .catch(err => {
     if (err && err.message) {
