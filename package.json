@@ -31,6 +31,8 @@
   },
   "dependencies": {
     "create-react-app": "1.5.2",
+    "electron-debug": "2.0.0",
+    "electron-devtools-installer": "2.2.4",
     "electron-store": "2.0.0",
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
@@ -55,8 +57,6 @@
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
     "electron": "2.0.1",
-    "electron-debug": "2.0.0",
-    "electron-devtools-installer": "2.2.4",
     "electron-packager": "12.1.0",
     "eslint": "4.15.0",
     "eslint-config-react-app": "3.0.0-next.66cc7a90",
