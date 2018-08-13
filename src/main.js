@@ -72,7 +72,8 @@ app.on('window-all-closed', function() {
 app.on('before-quit', ev => {
   if (processIds.length) {
     ev.preventDefault();
-    killAllRunningProcesses().then(() => app.quit());
+    killAllRunningProcesses();
+    app.quit();
   }
 });
 
