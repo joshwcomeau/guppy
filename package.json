@@ -35,12 +35,12 @@
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",
-    "yarn": "^1.9.2"
+    "yarn": "1.9.2"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-beta.44",
     "@babel/runtime": "7.0.0-beta.44",
-    "ansi-to-html": "^0.6.4",
+    "ansi-to-html": "0.6.4",
     "async": "2.6.1",
     "autoprefixer": "7.2.5",
     "babel-core": "7.0.0-bridge.0",
@@ -52,7 +52,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",
-    "cross-env": "^5.2.0",
+    "cross-env": "5.2.0",
     "css-loader": "0.28.9",
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
