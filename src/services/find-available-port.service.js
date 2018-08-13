@@ -11,8 +11,9 @@
  * this'd work if we port this app to Windows :( but hopefully it won't be too
  * hard of a problem!
  */
-const childProcess = window.require('child_process');
-const os = window.require('os');
+import * as childProcess from 'child_process';
+import * as os from 'os';
+
 const MAX_ATTEMPTS = 15;
 
 export default () =>

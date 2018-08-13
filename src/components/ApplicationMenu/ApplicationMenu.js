@@ -4,14 +4,14 @@
  */
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { shell, remote } from 'electron';
 
 import {
   createNewProjectStart,
   showImportExistingProjectPrompt,
 } from '../../actions';
 
-const { shell } = window.require('electron');
-const { app, process, Menu } = window.require('electron').remote;
+const { app, process, Menu } = remote;
 
 type Props = {
   createNewProjectStart: () => any,

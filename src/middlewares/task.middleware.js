@@ -1,4 +1,7 @@
 // @flow
+import { ipcRenderer } from 'electron';
+import * as childProcess from 'child_process';
+import psTree from 'ps-tree';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -17,10 +20,6 @@ import { isWin, getPathForPlatform } from '../services/platform.services';
 
 import type { Task, ProjectType } from '../types';
 import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
-
-const { ipcRenderer } = window.require('electron');
-const childProcess = window.require('child_process');
-const psTree = window.require('ps-tree');
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
