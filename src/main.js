@@ -8,7 +8,6 @@ const url = require('url');
 const childProcess = require('child_process');
 
 const fixPath = require('fix-path');
-const psTree = require('ps-tree');
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
@@ -98,7 +97,8 @@ app.on('window-all-closed', function() {
 app.on('before-quit', ev => {
   if (processIds.length) {
     ev.preventDefault();
-    killAllRunningProcesses().then(() => app.quit());
+    killAllRunningProcesses();
+    app.quit();
   }
 });
 
@@ -127,28 +127,9 @@ const killProcessId = doomedProcessId => {
 };
 
 const killAllRunningProcesses = () => {
-  const processKillingPromises = processIds.map(
-    processId =>
-      new Promise((resolve, reject) => {
-        killProcessId(processId);
-
-        psTree(processId, (err, children) => {
-          if (err) {
-            return reject(err);
-          }
-
-          if (!children || children.length === 0) {
-            return resolve();
-          }
-
-          children.forEach(child => killProcessId(child.PID));
-
-          resolve();
-        });
-      })
-  );
-
-  return Promise.all(processKillingPromises).catch(err => {
+  try {
+    processIds.forEach(processId => killProcessId(processId));
+  } catch (err) {
     console.error('Got error when trying to kill children', err);
-  });
+  }
 };
