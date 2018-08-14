@@ -69,8 +69,8 @@ export default (store: any) => (next: any) => (action: any) => {
           const child = childProcess.spawn(PACKAGE_MANAGER_CMD, commandArgs, {
             cwd: projectPath,
             env: {
+              ...window.process.env, // contains PATH which is needed to find the commands
               ...commandEnv,
-              ...getPathForPlatform(),
             },
           });
 
@@ -147,7 +147,9 @@ export default (store: any) => (next: any) => (action: any) => {
         {
           cwd: projectPath,
           // note if env. is undefined it will be ignored
-          env: getPathForPlatform(),
+          env: {
+            ...window.process.env, // contains PATH which is needed to find the commands
+          },
         }
       );
 
