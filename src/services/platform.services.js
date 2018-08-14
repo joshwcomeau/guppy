@@ -11,7 +11,7 @@ export const isWin = (): boolean => /^win/.test(os.platform());
 export const getWindowsHomeDir = (): string => {
   // For Windows Support
   // Documents folder is much better place for project folders (Most programs use it as a default save location)
-  // Since there is a chance of being moved or users language might be differet we are reading the value from Registery
+  // Since there is a chance of being moved or users language might be different we are reading the value from Registry
   // There might be a better solution but this seems ok so far
 
   const winDocumentsRegRecord = childProcess.execSync(

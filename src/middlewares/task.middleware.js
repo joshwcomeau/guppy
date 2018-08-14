@@ -140,14 +140,7 @@ export default (store: any) => (next: any) => (action: any) => {
       }
 
       /* Bypasses 'Are you sure?' check when ejecting CRA
-       *
-       * TODO: add windows support
        */
-      console.log('Task: ', action.task);
-      // const command =
-      //   project.type === 'create-react-app' && name === 'eject'
-      //     ? 'echo yes | npm'
-      //     : 'npm';
       const child = childProcess.spawn(
         PACKAGE_MANAGER_CMD,
         ['run', name, ...additionalArgs],
@@ -232,6 +225,7 @@ export default (store: any) => (next: any) => (action: any) => {
         // Because of that, `child.pid` refers to the `sh` command that spawned
         // the actual Node process, and so we need to use `psTree` to build a
         // tree of descendent children and kill them that way.
+        // TODO: Because we no longer use 'shell: true', this is probably not necessary anymore. Consider reverting.
         psTree(processId, (err, children) => {
           if (err) {
             console.error('Could not gather process children:', err);

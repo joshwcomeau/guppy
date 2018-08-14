@@ -66,7 +66,6 @@ export default (
 
   // For Windows Support
   // To support cross platform with slashes and escapes
-  // Taken from https://github.com/AWolf81/guppy/commit/b2434d907d0c2c2585006d82ef14523a974de6a0
   const projectPath = path.join(parentPath, id);
 
   const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
