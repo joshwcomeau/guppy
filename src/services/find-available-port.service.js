@@ -21,10 +21,10 @@ export default () =>
       // For Windows Support
       // Similar command to lsof
       // Finds if the specified port is in use
-      const command = isWin()
+      const command = isWin
         ? `netstat -aon | find "${port}"`
         : `lsof -i :${port}`;
-      const env = isWin() && {
+      const env = isWin && {
         cwd: 'C:\\Windows\\System32',
       };
       childProcess.exec(command, env, (err, res) => {

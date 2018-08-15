@@ -5,32 +5,30 @@ import { remote } from 'electron';
 import { PACKAGE_MANAGER } from '../config/app';
 
 // Returns true if the OS is Windows
-export const isWin = (): boolean => /^win/.test(os.platform());
+export const isWin = /^win/.test(os.platform());
 
 // Returns path to the users Documents direactory
-export const getWindowsHomeDir = (): string => {
-  // For Windows Support
-  // Documents folder is much better place for project folders (Most programs use it as a default save location)
-  // Since there is a chance of being moved or users language might be different we are reading the value from Registry
-  // There might be a better solution but this seems ok so far
-
-  const winDocumentsRegRecord = childProcess.execSync(
-    'REG QUERY "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders" /v Personal',
-    {
-      encoding: 'utf8',
-    }
-  );
-
-  const winDocPathArray = winDocumentsRegRecord.split(' ');
-  const winDocPath = winDocPathArray[winDocPathArray.length - 1]
-    .replace('%USERPROFILE%\\', '')
-    .replace(/\s/g, '');
-  return path.join(os.homedir(), winDocPath);
-};
+// For Windows Support
+// Documents folder is much better place for project
+// folders (Most programs use it as a default save location)
+// Since there is a chance of being moved or users language
+// might be different we are reading the value from Registry
+// There might be a better solution but this seems ok so far
+const winDocumentsRegRecord = childProcess.execSync(
+  'REG QUERY "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders" /v Personal',
+  {
+    encoding: 'utf8',
+  }
+);
+const winDocPathArray = winDocumentsRegRecord.split(' ');
+const winDocPath = winDocPathArray[winDocPathArray.length - 1]
+  .replace('%USERPROFILE%\\', '')
+  .replace(/\s/g, '');
+export const windowsHomeDir = path.join(os.homedir(), winDocPath);
 
 // Returns formatted command for Windows
 export const formatCommandForPlatform = (command: string): string =>
-  isWin() ? `${command}.cmd` : command;
+  isWin ? `${command}.cmd` : command;
 
 export const PACKAGE_MANAGER_CMD = path.join(
   remote.app.getAppPath(),

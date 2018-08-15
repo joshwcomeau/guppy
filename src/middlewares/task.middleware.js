@@ -73,7 +73,7 @@ export default (store: any) => (next: any) => (action: any) => {
           child.on('exit', code => {
             // For Windows Support
             // Windows sends code 1 (I guess its because we foce kill??)
-            const successfulCode = isWin() ? 1 : 0;
+            const successfulCode = isWin ? 1 : 0;
             const wasSuccessful = code === successfulCode || code === null;
             const timestamp = new Date();
 
@@ -171,7 +171,7 @@ export default (store: any) => (next: any) => (action: any) => {
       const { task } = action;
       const { processId, name } = task;
 
-      if (isWin()) {
+      if (isWin) {
         // For Windows Support
         // On Windows there is only one process so no need for psTree (see below)
         // We use /f for focefully terminate process because it ask for confirmation
