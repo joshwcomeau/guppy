@@ -1,6 +1,7 @@
 // @flow
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
+import * as path from 'path';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -15,7 +16,7 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
-import { isWin, getPathForPlatform } from '../services/platform.services';
+import { isWin } from '../services/platform.services';
 
 import type { Task, ProjectType } from '../types';
 import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
@@ -42,7 +43,7 @@ export default (store: any) => (next: any) => (action: any) => {
           const child = childProcess.spawn(PACKAGE_MANAGER_CMD, args, {
             cwd: projectPath,
             env: {
-              ...window.process.env, // contains PATH which is needed to find the commands
+              ...getBaseProjectEnvironment(projectPath),
               ...env,
             },
           });
@@ -109,7 +110,7 @@ export default (store: any) => (next: any) => (action: any) => {
       // for now.
       const additionalArgs = [];
       if (project.type === 'create-react-app' && name === 'test') {
-        additionalArgs.push('--', '--coverage');
+        additionalArgs.push('--coverage');
       }
 
       /* Bypasses 'Are you sure?' check when ejecting CRA
@@ -119,9 +120,7 @@ export default (store: any) => (next: any) => (action: any) => {
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,
-          env: {
-            ...window.process.env,
-          },
+          env: getBaseProjectEnvironment(projectPath),
         }
       );
 
@@ -252,6 +251,17 @@ export default (store: any) => (next: any) => (action: any) => {
   // when deferring the 'eject' task)
   return next(action);
 };
+
+const getBaseProjectEnvironment = (projectPath: string) => ({
+  // Forward the host env, and append the
+  // project's .bin directory to PATH to allow
+  // package scripts to function properly.
+  ...window.process.env,
+  PATH:
+    window.process.env.PATH +
+    path.delimiter +
+    path.join(projectPath, 'node_modules', '.bin'),
+});
 
 const getDevServerCommand = (
   task: Task,
