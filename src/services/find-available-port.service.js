@@ -25,7 +25,10 @@ export default () =>
       const command = isWin()
         ? `netstat -aon | find "${port}"`
         : `lsof -i :${port}`;
-      childProcess.exec(command, (err, res) => {
+      const env = isWin() && {
+        cwd: 'C:\\Windows\\System32',
+      };
+      childProcess.exec(command, env, (err, res) => {
         // Ugh, childProcess assumes that no output means that there was an
         // error, and `lsof` emits nothing when the port is empty. So,
         // counterintuitively, an error is good news, and a response is bad.
