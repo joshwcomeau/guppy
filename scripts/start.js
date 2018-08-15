@@ -66,6 +66,7 @@ function runElectronApp(port) {
     if (output.length) console.log(chalk.green('[ELECTRON]'), output);
   });
   electronProcess.stderr.on('data', data => {
+    const output = data.toString();
     console.log(chalk.red(`[ELECTRON] ${output}`));
     process.exit(1);
   });
