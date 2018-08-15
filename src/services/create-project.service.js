@@ -8,7 +8,7 @@ import * as path from 'path';
 import { COLORS } from '../constants';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
 
-import { formatCommandForPlatform } from './platform.services';
+import { formatCommandForPlatform } from './platform.service';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 

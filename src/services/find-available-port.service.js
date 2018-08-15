@@ -11,7 +11,7 @@
  * - `netstat` on Windows
  */
 import * as childProcess from 'child_process';
-import { isWin } from './platform.services';
+import { isWin } from './platform.service';
 
 const MAX_ATTEMPTS = 15;
 

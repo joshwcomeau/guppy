@@ -17,10 +17,9 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
-import { isWin } from '../services/platform.services';
+import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
 
 import type { Task, ProjectType } from '../types';
-import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {

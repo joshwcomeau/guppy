@@ -12,7 +12,7 @@
 import * as path from 'path';
 import * as os from 'os';
 import { ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
-import { windowsHomeDir, isWin } from '../services/platform.services';
+import { windowsHomeDir, isWin } from '../services/platform.service';
 
 import type { Action } from 'redux';
 
