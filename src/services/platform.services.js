@@ -14,17 +14,20 @@ export const isWin = /^win/.test(os.platform());
 // Since there is a chance of being moved or users language
 // might be different we are reading the value from Registry
 // There might be a better solution but this seems ok so far
-const winDocumentsRegRecord = childProcess.execSync(
-  'REG QUERY "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders" /v Personal',
-  {
-    encoding: 'utf8',
-  }
-);
-const winDocPathArray = winDocumentsRegRecord.split(' ');
-const winDocPath = winDocPathArray[winDocPathArray.length - 1]
-  .replace('%USERPROFILE%\\', '')
-  .replace(/\s/g, '');
-export const windowsHomeDir = path.join(os.homedir(), winDocPath);
+let winDocPath;
+if (isWin) {
+  const winDocumentsRegRecord = childProcess.execSync(
+    'REG QUERY "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders" /v Personal',
+    {
+      encoding: 'utf8',
+    }
+  );
+  const winDocPathArray = winDocumentsRegRecord.split(' ');
+  winDocPath = winDocPathArray[winDocPathArray.length - 1]
+    .replace('%USERPROFILE%\\', '')
+    .replace(/\s/g, '');
+}
+export const windowsHomeDir = isWin ? path.join(os.homedir(), winDocPath) : '';
 
 // Returns formatted command for Windows
 export const formatCommandForPlatform = (command: string): string =>
