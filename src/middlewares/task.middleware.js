@@ -2,6 +2,7 @@
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
 import * as path from 'path';
+import psTree from 'ps-tree';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -191,27 +192,36 @@ export default (store: any) => (next: any) => (action: any) => {
           )
         );
       } else {
-        // Info: No `shell: true` used so it's OK to kill just the childProcess.
-        childProcess.spawn('kill', ['-9', processId]);
+        // Child node processes will persist after their parent's death
+        // if they are not killed first, so we need to use `psTree` to build
+        // a tree of children and kill them that way.
+        psTree(processId, (err, children) => {
+          if (err) {
+            console.error('Could not gather process children:', err);
+          }
 
-        ipcRenderer.send('removeProcessId', processId);
+          const childrenPIDs = children.map(child => child.PID);
+          childProcess.spawn('kill', ['-9', processId, ...childrenPIDs]);
 
-        // Once the task is killed, we should dispatch a notification
-        // so that the terminal shows something about this update.
-        // My initial thought was that all tasks would have the same message,
-        // but given that we're treating `start` as its own special thing,
-        // I'm realizing that it should vary depending on the task type.
-        // TODO: Find a better place for this to live.
-        const abortMessage = isDevServerTask(name)
-          ? 'Server stopped'
-          : 'Task aborted';
+          ipcRenderer.send('removeProcessId', processId);
 
-        next(
-          receiveDataFromTaskExecution(
-            task,
-            `\u001b[31;1m${abortMessage}\u001b[0m`
-          )
-        );
+          // Once the task is killed, we should dispatch a notification
+          // so that the terminal shows something about this update.
+          // My initial thought was that all tasks would have the same message,
+          // but given that we're treating `start` as its own special thing,
+          // I'm realizing that it should vary depending on the task type.
+          // TODO: Find a better place for this to live.
+          const abortMessage = isDevServerTask(name)
+            ? 'Server stopped'
+            : 'Task aborted';
+
+          next(
+            receiveDataFromTaskExecution(
+              task,
+              `\u001b[31;1m${abortMessage}\u001b[0m`
+            )
+          );
+        });
       }
 
       break;
