@@ -39,28 +39,6 @@ export default (store: any) => (next: any) => (action: any) => {
         .then(port => {
           const { args, env } = getDevServerCommand(task, project.type, port);
 
-          /**
-           * NOTE: A quirk in Electron means we can't use `env` to supply
-           * environment variables, as you would traditionally:
-           *
-              childProcess.spawn(
-                `npm`,
-                ['run', name],
-                {
-                  cwd: projectPath,
-                  env: { PORT: port },
-                }
-              );
-           *
-           * If I try to run this, I get a bunch of nonsensical errors about
-           * no commands (not even built-in ones like `ls`) existing.
-           * I added a comment here:
-           * https://github.com/electron/electron/issues/3627
-           *
-           * As a workaround, I'm using "shell mode" to avoid having to
-           * specify environment variables:
-           */
-
           const child = childProcess.spawn(PACKAGE_MANAGER_CMD, args, {
             cwd: projectPath,
             env: {
@@ -194,7 +172,7 @@ export default (store: any) => (next: any) => (action: any) => {
       const { task } = action;
       const { processId, name } = task;
 
-      if (isWin) {
+      if (isWin()) {
         // For Windows Support
         // On Windows there is only one process so no need for psTree (see below)
         // We use /f for focefully terminate process because it ask for confirmation
