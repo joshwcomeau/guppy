@@ -288,7 +288,7 @@ const getDevServerCommand = (
       };
     case 'gatsby':
       return {
-        args: ['run', task.name, `-p ${port}`],
+        args: ['run', task.name, '-p', port],
         env: {},
       };
     default:
