@@ -34,7 +34,6 @@
     "electron-store": "2.0.0",
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
-    "ps-tree": "1.1.0",
     "yarn": "1.9.2"
   },
   "devDependencies": {

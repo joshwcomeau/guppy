@@ -14,7 +14,7 @@ const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
 // List of packages not to bundle and just fall back to `require()`
-const externals = ['ps-tree', 'electron-store'];
+const externals = ['electron-store'];
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.

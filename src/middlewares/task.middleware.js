@@ -1,7 +1,6 @@
 // @flow
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
-import psTree from 'ps-tree';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -38,11 +37,7 @@ export default (store: any) => (next: any) => (action: any) => {
     case LAUNCH_DEV_SERVER: {
       findAvailablePort()
         .then(port => {
-          const { commandArgs, commandEnv } = getDevServerArguments(
-            task,
-            project.type,
-            port
-          );
+          const { args, env } = getDevServerCommand(task, project.type, port);
 
           /**
            * NOTE: A quirk in Electron means we can't use `env` to supply
@@ -66,11 +61,11 @@ export default (store: any) => (next: any) => (action: any) => {
            * specify environment variables:
            */
 
-          const child = childProcess.spawn(PACKAGE_MANAGER_CMD, commandArgs, {
+          const child = childProcess.spawn(PACKAGE_MANAGER_CMD, args, {
             cwd: projectPath,
             env: {
               ...window.process.env, // contains PATH which is needed to find the commands
-              ...commandEnv,
+              ...env,
             },
           });
 
@@ -146,9 +141,8 @@ export default (store: any) => (next: any) => (action: any) => {
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,
-          // note if env. is undefined it will be ignored
           env: {
-            ...window.process.env, // contains PATH which is needed to find the commands
+            ...window.process.env,
           },
         }
       );
@@ -220,42 +214,27 @@ export default (store: any) => (next: any) => (action: any) => {
           )
         );
       } else {
-        // Our child was spawned using `shell: true` to get around a quirk with
-        // electron not working when specifying environment variables the
-        // "correct" way (see comment above).
-        //
-        // Because of that, `child.pid` refers to the `sh` command that spawned
-        // the actual Node process, and so we need to use `psTree` to build a
-        // tree of descendent children and kill them that way.
-        // TODO: Because we no longer use 'shell: true', this is probably not necessary anymore. Consider reverting.
-        psTree(processId, (err, children) => {
-          if (err) {
-            console.error('Could not gather process children:', err);
-          }
+        // Info: No `shell: true` used so it's OK to kill just the childProcess.
+        childProcess.spawn('kill', ['-9', processId]);
 
-          const childrenPIDs = children.map(child => child.PID);
+        ipcRenderer.send('removeProcessId', processId);
 
-          childProcess.spawn('kill', ['-9', ...childrenPIDs]);
+        // Once the task is killed, we should dispatch a notification
+        // so that the terminal shows something about this update.
+        // My initial thought was that all tasks would have the same message,
+        // but given that we're treating `start` as its own special thing,
+        // I'm realizing that it should vary depending on the task type.
+        // TODO: Find a better place for this to live.
+        const abortMessage = isDevServerTask(name)
+          ? 'Server stopped'
+          : 'Task aborted';
 
-          ipcRenderer.send('removeProcessId', processId);
-
-          // Once the children are killed, we should dispatch a notification
-          // so that the terminal shows something about this update.
-          // My initial thought was that all tasks would have the same message,
-          // but given that we're treating `start` as its own special thing,
-          // I'm realizing that it should vary depending on the task type.
-          // TODO: Find a better place for this to live.
-          const abortMessage = isDevServerTask(name)
-            ? 'Server stopped'
-            : 'Task aborted';
-
-          next(
-            receiveDataFromTaskExecution(
-              task,
-              `\u001b[31;1m${abortMessage}\u001b[0m`
-            )
-          );
-        });
+        next(
+          receiveDataFromTaskExecution(
+            task,
+            `\u001b[31;1m${abortMessage}\u001b[0m`
+          )
+        );
       }
 
       break;
@@ -296,18 +275,23 @@ export default (store: any) => (next: any) => (action: any) => {
   return next(action);
 };
 
-const getDevServerArguments = (
+const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
   port: string
 ) => {
   switch (projectType) {
     case 'create-react-app':
-      return { commandArgs: ['run', task.name], commandEnv: { PORT: port } };
+      return {
+        args: ['run', task.name],
+        env: {
+          PORT: port,
+        },
+      };
     case 'gatsby':
       return {
-        commandArgs: ['run', task.name, '--', `-p ${port}`],
-        commandEnv: {},
+        args: ['run', task.name, '--', `-p ${port}`],
+        env: {},
       };
     default:
       throw new Error('Unrecognized project type: ' + projectType);
