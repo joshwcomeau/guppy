@@ -4,7 +4,7 @@ const webpackConfig = require('../config/webpack.config.dev');
 module.exports = (baseConfig, configType, defaultConfig) => {
   defaultConfig.module.rules.shift();
 
-  defaultConfig.module.rules.unshift(webpackConfig.module.rules[1]);
+  defaultConfig.module.rules.unshift(webpackConfig.module.rules[1]); // using js rule from our config
 
   // defaultConfig.module.rules.push({
   //   test: /\.scss$/,
