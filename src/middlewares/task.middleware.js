@@ -172,6 +172,7 @@ export default (store: any) => (next: any) => (action: any) => {
       const { processId, name } = task;
 
       killProcessId(processId);
+      ipcRenderer.send('removeProcessId', processId);
 
       // Once the task is killed, we should dispatch a notification
       // so that the terminal shows something about this update.

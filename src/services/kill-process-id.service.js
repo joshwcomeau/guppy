@@ -1,7 +1,12 @@
+/**
+ * NOTE: This service is used both by the Electron client
+ * and server, so it must only contain Node-compatible (read: non-ES6)
+ * code. If at some future time this requires some large amount
+ * of ES6 code, we can make a client-side wrapper.
+ */
 const childProcess = require('child_process');
 const os = require('os');
 const psTree = require('ps-tree');
-const { ipcRenderer } = require('electron');
 
 const isWin = /^win/.test(os.platform());
 
@@ -28,8 +33,6 @@ const killProcessId = doomedProcessId => {
       childProcess.spawn('kill', ['-9', doomedProcessId, ...childrenPIDs]);
     });
   }
-
-  ipcRenderer.send('removeProcessId', doomedProcessId);
 };
 
 module.exports = killProcessId;
