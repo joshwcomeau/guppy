@@ -6,6 +6,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const childProcess = require('child_process');
+const killProcessId = require('./services/kill-process-id.service');
 
 const fixPath = require('fix-path');
 
@@ -118,17 +119,15 @@ ipcMain.on('removeProcessId', (event, processId) => {
   processIds = processIds.filter(id => id !== processId);
 });
 
-const killProcessId = doomedProcessId => {
-  childProcess.spawnSync('kill', ['-9', doomedProcessId]);
-
-  // Remove the parent or any children PIDs from the list of tracked
-  // IDs, since they're killed now.
-  processIds = processIds.filter(id => id !== doomedProcessId);
-};
-
 const killAllRunningProcesses = () => {
   try {
-    processIds.forEach(processId => killProcessId(processId));
+    processIds.forEach(processId => {
+      killProcessId(processId);
+
+      // Remove the parent or any children PIDs from the list of tracked
+      // IDs, since they're killed now.
+      processIds = processIds.filter(id => id !== processId);
+    });
   } catch (err) {
     console.error('Got error when trying to kill children', err);
   }

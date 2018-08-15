@@ -2,7 +2,6 @@
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
 import * as path from 'path';
-import psTree from 'ps-tree';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -17,6 +16,7 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
+import killProcessId from '../services/kill-process-id.service';
 import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
 
 import type { Task, ProjectType } from '../types';
@@ -171,57 +171,24 @@ export default (store: any) => (next: any) => (action: any) => {
       const { task } = action;
       const { processId, name } = task;
 
-      if (isWin) {
-        // For Windows Support
-        // On Windows there is only one process so no need for psTree (see below)
-        // We use /f for focefully terminate process because it ask for confirmation
-        // We use /t to kill all child processes
-        // More info https://ss64.com/nt/taskkill.html
-        childProcess.spawn('taskkill', ['/pid', processId, '/f', '/t']);
-        ipcRenderer.send('removeProcessId', processId);
+      killProcessId(processId);
 
-        const abortMessage = isDevServerTask(name)
-          ? 'Server stopped'
-          : 'Task aborted';
+      // Once the task is killed, we should dispatch a notification
+      // so that the terminal shows something about this update.
+      // My initial thought was that all tasks would have the same message,
+      // but given that we're treating `start` as its own special thing,
+      // I'm realizing that it should vary depending on the task type.
+      // TODO: Find a better place for this to live.
+      const abortMessage = isDevServerTask(name)
+        ? 'Server stopped'
+        : 'Task aborted';
 
-        next(
-          receiveDataFromTaskExecution(
-            task,
-            `\u001b[31;1m${abortMessage}\u001b[0m`
-          )
-        );
-      } else {
-        // Child node processes will persist after their parent's death
-        // if they are not killed first, so we need to use `psTree` to build
-        // a tree of children and kill them that way.
-        psTree(processId, (err, children) => {
-          if (err) {
-            console.error('Could not gather process children:', err);
-          }
-
-          const childrenPIDs = children.map(child => child.PID);
-          childProcess.spawn('kill', ['-9', processId, ...childrenPIDs]);
-
-          ipcRenderer.send('removeProcessId', processId);
-
-          // Once the task is killed, we should dispatch a notification
-          // so that the terminal shows something about this update.
-          // My initial thought was that all tasks would have the same message,
-          // but given that we're treating `start` as its own special thing,
-          // I'm realizing that it should vary depending on the task type.
-          // TODO: Find a better place for this to live.
-          const abortMessage = isDevServerTask(name)
-            ? 'Server stopped'
-            : 'Task aborted';
-
-          next(
-            receiveDataFromTaskExecution(
-              task,
-              `\u001b[31;1m${abortMessage}\u001b[0m`
-            )
-          );
-        });
-      }
+      next(
+        receiveDataFromTaskExecution(
+          task,
+          `\u001b[31;1m${abortMessage}\u001b[0m`
+        )
+      );
 
       break;
     }
