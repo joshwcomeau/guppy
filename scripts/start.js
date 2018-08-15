@@ -68,7 +68,6 @@ function runElectronApp(port) {
   electronProcess.stderr.on('data', data => {
     const output = data.toString();
     console.log(chalk.red(`[ELECTRON] ${output}`));
-    process.exit(1);
   });
 
   // close webpack server when electron quits
