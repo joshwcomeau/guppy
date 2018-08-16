@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"7zip@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/7zip/-/7zip-0.0.6.tgz#9cafb171af82329490353b4816f03347aa150a30"
+
 "@babel/code-frame@7.0.0-beta.44", "@babel/code-frame@^7.0.0-beta.35", "@babel/code-frame@^7.0.0-beta.40":
   version "7.0.0-beta.44"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.44.tgz#2a02643368de80916162be70865c97774f3adbd9"
@@ -798,7 +802,7 @@ ansi-styles@^3.1.0, ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-ansi-to-html@^0.6.4:
+ansi-to-html@0.6.4:
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/ansi-to-html/-/ansi-to-html-0.6.4.tgz#8b14ace87f8b3d25367d03cd5300d60be17cf9e0"
   dependencies:
@@ -2203,6 +2207,13 @@ create-react-app@1.5.2:
     tmp "0.0.31"
     validate-npm-package-name "^3.0.0"
 
+cross-env@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.2.0.tgz#6ecd4c015d5773e614039ee529076669b9d126f2"
+  dependencies:
+    cross-spawn "^6.0.5"
+    is-windows "^1.0.0"
+
 cross-spawn@5.1.0, cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -2217,6 +2228,20 @@ cross-spawn@^4.0.0:
   dependencies:
     lru-cache "^4.0.1"
     which "^1.2.9"
+
+cross-spawn@^6.0.5:
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
+  dependencies:
+    nice-try "^1.0.4"
+    path-key "^2.0.1"
+    semver "^5.5.0"
+    shebang-command "^1.2.0"
+    which "^1.2.9"
+
+cross-unzip@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/cross-unzip/-/cross-unzip-0.0.2.tgz#5183bc47a09559befcf98cc4657964999359372f"
 
 cryptiles@3.x.x:
   version "3.1.2"
@@ -2778,6 +2803,22 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
+electron-debug@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/electron-debug/-/electron-debug-2.0.0.tgz#3059a6557acbfb091f138d83875f57bac80cea6d"
+  dependencies:
+    electron-is-dev "^0.3.0"
+    electron-localshortcut "^3.0.0"
+
+electron-devtools-installer@2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/electron-devtools-installer/-/electron-devtools-installer-2.2.4.tgz#261a50337e37121d338b966f07922eb4939a8763"
+  dependencies:
+    "7zip" "0.0.6"
+    cross-unzip "0.0.2"
+    rimraf "^2.5.2"
+    semver "^5.3.0"
+
 electron-download@^3.0.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/electron-download/-/electron-download-3.3.0.tgz#2cfd54d6966c019c4d49ad65fbe65cc9cdef68c8"
@@ -2805,6 +2846,23 @@ electron-download@^4.0.0:
     rc "^1.1.2"
     semver "^5.3.0"
     sumchecker "^2.0.1"
+
+electron-is-accelerator@^0.1.0:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/electron-is-accelerator/-/electron-is-accelerator-0.1.2.tgz#509e510c26a56b55e17f863a4b04e111846ab27b"
+
+electron-is-dev@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
+
+electron-localshortcut@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/electron-localshortcut/-/electron-localshortcut-3.1.0.tgz#10c1ffd537b8d39170aaf6e1551341f7780dd2ce"
+  dependencies:
+    debug "^2.6.8"
+    electron-is-accelerator "^0.1.0"
+    keyboardevent-from-electron-accelerator "^1.1.0"
+    keyboardevents-areequal "^0.2.1"
 
 electron-osx-sign@^0.4.1:
   version "0.4.10"
@@ -4880,7 +4938,7 @@ is-utf8@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
 
-is-windows@^1.0.1, is-windows@^1.0.2:
+is-windows@^1.0.0, is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
 
@@ -5449,6 +5507,14 @@ jsx-ast-utils@^2.0.0, jsx-ast-utils@^2.0.1:
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.0.1.tgz#e801b1b39985e20fffc87b40e3748080e2dcac7f"
   dependencies:
     array-includes "^3.0.3"
+
+keyboardevent-from-electron-accelerator@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/keyboardevent-from-electron-accelerator/-/keyboardevent-from-electron-accelerator-1.1.0.tgz#324614f6e33490c37ffc5be5876b3e85fe223c84"
+
+keyboardevents-areequal@^0.2.1:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/keyboardevents-areequal/-/keyboardevents-areequal-0.2.2.tgz#88191ec738ce9f7591c25e9056de928b40277194"
 
 killable@^1.0.0:
   version "1.0.0"
@@ -6149,6 +6215,10 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
+nice-try@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.4.tgz#d93962f6c52f2c1558c0fbda6d512819f1efe1c4"
+
 no-case@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"
@@ -6691,7 +6761,7 @@ path-is-inside@^1.0.1, path-is-inside@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/path-is-inside/-/path-is-inside-1.0.2.tgz#365417dede44430d1c11af61027facf074bdfc53"
 
-path-key@^2.0.0:
+path-key@^2.0.0, path-key@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-2.0.1.tgz#411cadb574c5a140d3a4b1910d40d80cc9f40b40"
 
@@ -7963,7 +8033,7 @@ right-align@^0.1.1:
   dependencies:
     align-text "^0.1.1"
 
-rimraf@2, rimraf@^2.2.8, rimraf@^2.5.0, rimraf@^2.5.1, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2:
+rimraf@2, rimraf@^2.2.8, rimraf@^2.5.0, rimraf@^2.5.1, rimraf@^2.5.2, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.2.tgz#2ed8150d24a16ea8651e6d6ef0f47c4158ce7a36"
   dependencies:
@@ -9732,6 +9802,10 @@ yargs@~3.10.0:
     cliui "^2.1.0"
     decamelize "^1.0.0"
     window-size "0.1.0"
+
+yarn@1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.9.2.tgz#7666c6db0fed8dc090ae0dce11a8a28b1d82e391"
 
 yauzl@2.4.1:
   version "2.4.1"

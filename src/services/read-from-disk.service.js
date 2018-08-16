@@ -13,15 +13,19 @@ const DEFAULT_PARENT_PATH = getDefaultParentPath();
 /**
  * Load a project's package.json
  */
-export const loadPackageJson = (path: string) => {
+export const loadPackageJson = (projectPath: string) => {
   return new Promise((resolve, reject) => {
-    return fs.readFile(`${path}/package.json`, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      }
+    return fs.readFile(
+      path.join(projectPath, 'package.json'),
+      'utf8',
+      (err, data) => {
+        if (err) {
+          return reject(err);
+        }
 
-      return resolve(JSON.parse(data));
-    });
+        return resolve(JSON.parse(data));
+      }
+    );
   });
 };
 
@@ -33,7 +37,7 @@ export const writePackageJson = (projectPath: string, json: any) => {
 
   return new Promise((resolve, reject) => {
     fs.writeFile(
-      `${projectPath}/package.json`,
+      path.join(projectPath, 'package.json'),
       prettyPrintedPackageJson,
       err => {
         if (err) {
@@ -147,8 +151,7 @@ export function loadProjectDependency(
   dependencyLocation: DependencyLocation = 'dependencies'
 ) {
   // prettier-ignore
-  const dependencyPath =
-    `${projectPath}/node_modules/${dependencyName}/package.json`;
+  const dependencyPath = path.join(projectPath, 'node_modules', dependencyName, 'package.json');
 
   return new Promise((resolve, reject) => {
     fs.readFile(dependencyPath, 'utf8', (err, data) => {

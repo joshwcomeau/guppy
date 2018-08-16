@@ -6,9 +6,9 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const childProcess = require('child_process');
+const killProcessId = require('./services/kill-process-id.service');
 
 const fixPath = require('fix-path');
-const psTree = require('ps-tree');
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
@@ -36,6 +36,31 @@ function createWindow() {
     titleBarStyle: 'hidden',
     icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
   });
+
+  // set up some chrome extensions
+  const {
+    default: installExtension,
+    REACT_DEVELOPER_TOOLS,
+    REACT_PERF,
+  } = require('electron-devtools-installer');
+
+  require('electron-debug')({ showDevTools: true });
+
+  const ChromeLens = {
+    // ID of the extension (https://chrome.google.com/webstore/detail/chromelens/idikgljglpfilbhaboonnpnnincjhjkd)
+    id: 'idikgljglpfilbhaboonnpnnincjhjkd',
+    electron: '>=1.2.1',
+  };
+
+  const extensions = [REACT_DEVELOPER_TOOLS, REACT_PERF, ChromeLens];
+
+  for (const extension of extensions) {
+    try {
+      installExtension(extension);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   // and load the index.html of the app.
   const startUrl =
@@ -73,7 +98,8 @@ app.on('window-all-closed', function() {
 app.on('before-quit', ev => {
   if (processIds.length) {
     ev.preventDefault();
-    killAllRunningProcesses().then(() => app.quit());
+    killAllRunningProcesses();
+    app.quit();
   }
 });
 
@@ -93,37 +119,16 @@ ipcMain.on('removeProcessId', (event, processId) => {
   processIds = processIds.filter(id => id !== processId);
 });
 
-const killProcessId = doomedProcessId => {
-  childProcess.spawnSync('kill', ['-9', doomedProcessId]);
-
-  // Remove the parent or any children PIDs from the list of tracked
-  // IDs, since they're killed now.
-  processIds = processIds.filter(id => id !== doomedProcessId);
-};
-
 const killAllRunningProcesses = () => {
-  const processKillingPromises = processIds.map(
-    processId =>
-      new Promise((resolve, reject) => {
-        killProcessId(processId);
+  try {
+    processIds.forEach(processId => {
+      killProcessId(processId);
 
-        psTree(processId, (err, children) => {
-          if (err) {
-            return reject(err);
-          }
-
-          if (!children || children.length === 0) {
-            return resolve();
-          }
-
-          children.forEach(child => killProcessId(child.PID));
-
-          resolve();
-        });
-      })
-  );
-
-  return Promise.all(processKillingPromises).catch(err => {
+      // Remove the parent or any children PIDs from the list of tracked
+      // IDs, since they're killed now.
+      processIds = processIds.filter(id => id !== processId);
+    });
+  } catch (err) {
     console.error('Got error when trying to kill children', err);
-  });
+  }
 };

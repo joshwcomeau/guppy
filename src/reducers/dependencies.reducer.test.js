@@ -56,6 +56,7 @@ Object {
       "description": "",
       "homepage": "",
       "license": "",
+      "location": "dependencies",
       "name": "redux",
       "repository": Object {
         "type": "",

@@ -1,11 +1,14 @@
 // @flow
 import slug from 'slug';
 import random from 'random-seed';
-import * as fs from 'fs';
 import * as childProcess from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { COLORS } from '../constants';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
+
+import { formatCommandForPlatform } from './platform.service';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
@@ -61,9 +64,11 @@ export default (
 
   const id = slug(projectName).toLowerCase();
 
-  const path = `${parentPath}/${id}`;
+  // For Windows Support
+  // To support cross platform with slashes and escapes
+  const projectPath = path.join(parentPath, id);
 
-  const [instruction, ...args] = getBuildInstructions(projectType, path);
+  const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
 
   const process = childProcess.spawn(instruction, args);
 
@@ -75,7 +80,7 @@ export default (
   process.on('close', () => {
     onStatusUpdate('Dependencies installed');
 
-    fs.readFile(`${path}/package.json`, 'utf8', (err, data) => {
+    fs.readFile(path.join(projectPath, 'package.json'), 'utf8', (err, data) => {
       if (err) {
         return console.error(err);
       }
@@ -96,12 +101,16 @@ export default (
 
       const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
 
-      fs.writeFile(`${path}/package.json`, prettyPrintedPackageJson, err => {
-        if (err) {
-          return console.error(err);
+      fs.writeFile(
+        path.join(projectPath, 'package.json'),
+        prettyPrintedPackageJson,
+        err => {
+          if (err) {
+            return console.error(err);
+          }
+          onComplete(packageJson);
         }
-        onComplete(packageJson);
-      });
+      );
     });
   });
 };
@@ -130,11 +139,15 @@ export const getBuildInstructions = (
   projectType: ProjectType,
   path: string
 ) => {
+  // For Windows Support
+  // Windows tries to run command as a script rather than on a cmd
+  // To force it we add *.cmd to the commands
+  const command = formatCommandForPlatform('npx');
   switch (projectType) {
     case 'create-react-app':
-      return ['npx', 'create-react-app', path];
+      return [command, 'create-react-app', path];
     case 'gatsby':
-      return ['npx', 'gatsby', 'new', path];
+      return [command, 'gatsby', 'new', path];
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }
