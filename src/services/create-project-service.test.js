@@ -5,7 +5,7 @@ jest.mock('os', () => ({
 }));
 
 jest.mock('../reducers/paths.reducer.js', () => ({
-  getDefaultParentPath: jest.fn(),
+  defaultParentPath: 'test',
 }));
 
 // eslint-disable-next-line import/first
