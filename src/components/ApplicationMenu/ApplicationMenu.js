@@ -104,7 +104,7 @@ class ApplicationMenu extends Component<Props> {
             click: this.openGettingStartedDocs,
           },
           {
-            label: 'Report an issue',
+            label: __DARWIN__ ? 'Report an Issue' : 'Report an issue',
             click: this.openReportIssue,
           },
         ],
