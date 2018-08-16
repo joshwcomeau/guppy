@@ -89,13 +89,13 @@ You can build an executable by running:
 
 ```
 # MacOS
-yarn package:mac
+yarn dist:mac
 
 # Windows
-yarn package:win
+yarn dist:win
 
 # Linux
-yarn package:linux
+yarn dist:linux
 ```
 
 The result will be in the `release-builds` folder.
