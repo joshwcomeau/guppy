@@ -1,7 +1,7 @@
 {
   "name": "guppy",
   "productName": "Guppy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "main": "src/main.js",
   "homepage": "./",
@@ -11,16 +11,19 @@
   },
   "license": "ISC",
   "scripts": {
-    "start": "NODE_ENV=development npm run start:react",
-    "start:react": "BROWSER=none node scripts/start.js",
+    "start": "cross-env NODE_ENV=development npm run start:react",
+    "start:react": "cross-env BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
-    "package:mac": "electron-packager . --platform=darwin --arch=x64 --icon=src/assets/icons/mac/logo.icns --prune=true --out=release-builds --overwrite",
     "package:linux": "electron-packager . --platform=linux --prune=true --out=release-builds --overwrite",
-    "package": "GENERATE_SOURCEMAP=false npm run build && npm run package:mac && npm run package:linux",
+    "package:mac": "electron-packager . --platform=darwin --arch=x64 --icon=src/assets/icons/mac/logo.icns --prune=true --out=release-builds --overwrite",
+    "package:win": "electron-packager . --platform=win32 --arch=x64 --icon=src/assets/icons/win/logo.ico --prune=true --out=release-builds --overwrite",
+    "dist:linux": "cross-env GENERATE_SOURCEMAP=false npm run build && npm run package:linux",
+    "dist:mac": "cross-env GENERATE_SOURCEMAP=false npm run build && npm run package:mac",
+    "dist:win": "cross-env GENERATE_SOURCEMAP=false npm run build && npm run package:win",
     "test": "node scripts/test.js --env=node",
     "flow": "flow",
     "prettier": "prettier --write",
-    "detect-port": "./node_modules/detect-port-alt/bin/detect-port 3000",
+    "detect-port": "cross-env ./node_modules/detect-port-alt/bin/detect-port 3000",
     "precommit": "yarn run flow && lint-staged"
   },
   "lint-staged": {
@@ -36,12 +39,13 @@
     "electron-store": "2.0.0",
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
-    "ps-tree": "1.1.0"
+    "ps-tree": "1.1.0",
+    "yarn": "1.9.2"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-beta.44",
     "@babel/runtime": "7.0.0-beta.44",
-    "ansi-to-html": "^0.6.4",
+    "ansi-to-html": "0.6.4",
     "async": "2.6.1",
     "autoprefixer": "7.2.5",
     "babel-core": "7.0.0-bridge.0",
@@ -53,6 +57,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",
+    "cross-env": "5.2.0",
     "css-loader": "0.28.9",
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",

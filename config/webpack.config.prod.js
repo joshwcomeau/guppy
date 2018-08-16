@@ -16,7 +16,7 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
 // List of packages not to bundle and just fall back to `require()`
-const externals = ['ps-tree', 'electron-store'];
+const externals = ['electron-store'];
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -482,6 +482,6 @@ module.exports = {
         return callback(null, 'commonjs ' + request);
       }
       callback();
-    }
+    },
   ],
 };
