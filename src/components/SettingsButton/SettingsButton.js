@@ -63,7 +63,7 @@ class SettingsButton extends Component<Props, State> {
         }}
       >
         {({ rotations, scale, color }) => (
-          <div>
+          <Wrapper>
             <IconBase
               size={this.props.size}
               icon={settings}
@@ -78,11 +78,15 @@ class SettingsButton extends Component<Props, State> {
               onMouseLeave={this.handleMouseLeave}
               onClick={this.props.action}
             />
-          </div>
+          </Wrapper>
         )}
       </Motion>
     );
   }
 }
+
+const Wrapper = styled.div`
+  cursor: pointer;
+`;
 
 export default SettingsButton;
