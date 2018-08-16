@@ -85,10 +85,17 @@ This should open an Electron window with the application running.
 
 In development, all projects are created at `~/guppy-projects-dev`
 
-You can build a macOS executable by running:
+You can build an executable by running:
 
 ```
-yarn package
+# MacOS
+yarn dist:mac
+
+# Windows
+yarn dist:win
+
+# Linux
+yarn dist:linux
 ```
 
 The result will be in the `release-builds` folder.

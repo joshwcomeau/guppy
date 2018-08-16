@@ -132,8 +132,8 @@ type GlobalState = { projects: State };
 //    useful than project.scripts
 //  - Solve the ugliness with `project.guppy.X`
 const prepareProjectForConsumption = (
-  project: ProjectInternal,
-  state: GlobalState
+  state: GlobalState,
+  project: ProjectInternal
 ): Project => {
   return {
     id: project.guppy.id,
@@ -142,9 +142,9 @@ const prepareProjectForConsumption = (
     color: project.guppy.color,
     icon: project.guppy.icon,
     createdAt: project.guppy.createdAt,
-    tasks: getTasksForProjectId(project.guppy.id, state),
-    dependencies: getDependenciesForProjectId(project.guppy.id, state),
-    path: getPathForProjectId(project.guppy.id, state),
+    tasks: getTasksForProjectId(state, project.guppy.id),
+    dependencies: getDependenciesForProjectId(state, project.guppy.id),
+    path: getPathForProjectId(state, project.guppy.id),
   };
 };
 
@@ -152,7 +152,7 @@ export const getById = (state: GlobalState) => state.projects.byId;
 export const getSelectedProjectId = (state: GlobalState) =>
   state.projects.selectedId;
 
-export const getInternalProjectById = (id: string, state: GlobalState) =>
+export const getInternalProjectById = (state: GlobalState, id: string) =>
   getById(state)[id];
 
 export const getProjectsArray = (state: GlobalState) => {
@@ -162,13 +162,13 @@ export const getProjectsArray = (state: GlobalState) => {
     .map(project => {
       // console.log('map project', project);
       // $FlowFixMe
-      return prepareProjectForConsumption(project, state);
-    })
+      prepareProjectForConsumption(state, project)
+    )
     .sort((p1, p2) => (p1.createdAt < p2.createdAt ? 1 : -1));
 };
 
-export const getProjectById = (id: string, state: GlobalState) =>
-  prepareProjectForConsumption(state.projects.byId[id], state);
+export const getProjectById = (state: GlobalState, id: string) =>
+  prepareProjectForConsumption(state, state.projects.byId[id]);
 
 // TODO: check the perf cost of this selector, memoize if it's non-trivial.
 export const getSelectedProject = (state: GlobalState) => {
@@ -184,7 +184,7 @@ export const getSelectedProject = (state: GlobalState) => {
     return null;
   }
 
-  return prepareProjectForConsumption(project, state);
+  return prepareProjectForConsumption(state, project);
 };
 
 export const getDependencyMapForSelectedProject = (state: GlobalState) => {
@@ -194,7 +194,7 @@ export const getDependencyMapForSelectedProject = (state: GlobalState) => {
     return [];
   }
 
-  const dependencies = getDependenciesForProjectId(projectId, state);
+  const dependencies = getDependenciesForProjectId(state, projectId);
 
   return dependencies.reduce((acc, dep) => {
     acc[dep.name] = dep;

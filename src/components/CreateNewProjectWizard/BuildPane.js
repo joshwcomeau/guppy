@@ -25,11 +25,11 @@ const BUILD_STEPS = {
     copy: 'Creating project directory',
   },
   installingDependencies: {
-    copy: 'Installing dependencies.',
+    copy: 'Installing dependencies',
     additionalCopy: 'This step can take a while...',
   },
   guppification: {
-    copy: 'Persisting project info.',
+    copy: 'Persisting project info',
   },
 };
 

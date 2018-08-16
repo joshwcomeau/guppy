@@ -1,13 +1,12 @@
 // @flow
 import asyncMap from 'async/map';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { pick } from '../utils';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
 
-import type { ProjectInternal } from '../types';
-
-const fs = window.require('fs');
-const path = window.require('path');
+import type { DependencyLocation, ProjectInternal } from '../types';
 
 const DEFAULT_PARENT_PATH = getDefaultParentPath();
 
@@ -148,7 +147,8 @@ export function loadGuppyProjects(projectPathsInput: Array<string>) {
  */
 export function loadProjectDependency(
   projectPath: string,
-  dependencyName: string
+  dependencyName: string,
+  dependencyLocation: DependencyLocation = 'dependencies'
 ) {
   // prettier-ignore
   const dependencyPath = path.join(projectPath, 'node_modules', dependencyName, 'package.json');
@@ -184,6 +184,7 @@ export function loadProjectDependency(
       const dependency = {
         ...packageJsonSubset,
         status: 'idle',
+        location: dependencyLocation,
       };
 
       return resolve(dependency);
@@ -198,8 +199,6 @@ export function loadProjectDependency(
  * NOTE: I wonder how this would perform on a project with 100+ top-level
  * dependencies... might need to set up a streaming service that can communicate
  * loading status if it takes more than a few hundred ms.
- *
- * TODO: support devDependencies
  */
 export function loadAllProjectDependencies(
   project: ProjectInternal,
@@ -209,14 +208,29 @@ export function loadAllProjectDependencies(
   return loadPackageJson(projectPath).then(
     packageJson =>
       new Promise((resolve, reject) => {
-        const dependencyNames = Object.keys(packageJson.dependencies);
+        // Check for existence of both dependencies and devDependencies
+        // We can reasonably assume all projects have dependencies
+        // but some may not have devDependencies
+        const deps = Object.keys(packageJson.dependencies);
+        const devDeps = Object.keys(packageJson.devDependencies || []);
+        const dependencyNames = [...deps, ...devDeps];
 
         // Each project in a Guppy directory should have a package.json.
         // We'll read all the project info we need from this file.
         asyncMap(
           dependencyNames,
           function(dependencyName, callback) {
-            loadProjectDependency(projectPath, dependencyName)
+            // If the name of the package is present in the devDeps array
+            // then its location is devDependencies
+            const dependencyLocation = devDeps.includes(dependencyName)
+              ? 'devDependencies'
+              : 'dependencies';
+
+            loadProjectDependency(
+              projectPath,
+              dependencyName,
+              dependencyLocation
+            )
               .then(dependency => callback(null, dependency))
               .catch(callback);
           },

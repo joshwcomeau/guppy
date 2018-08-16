@@ -63,7 +63,8 @@ const pseudoAdjectives = [
   'ice',
 ];
 
-const prefixes = [...adjectives, ...pseudoAdjectives];
+// Exported so we can test the generation of the project name (generateRandomName())
+export const prefixes = [...adjectives, ...pseudoAdjectives];
 
 const animalNames = [
   'cat',
@@ -176,4 +177,5 @@ const miscNouns = [
   'thing',
 ];
 
-const suffixes = [...animalNames, ...objects, ...miscNouns];
+// Exported so we can test the generation of the project name (generateRandomName())
+export const suffixes = [...animalNames, ...objects, ...miscNouns];

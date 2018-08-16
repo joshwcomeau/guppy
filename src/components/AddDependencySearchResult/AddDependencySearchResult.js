@@ -274,8 +274,8 @@ const mapStateToProps = (state, ownProps) => {
     currentStatus,
     projectId: selectedProjectId,
     isPackageJsonLocked: getPackageJsonLockedForProjectId(
-      selectedProjectId,
-      state
+      state,
+      selectedProjectId
     ),
   };
 };

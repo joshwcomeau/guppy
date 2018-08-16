@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
 
 import { deleteDependencyStart } from '../../actions';
 import { COLORS } from '../../constants';
@@ -10,7 +11,7 @@ import Button from '../Button';
 import Spinner from '../Spinner';
 import PixelShifter from '../PixelShifter';
 
-const { dialog } = window.require('electron').remote;
+const { dialog } = remote;
 
 type Props = {
   projectId: string,
@@ -61,7 +62,10 @@ class DeleteDependencyButton extends PureComponent<Props> {
         style={{ width: 75 }}
       >
         {isBeingDeleted ? (
-          <PixelShifter y={2}>
+          <PixelShifter
+            y={2}
+            reason="visually center the spinner within the button"
+          >
             <Spinner size={18} color={COLORS.white} />
           </PixelShifter>
         ) : (
@@ -74,8 +78,8 @@ class DeleteDependencyButton extends PureComponent<Props> {
 
 const mapStateToProps = (state, ownProps) => ({
   isPackageJsonLocked: getPackageJsonLockedForProjectId(
-    ownProps.projectId,
-    state
+    state,
+    ownProps.projectId
   ),
 });
 

@@ -11,6 +11,7 @@ import Middot from '../Middot';
 import DeleteDependencyButton from '../DeleteDependencyButton';
 import Spinner from '../Spinner';
 import License from '../License';
+import HelpButton from '../HelpButton';
 
 import type { Dependency } from '../../types';
 
@@ -40,15 +41,34 @@ class DependencyDetailsTable extends Component<Props> {
         <tbody>
           <tr>
             <FirstCell>
-              <Label>Last Published</Label>
+              <Label>
+                Location
+                <HelpButton
+                  size={16}
+                  href="https://github.com/joshwcomeau/guppy/blob/master/docs/understanding-package.json.md#dependencies-vs-devdependencies"
+                />
+              </Label>
             </FirstCell>
             <FirstCell>
+              <DependencyLocationLabel
+                isDevDependency={dependency.location === 'devDependencies'}
+              >
+                {dependency.location}
+              </DependencyLocationLabel>
+            </FirstCell>
+          </tr>
+
+          <tr>
+            <Cell>
+              <Label>Last Published</Label>
+            </Cell>
+            <Cell>
               {lastUpdatedAt ? (
                 moment(lastUpdatedAt).fromNow()
               ) : (
                 <Spinner size={15} />
               )}
-            </FirstCell>
+            </Cell>
           </tr>
 
           <tr>
@@ -78,6 +98,7 @@ class DependencyDetailsTable extends Component<Props> {
               )}
             </Cell>
           </tr>
+
           <tr>
             <LastCell>
               <Label style={{ color: COLORS.pink[500] }}>Danger Zone</Label>
@@ -109,6 +130,15 @@ const Cell = styled.td`
     width: 150px;
     color: ${COLORS.gray[600]};
   }
+`;
+
+const DependencyLocationLabel = styled.span`
+  background-color: ${props =>
+    props.isDevDependency ? COLORS.orange[700] : COLORS.blue[700]};
+  border-radius: 4px;
+  color: ${COLORS.white};
+  font-size: 14px;
+  padding: 5px 10px;
 `;
 
 // TODO: Feels gross to be doing this manually when `tr:first-child td`

@@ -1,4 +1,5 @@
 // @flow
+import { remote } from 'electron';
 import {
   SHOW_IMPORT_EXISTING_PROJECT_PROMPT,
   IMPORT_EXISTING_PROJECT_START,
@@ -13,7 +14,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 
-const { dialog } = window.require('electron').remote;
+const { dialog } = remote;
 
 // TODO: Flow types
 export default (store: any) => (next: any) => (action: any) => {
@@ -57,7 +58,7 @@ export default (store: any) => (next: any) => (action: any) => {
           // Check to see if we already have a project with this ID.
           // In the future, maybe I can attach a suffix like `-copy`, but for
           // now I'll just reject it outright.
-          if (getInternalProjectById(projectId, state)) {
+          if (getInternalProjectById(state, projectId)) {
             throw new Error('project-name-already-exists');
           }
 

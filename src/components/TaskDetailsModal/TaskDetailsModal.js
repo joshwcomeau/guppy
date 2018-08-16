@@ -184,7 +184,7 @@ const LastRunText = styled.span`
 `;
 
 const mapStateToProps = (state, ownProps) => ({
-  task: getTaskById(ownProps.taskId, state),
+  task: getTaskById(state, ownProps.taskId),
 });
 
 export default connect(

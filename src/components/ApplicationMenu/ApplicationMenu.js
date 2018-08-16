@@ -4,19 +4,23 @@
  */
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { shell, remote } from 'electron';
 
 import {
   createNewProjectStart,
   showImportExistingProjectPrompt,
 } from '../../actions';
 
-const { shell } = window.require('electron');
-const { app, process, Menu } = window.require('electron').remote;
+const { app, process, Menu } = remote;
 
 type Props = {
   createNewProjectStart: () => any,
   showImportExistingProjectPrompt: () => any,
 };
+
+// TODO: Maybe I should store the git repo URL somewhere? Maybe it should
+// read from package.json?
+const baseRepoUrl = 'https://github.com/joshwcomeau/guppy';
 
 class ApplicationMenu extends Component<Props> {
   menu: any;
@@ -27,24 +31,29 @@ class ApplicationMenu extends Component<Props> {
       showImportExistingProjectPrompt,
     } = this.props;
 
+    const __DARWIN__ = process.platform === 'darwin';
     const template = [
       {
-        label: 'File',
+        label: __DARWIN__ ? 'File' : '&File',
         submenu: [
           {
-            label: 'Create New Project',
+            label: __DARWIN__
+              ? 'Create New Project...'
+              : 'Create &new project...',
             click: createNewProjectStart,
-            accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
+            accelerator: 'CmdOrCtrl+N',
           },
           {
-            label: 'Import Existing Project',
+            label: __DARWIN__
+              ? 'Import Existing Project...'
+              : '&Import existing project...',
             click: showImportExistingProjectPrompt,
-            accelerator: process.platform === 'darwin' ? 'Cmd+I' : 'Ctrl+I',
+            accelerator: 'CmdOrCtrl+I',
           },
         ],
       },
       {
-        label: 'Edit',
+        label: __DARWIN__ ? 'Edit' : '&Edit',
         submenu: [
           { role: 'undo' },
           { role: 'redo' },
@@ -53,29 +62,50 @@ class ApplicationMenu extends Component<Props> {
           { role: 'copy' },
           { role: 'paste' },
           { role: 'delete' },
-          { role: 'selectall' },
+          {
+            role: 'selectall',
+            label: __DARWIN__ ? 'Select All' : 'Select all',
+          },
         ],
       },
       {
-        label: 'View',
+        label: __DARWIN__ ? 'View' : '&View',
         submenu: [
           { role: 'reload' },
-          { role: 'forcereload' },
-          { role: 'toggledevtools' },
+          {
+            role: 'forcereload',
+            label: __DARWIN__ ? 'Force Reload' : 'Force reload',
+          },
+          {
+            role: 'toggledevtools',
+            label: __DARWIN__
+              ? 'Toggle Developer Tools'
+              : 'Toggle developer tools',
+          },
           { type: 'separator' },
-          { role: 'resetzoom' },
-          { role: 'zoomin' },
-          { role: 'zoomout' },
+          {
+            role: 'resetzoom',
+            label: __DARWIN__ ? 'Actual Size' : 'Actual size',
+          },
+          { role: 'zoomin', label: __DARWIN__ ? 'Zoom In' : 'Zoom in' },
+          { role: 'zoomout', label: __DARWIN__ ? 'Zoom Out' : 'Zoom out' },
           { type: 'separator' },
-          { role: 'togglefullscreen' },
+          {
+            role: 'togglefullscreen',
+            label: __DARWIN__ ? 'Toggle Full Screen' : 'Toggle full screen',
+          },
         ],
       },
       {
-        label: 'Help',
+        label: __DARWIN__ ? 'Help' : '&Help',
         submenu: [
           {
-            label: 'Getting Started',
+            label: __DARWIN__ ? 'Getting Started' : 'Getting started',
             click: this.openGettingStartedDocs,
+          },
+          {
+            label: __DARWIN__ ? 'Report an Issue' : 'Report an issue',
+            click: this.openReportIssue,
           },
         ],
       },
@@ -104,10 +134,11 @@ class ApplicationMenu extends Component<Props> {
   }
 
   openGettingStartedDocs = () => {
-    // TODO: Maybe I should store the git repo URL somewhere? Maybe it should
-    // read from package.json?
-    const baseRepoUrl = 'https://github.com/joshwcomeau/guppy';
     shell.openExternal(`${baseRepoUrl}/docs/getting-started.md`);
+  };
+
+  openReportIssue = () => {
+    shell.openExternal(`${baseRepoUrl}/issues/new`);
   };
 
   render() {

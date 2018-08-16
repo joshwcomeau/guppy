@@ -24,7 +24,7 @@ export default store => next => action => {
     case ADD_DEPENDENCY_START: {
       const { projectId, dependencyName, version } = action;
 
-      const projectPath = getPathForProjectId(projectId, store.getState());
+      const projectPath = getPathForProjectId(store.getState(), projectId);
 
       installDependency(projectPath, dependencyName, version)
         .then(() => loadProjectDependency(projectPath, dependencyName))
@@ -43,7 +43,7 @@ export default store => next => action => {
     case UPDATE_DEPENDENCY_START: {
       const { projectId, dependencyName, latestVersion } = action;
 
-      const projectPath = getPathForProjectId(projectId, store.getState());
+      const projectPath = getPathForProjectId(store.getState(), projectId);
 
       installDependency(projectPath, dependencyName, latestVersion)
         .then(() => {
@@ -63,7 +63,7 @@ export default store => next => action => {
     case DELETE_DEPENDENCY_START: {
       const { projectId, dependencyName } = action;
 
-      const projectPath = getPathForProjectId(projectId, store.getState());
+      const projectPath = getPathForProjectId(store.getState(), projectId);
 
       uninstallDependency(projectPath, dependencyName)
         .then(() => {

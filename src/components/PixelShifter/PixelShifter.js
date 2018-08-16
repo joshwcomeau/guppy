@@ -1,6 +1,21 @@
-import styled from 'styled-components';
+// @flow
+import React from 'react';
 
-export default styled.div`
-  width: 100%;
-  transform: translate(${props => props.x || 0}px, ${props => props.y || 0}px);
-`;
+type Props = {
+  x?: number,
+  y?: number,
+  reason: string,
+  children: React$Node,
+};
+
+const PixelShifter = ({ x = 0, y = 0, reason, children }: Props) => (
+  <div
+    style={{
+      transform: `translate(${x}px, ${y}px)`,
+    }}
+  >
+    {children}
+  </div>
+);
+
+export default PixelShifter;

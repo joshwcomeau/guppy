@@ -29,7 +29,7 @@ Steps to reproduce the behavior:
 
 **Environment (please complete the following information):**
  - OS: <!-- e.g. MacOS, Windows -->
- - Version: <!-- e.g. 0.1.0 - to find the version, check the project's `package.json`, or go to Guppy -> About Guppy in the production bundle (not the development Electron app, but the packaged, distributable one) -->
+ - Version: <!-- e.g. 0.2.0 - to find the version, check the project's `package.json`, or go to Guppy -> About Guppy in the production bundle (not the development Electron app, but the packaged, distributable one) -->
  - Node version: <!-- [eg. 8.11.1] - to find the version, run `node -v` in a terminal -->
 
 **Additional context**

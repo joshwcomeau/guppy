@@ -8,6 +8,8 @@ import {
 
 import reducer, { getTaskDescription } from './tasks.reducer';
 
+jest.mock('electron');
+
 describe('Tasks reducer', () => {
   describe(REFRESH_PROJECTS, () => {
     test('captures task data from new projects', () => {

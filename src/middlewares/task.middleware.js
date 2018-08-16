@@ -1,4 +1,7 @@
 // @flow
+import { ipcRenderer } from 'electron';
+import * as childProcess from 'child_process';
+import * as path from 'path';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -13,19 +16,10 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
-import {
-  isWin,
-  formatCommandForPlatform,
-  getPathForPlatform,
-} from '../services/platform.services';
+import killProcessId from '../services/kill-process-id.service';
+import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
 
 import type { Task, ProjectType } from '../types';
-import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
-
-const { ipcRenderer } = window.require('electron');
-const childProcess = window.require('child_process');
-const psTree = window.require('ps-tree');
-const fs = window.require('fs');
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
@@ -36,48 +30,21 @@ export default (store: any) => (next: any) => (action: any) => {
 
   const state = store.getState();
 
-  const project = getProjectById(task.projectId, state);
-  const projectPath = getPathForProjectId(task.projectId, state);
+  const project = getProjectById(state, task.projectId);
+  const projectPath = getPathForProjectId(state, task.projectId);
 
   // eslint-disable-next-line default-case
   switch (action.type) {
     case LAUNCH_DEV_SERVER: {
       findAvailablePort()
         .then(port => {
-          const { commandArgs, commandEnv } = getDevServerArguments(
-            task,
-            project.type,
-            port
-          );
+          const { args, env } = getDevServerCommand(task, project.type, port);
 
-          /**
-           * NOTE: A quirk in Electron means we can't use `env` to supply
-           * environment variables, as you would traditionally:
-           *
-              childProcess.spawn(
-                `npm`,
-                ['run', name],
-                {
-                  cwd: projectPath,
-                  env: { PORT: port },
-                }
-              );
-           *
-           * If I try to run this, I get a bunch of nonsensical errors about
-           * no commands (not even built-in ones like `ls`) existing.
-           * I added a comment here:
-           * https://github.com/electron/electron/issues/3627
-           *
-           * As a workaround, I'm using "shell mode" to avoid having to
-           * specify environment variables:
-           */
-
-          const child = childProcess.spawn(PACKAGE_MANAGER_CMD, commandArgs, {
+          const child = childProcess.spawn(PACKAGE_MANAGER_CMD, args, {
             cwd: projectPath,
             env: {
-              ...commandEnv,
-              PATH: getPathForPlatform(),
-              FORCE_COLOR: true,
+              ...getBaseProjectEnvironment(projectPath),
+              ...env,
             },
           });
 
@@ -127,7 +94,7 @@ export default (store: any) => (next: any) => (action: any) => {
     case RUN_TASK: {
       const { projectId, name } = action.task;
 
-      const project = getProjectById(projectId, store.getState());
+      const project = getProjectById(store.getState(), projectId);
 
       // TEMPORARY HACK
       // By default, create-react-app runs tests in interactive watch mode.
@@ -142,26 +109,17 @@ export default (store: any) => (next: any) => (action: any) => {
       // for now.
       const additionalArgs = [];
       if (project.type === 'create-react-app' && name === 'test') {
-        additionalArgs.push('--', '--coverage');
+        additionalArgs.push('--coverage');
       }
 
       /* Bypasses 'Are you sure?' check when ejecting CRA
-       *
-       * TODO: add windows support
        */
-      console.log('Task: ', action.task);
-      // const command =
-      //   project.type === 'create-react-app' && name === 'eject'
-      //     ? 'echo yes | npm'
-      //     : 'npm';
       const child = childProcess.spawn(
         PACKAGE_MANAGER_CMD,
         ['run', name, ...additionalArgs],
         {
           cwd: projectPath,
-          env: {
-            PATH: getPathForPlatform(),
-          },
+          env: getBaseProjectEnvironment(projectPath),
         }
       );
 
@@ -174,6 +132,13 @@ export default (store: any) => (next: any) => (action: any) => {
       next(attachTaskMetadata(task, child.pid));
 
       child.stdout.on('data', data => {
+        // The 'eject' task prompts the user, to ask if they're sure.
+        // We can bypass this prompt, as our UI already has an alert that
+        // confirms this action.
+        // TODO: Eject deserves its own Redux action, to avoid cluttering up
+        // this generic "RUN_TASK" action.
+        // TODO: Is there a way to "future-proof" this, in case the CRA
+        // confirmation copy changes?
         const isEjectPrompt = data
           .toString()
           .includes('Are you sure you want to eject? This action is permanent');
@@ -205,62 +170,25 @@ export default (store: any) => (next: any) => (action: any) => {
       const { task } = action;
       const { processId, name } = task;
 
-      if (isWin) {
-        // For Windows Support
-        // On Windows there is only one process so no need for psTree (see below)
-        // We use /f for focefully terminate process because it ask for confirmation
-        // We use /t to kill all child processes
-        // More info https://ss64.com/nt/taskkill.html
-        childProcess.spawn('taskkill', ['/pid', processId, '/f', '/t']);
-        ipcRenderer.send('removeProcessId', processId);
+      killProcessId(processId);
+      ipcRenderer.send('removeProcessId', processId);
 
-        const abortMessage = isDevServerTask(name)
-          ? 'Server stopped'
-          : 'Task aborted';
+      // Once the task is killed, we should dispatch a notification
+      // so that the terminal shows something about this update.
+      // My initial thought was that all tasks would have the same message,
+      // but given that we're treating `start` as its own special thing,
+      // I'm realizing that it should vary depending on the task type.
+      // TODO: Find a better place for this to live.
+      const abortMessage = isDevServerTask(name)
+        ? 'Server stopped'
+        : 'Task aborted';
 
-        next(
-          receiveDataFromTaskExecution(
-            task,
-            `\u001b[31;1m${abortMessage}\u001b[0m`
-          )
-        );
-      } else {
-        // Our child was spawned using `shell: true` to get around a quirk with
-        // electron not working when specifying environment variables the
-        // "correct" way (see comment above).
-        //
-        // Because of that, `child.pid` refers to the `sh` command that spawned
-        // the actual Node process, and so we need to use `psTree` to build a
-        // tree of descendent children and kill them that way.
-        psTree(processId, (err, children) => {
-          if (err) {
-            console.error('Could not gather process children:', err);
-          }
-
-          const childrenPIDs = children.map(child => child.PID);
-
-          childProcess.spawn('kill', ['-9', ...childrenPIDs]);
-
-          ipcRenderer.send('removeProcessId', processId);
-
-          // Once the children are killed, we should dispatch a notification
-          // so that the terminal shows something about this update.
-          // My initial thought was that all tasks would have the same message,
-          // but given that we're treating `start` as its own special thing,
-          // I'm realizing that it should vary depending on the task type.
-          // TODO: Find a better place for this to live.
-          const abortMessage = isDevServerTask(name)
-            ? 'Server stopped'
-            : 'Task aborted';
-
-          next(
-            receiveDataFromTaskExecution(
-              task,
-              `\u001b[31;1m${abortMessage}\u001b[0m`
-            )
-          );
-        });
-      }
+      next(
+        receiveDataFromTaskExecution(
+          task,
+          `\u001b[31;1m${abortMessage}\u001b[0m`
+        )
+      );
 
       break;
     }
@@ -286,7 +214,7 @@ export default (store: any) => (next: any) => (action: any) => {
       // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
       // this instead.
       if (task.name === 'eject') {
-        const project = getProjectById(task.projectId, store.getState());
+        const project = getProjectById(store.getState(), task.projectId);
 
         store.dispatch(loadDependencyInfoFromDisk(project.id, project.path));
       }
@@ -300,7 +228,18 @@ export default (store: any) => (next: any) => (action: any) => {
   return next(action);
 };
 
-const getDevServerArguments = (
+const getBaseProjectEnvironment = (projectPath: string) => ({
+  // Forward the host env, and append the
+  // project's .bin directory to PATH to allow
+  // package scripts to function properly.
+  ...window.process.env,
+  PATH:
+    window.process.env.PATH +
+    path.delimiter +
+    path.join(projectPath, 'node_modules', '.bin'),
+});
+
+const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
   port: string
@@ -308,11 +247,16 @@ const getDevServerArguments = (
   let command;
   switch (projectType) {
     case 'create-react-app':
-      return { commandArgs: ['run', task.name], commandEnv: { PORT: port } };
+      return {
+        args: ['run', task.name],
+        env: {
+          PORT: port,
+        },
+      };
     case 'gatsby':
       return {
-        commandArgs: ['run', task.name, '--', `-p ${port}`],
-        commandEnv: {},
+        args: ['run', task.name, '-p', port],
+        env: {},
       };
     default:
       throw new Error('Unrecognized project type: ' + projectType);

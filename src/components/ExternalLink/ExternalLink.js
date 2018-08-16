@@ -1,10 +1,9 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { shell } from 'electron';
 
 import { COLORS } from '../../constants';
-
-const { shell } = window.require('electron');
 
 type Props = {
   href: string,
