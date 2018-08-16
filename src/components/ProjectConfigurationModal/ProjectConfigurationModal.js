@@ -32,7 +32,7 @@ type Props = {
   project: Project,
   isVisible: boolean,
   hideModal: () => void,
-  saveProjectSettingsStart: (string, string) => void,
+  saveProjectSettingsStart: (string, string, Project) => void,
   // From Redux:
   // task: Task,
   // runTask: (task: Task, timestamp: Date) => any,
@@ -66,10 +66,10 @@ class ProjectConfigurationModal extends Component<Props, State> {
 
   saveSettings = e => {
     e.preventDefault();
-    const { hideModal, saveProjectSettingsStart } = this.props;
+    const { hideModal, saveProjectSettingsStart, project } = this.props;
     const { newName, projectIcon } = this.state;
 
-    saveProjectSettingsStart(newName, projectIcon);
+    saveProjectSettingsStart(newName, projectIcon, project);
   };
 
   changeProjectname = e => {

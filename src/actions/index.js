@@ -51,7 +51,6 @@ export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
-
 //
 //
 // Action Creators
@@ -304,21 +303,25 @@ export const hideModal = (modal: string) => ({
 
 // project settings related actions
 
-export const saveProjectSettingsStart = (name: string, icon: string) => ({
+export const saveProjectSettingsStart = (
+  name: string,
+  icon: string,
+  project: Project
+) => ({
   type: SAVE_PROJECT_SETTINGS_START,
   name,
   icon,
+  project,
 });
 
 export const saveProjectSettingsFinish = (
-  project: ProjectInternal,
+  project: Project,
   oldProjectId: string
 ) => ({
   type: SAVE_PROJECT_SETTINGS_FINISH,
   project,
   oldProjectId,
 });
-
 // export const ejectProjectStart = (task: Task, timestamp: Date) => ({
 //   type: EJECT_PROJECT_START,
 //   task,

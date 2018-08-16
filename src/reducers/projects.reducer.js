@@ -159,8 +159,7 @@ export const getProjectsArray = (state: GlobalState) => {
   // console.log('get projects', state.projects);
   // $FlowFixMe
   return Object.values(state.projects.byId)
-    .map(project => {
-      // console.log('map project', project);
+    .map(project =>
       // $FlowFixMe
       prepareProjectForConsumption(state, project)
     )

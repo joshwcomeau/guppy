@@ -14,35 +14,6 @@ const spawnProcess = (cmd: string, cmdArgs: string[], projectPath: string) =>
     // logger(child) // service will be used here later
   });
 
-/* TODO: Improve flow type for executor - no type annotation found
-         from facebook flow source https://github.com/facebook/flow/blob/v0.76.0/lib/core.js#L584:
-          constructor(callback: (
-                resolve: (result: Promise<R> | R) => void,
-                reject: (error: any) => void
-              ) => mixed): void;
-*/
-
-const spawnProcess = (
-  cmd: string,
-  cmdArgs: Array<string>,
-  projectPath: string,
-  [resolve, reject]: Array<any>
-) => {
-  const child = childProcess.spawn(cmd, cmdArgs, {
-    cwd: projectPath,
-  });
-
-  child.on('exit', code => {
-    if (code) {
-      reject(child.stderr);
-    } else {
-      resolve(child.stdout);
-    }
-  });
-
-  return child;
-};
-
 export const installDependency = (
   projectPath: string,
   dependencyName: string,

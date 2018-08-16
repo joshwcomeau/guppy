@@ -40,26 +40,29 @@ const showConfirmation = () => {
 export default (store: any) => (next: any) => (action: any) => {
   switch (action.type) {
     case SAVE_PROJECT_SETTINGS_START:
-      const state = store.getState();
+      // const state = store.getState();
       // console.log(
       //   'input needed - new name, project',
       //   action.name,
       //   getSelectedProject(state),
       //   state
       // );
-      const project = getSelectedProject(state); // before change
+      // const project = getSelectedProject(state); // before change
+      const { project } = action;
       const { path: projectPath } = project;
       const id = slug(action.name).toLowerCase();
       const workspace = path.resolve(projectPath, '../'); // we could use getDefaultParentPath from path.reducers as well - what's better?
       let newPath = path.join(workspace, id);
 
-      const renameFolder = (projectPath, newPath) =>
-        new Promise((resolve, reject) => {
+      const renameFolder = (projectPath, newPath) => {
+        console.log('rename', projectPath, newPath);
+        return new Promise((resolve, reject) => {
           fs.rename(projectPath, newPath, err => {
             if (err) return reject(err);
             resolve();
           });
         });
+      };
 
       //console.log('changed', projectPath !== newPath, projectPath, newPath);
       // Let's load the basic project info for the path specified, if possible.
@@ -92,17 +95,17 @@ export default (store: any) => (next: any) => (action: any) => {
           };
 
           // Todo: Check if id is modified & only write if modified
-          // Todo: Add prompt if this is an imported project
 
-          return { json: packageJsonWithGuppy, confirmed, oldProjectId };
+          return { json: packageJsonWithGuppy, confirmed };
         })
-        .then(({ json, confirmed, oldProjectId }) => {
+        .then(({ json, confirmed }) => {
           newPath = !confirmed ? projectPath : newPath;
           const renamePromise =
             confirmed && projectPath !== newPath
               ? renameFolder(projectPath, newPath)
               : Promise.resolve(); // confirmed & rename required
 
+          // console.log(renamePromise, confirmed, projectPath, newPath);
           return renamePromise
             .then(() => {
               // renaming done
@@ -125,7 +128,7 @@ export default (store: any) => (next: any) => (action: any) => {
                     path: newPath,
                     guppy: { ...project.guppy, ...update, type: project.type },
                   },
-                  oldProjectId
+                  action.project.id
                 )
               );
               return { ...json, path: newPath };
@@ -163,12 +166,12 @@ export default (store: any) => (next: any) => (action: any) => {
       // todo: Check if refreshProjects is doing too much? It would be better to just refresh the modified project - for now OK.
       //// console.log('refresh now', action.project);
       const { id: projectId } = action.project;
-      //// console.log('projectid', projectId);
-      store.dispatch(refreshProjects()); // --> throws an error Cannot read property 'name' of null at ProjectConfigurationModal.render
-      // store.dispatch(selectProject(projectId)); // reselecting the same project with new id not working yet!!
-      break;
-    case REFRESH_PROJECTS:
+      // console.log('new projectid', projectId);
+      // console.log('oldid', action.oldProjectId);
+
       store.dispatch(hideModal());
+      // store.dispatch(refreshProjects()); // --> throws an error Cannot read property 'name' of null at ProjectConfigurationModal.render
+      // store.dispatch(selectProject(projectId)); // reselecting the same project with new id not working yet!!
       break;
     default:
   }
