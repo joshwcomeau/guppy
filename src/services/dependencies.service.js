@@ -1,7 +1,6 @@
 // @flow
-import { PACKAGE_MANAGER_CMD } from './platform.services';
-import { ChildProcess } from 'child_process';
-const childProcess = window.require('child_process');
+import { PACKAGE_MANAGER_CMD } from './platform.service';
+import * as childProcess from 'child_process';
 
 const spawnProcess = (cmd: string, cmdArgs: string[], projectPath: string) =>
   new Promise((resolve, reject) => {

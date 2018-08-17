@@ -14,7 +14,7 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const chalk = require('chalk');
 const path = require('path');
 const webpack = require('webpack');
@@ -38,6 +38,8 @@ const isInteractive = process.stdout.isTTY;
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
+const IS_WIN = /^win/.test(process.platform);
+
 /**
  * Flag to check whether Electron is
  * running already.
@@ -48,35 +50,31 @@ let isElectronRunning = false;
  * Singleton-ish run of Electron
  * Prevents multiple re-runs of Electron App
  */
-function runElectronApp() {
+function runElectronApp(port) {
   if (isElectronRunning) return;
 
   isElectronRunning = true;
-  // For Windows Support
-  const envPATHS = process.env.PATH.split(';');
-  envPATHS.push(path.join(__dirname, '../node_modules', '.bin'));
-  const newPATHS = envPATHS.join(';');
-  exec(
-    `electron${/^win/.test(process.platform) ? '.cmd' : ''} .`,
-    {
-      env: {
-        PATH: newPATHS,
-        ELECTRON_START_URL: `http://localhost:${DEFAULT_PORT}`,
-      },
-    },
-    (err, stdout, stderr) => {
-      if (err) {
-        console.info(chalk.red('Electron app run failed: ') + stderr);
-        return;
-      }
+  process.env['ELECTRON_START_URL'] =
+    process.env['ELECTRON_START_URL'] || `http://localhost:${port}`;
+  const electronCommand = IS_WIN ? 'electron.cmd' : 'electron';
 
-      // Clear console for brevity
-      process.stdout.write('\x1bc');
+  const electronProcess = spawn(electronCommand, ['.']);
 
-      // Log output
-      console.info(stdout);
-    }
-  );
+  electronProcess.stdout.on('data', data => {
+    // dont log blank output or empty newlines
+    const output = data.toString().trim();
+    if (output.length) console.log(chalk.green('[ELECTRON]'), output);
+  });
+  electronProcess.stderr.on('data', data => {
+    const output = data.toString();
+    console.log(chalk.red(`[ELECTRON] ${output}`));
+  });
+
+  // close webpack server when electron quits
+  electronProcess.on('exit', code => process.exit(code));
+
+  // clear console for brevity
+  process.stdout.write('\x1bc');
 }
 
 // Warn and crash if required files are missing
@@ -159,7 +157,10 @@ checkBrowsers(paths.appPath)
      *
      * Fails on error
      */
-    compiler.plugin('done', stats => !stats.hasErrors() && runElectronApp());
+    compiler.plugin(
+      'done',
+      stats => !stats.hasErrors() && runElectronApp(port)
+    );
   })
   .catch(err => {
     if (err && err.message) {

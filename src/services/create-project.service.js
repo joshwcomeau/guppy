@@ -1,19 +1,18 @@
 // @flow
 import slug from 'slug';
 import random from 'random-seed';
+import * as childProcess from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { COLORS } from '../constants';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
 
-import { isWin } from './platform.services';
+import { formatCommandForPlatform } from './platform.service';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
 import type { ProjectType } from '../types';
-
-const fs = window.require('fs');
-const childProcess = window.require('child_process');
-const path = window.require('path');
 
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
@@ -67,7 +66,6 @@ export default (
 
   // For Windows Support
   // To support cross platform with slashes and escapes
-  // Taken from https://github.com/AWolf81/guppy/commit/b2434d907d0c2c2585006d82ef14523a974de6a0
   const projectPath = path.join(parentPath, id);
 
   const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
@@ -144,7 +142,7 @@ export const getBuildInstructions = (
   // For Windows Support
   // Windows tries to run command as a script rather than on a cmd
   // To force it we add *.cmd to the commands
-  const command = isWin ? 'npx.cmd' : 'npx';
+  const command = formatCommandForPlatform('npx');
   switch (projectType) {
     case 'create-react-app':
       return [command, 'create-react-app', path];

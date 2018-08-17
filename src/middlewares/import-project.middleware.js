@@ -1,4 +1,5 @@
 // @flow
+import { remote } from 'electron';
 import {
   SHOW_IMPORT_EXISTING_PROJECT_PROMPT,
   IMPORT_EXISTING_PROJECT_START,
@@ -13,7 +14,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 
-const { dialog } = window.require('electron').remote;
+const { dialog } = remote;
 
 // TODO: Flow types
 export default (store: any) => (next: any) => (action: any) => {

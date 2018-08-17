@@ -2,12 +2,13 @@
 import React, { PureComponent } from 'react';
 import IconBase from 'react-icons-kit';
 import { ic_eject as ejectIcon } from 'react-icons-kit/md/ic_eject';
+import { remote } from 'electron';
 
 import { COLORS } from '../../constants';
 
 import BigClickableButton from '../BigClickableButton';
 
-const { dialog } = window.require('electron').remote;
+const { dialog } = remote;
 
 type Props = {
   width: number,

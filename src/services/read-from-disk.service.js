@@ -1,13 +1,12 @@
 // @flow
 import asyncMap from 'async/map';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { pick } from '../utils';
 import { getDefaultParentPath } from '../reducers/paths.reducer';
 
 import type { DependencyLocation, ProjectInternal } from '../types';
-
-const fs = window.require('fs');
-const path = window.require('path');
 
 const DEFAULT_PARENT_PATH = getDefaultParentPath();
 

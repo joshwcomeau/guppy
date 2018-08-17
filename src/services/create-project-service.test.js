@@ -1,9 +1,14 @@
-jest.mock('os', () => ({ homedir: jest.fn() }));
+jest.mock('electron');
+jest.mock('os', () => ({
+  homedir: jest.fn(),
+  platform: () => process.platform,
+}));
 
 jest.mock('../reducers/paths.reducer.js', () => ({
   getDefaultParentPath: jest.fn(),
 }));
 
+// eslint-disable-next-line import/first
 import {
   possibleProjectColors,
   getColorForProject,
