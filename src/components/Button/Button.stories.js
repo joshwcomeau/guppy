@@ -1,9 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
+import { decorateAction } from '@storybook/addon-actions';
+// import { action } from '@storybook/addon-actions';
 import { withInfo } from '@storybook/addon-info';
 import Button from './Button';
+
+const targetAction = decorateAction([
+  args => {
+    console.log(args[0].target);
+    return [args[0].target];
+  },
+]);
+console.log('decorate', decorateAction, targetAction);
 
 const SIZES = ['small', 'medium', 'large'];
 
@@ -12,24 +21,20 @@ storiesOf('Button', module)
     'default',
     withInfo(`
     Basic usage of Button Component
-    `)(() => (
-      <Wrapper>
-        <Button onClick={action('clicked')}>Hello Button</Button>
-      </Wrapper>
-    ))
+    `)(() => <Button onClick={targetAction('clicked')}>Hello Button</Button>)
   )
   .add(
     'with size',
     withInfo(`
     The button can be resized with the \`size\` prop.
     `)(() => (
-      <Wrapper>
+      <React.Fragment>
         {SIZES.map((size, i) => (
-          <Button onClick={action('clicked')} size={size} key={i}>
+          <Button onClick={targetAction('button-clicked')} size={size} key={i}>
             Button {size}
           </Button>
         ))}
-      </Wrapper>
+      </React.Fragment>
     ))
   )
   .add(
@@ -37,18 +42,14 @@ storiesOf('Button', module)
     withInfo(`
     Type will change the appearance of the button.
     `)(() => (
-      <Wrapper>
-        <Button onClick={action('clicked')}>Button normal</Button>
-        <Button onClick={action('clicked')} type="fill">
+      <React.Fragment>
+        <Button onClick={targetAction('button-clicked')}>Button normal</Button>
+        <Button onClick={targetAction('button-clicked')} type="fill">
           Button fill
         </Button>
-        <Button onClick={action('clicked')} type="stroke">
+        <Button onClick={targetAction('button-clicked')} type="stroke">
           Button stroke
         </Button>
-      </Wrapper>
+      </React.Fragment>
     ))
   );
-
-const Wrapper = styled.div`
-  padding: 1em;
-`;

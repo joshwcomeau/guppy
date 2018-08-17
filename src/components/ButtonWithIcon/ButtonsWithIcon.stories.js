@@ -13,7 +13,7 @@ storiesOf('ButtonWithIcon', module).add(
     Basic usage of Button Component.
     A list of all icons can be found [here](https://feathericons.com/)
     `)(() => (
-    <Wrapper>
+    <React.Fragment>
       <ButtonWithIcon
         icon={<IconBase icon={check} />}
         onClick={action('clicked')}
@@ -26,10 +26,6 @@ storiesOf('ButtonWithIcon', module).add(
       >
         Gear Button
       </ButtonWithIcon>
-    </Wrapper>
+    </React.Fragment>
   ))
 );
-
-const Wrapper = styled.div`
-  padding: 1em;
-`;
