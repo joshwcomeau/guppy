@@ -23,3 +23,6 @@ yarn-error.log*
 
 # because we use yarn.lock
 package-lock.json
+
+# storybook
+/storybook-static
