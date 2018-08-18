@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { COLORS } from '../constants';
-import { getDefaultParentPath } from '../reducers/paths.reducer';
+import { defaultParentPath } from '../reducers/paths.reducer';
 
 import { formatCommandForPlatform } from './platform.service';
 
@@ -52,7 +52,7 @@ export default (
     return;
   }
 
-  const parentPath = getDefaultParentPath();
+  const parentPath = defaultParentPath;
 
   // Create the projects directory, if this is the first time creating a
   // project.

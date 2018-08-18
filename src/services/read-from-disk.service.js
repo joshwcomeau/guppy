@@ -4,11 +4,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { pick } from '../utils';
-import { getDefaultParentPath } from '../reducers/paths.reducer';
+import { defaultParentPath } from '../reducers/paths.reducer';
 
 import type { DependencyLocation, ProjectInternal } from '../types';
-
-const DEFAULT_PARENT_PATH = getDefaultParentPath();
 
 /**
  * Load a project's package.json
@@ -67,8 +65,8 @@ export function loadGuppyProjects(projectPathsInput: Array<string>) {
   // emulate a clean slate, but might also be useful for users who want to
   // create projects outside of Guppy but have them managed internally)
   try {
-    readdirSync(DEFAULT_PARENT_PATH).forEach(f => {
-      const projectPath = path.join(DEFAULT_PARENT_PATH, f);
+    readdirSync(defaultParentPath).forEach(f => {
+      const projectPath = path.join(defaultParentPath, f);
       const isDirectory = statSync(projectPath).isDirectory();
 
       if (isDirectory && !projectPaths.includes(projectPath)) {
@@ -86,8 +84,8 @@ export function loadGuppyProjects(projectPathsInput: Array<string>) {
     // TODO: Maybe use asyncReduce to handle the output format in 1 neat step?
     asyncMap(
       projectPaths,
-      function(path, callback) {
-        loadPackageJson(path)
+      function(projectPath, callback) {
+        loadPackageJson(projectPath)
           .then(json => callback(null, json))
           .catch(err =>
             // If the package.json couldn't be loaded, this likely means the
