@@ -1,4 +1,4 @@
-import convert from 'color-convert';
+import Color from 'color';
 
 // TODO: Modernize
 /* eslint-disable */
@@ -248,7 +248,7 @@ export const safeEscapeString = (val: string) =>
 // given a hex/rgb/hsl color value, determine the most
 // visible color to use to display text in front
 const LUMA_THRESHOLD = 165;
-const BASE_STACK_COLOR = 'rgb(255,255,255)';
+const BASE_STACK_COLOR = { r: 255, g: 255, b: 255, alpha: 1 };
 
 // weightings taken from SMPTE C, Rec. 709
 // see http://en.wikipedia.org/wiki/Luma_%28video%29 for more info
@@ -257,113 +257,52 @@ const G_WEIGHT = 0.7152;
 const B_WEIGHT = 0.0722;
 const luma = ({ r, g, b }) => r * R_WEIGHT + g * G_WEIGHT + b * B_WEIGHT;
 
-// input: #000 or #000000
-const getRgbFromHex = hex => {
-  const [r, g, b] = convert.hex.rgb(hex);
-  return { r, g, b };
-};
-
-// input: hsl(0,0%,0%)
-const getRgbFromHsl = hsl => {
-  const values = hsl
-    .substring(4, hsl.length - 1)
-    .replace(/%/g, '')
-    .split(',');
-  const [r, g, b] = convert.hsl.rgb(...values);
-  return { r, g, b };
-};
-
-// input: rgb(0,0,0)
-const getRgbFromRgb = rgb => {
-  const values = rgb.substring(4, rgb.length - 1).split(',');
-  return {
-    r: values[0],
-    g: values[1],
-    b: values[2],
-  };
-};
-
-// input: rgb(0,0,0) or rgba(0,0,0,0)
-const getRgbaFromRgba = rgba => {
-  if (rgba.charAt(3) !== 'a') {
-    return {
-      ...getRgbFromRgb(rgba),
-      a: 1,
-    };
-  }
-
-  const values = rgba.substring(5, rgba.length - 1).split(',');
-  return {
-    r: values[0],
-    g: values[1],
-    b: values[2],
-    a: values[3],
-  };
-};
-
-const rgbCodeFromRgbValues = ({ r, g, b }) => `rgb(${r},${g},${b})`;
-
-// Given a stack of RGB(A) values, calculate the effective
+// Given a stack of RGBA channels, calculate the effective
 // color when displayed in a browser.
 //
 // The first argument is the "bottom" of the stack, the second
 // is the next color up from the bottom, and so on.
-export const effectiveColorFromRgbaStack = (...layers) => {
+const effectiveColorFromRgbaStack = (...layers) => {
   // remove falsey values
-  layers = layers.filter(val => !!val && val);
+  layers = layers.filter(val => !!val);
 
-  // convert to { r, g, b } format and remove fully
-  // transparent values
-  layers = layers.map(getRgbaFromRgba).filter(rgba => rgba.a > 0);
+  // remove fully transparent values
+  layers = layers.filter(rgba => rgba.alpha);
 
-  if (!layers.length) return 'rgba(255,255,255,1)';
-  if (layers.length === 1) return rgbCodeFromRgbValues(layers[0]);
+  if (!layers.length) return BASE_STACK_COLOR;
+  if (layers.length === 1) return layers[0];
 
-  let base = layers[0];
+  let base = { ...layers[0] };
   layers.slice(1).forEach(layer => {
-    base.a = 1 - (1 - layer.a) * (1 - base.a);
+    base.alpha = 1 - (1 - layer.alpha) * (1 - base.alpha);
     base.r = Math.round(
-      (layer.r * layer.a) / base.a + (base.r * base.a * (1 - layer.a)) / base.a
+      (layer.r * layer.alpha) / base.alpha +
+        (base.r * base.alpha * (1 - layer.alpha)) / base.alpha
     );
     base.g = Math.round(
-      (layer.g * layer.a) / base.a + (base.g * base.a * (1 - layer.a)) / base.a
+      (layer.g * layer.alpha) / base.alpha +
+        (base.g * base.alpha * (1 - layer.alpha)) / base.alpha
     );
     base.b = Math.round(
-      (layer.b * layer.a) / base.a + (base.b * base.a * (1 - layer.a)) / base.a
+      (layer.b * layer.alpha) / base.alpha +
+        (base.b * base.alpha * (1 - layer.alpha)) / base.alpha
     );
   });
 
-  return rgbCodeFromRgbValues(base);
+  return base;
 };
 
-const parseRgb = colorCode => {
-  // strip whitespace
-  colorCode = colorCode.replace(/\s/g, '');
+const getEffectiveRgb = color => {
+  const channels = {
+    alpha: 1,
+    ...Color(color)
+      .rgb()
+      .object(),
+  };
 
-  // because I'm too lazy to write a HEXA -> RGBA converter
-  if (colorCode.charAt(0) === '#' && colorCode.length === 9) {
-    throw new Error(`HEXA is not supported ('${colorCode}')`);
-  }
-
-  if (colorCode.substring(0, 4) === 'rgba') {
-    return getRgbFromRgb(
-      effectiveColorFromRgbaStack(BASE_STACK_COLOR, colorCode)
-    );
-  }
-
-  if (colorCode.substring(0, 3) === 'rgb') {
-    return getRgbFromRgb(colorCode);
-  }
-
-  if (colorCode.charAt(0) === '#') {
-    return getRgbFromHex(colorCode);
-  }
-
-  if (colorCode.substring(0, 3) === 'hsl') {
-    return getRgbFromHsl(colorCode);
-  }
-
-  throw new Error(`Unrecognized color code: '${colorCode}'`);
+  if (channels.alpha !== 1)
+    return effectiveColorFromRgbaStack(BASE_STACK_COLOR, channels);
+  return channels;
 };
 
 export const contrastingColor = (
@@ -371,7 +310,9 @@ export const contrastingColor = (
   threshold = LUMA_THRESHOLD
 ) => {
   try {
-    return luma(parseRgb(backgroundColor)) >= LUMA_THRESHOLD ? '#000' : '#fff';
+    return luma(getEffectiveRgb(backgroundColor)) >= LUMA_THRESHOLD
+      ? '#000'
+      : '#fff';
   } catch (e) {
     console.warn(e + ', defaulting to #fff');
     return '#fff';
