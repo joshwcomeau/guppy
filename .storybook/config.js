@@ -15,6 +15,7 @@ addDecorator(WrapperDecorator);
 const components = require.context('../src/components', true, /.stories.js$/);
 
 function loadStories() {
+  require('./colors.stories.js');
   components.keys().forEach(filename => components(filename));
 }
 

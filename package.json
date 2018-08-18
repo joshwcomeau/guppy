@@ -26,6 +26,7 @@
     "prettier": "prettier --write",
     "detect-port": "cross-env ./node_modules/detect-port-alt/bin/detect-port 3000",
     "precommit": "yarn run flow && lint-staged",
+    "build-storybook": "build-storybook -c .storybook -o storybook-static",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "lint-staged": {
@@ -64,6 +65,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",
+    "color-convert": "1.9.2",
     "cross-env": "5.2.0",
     "css-loader": "0.28.9",
     "dotenv": "5.0.0",
@@ -92,6 +94,7 @@
     "jest": "23.3",
     "lint-staged": "7.2.0",
     "loader-utils": "1.1.0",
+    "material-colors": "1.2.6",
     "moment": "2.22.2",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
