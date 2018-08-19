@@ -25,7 +25,9 @@
     "lint": "eslint .",
     "prettier": "prettier --write",
     "detect-port": "cross-env ./node_modules/detect-port-alt/bin/detect-port 3000",
-    "precommit": "yarn run flow && lint-staged"
+    "precommit": "yarn run flow && lint-staged",
+    "build-storybook": "build-storybook -c .storybook -o storybook-static",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "lint-staged": {
     "*.js": [
@@ -45,8 +47,11 @@
     "yarn": "1.9.2"
   },
   "devDependencies": {
-    "@babel/core": "7.0.0-beta.44",
+    "@babel/core": "7.0.0-rc.1",
     "@babel/runtime": "7.0.0-beta.44",
+    "@storybook/addon-actions": "3.4.10",
+    "@storybook/addon-info": "3.4.10",
+    "@storybook/react": "3.4.10",
     "ansi-to-html": "0.6.4",
     "async": "2.6.1",
     "autoprefixer": "7.2.5",
@@ -55,6 +60,7 @@
     "babel-jest": "22.1.0",
     "babel-loader": "8.0.0-beta.0",
     "babel-plugin-named-asset-import": "1.0.0-next.66cc7a90",
+    "babel-plugin-react-docgen": "2.0.0-babel7.0",
     "babel-preset-react-app": "4.0.0-next.66cc7a90",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
@@ -97,6 +103,7 @@
     "random-seed": "0.3.0",
     "react": "16.3.2",
     "react-dev-utils": "6.0.0-next.66cc7a90",
+    "react-docgen": "2.21.0",
     "react-dom": "16.3.2",
     "react-icons-kit": "1.1.5",
     "react-instantsearch": "5.1.0",
