@@ -11,7 +11,7 @@ storiesOf('ButtonWithIcon', module).add(
   'default',
   withInfo(`
     Basic usage of Button Component.
-    A list of all icons can be found [here](https://feathericons.com/)
+    A list of all icons can be found [here](http://wmira.github.io/react-icons-kit/#/iconset/feather)
     `)(() => (
     <React.Fragment>
       <ButtonWithIcon

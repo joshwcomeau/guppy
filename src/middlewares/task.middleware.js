@@ -245,7 +245,6 @@ const getDevServerCommand = (
   projectType: ProjectType,
   port: string
 ) => {
-  let command;
   switch (projectType) {
     case 'create-react-app':
       return {

@@ -16,9 +16,9 @@ type Props = {
   color2: string,
   textColor?: string,
   showOutline: boolean,
-  noPadding: boolean,
+  noPadding?: boolean,
   style: { [key: string]: any },
-  disabled: boolean,
+  disabled?: boolean,
   children: React$Node,
 };
 
