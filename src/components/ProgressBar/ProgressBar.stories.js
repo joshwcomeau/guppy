@@ -30,10 +30,21 @@ class ProgressManager extends Component<Props, State> {
   };
 
   render() {
-    return this.props.children({
-      progress: this.state.progress,
-      updateProgress: this.updateProgress,
-    });
+    const { children } = this.props;
+    const { progress } = this.state;
+
+    return (
+      <Fragment>
+        {children({
+          progress: progress,
+          updateProgress: this.updateProgress,
+        })}
+        <br />
+        <Button size="small" onClick={this.updateProgress}>
+          Generate new value
+        </Button>
+      </Fragment>
+    );
   }
 }
 
@@ -44,59 +55,44 @@ storiesOf('ProgressBar', module).add(
       <Showcase label="Empty">
         <ProgressBar progress={0} />
       </Showcase>
+
       <Showcase label="Half full">
         <ProgressBar progress={0.5} />
       </Showcase>
+
       <Showcase label="Full">
         <ProgressBar progress={1} />
       </Showcase>
+
       <Showcase label="Dynamic">
         <ProgressManager>
-          {({ progress, updateProgress }) => (
-            <Fragment>
-              <ProgressBar progress={progress} />
-              <br />
-              <Button size="small" onClick={updateProgress}>
-                Generate new value
-              </Button>
-            </Fragment>
-          )}
+          {({ progress }) => <ProgressBar progress={progress} />}
         </ProgressManager>
       </Showcase>
+
       <Showcase label="Dynamic (tighter)">
         <ProgressManager>
-          {({ progress, updateProgress }) => (
-            <Fragment>
-              <ProgressBar progress={progress} stiffness={170} damping={16} />
-              <br />
-              <Button size="small" onClick={updateProgress}>
-                Generate new value
-              </Button>
-            </Fragment>
+          {({ progress }) => (
+            <ProgressBar progress={progress} stiffness={170} damping={16} />
           )}
         </ProgressManager>
       </Showcase>
+
       <Showcase label="Dynamic (tall + rainbow)">
         <ProgressManager>
-          {({ progress, updateProgress }) => (
-            <Fragment>
-              <ProgressBar
-                height={16}
-                progress={progress}
-                colors={[
-                  COLORS.red[500],
-                  COLORS.orange[500],
-                  COLORS.lime[500],
-                  COLORS.teal[500],
-                  COLORS.blue[700],
-                  COLORS.purple[500],
-                ]}
-              />
-              <br />
-              <Button size="small" onClick={updateProgress}>
-                Generate new value
-              </Button>
-            </Fragment>
+          {({ progress }) => (
+            <ProgressBar
+              height={16}
+              progress={progress}
+              colors={[
+                COLORS.red[500],
+                COLORS.orange[500],
+                COLORS.lime[500],
+                COLORS.teal[500],
+                COLORS.blue[700],
+                COLORS.purple[500],
+              ]}
+            />
           )}
         </ProgressManager>
       </Showcase>
