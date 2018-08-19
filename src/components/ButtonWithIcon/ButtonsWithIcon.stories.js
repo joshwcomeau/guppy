@@ -32,16 +32,6 @@ storiesOf('ButtonWithIcon', module).add(
           Settings
         </ButtonWithIcon>
       </Showcase>
-      <br />
-      <br />
-      <Paragraph>
-        <em>icon</em> is an arbitrary React element, although you may wish to
-        use one of{' '}
-        <a href="http://wmira.github.io/react-icons-kit/#/iconset/feather">
-          the Feather icons
-        </a>{' '}
-        from react-icons-kit.
-      </Paragraph>
     </React.Fragment>
   ))
 );

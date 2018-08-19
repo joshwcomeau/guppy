@@ -15,7 +15,7 @@ const SIZES = ['small', 'medium', 'large'];
 storiesOf('Button', module)
   .add(
     'default',
-    withInfo()(({ story }) => (
+    withInfo()(() => (
       <Button onClick={targetAction('clicked')}>Hello Button</Button>
     ))
   )
