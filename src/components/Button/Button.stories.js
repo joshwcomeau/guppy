@@ -11,21 +11,32 @@ const targetAction = decorateAction([args => [args[0].target]]);
 const SIZES = ['small', 'medium', 'large'];
 
 storiesOf('Button', module)
-  .add('default', () => (
-    <Button onClick={targetAction('clicked')}>Hello Button</Button>
-  ))
-  .add('sizes', () =>
-    SIZES.map((size, i) => (
-      <Button onClick={targetAction('button-clicked')} size={size} key={i}>
-        Button {size}
-      </Button>
+  .add(
+    'default',
+    withInfo()(() => (
+      <Button onClick={targetAction('clicked')}>Hello Button</Button>
     ))
   )
-  .add('types (visual styles)', () => (
-    <React.Fragment>
-      <Button onClick={targetAction('button-clicked')}>Default (stroke)</Button>
-      <Button onClick={targetAction('button-clicked')} type="fill">
-        Button fill
-      </Button>
-    </React.Fragment>
-  ));
+  .add(
+    'sizes',
+    withInfo()(() =>
+      SIZES.map((size, i) => (
+        <Button onClick={targetAction('button-clicked')} size={size} key={i}>
+          Button {size}
+        </Button>
+      ))
+    )
+  )
+  .add(
+    'types (visual styles)',
+    withInfo()(() => (
+      <React.Fragment>
+        <Button onClick={targetAction('button-clicked')}>
+          Default (stroke)
+        </Button>
+        <Button onClick={targetAction('button-clicked')} type="fill">
+          Button fill
+        </Button>
+      </React.Fragment>
+    ))
+  );

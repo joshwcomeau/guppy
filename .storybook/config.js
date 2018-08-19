@@ -12,7 +12,6 @@ const Wrapper = styled.div`
 
 const WrapperDecorator = storyFn => <Wrapper>{storyFn()}</Wrapper>;
 
-addDecorator((story, context) => withInfo()(story)(context));
 addDecorator(WrapperDecorator);
 
 // This project colocates stories and other files with their original
