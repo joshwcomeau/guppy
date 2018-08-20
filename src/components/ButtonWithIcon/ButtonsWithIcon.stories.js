@@ -8,7 +8,8 @@ import { withInfo } from '@storybook/addon-info';
 import { check, settings } from 'react-icons-kit/feather';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
-import Showcase from '../Showcase';
+
+import Showcase from '../../../.storybook/components/Showcase';
 import Paragraph from '../Paragraph';
 import ButtonWithIcon from './ButtonWithIcon';
 

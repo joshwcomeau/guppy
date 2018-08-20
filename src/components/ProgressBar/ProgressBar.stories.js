@@ -8,10 +8,11 @@ import { withInfo } from '@storybook/addon-info';
 import { check, settings } from 'react-icons-kit/feather';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
-import Showcase from '../Showcase';
+import { COLORS } from '../../constants';
+
+import Showcase from '../../../.storybook/components/Showcase';
 import Button from '../Button';
 import ProgressBar from './ProgressBar';
-import { COLORS } from '../../constants';
 
 type Props = { children: (data: any) => React$Node };
 type State = { progress: number };

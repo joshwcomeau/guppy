@@ -6,9 +6,9 @@
 import React, { Fragment, Component } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { COLORS } from '../../../src/constants';
 
-import Heading from '../Heading';
+import Heading from '../../../src/components/Heading';
 
 type Props = {
   label: string,

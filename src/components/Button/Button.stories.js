@@ -5,8 +5,8 @@ import { storiesOf } from '@storybook/react';
 import { decorateAction } from '@storybook/addon-actions';
 import { withInfo } from '@storybook/addon-info';
 
+import Showcase from '../../../.storybook/components/Showcase';
 import Button from './Button';
-import Showcase from '../Showcase';
 
 const targetAction = decorateAction([args => [args[0].target]]);
 
@@ -23,8 +23,8 @@ storiesOf('Button', module)
     'sizes',
     withInfo()(() =>
       SIZES.map((size, i) => (
-        <Showcase label={size}>
-          <Button onClick={targetAction('button-clicked')} size={size} key={i}>
+        <Showcase label={size} key={i}>
+          <Button onClick={targetAction('button-clicked')} size={size}>
             Button
           </Button>
         </Showcase>
