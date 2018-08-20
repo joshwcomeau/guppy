@@ -17,6 +17,8 @@ class Heading extends Component<Props> {
     const { size, ...delegated } = this.props;
 
     switch (this.props.size) {
+      case 'xsmall':
+        return <HeadingXSmall {...delegated} />;
       case 'small':
         return <HeadingSmall {...delegated} />;
       case 'medium':
@@ -30,12 +32,16 @@ class Heading extends Component<Props> {
   }
 }
 
-const HeadingSmall = styled.h5`
-  font-size: 26px;
+const HeadingXSmall = styled.h6`
+  font-size: 21px;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: ${COLORS.gray[800]};
+`;
+
+const HeadingSmall = HeadingXSmall.withComponent('h3').extend`
+  font-size: 26px;
 `;
 
 const HeadingMedium = HeadingSmall.withComponent('h3').extend`

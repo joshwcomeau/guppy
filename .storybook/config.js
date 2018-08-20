@@ -2,13 +2,10 @@
 import React from 'react';
 import { configure, setAddon, addDecorator } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
-import styled from 'styled-components';
 
 import '../src/global-styles';
-
-const Wrapper = styled.div`
-  padding: 1em;
-`;
+import { COLORS } from '../src/constants';
+import Wrapper from './components/Wrapper';
 
 const WrapperDecorator = storyFn => <Wrapper>{storyFn()}</Wrapper>;
 
