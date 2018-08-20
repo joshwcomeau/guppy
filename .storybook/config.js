@@ -2,7 +2,6 @@
 import React from 'react';
 import { configure, setAddon, addDecorator } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
-import styled from 'styled-components';
 
 import '../src/global-styles';
 import { COLORS } from '../src/constants';

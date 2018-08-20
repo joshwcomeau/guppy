@@ -37,7 +37,7 @@ class ProgressManager extends Component<Props, State> {
     return (
       <Fragment>
         {children({
-          progress: progress,
+          progress,
           updateProgress: this.updateProgress,
         })}
         <br />
