@@ -126,6 +126,11 @@ const Wrapper = styled.div.attrs({
   display: flex;
   justify-content: center;
   align-items: center;
+  /*
+    If items are too large to fit in the modal, we want them to be
+    scrollable.
+  */
+  overflow: auto;
 `;
 
 const Backdrop = styled.div`

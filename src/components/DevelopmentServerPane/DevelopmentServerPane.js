@@ -158,6 +158,13 @@ const TerminalWrapper = styled.div`
   @media ${BREAKPOINTS.mdMin} {
     flex: 11;
     padding-left: 20px;
+    /*
+      overflow: hidden is needed so that the column won't expand when the
+      terminal output is really long. This way, it will be scrollable.
+    */
+    overflow: hidden;
+    /* Offset by the Card padding amount. */
+    margin-top: -15px;
   }
 `;
 

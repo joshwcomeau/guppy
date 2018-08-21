@@ -15,6 +15,7 @@ import Toggle from '../Toggle';
 import LargeLED from '../LargeLED';
 import EjectButton from '../EjectButton';
 import TerminalOutput from '../TerminalOutput';
+import WindowDimensions from '../WindowDimensions';
 
 import type { Task } from '../../types';
 
@@ -118,6 +119,15 @@ class TaskDetailsModal extends PureComponent<Props> {
 
     const isRunning = !!processId;
 
+    // HACK: So, we want the terminal to occupy as much height as it can.
+    // To do this, we set it to the window height, minus the height of all the
+    // other stuff added together.
+    // I can't simply use a flex column because the available modal height is
+    // unknown.
+    // It doesn't have to be perfect, so I'm not worried about small changes to
+    // the header or status indicators.
+    const APPROXIMATE_NON_TERMINAL_HEIGHT = 380;
+
     return (
       <Fragment>
         <ModalHeader
@@ -153,7 +163,15 @@ class TaskDetailsModal extends PureComponent<Props> {
 
           <HorizontalRule />
 
-          <TerminalOutput height={425} title="Output" task={task} />
+          <WindowDimensions>
+            {({ height }) => (
+              <TerminalOutput
+                height={height - APPROXIMATE_NON_TERMINAL_HEIGHT}
+                title="Output"
+                task={task}
+              />
+            )}
+          </WindowDimensions>
         </MainContent>
       </Fragment>
     );
@@ -200,7 +218,6 @@ const LastRunText = styled.div`
 const HorizontalRule = styled.div`
   height: 0px;
   margin-top: 25px;
-  margin-bottom: 15px;
   border-bottom: 1px solid ${COLORS.gray[200]};
 `;
 

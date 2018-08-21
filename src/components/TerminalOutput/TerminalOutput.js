@@ -65,11 +65,6 @@ class TerminalOutput extends PureComponent<Props> {
   render() {
     const { width, height, title, task } = this.props;
 
-    // TODO: Check if `task` is actually always defined.
-    const logs = task ? task.logs : [];
-
-    console.log(task);
-
     return (
       <Fragment>
         <Header>
@@ -101,7 +96,7 @@ class TerminalOutput extends PureComponent<Props> {
         >
           <TableWrapper height={height}>
             <LogWrapper>
-              {logs.map(log => (
+              {task.logs.map(log => (
                 <LogRow
                   key={log.id}
                   dangerouslySetInnerHTML={{
@@ -122,8 +117,6 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  /* Offset by the Card padding amount. */
-  margin-top: -15px;
 `;
 
 const Wrapper = styled.div`
