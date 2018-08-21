@@ -16,6 +16,7 @@ const { app, process, Menu } = remote;
 type Props = {
   createNewProjectStart: () => any,
   showImportExistingProjectPrompt: () => any,
+  clearConsole: () => any,
 };
 
 // TODO: Maybe I should store the git repo URL somewhere? Maybe it should

@@ -30,6 +30,7 @@ export const COMPLETE_TASK = 'COMPLETE_TASK';
 export const RECEIVE_DATA_FROM_TASK_EXECUTION =
   'RECEIVE_DATA_FROM_TASK_EXECUTION';
 export const LAUNCH_DEV_SERVER = 'LAUNCH_DEV_SERVER';
+export const CLEAR_CONSOLE = 'CLEAR_CONSOLE';
 export const LOAD_DEPENDENCY_INFO_FROM_DISK = 'LOAD_DEPENDENCY_INFO_FROM_DISK';
 export const ADD_DEPENDENCY_START = 'ADD_DEPENDENCY_START';
 export const ADD_DEPENDENCY_ERROR = 'ADD_DEPENDENCY_ERROR';
@@ -176,6 +177,11 @@ export const launchDevServer = (task: Task, timestamp: Date) => ({
   type: LAUNCH_DEV_SERVER,
   task,
   timestamp,
+});
+
+export const clearConsole = (task: Task) => ({
+  type: CLEAR_CONSOLE,
+  task,
 });
 
 export const deleteDependencyStart = (
