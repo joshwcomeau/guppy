@@ -15,7 +15,6 @@ import Toggle from '../Toggle';
 import LargeLED from '../LargeLED';
 import EjectButton from '../EjectButton';
 import TerminalOutput from '../TerminalOutput';
-import Spacer from '../Spacer';
 
 import type { Task } from '../../types';
 
@@ -40,61 +39,70 @@ class TaskDetailsModal extends PureComponent<Props> {
     isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
   };
 
-  getStatusText = () => {
-    const { status, timeSinceStatusChange } = this.props.task;
+  renderPrimaryStatusText = () => {
+    const { status } = this.props.task;
 
     switch (status) {
-      case 'idle': {
+      case 'idle':
         return (
-          <span>
+          <PrimaryStatusText>
             Task is <strong>idle</strong>.
-            {timeSinceStatusChange && (
-              <LastRunText>
-                Last run:{' '}
-                {moment(timeSinceStatusChange).format(
-                  'MMMM Do, YYYY [at] h:mm a'
-                )}
-              </LastRunText>
-            )}
-          </span>
+          </PrimaryStatusText>
         );
-      }
-      case 'pending': {
+
+      case 'pending':
         return (
-          <span>
+          <PrimaryStatusText>
             Task is{' '}
             <strong style={{ color: COLORS.orange[500] }}>running</strong>...
-          </span>
+          </PrimaryStatusText>
         );
-      }
 
-      case 'success': {
+      case 'success':
         return (
-          <span>
+          <PrimaryStatusText>
             Task{' '}
             <strong style={{ color: COLORS.green[700] }}>
               completed successfully
             </strong>.
-            <LastRunText>
-              {moment(timeSinceStatusChange).calendar()}
-            </LastRunText>
-          </span>
+          </PrimaryStatusText>
         );
-      }
 
-      case 'failed': {
+      case 'failed':
         return (
-          <span>
+          <PrimaryStatusText>
             Task <strong>failed</strong>.
-            <LastRunText>
-              {moment(timeSinceStatusChange).calendar()}
-            </LastRunText>
-          </span>
+          </PrimaryStatusText>
         );
-      }
+
+      default:
+        throw new Error('Unrecognized status in TaskDetailsModal.');
+    }
+  };
+
+  renderTimestamp = () => {
+    const { status, timeSinceStatusChange } = this.props.task;
+
+    switch (status) {
+      case 'idle':
+        return (
+          <LastRunText>
+            Last run:{' '}
+            {moment(timeSinceStatusChange).format('MMMM Do, YYYY [at] h:mm a')}
+          </LastRunText>
+        );
+
+      case 'pending':
+        return null;
+
+      case 'success':
+      case 'failed':
+        return (
+          <LastRunText>{moment(timeSinceStatusChange).calendar()}</LastRunText>
+        );
 
       default: {
-        throw new Error('Unrecognized status in TaskDetailsModal');
+        throw new Error('Unrecognized status in TaskDetailsModal.');
       }
     }
   };
@@ -106,7 +114,7 @@ class TaskDetailsModal extends PureComponent<Props> {
       return null;
     }
 
-    const { name, description, status, processId, logs } = task;
+    const { name, description, status, processId } = task;
 
     const isRunning = !!processId;
 
@@ -136,13 +144,16 @@ class TaskDetailsModal extends PureComponent<Props> {
 
         <MainContent>
           <Status>
-            <LargeLED size={32} status={status} />
-            <StatusLabel>{this.getStatusText()}</StatusLabel>
+            <LargeLED size={48} status={status} />
+            <StatusLabel>
+              {this.renderPrimaryStatusText()}
+              {this.renderTimestamp()}
+            </StatusLabel>
           </Status>
 
-          <Spacer size={25} />
+          <HorizontalRule />
 
-          <TerminalOutput height={425} logs={logs} />
+          <TerminalOutput height={425} title="Output" task={task} />
         </MainContent>
       </Fragment>
     );
@@ -171,16 +182,26 @@ const Description = styled.div`
 const Status = styled.div`
   display: flex;
   align-items: center;
-  font-size: 20px;
 `;
 
 const StatusLabel = styled.div`
   margin-left: 10px;
 `;
 
-const LastRunText = styled.span`
-  margin-left: 10px;
+const PrimaryStatusText = styled.div`
+  font-size: 20px;
+`;
+
+const LastRunText = styled.div`
   color: ${COLORS.gray[400]};
+  font-size: 16px;
+`;
+
+const HorizontalRule = styled.div`
+  height: 0px;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid ${COLORS.gray[200]};
 `;
 
 const mapStateToProps = (state, ownProps) => ({
