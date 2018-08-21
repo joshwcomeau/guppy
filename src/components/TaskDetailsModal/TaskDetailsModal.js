@@ -84,6 +84,10 @@ class TaskDetailsModal extends PureComponent<Props> {
   renderTimestamp = () => {
     const { status, timeSinceStatusChange } = this.props.task;
 
+    if (!timeSinceStatusChange) {
+      return null;
+    }
+
     switch (status) {
       case 'idle':
         return (
