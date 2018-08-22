@@ -200,9 +200,11 @@ export default (store: any) => (next: any) => (action: any) => {
       // Send a message to add info to the terminal about the task being done.
       // TODO: ASCII fish art?
 
+      /* eslint-disable no-useless-concat */
       const message = wasSuccessful
         ? '\u001b[32;1m' + 'Task Completed' + '\u001b[0m'
         : '\u001b[31;1m' + 'Task Failed' + '\u001b[0m';
+      /* eslint-enable */
 
       next(receiveDataFromTaskExecution(task, message));
 
