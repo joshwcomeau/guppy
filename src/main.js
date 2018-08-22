@@ -58,7 +58,7 @@ function createWindow() {
     try {
       installExtension(extension);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
