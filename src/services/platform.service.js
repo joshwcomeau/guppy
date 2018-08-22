@@ -2,10 +2,11 @@ import * as childProcess from 'child_process';
 import * as os from 'os';
 import * as path from 'path';
 import { remote } from 'electron';
+
 import { PACKAGE_MANAGER } from '../config/app';
 
-// Returns true if the OS is Windows
 export const isWin = /^win/.test(os.platform());
+export const isMac = remote.process.platform === 'darwin';
 
 // Returns path to the users Documents direactory
 // For Windows Support
