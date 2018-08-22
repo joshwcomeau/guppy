@@ -197,8 +197,8 @@ const MainContent = styled.section`
 `;
 
 const Description = styled.div`
-  font-size: 24px;
-  color: ${COLORS.gray[600]};
+  font-size: 21px;
+  color: ${COLORS.gray[500]};
 `;
 
 const Status = styled.div`
