@@ -7,7 +7,6 @@ import { withInfo } from '@storybook/addon-info';
 
 import Showcase from '../../../.storybook/components/Showcase';
 import Logo from './Logo';
-import Swimming from '../Swimming';
 
 const targetAction = decorateAction([args => [args[0].target]]);
 

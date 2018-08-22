@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-import Logo from '../Logo';
 import Paragraph from '../Paragraph';
 import ExternalLink from '../ExternalLink';
 import AlgoliaLogo from './AlgoliaLogo';

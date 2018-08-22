@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import styled from 'styled-components';
 
 import guppyLogoSrc from '../../assets/images/guppy-logo.svg';
 
@@ -24,6 +23,7 @@ class Logo extends Component<Props> {
     return (
       <img
         src={guppyLogoSrc}
+        alt="Guppy logo"
         aria-roledescription="logo"
         style={{
           width: getLogoWidth(size),
