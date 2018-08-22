@@ -132,14 +132,24 @@ export default (state: State = initialState, action: Action) => {
           return;
         }
 
-        const nextStatus = !wasSuccessful
-          ? 'failed'
-          : task.type === 'short-term'
-            ? 'success'
-            : 'idle';
+        // For short-term tasks like building for production, we want to show
+        // either a success or failed status.
+        // For long-running tasks, though, once a task is completed, it goes
+        // back to being "idle" regardless of whether it was successful or not.
+        // Long-running tasks reserve "failed" for cases where the task is
+        // still running, it's just hit an error.
+        //
+        // TODO: Come up with a better model for all of this :/
+        let nextStatus;
+        if (task.type === 'short-term') {
+          nextStatus = wasSuccessful ? 'success' : 'failed';
+        } else {
+          nextStatus = 'idle';
+        }
 
         draftState[task.id].status = nextStatus;
         draftState[task.id].timeSinceStatusChange = timestamp;
+
         delete draftState[task.id].processId;
       });
     }

@@ -195,16 +195,16 @@ export default (store: any) => (next: any) => (action: any) => {
     }
 
     case COMPLETE_TASK: {
-      const { task } = action;
+      const { task, wasSuccessful } = action;
 
       // Send a message to add info to the terminal about the task being done.
       // TODO: ASCII fish art?
 
-      const message = 'Task completed';
+      const message = wasSuccessful
+        ? '\u001b[32;1m' + 'Task Completed' + '\u001b[0m'
+        : '\u001b[31;1m' + 'Task Failed' + '\u001b[0m';
 
-      next(
-        receiveDataFromTaskExecution(task, `\u001b[32;1m${message}\u001b[0m`)
-      );
+      next(receiveDataFromTaskExecution(task, message));
 
       if (task.processId) {
         ipcRenderer.send('removeProcessId', task.processId);
