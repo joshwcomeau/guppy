@@ -63,11 +63,11 @@ function runElectronApp(port) {
   electronProcess.stdout.on('data', data => {
     // dont log blank output or empty newlines
     const output = data.toString().trim();
-    if (output.length) console.info(chalk.green('[ELECTRON]'), output);
+    if (output.length) console.log(chalk.green('[ELECTRON]'), output);
   });
   electronProcess.stderr.on('data', data => {
     const output = data.toString();
-    console.error(chalk.red(`[ELECTRON] ${output}`));
+    console.log(chalk.red(`[ELECTRON] ${output}`));
   });
 
   // close webpack server when electron quits
