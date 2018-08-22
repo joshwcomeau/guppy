@@ -1,3 +1,5 @@
+import Color from 'color';
+
 // TODO: Modernize
 /* eslint-disable */
 export const range = function(start, end, step) {
@@ -240,3 +242,79 @@ export const safeEscapeString = (val: string) =>
     `<span>${val}</span>`,
     'text/html'
   ): any).body.textContent;
+
+//
+//
+// given a hex/rgb/hsl color value, determine the most
+// visible color to use to display text in front
+const LUMA_THRESHOLD = 165;
+const BASE_STACK_COLOR = { r: 255, g: 255, b: 255, alpha: 1 };
+
+// weightings taken from SMPTE C, Rec. 709
+// see http://en.wikipedia.org/wiki/Luma_%28video%29 for more info
+const R_WEIGHT = 0.2126;
+const G_WEIGHT = 0.7152;
+const B_WEIGHT = 0.0722;
+const luma = ({ r, g, b }) => r * R_WEIGHT + g * G_WEIGHT + b * B_WEIGHT;
+
+// Given a stack of RGBA channels, calculate the effective
+// color when displayed in a browser.
+//
+// The first argument is the "bottom" of the stack, the second
+// is the next color up from the bottom, and so on.
+const effectiveColorFromRgbaStack = (...layers) => {
+  // remove falsey values
+  layers = layers.filter(val => !!val);
+
+  // remove fully transparent values
+  layers = layers.filter(rgba => rgba.alpha);
+
+  if (!layers.length) return BASE_STACK_COLOR;
+  if (layers.length === 1) return layers[0];
+
+  let base = { ...layers[0] };
+  layers.slice(1).forEach(layer => {
+    base.alpha = 1 - (1 - layer.alpha) * (1 - base.alpha);
+    base.r = Math.round(
+      (layer.r * layer.alpha) / base.alpha +
+        (base.r * base.alpha * (1 - layer.alpha)) / base.alpha
+    );
+    base.g = Math.round(
+      (layer.g * layer.alpha) / base.alpha +
+        (base.g * base.alpha * (1 - layer.alpha)) / base.alpha
+    );
+    base.b = Math.round(
+      (layer.b * layer.alpha) / base.alpha +
+        (base.b * base.alpha * (1 - layer.alpha)) / base.alpha
+    );
+  });
+
+  return base;
+};
+
+const getEffectiveRgb = color => {
+  const channels = {
+    alpha: 1,
+    ...Color(color)
+      .rgb()
+      .object(),
+  };
+
+  if (channels.alpha !== 1)
+    return effectiveColorFromRgbaStack(BASE_STACK_COLOR, channels);
+  return channels;
+};
+
+export const contrastingColor = (
+  backgroundColor,
+  threshold = LUMA_THRESHOLD
+) => {
+  try {
+    return luma(getEffectiveRgb(backgroundColor)) >= LUMA_THRESHOLD
+      ? '#000'
+      : '#fff';
+  } catch (e) {
+    console.warn(e + ', defaulting to #fff');
+    return '#fff';
+  }
+};
