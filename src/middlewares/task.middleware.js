@@ -2,6 +2,7 @@
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
 import * as path from 'path';
+
 import {
   RUN_TASK,
   ABORT_TASK,

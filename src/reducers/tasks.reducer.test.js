@@ -295,7 +295,7 @@ describe('Tasks reducer', () => {
   });
 
   describe(COMPLETE_TASK, () => {
-    test('marks a sustained task as idle, on success', () => {
+    test('marks a sustained task as idle, when it was successful', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -347,7 +347,7 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test('marks a sustained task as idle, on failure', () => {
+    test('marks a sustained task as idle, when it fails', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -399,7 +399,7 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test('marks a short-term task as idle, on success', () => {
+    test('marks a short-term task as success, when it was successful', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -451,7 +451,7 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test('marks a short-term task as idle, on failure', () => {
+    test('marks a short-term task as failed, when it fails', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
