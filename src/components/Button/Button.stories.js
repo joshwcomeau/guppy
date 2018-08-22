@@ -10,7 +10,7 @@ import Button from './Button';
 
 const targetAction = decorateAction([args => [args[0].target]]);
 
-const SIZES = ['small', 'medium', 'large'];
+const SIZES = ['xsmall', 'small', 'medium', 'large'];
 
 storiesOf('Button', module)
   .add(

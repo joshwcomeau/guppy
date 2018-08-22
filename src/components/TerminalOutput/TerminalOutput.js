@@ -1,10 +1,16 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { clearConsole } from '../../actions';
 import { COLORS } from '../../constants';
 
-import type { Log } from '../../types';
+import Button from '../Button';
+import Heading from '../Heading';
+import PixelShifter from '../PixelShifter';
+
+import type { Task } from '../../types';
 
 var Convert = require('ansi-to-html');
 var convert = new Convert();
@@ -12,12 +18,13 @@ var convert = new Convert();
 type Props = {
   width?: number,
   height?: number,
-  logs: Array<Log>,
+  title: string,
+  task: Task,
+  clearConsole: (task: Task) => void,
 };
 
 class TerminalOutput extends PureComponent<Props> {
   static defaultProps = {
-    logs: [],
     width: '100%',
     height: 200,
   };
@@ -45,31 +52,72 @@ class TerminalOutput extends PureComponent<Props> {
     this.node.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
   };
 
+  handleClear = () => {
+    const { task, clearConsole } = this.props;
+
+    if (!task) {
+      return;
+    }
+
+    clearConsole(task);
+  };
+
   render() {
-    const { width, height, logs } = this.props;
+    const { width, height, title, task } = this.props;
 
     return (
-      <Wrapper
-        width={width}
-        height={height}
-        innerRef={node => (this.node = node)}
-      >
-        <TableWrapper height={height}>
-          <LogWrapper>
-            {logs.map(log => (
-              <LogRow
-                key={log.id}
-                dangerouslySetInnerHTML={{
-                  __html: convert.toHtml(log.text),
-                }}
-              />
-            ))}
-          </LogWrapper>
-        </TableWrapper>
-      </Wrapper>
+      <Fragment>
+        <Header>
+          <Heading size="xsmall">{title}</Heading>
+          <PixelShifter
+            x={-1}
+            style={{ display: 'inherit' }}
+            reason={`
+              Buttons have a slightly-extruding stroke we want to
+              offset.
+            `}
+          >
+            <Button
+              size="xsmall"
+              type="fill"
+              color1={COLORS.red[700]}
+              color2={COLORS.red[500]}
+              textColor={COLORS.white}
+              onClick={this.handleClear}
+            >
+              Clear
+            </Button>
+          </PixelShifter>
+        </Header>
+        <Wrapper
+          width={width}
+          height={height}
+          innerRef={node => (this.node = node)}
+        >
+          <TableWrapper height={height}>
+            <LogWrapper>
+              {task.logs.map(log => (
+                <LogRow
+                  key={log.id}
+                  dangerouslySetInnerHTML={{
+                    __html: convert.toHtml(log.text),
+                  }}
+                />
+              ))}
+            </LogWrapper>
+          </TableWrapper>
+        </Wrapper>
+      </Fragment>
     );
   }
 }
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+`;
 
 const Wrapper = styled.div`
   width: ${props =>
@@ -106,4 +154,7 @@ const LogRow = styled.div`
   white-space: pre;
 `;
 
-export default TerminalOutput;
+export default connect(
+  null,
+  { clearConsole }
+)(TerminalOutput);

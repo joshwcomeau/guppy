@@ -3,17 +3,15 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { launchDevServer, clearConsole, abortTask } from '../../actions';
+import { launchDevServer, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getDocumentationLink } from '../../services/project-type-specifics';
-import { BREAKPOINTS, COLORS } from '../../constants';
+import { BREAKPOINTS } from '../../constants';
 
 import Module from '../Module';
 import Card from '../Card';
 import Toggle from '../Toggle';
-import Button from '../Button';
-import Heading from '../Heading';
 import Spacer from '../Spacer';
 import TerminalOutput from '../TerminalOutput';
 import ExternalLink from '../ExternalLink';
@@ -25,7 +23,6 @@ import type { Project, Task } from '../../types';
 type Props = {
   project: Project,
   task: ?Task,
-  clearConsole: (task: Task) => void,
   launchDevServer: (task: Task, timestamp: Date) => void,
   abortTask: (task: Task, timestamp: Date) => void,
 };
@@ -47,16 +44,6 @@ class DevelopmentServerPane extends PureComponent<Props> {
     } else {
       abortTask(task, timestamp);
     }
-  };
-
-  handleClear = () => {
-    const { task, clearConsole } = this.props;
-
-    if (!task) {
-      return;
-    }
-
-    clearConsole(task);
   };
 
   render() {
@@ -105,21 +92,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
               {docLink}
             </InfoWrapper>
             <TerminalWrapper>
-              <PanelHeading size="small">
-                <Title>Server Logs</Title>
-                <ButtonStrip>
-                  <Button
-                    size="small"
-                    color1={COLORS.red[700]}
-                    color2={COLORS.red[500]}
-                    textColor={COLORS.red[700]}
-                    onClick={this.handleClear}
-                  >
-                    Clear
-                  </Button>
-                </ButtonStrip>
-              </PanelHeading>
-              <TerminalOutput height={300} logs={task.logs} />
+              <TerminalOutput height={300} title="Server Logs" task={task} />
             </TerminalWrapper>
           </Wrapper>
         </OnlyOn>
@@ -134,7 +107,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
               </SmallInfoWrapper>
             </InfoWrapper>
             <TerminalWrapper>
-              <TerminalOutput height={300} logs={task.logs} />
+              <TerminalOutput height={300} task={task} />
             </TerminalWrapper>
           </Wrapper>
         </OnlyOn>
@@ -182,25 +155,17 @@ const Description = styled.div`
 `;
 
 const TerminalWrapper = styled.div`
-  overflow: auto;
-
   @media ${BREAKPOINTS.mdMin} {
     flex: 11;
     padding-left: 20px;
+    /*
+      overflow: hidden is needed so that the column won't expand when the
+      terminal output is really long. This way, it will be scrollable.
+    */
+    overflow: hidden;
+    /* Offset by the Card padding amount. */
+    margin-top: -15px;
   }
-`;
-
-const PanelHeading = styled(Heading)`
-  display: flex;
-`;
-
-const ButtonStrip = styled.div`
-  padding: 5px;
-  margin-left: auto;
-`;
-
-const Title = styled.div`
-  line-height: 45px;
 `;
 
 const mapStateToProps = state => {
@@ -220,7 +185,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { launchDevServer, abortTask, clearConsole };
+const mapDispatchToProps = { launchDevServer, abortTask };
 
 export default connect(
   mapStateToProps,
