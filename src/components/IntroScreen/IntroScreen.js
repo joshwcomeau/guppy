@@ -13,7 +13,6 @@ import Button from '../Button';
 import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
-import Swimming from '../Swimming';
 
 type Props = {
   shouldHideContent: boolean,
@@ -28,9 +27,8 @@ class IntroScreen extends Component<Props> {
       <Fragment>
         <Wrapper isVisible={!shouldHideContent}>
           <Header>
-            <Swimming>
-              <Logo size="medium" />
-            </Swimming>
+            <Logo size="large" />
+
             <AppName>Guppy</AppName>
           </Header>
 
@@ -73,7 +71,6 @@ const Header = styled.div`
 
 const AppName = styled.div`
   font-size: 42px;
-  transform: translateY(-10px);
 `;
 
 const Actions = styled.div`
