@@ -6,7 +6,7 @@ import { remote } from 'electron';
 import { PACKAGE_MANAGER } from '../config/app';
 
 export const isWin = /^win/.test(os.platform());
-export const isMac = remote.process.platform === 'darwin';
+export const isMac = /darwin/.test(os.platform());
 
 // Returns path to the users Documents direactory
 // For Windows Support
