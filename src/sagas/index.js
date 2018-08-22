@@ -5,3 +5,4 @@ import taskSaga from './task.saga';
 
 export default function*() {
   yield all([dependencySaga(), importProjectSaga(), taskSaga()]);
+}

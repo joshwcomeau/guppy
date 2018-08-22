@@ -1,6 +1,9 @@
 // @flow
 import { select, call, put, take, takeEvery } from 'redux-saga/effects';
 import { buffers, eventChannel, END } from 'redux-saga';
+import { ipcRenderer } from 'electron';
+import * as childProcess from 'child_process';
+import * as path from 'path';
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -15,58 +18,35 @@ import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
-import {
-  isWin,
-  formatCommandForPlatform,
-  getPathForPlatform,
-} from '../services/platform.services';
+import killProcessId from '../services/kill-process-id.service';
+import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
 
 import type { Task, ProjectType } from '../types';
+import type { Saga } from 'redux-saga';
 
-const { ipcRenderer } = window.require('electron');
-const childProcess = window.require('child_process');
-const psTree = window.require('ps-tree');
-
-function* launchDevServer({ task }) {
+export function* launchDevServer({ task }): Saga<void> {
   const project = yield select(getProjectById, task.projectId);
   const projectPath = yield select(getPathForProjectId, task.projectId);
 
   try {
     const port = yield call(findAvailablePort);
-    const { commandArgs, commandEnv } = yield call(
-      getDevServerArguments,
+    const { args, env } = yield call(
+      getDevServerCommand,
       task,
       project.type,
       port
     );
 
-    /**
-     * NOTE: A quirk in Electron means we can't use `env` to supply
-     * environment variables, as you would traditionally:
-     *
-        childProcess.spawn(
-          `npm`,
-          ['run', name],
-          {
-            cwd: projectPath,
-            env: { PORT: port },
-          }
-        );
-    *
-    * If I try to run this, I get a bunch of nonsensical errors about
-    * no commands (not even built-in ones like `ls`) existing.
-    * I added a comment here:
-    * https://github.com/electron/electron/issues/3627
-    *
-    * As a workaround, I'm using "shell mode" to avoid having to
-    * specify environment variables:
-    */
+    console.log({ ...getBaseProjectEnvironment(projectPath), ...env }.PATH);
 
     const child = yield call(
-      [childProcess, 'spawn'],
-      formatCommandForPlatform('npm'),
-      commandArgs,
-      { cwd: projectPath, env: { ...commandEnv, PATH: getPathForPlatform() } }
+      [childProcess, childProcess.spawn],
+      PACKAGE_MANAGER_CMD,
+      args,
+      {
+        cwd: projectPath,
+        env: { ...getBaseProjectEnvironment(projectPath), ...env },
+      }
     );
 
     // Now that we have a port/processId for the server, attach it to
@@ -74,9 +54,9 @@ function* launchDevServer({ task }) {
     // to kill the process
     yield put(attachTaskMetadata(task, child.pid, port));
 
-    yield call([ipcRenderer, 'send'], 'addProcessId', child.pid);
+    yield call([ipcRenderer, ipcRenderer.send], 'addProcessId', child.pid);
 
-    const stdioChannel = yield call(createStdioChannel, child, {
+    const stdioChannel = createStdioChannel(child, {
       stdout: emitter => data => {
         // Ok so, unfortunately, failure-to-compile is still pushed
         // through stdout, not stderr. We want that message specifically
@@ -92,7 +72,7 @@ function* launchDevServer({ task }) {
       },
       exit: emitter => code => {
         // For Windows Support
-        // Windows sends code 1 (I guess its because we foce kill??)
+        // Windows sends code 1 (I guess its because we force kill??)
         const successfulCode = isWin ? 1 : 0;
         const wasSuccessful = code === successfulCode || code === null;
         const timestamp = new Date();
@@ -131,12 +111,12 @@ function* launchDevServer({ task }) {
     }
   } catch (err) {
     // TODO: Error handling (this can happen if the first 15 ports are occupied,
-    // or if there' s some generic Node error
+    // or if there's some generic Node error
     console.error(err);
   }
 }
 
-function* taskRun({ task }) {
+export function* taskRun({ task }): Saga<void> {
   const project = yield select(getProjectById, task.projectId);
   const projectPath = yield select(getPathForProjectId, task.projectId);
   const { name } = task;
@@ -154,31 +134,36 @@ function* taskRun({ task }) {
   // for now.
   const additionalArgs = [];
   if (project.type === 'create-react-app' && name === 'test') {
-    additionalArgs.push('--', '--coverage');
+    additionalArgs.push('--coverage');
   }
 
   const child = yield call(
-    [childProcess, 'spawn'],
-    formatCommandForPlatform('npm'),
+    [childProcess, childProcess.spawn],
+    PACKAGE_MANAGER_CMD,
     ['run', name, ...additionalArgs],
     {
       cwd: projectPath,
-      env: {
-        PATH: getPathForPlatform(),
-      },
+      env: getBaseProjectEnvironment(projectPath),
     }
   );
 
   // When this application exits, we want to kill this process.
   // Send it up to the main process.
-  yield call([ipcRenderer, 'send'], child.pid);
+  yield call([ipcRenderer, ipcRenderer.send], child.pid);
 
   // TODO: Does the renderer process still need to know about the child
   // processId?
   yield put(attachTaskMetadata(task, child.pid));
 
-  const stdioChannel = yield call(createStdioChannel, child, {
+  const stdioChannel = createStdioChannel(child, {
     stdout: emitter => data => {
+      // The 'eject' task prompts the user, to ask if they're sure.
+      // We can bypass this prompt, as our UI already has an alert that
+      // confirms this action.
+      // TODO: Eject deserves its own Redux action, to avoid cluttering up
+      // this generic "RUN_TASK" action.
+      // TODO: Is there a way to "future-proof" this, in case the CRA
+      // confirmation copy changes?
       const isEjectPrompt = data
         .toString()
         .includes('Are you sure you want to eject? This action is permanent');
@@ -228,87 +213,28 @@ function* taskRun({ task }) {
   }
 }
 
-function* taskAbort({ task }) {
+export function* taskAbort({ task }): Saga<void> {
   const { processId, name } = task;
 
-  // For Windows Support
-  // On Windows there is only one process so no need for psTree (see below)
-  // We use /f for focefully terminate process because it ask for confirmation
-  // We use /t to kill all child processes
-  // More info https://ss64.com/nt/taskkill.html
-  if (isWin) {
-    yield call([childProcess, 'spawn'], 'taskkill', [
-      '/pid',
-      processId,
-      '/f',
-      '/t',
-    ]);
-    yield call([ipcRenderer, 'send'], 'removeProcessId', processId);
+  yield call(killProcessId, processId);
+  yield call([ipcRenderer, ipcRenderer.send], 'removeProcessId', processId);
 
-    const abortMessage = isDevServerTask(name)
-      ? 'Server stopped'
-      : 'Task aborted';
+  // Once the children are killed, we should dispatch a notification
+  // so that the terminal shows something about this update.
+  // My initial thought was that all tasks would have the same message,
+  // but given that we're treating `start` as its own special thing,
+  // I'm realizing that it should vary depending on the task type.
+  // TODO: Find a better place for this to live.
+  const abortMessage = isDevServerTask(name)
+    ? 'Server stopped'
+    : 'Task aborted';
 
-    yield put(
-      receiveDataFromTaskExecution(task, `\u001b[31;1m${abortMessage}\u001b[0m`)
-    );
-  } else {
-    // Our child was spawned using `shell: true` to get around a quirk with
-    // electron not working when specifying environment variables the
-    // "correct" way (see comment above).
-    //
-    // Because of that, `child.pid` refers to the `sh` command that spawned
-    // the actual Node process, and so we need to use `psTree` to build a
-    // tree of descendent children and kill them that way.
-
-    // wrap psTree in a promise to facilitate use inside a saga (yield cannot
-    // be used inside a callback function, even when it's nested within a
-    // generator)
-    const promisifyPsTree = _processId =>
-      new Promise((resolve, reject) => {
-        psTree(_processId, (err, children) => {
-          if (err) return reject(err);
-          return resolve(children);
-        });
-      });
-
-    try {
-      const children = yield call(promisifyPsTree, processId);
-
-      // in the original task middleware, the below code would run regardless
-      // of psTree throwing an error, which I don't believe is correct; I imagine
-      // children would be undefined, null, or an empty array -- whichever, there
-      // doesn't seem to be any point to continue if this is the case. As such,
-      // I've kept it inside the try block.
-      const childrenPIDs = children.map(child => child.PID);
-
-      yield call([childProcess, 'spawn'], 'kill', ['-9', ...childrenPIDs]);
-
-      yield call([ipcRenderer, 'send'], 'removeProcessId', processId);
-
-      // Once the children are killed, we should dispatch a notification
-      // so that the terminal shows something about this update.
-      // My initial thought was that all tasks would have the same message,
-      // but given that we're treating `start` as its own special thing,
-      // I'm realizing that it should vary depending on the task type.
-      // TODO: Find a better place for this to live.
-      const abortMessage = isDevServerTask(name)
-        ? 'Server stopped'
-        : 'Task aborted';
-
-      yield put(
-        receiveDataFromTaskExecution(
-          task,
-          `\u001b[31;1m${abortMessage}\u001b[0m`
-        )
-      );
-    } catch (err) {
-      yield call([console, 'error'], 'Could not gather process children:', err);
-    }
-  }
+  yield put(
+    receiveDataFromTaskExecution(task, `\u001b[31;1m${abortMessage}\u001b[0m`)
+  );
 }
 
-function* displayTaskComplete(task) {
+export function* displayTaskComplete(task): Saga<void> {
   // Send a message to add info to the terminal about the task being done.
   // TODO: ASCII fish art?
 
@@ -319,9 +245,13 @@ function* displayTaskComplete(task) {
   );
 }
 
-function* taskComplete({ task }) {
+export function* taskComplete({ task }): Saga<void> {
   if (task.processId) {
-    yield call([ipcRenderer, 'send'], 'removeProcessId', task.processId);
+    yield call(
+      [ipcRenderer, ipcRenderer.send],
+      'removeProcessId',
+      task.processId
+    );
   }
 
   // The `eject` task is special; after running it, its dependencies will
@@ -338,9 +268,9 @@ function* taskComplete({ task }) {
 const createStdioChannel = (
   child: any,
   handlers: {
-    stdout: (emitter: any) => (data: string) => null,
-    stderr: (emitter: any) => (data: string) => null,
-    exit: (emitter: any) => (code: number) => null,
+    stdout: (emitter: any) => (data: string) => void,
+    stderr: (emitter: any) => (data: string) => void,
+    exit: (emitter: any) => (code: number) => void,
   }
 ) => {
   return eventChannel(emitter => {
@@ -360,32 +290,47 @@ const createStdioChannel = (
   }, buffers.expanding(2));
 };
 
-const getDevServerArguments = (
+export const getBaseProjectEnvironment = (projectPath: string) => ({
+  // Forward the host env, and append the
+  // project's .bin directory to PATH to allow
+  // package scripts to function properly.
+  ...window.process.env,
+  PATH:
+    // window.process.env.PATH +
+    // path.delimiter +
+    path.join(projectPath, 'node_modules', '.bin'),
+});
+
+export const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
   port: string
 ) => {
   switch (projectType) {
     case 'create-react-app':
-      return { commandArgs: ['run', task.name], commandEnv: { PORT: port } };
+      return {
+        args: ['run', task.name],
+        env: {
+          PORT: port,
+        },
+      };
     case 'gatsby':
       return {
-        commandArgs: ['run', task.name, '--', `-p ${port}`],
-        commandEnv: {},
+        args: ['run', task.name, '-p', port],
+        env: {},
       };
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }
 };
 
-const sendCommandToProcess = (child: any, command: string) => {
+export const sendCommandToProcess = (child: any, command: string) => {
   // Commands have to be suffixed with '\n' to signal that the command is
   // ready to be sent. Same as a regular command + hitting the enter key.
   child.stdin.write(`${command}\n`);
 };
 
-// $FlowFixMe
-export default function* rootSaga() {
+export default function* rootSaga(): Saga<void> {
   yield takeEvery(LAUNCH_DEV_SERVER, launchDevServer);
   // these saga handlers are named in reverse order (RUN_TASK => taskRun, etc.)
   // to avoid naming conflicts with their related actions (completeTask is

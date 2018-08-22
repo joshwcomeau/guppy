@@ -6,7 +6,6 @@ import rootSaga, {
   importProject,
   inferProjectType,
 } from './import-project.saga';
-import electron from 'electron';
 import {
   importExistingProjectStart,
   importExistingProjectError,
@@ -22,7 +21,10 @@ import { getInternalProjectById } from '../reducers/projects.reducer';
 import { getColorForProject } from '../services/create-project.service';
 
 jest.mock('electron', () => ({
-  remote: { dialog: { showOpenDialog: jest.fn(), showErrorBox: jest.fn() } },
+  remote: {
+    app: { getAppPath: () => '' },
+    dialog: { showOpenDialog: jest.fn(), showErrorBox: jest.fn() },
+  },
 }));
 
 describe('import-project saga', () => {

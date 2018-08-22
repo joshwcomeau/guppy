@@ -35,6 +35,6 @@ export const formatCommandForPlatform = (command: string): string =>
 
 export const PACKAGE_MANAGER_CMD = path.join(
   remote.app.getAppPath(),
-  './node_modules/yarn/bin',
+  'node_modules/yarn/bin',
   formatCommandForPlatform(PACKAGE_MANAGER)
 );
