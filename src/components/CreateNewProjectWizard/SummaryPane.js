@@ -30,7 +30,7 @@ class SummaryPane extends PureComponent<Props> {
       return (
         <IntroWrapper>
           <FadeIn key="intro-t">
-            <Logo grayscale size="large" />
+            <Logo size="large" />
 
             <Spacer size={30} />
             <StepTitle>Create new project</StepTitle>
