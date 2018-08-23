@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { runTask, abortTask } from '../../actions';
+import { GUPPY_REPO_URL } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getTasksInTaskListForProjectId } from '../../reducers/tasks.reducer';
 
@@ -74,7 +75,7 @@ class TaskRunnerPane extends Component<Props, State> {
     return (
       <Module
         title="Tasks"
-        moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#tasks"
+        moreInfoHref={`${GUPPY_REPO_URL}/blob/master/docs/getting-started.md#tasks`}
       >
         {tasks.map(task => (
           <TaskRunnerPaneRow

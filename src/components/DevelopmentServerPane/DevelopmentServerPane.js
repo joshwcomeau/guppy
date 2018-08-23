@@ -7,7 +7,7 @@ import { launchDevServer, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getDocumentationLink } from '../../services/project-type-specifics';
-import { BREAKPOINTS } from '../../constants';
+import { BREAKPOINTS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
 import Card from '../Card';
@@ -79,7 +79,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
     return (
       <Module
         title="Development Server"
-        moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#development-server"
+        moreInfoHref={`${GUPPY_REPO_URL}/blob/master/docs/getting-started.md#development-server`}
         primaryActionChildren={
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
