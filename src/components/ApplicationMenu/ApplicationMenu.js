@@ -6,13 +6,12 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { shell, remote } from 'electron';
 
-import packageJson from '../../../package.json';
-
 import {
   createNewProjectStart,
   showImportExistingProjectPrompt,
   clearConsole,
 } from '../../actions';
+import { GUPPY_REPO_URL } from '../../constants';
 import { isMac } from '../../services/platform.service';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
@@ -28,8 +27,6 @@ type Props = {
   showImportExistingProjectPrompt: () => any,
   clearConsole: (task: Task) => any,
 };
-
-const baseRepoUrl = packageJson.repository.url.replace(/.git$/, '');
 
 class ApplicationMenu extends Component<Props> {
   menu: any;
@@ -181,11 +178,11 @@ class ApplicationMenu extends Component<Props> {
   };
 
   openGettingStartedDocs = () => {
-    shell.openExternal(`${baseRepoUrl}/blob/master/docs/getting-started.md`);
+    shell.openExternal(`${GUPPY_REPO_URL}/blob/master/docs/getting-started.md`);
   };
 
   openReportIssue = () => {
-    shell.openExternal(`${baseRepoUrl}/issues/new/choose`);
+    shell.openExternal(`${GUPPY_REPO_URL}/issues/new/choose`);
   };
 
   render() {

@@ -1,3 +1,5 @@
+import packageJson from '../package.json';
+
 export const COLORS = {
   hotPink: {
     '500': '#F50057',
@@ -119,3 +121,5 @@ export const ALGOLIA_KEYS = {
   apiKey: '7492903b80561e70bff1359d7052b4ae',
   indexName: 'npm-search',
 };
+
+export const GUPPY_REPO_URL = packageJson.repository.url.replace(/.git$/, '');

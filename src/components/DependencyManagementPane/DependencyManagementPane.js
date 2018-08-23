@@ -7,7 +7,7 @@ import { plus } from 'react-icons-kit/feather/plus';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { COLORS } from '../../constants';
+import { COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
 import AddDependencyModal from '../AddDependencyModal';
@@ -109,7 +109,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     return (
       <Module
         title="Dependencies"
-        moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#dependencies"
+        moreInfoHref={`${GUPPY_REPO_URL}/blob/master/docs/getting-started.md#dependencies`}
       >
         <Wrapper>
           <DependencyList>
