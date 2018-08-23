@@ -135,11 +135,11 @@ class ApplicationMenu extends Component<Props> {
   }
 
   openGettingStartedDocs = () => {
-    shell.openExternal(`${baseRepoUrl}/docs/getting-started.md`);
+    shell.openExternal(`${baseRepoUrl}/blob/master/docs/getting-started.md`);
   };
 
   openReportIssue = () => {
-    shell.openExternal(`${baseRepoUrl}/issues/new`);
+    shell.openExternal(`${baseRepoUrl}/issues/new/choose`);
   };
 
   render() {
