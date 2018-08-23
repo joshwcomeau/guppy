@@ -4,7 +4,7 @@ import * as childProcess from 'child_process';
 import * as path from 'path';
 import chalkRaw from 'chalk';
 
-import rootSaga, {
+import {
   launchDevServer,
   taskRun,
   taskAbort,
