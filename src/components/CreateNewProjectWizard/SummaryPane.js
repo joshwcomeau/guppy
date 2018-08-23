@@ -8,7 +8,6 @@ import Paragraph from '../Paragraph';
 import FadeIn from '../FadeIn';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
-import Swimming from '../Swimming';
 import ExternalLink from '../ExternalLink';
 
 import ImportExisting from './ImportExisting';
@@ -31,9 +30,7 @@ class SummaryPane extends PureComponent<Props> {
       return (
         <IntroWrapper>
           <FadeIn key="intro-t">
-            <Swimming>
-              <Logo size="large" />
-            </Swimming>
+            <Logo size="large" />
 
             <Spacer size={30} />
             <StepTitle>Create new project</StepTitle>

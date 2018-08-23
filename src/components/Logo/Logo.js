@@ -1,41 +1,50 @@
 // @flow
 import React, { Component } from 'react';
-import styled from 'styled-components';
+
+import guppyLogoSrc from '../../assets/images/guppy-logo.svg';
+
+type Size = 'small' | 'medium' | 'large';
 
 type Props = {
-  size: 'small' | 'medium' | 'large',
-  grayscale: boolean,
+  size?: Size,
+  grayscale?: boolean,
 };
 
 class Logo extends Component<Props> {
+  static defaultProps = {
+    size: 'medium',
+  };
+
   render() {
     const { size, grayscale } = this.props;
 
+    const desaturationAmount = grayscale ? 90 : 0;
+
     return (
-      <LogoElem size={size} grayscale={grayscale}>
-        {/* eslint-disable-next-line jsx-a11y/accessible-emoji */}
-        🐠
-      </LogoElem>
+      <img
+        src={guppyLogoSrc}
+        alt="Guppy logo"
+        aria-roledescription="logo"
+        style={{
+          width: getLogoWidth(size),
+          filter: `grayscale(${desaturationAmount}%)`,
+        }}
+      />
     );
   }
 }
 
-const getFontSize = ({ size }) => {
+const getLogoWidth = (size: ?Size) => {
   switch (size) {
     case 'small':
       return 24;
-    default:
     case 'medium':
       return 48;
     case 'large':
       return 96;
+    default:
+      throw new Error('Unrecognized size for logo');
   }
 };
-
-const LogoElem = styled.div`
-  font-size: ${getFontSize}px;
-  filter: grayscale(${props => (props.grayscale ? '90%' : '0%')});
-  cursor: default;
-`;
 
 export default Logo;
