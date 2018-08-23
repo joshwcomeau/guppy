@@ -2,6 +2,8 @@
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
 import * as path from 'path';
+import chalkRaw from 'chalk';
+
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -20,6 +22,8 @@ import killProcessId from '../services/kill-process-id.service';
 import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
 
 import type { Task, ProjectType } from '../types';
+
+const chalk = new chalkRaw.constructor({ level: 3 });
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
@@ -184,27 +188,22 @@ export default (store: any) => (next: any) => (action: any) => {
         ? 'Server stopped'
         : 'Task aborted';
 
-      next(
-        receiveDataFromTaskExecution(
-          task,
-          `\u001b[31;1m${abortMessage}\u001b[0m`
-        )
-      );
+      next(receiveDataFromTaskExecution(task, chalk.bold.red(abortMessage)));
 
       break;
     }
 
     case COMPLETE_TASK: {
-      const { task } = action;
+      const { task, wasSuccessful } = action;
 
       // Send a message to add info to the terminal about the task being done.
       // TODO: ASCII fish art?
 
-      const message = 'Task completed';
+      const message = wasSuccessful
+        ? chalk.bold.green('Task completed')
+        : chalk.bold.red('Task failed');
 
-      next(
-        receiveDataFromTaskExecution(task, `\u001b[32;1m${message}\u001b[0m`)
-      );
+      next(receiveDataFromTaskExecution(task, message));
 
       if (task.processId) {
         ipcRenderer.send('removeProcessId', task.processId);
