@@ -4,6 +4,8 @@ import { buffers, eventChannel, END } from 'redux-saga';
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
 import * as path from 'path';
+import chalkRaw from 'chalk';
+
 import {
   RUN_TASK,
   ABORT_TASK,
@@ -23,6 +25,8 @@ import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
 
 import type { Task, ProjectType } from '../types';
 import type { Saga } from 'redux-saga';
+
+const chalk = new chalkRaw.constructor({ level: 3 });
 
 export function* launchDevServer({ task }: { task: Task }): Saga<void> {
   const project = yield select(getProjectById, task.projectId);
@@ -145,13 +149,13 @@ export function* taskRun({ task }: { task: Task }): Saga<void> {
     }
   );
 
-  // When this application exits, we want to kill this process.
-  // Send it up to the main process.
-  yield call([ipcRenderer, ipcRenderer.send], child.pid);
-
   // TODO: Does the renderer process still need to know about the child
   // processId?
   yield put(attachTaskMetadata(task, child.pid));
+
+  // When this application exits, we want to kill this process.
+  // Send it up to the main process.
+  yield call([ipcRenderer, ipcRenderer.send], 'addProcessId', child.pid);
 
   const stdioChannel = createStdioChannel(child, {
     stdout: emitter => data => {
@@ -227,9 +231,7 @@ export function* taskAbort({ task }: { task: Task }): Saga<void> {
     ? 'Server stopped'
     : 'Task aborted';
 
-  yield put(
-    receiveDataFromTaskExecution(task, `\u001b[31;1m${abortMessage}\u001b[0m`)
-  );
+  yield put(receiveDataFromTaskExecution(task, chalk.bold.red(abortMessage)));
 }
 
 export function* displayTaskComplete(task: Task): Saga<void> {
@@ -238,9 +240,7 @@ export function* displayTaskComplete(task: Task): Saga<void> {
 
   const message = 'Task completed';
 
-  yield put(
-    receiveDataFromTaskExecution(task, `\u001b[32;1m${message}\u001b[0m`)
-  );
+  yield put(receiveDataFromTaskExecution(task, chalk.bold.green(message)));
 }
 
 export function* taskComplete({ task }: { task: Task }): Saga<void> {
@@ -294,8 +294,8 @@ export const getBaseProjectEnvironment = (projectPath: string) => ({
   // package scripts to function properly.
   ...window.process.env,
   PATH:
-    // window.process.env.PATH +
-    // path.delimiter +
+    window.process.env.PATH +
+    path.delimiter +
     path.join(projectPath, 'node_modules', '.bin'),
 });
 
