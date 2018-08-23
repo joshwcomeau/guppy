@@ -24,7 +24,7 @@ import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
 import type { Task, ProjectType } from '../types';
 import type { Saga } from 'redux-saga';
 
-export function* launchDevServer({ task }): Saga<void> {
+export function* launchDevServer({ task }: { task: Task }): Saga<void> {
   const project = yield select(getProjectById, task.projectId);
   const projectPath = yield select(getPathForProjectId, task.projectId);
 
@@ -36,8 +36,6 @@ export function* launchDevServer({ task }): Saga<void> {
       project.type,
       port
     );
-
-    console.log({ ...getBaseProjectEnvironment(projectPath), ...env }.PATH);
 
     const child = yield call(
       [childProcess, childProcess.spawn],
@@ -116,7 +114,7 @@ export function* launchDevServer({ task }): Saga<void> {
   }
 }
 
-export function* taskRun({ task }): Saga<void> {
+export function* taskRun({ task }: { task: Task }): Saga<void> {
   const project = yield select(getProjectById, task.projectId);
   const projectPath = yield select(getPathForProjectId, task.projectId);
   const { name } = task;
@@ -213,7 +211,7 @@ export function* taskRun({ task }): Saga<void> {
   }
 }
 
-export function* taskAbort({ task }): Saga<void> {
+export function* taskAbort({ task }: { task: Task }): Saga<void> {
   const { processId, name } = task;
 
   yield call(killProcessId, processId);
@@ -234,7 +232,7 @@ export function* taskAbort({ task }): Saga<void> {
   );
 }
 
-export function* displayTaskComplete(task): Saga<void> {
+export function* displayTaskComplete(task: Task): Saga<void> {
   // Send a message to add info to the terminal about the task being done.
   // TODO: ASCII fish art?
 
@@ -245,7 +243,7 @@ export function* displayTaskComplete(task): Saga<void> {
   );
 }
 
-export function* taskComplete({ task }): Saga<void> {
+export function* taskComplete({ task }: { task: Task }): Saga<void> {
   if (task.processId) {
     yield call(
       [ipcRenderer, ipcRenderer.send],
