@@ -7,7 +7,6 @@ import filter from 'redux-storage-decorator-filter';
 
 import { refreshProjects } from '../actions';
 import rootReducer from '../reducers';
-import { handleReduxUpdates } from '../services/redux-persistence.service';
 import taskMiddleware from '../middlewares/task.middleware';
 import dependencyMiddleware from '../middlewares/dependency.middleware';
 import importProjectMiddleware from '../middlewares/import-project.middleware';
@@ -16,7 +15,7 @@ import handleMigrations from './migrations';
 
 import DevTools from '../components/DevTools';
 
-export default function configureStore(initialState: any) {
+export default function configureStore() {
   // Store all Redux changes in an electron-store, handled by redux-storage.
   let engine = createEngine(
     process.env.NODE_ENV === 'development' ? 'redux-data-dev' : 'redux-data'
@@ -28,9 +27,8 @@ export default function configureStore(initialState: any) {
   // Batch updates, so that frequent dispatches don't cause performance issues
   engine = debounce(engine, 1000);
 
-  // We don't want to store all information about tasks.
-  // When the app restarts, we don't need to know about any ongoing task info,
-  // as their process be terminated when the app quits.
+  // We don't want to store task info.
+  // Tasks
   engine = filter(engine, null, [['tasks']]);
   const storageMiddleware = storage.createMiddleware(engine);
 
@@ -38,7 +36,6 @@ export default function configureStore(initialState: any) {
 
   const store = createStore(
     wrappedReducer,
-    initialState,
     compose(
       applyMiddleware(
         thunk,
