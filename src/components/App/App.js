@@ -1,15 +1,10 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
 import { refreshProjects, selectProject } from '../../actions';
 import { COLORS } from '../../constants';
-import {
-  extractProjectIdFromUrl,
-  buildUrlForProjectId,
-} from '../../services/location.service';
 import {
   getProjectsArray,
   getSelectedProject,
@@ -33,34 +28,16 @@ type Props = {
   projects: Array<Project>,
   refreshProjects: Action,
   selectProject: Action,
-  history: any, // Provided by `withRouter`
 };
 
 class App extends Component<Props> {
   componentDidMount() {
-    const {
-      history,
-      selectedProject,
-      selectProject,
-      refreshProjects,
-    } = this.props;
-
-    refreshProjects();
-
-    if (selectedProject) {
-      history.replace(buildUrlForProjectId(selectedProject.id));
-    }
-
-    history.listen(location => {
-      const projectId = extractProjectIdFromUrl(location);
-
-      if (projectId) {
-        selectProject(projectId);
-      }
-    });
+    this.props.refreshProjects();
   }
 
   render() {
+    const { selectedProject } = this.props;
+
     return (
       <Fragment>
         <Titlebar />
@@ -70,18 +47,7 @@ class App extends Component<Props> {
           <Sidebar />
 
           <MainContent>
-            <Switch>
-              <Route exact path="/" component={IntroScreen} />
-              <Route
-                path="/project/:projectId"
-                render={routerProps => (
-                  <ProjectPage
-                    key={routerProps.match.params.projectId}
-                    {...routerProps}
-                  />
-                )}
-              />
-            </Switch>
+            {selectedProject ? <ProjectPage /> : <IntroScreen />}
           </MainContent>
         </Wrapper>
 
@@ -117,9 +83,7 @@ const mapStateToProps = state => ({
   selectedProject: getSelectedProject(state),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    { refreshProjects, selectProject }
-  )(App)
-);
+export default connect(
+  mapStateToProps,
+  { refreshProjects, selectProject }
+)(App);
