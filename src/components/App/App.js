@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
-import { refreshProjects, selectProject } from '../../actions';
+import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import {
   extractProjectIdFromUrl,
@@ -120,6 +120,9 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { refreshProjects, selectProject }
+    {
+      refreshProjects: actions.refreshProjects,
+      selectProject: actions.selectProject,
+    }
   )(App)
 );

@@ -103,15 +103,15 @@ class RoundedOutline extends Component<Props, State> {
 
     const svgId = `${color1.replace('#', '')}-${color2.replace('#', '')}`;
 
-    const dashOffset = isShown ? 0 : pathLength;
+    const finalDashOffset = isShown ? 0 : pathLength;
 
     return (
       <Motion
         style={{
           dashOffset:
             animateChanges && finishedAllMountingSteps
-              ? spring(dashOffset, springSettings)
-              : dashOffset,
+              ? spring(finalDashOffset, springSettings)
+              : finalDashOffset,
         }}
       >
         {({ dashOffset }) => (

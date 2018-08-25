@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
 
-import { deleteDependencyStart } from '../../actions';
+import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 
@@ -85,5 +85,5 @@ const mapStateToProps = (state, ownProps) => ({
 
 export default connect(
   mapStateToProps,
-  { deleteDependencyStart }
+  { deleteDependencyStart: actions.deleteDependencyStart }
 )(DeleteDependencyButton);

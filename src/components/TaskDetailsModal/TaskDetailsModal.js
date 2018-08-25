@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import { runTask, abortTask } from '../../actions';
+import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 import { getTaskById } from '../../reducers/tasks.reducer';
@@ -231,5 +231,5 @@ const mapStateToProps = (state, ownProps) => ({
 
 export default connect(
   mapStateToProps,
-  { runTask, abortTask }
+  { runTask: actions.runTask, abortTask: actions.abortTask }
 )(TaskDetailsModal);

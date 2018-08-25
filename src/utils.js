@@ -73,6 +73,7 @@ export const sampleMany = (arr, size) => {
 export const random = (min, max) =>
   Math.floor(Math.random() * (max - min)) + min;
 
+// eslint-disable-next-line no-shadow
 export const sum = values => values.reduce((sum, value) => sum + value, 0);
 export const mean = values => sum(values) / values.length;
 

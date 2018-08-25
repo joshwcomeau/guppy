@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 
 import { COLORS, Z_INDICES } from '../../constants';
-import { selectProject, createNewProjectStart } from '../../actions';
+import * as actions from '../../actions';
 import {
   getProjectsArray,
   getSelectedProjectId,
@@ -32,7 +32,6 @@ type Props = {
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
   createNewProjectStart: () => void,
-  selectProject: (projectId: string) => void,
   location: any, // Provided by React Router
 };
 
@@ -205,8 +204,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  createNewProjectStart,
-  selectProject,
+  createNewProjectStart: actions.createNewProjectStart,
 };
 
 export default withRouter(

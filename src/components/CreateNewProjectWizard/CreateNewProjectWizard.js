@@ -4,11 +4,7 @@ import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 import slug from 'slug';
 
-import {
-  addProject,
-  createNewProjectCancel,
-  createNewProjectFinish,
-} from '../../actions';
+import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
 
 import TwoPaneModal from '../TwoPaneModal';
@@ -191,9 +187,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  addProject,
-  createNewProjectCancel,
-  createNewProjectFinish,
+  addProject: actions.addProject,
+  createNewProjectCancel: actions.createNewProjectCancel,
+  createNewProjectFinish: actions.createNewProjectFinish,
 };
 
 export default connect(

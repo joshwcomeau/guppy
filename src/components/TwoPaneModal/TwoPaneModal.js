@@ -85,7 +85,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
       transitionState === 'entering' || transitionState === 'exiting';
 
     // prettier-ignore
-    const transitTranslate = transitionState === 'entering' || isBeingDismissed
+    const finalTransitTranslate = transitionState === 'entering' || isBeingDismissed
         ? 50
         : transitionState === 'exiting'
           ? -50
@@ -100,7 +100,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
             foldSpringSettings
           ),
           transitTranslate: spring(
-            transitTranslate,
+            finalTransitTranslate,
             transitTranslateSpringSettings
           ),
           transitOpacity: spring(

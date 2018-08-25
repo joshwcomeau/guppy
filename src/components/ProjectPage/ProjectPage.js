@@ -6,7 +6,7 @@ import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
-import { loadDependencyInfoFromDisk } from '../../actions';
+import * as actions from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -115,6 +115,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { loadDependencyInfoFromDisk }
+    { loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDisk }
   )(ProjectPage)
 );

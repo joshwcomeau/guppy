@@ -80,12 +80,12 @@ class Modal extends PureComponent<Props, State> {
             const inTransit =
               transitionState === 'entering' || transitionState === 'exiting';
 
-            const translateY = transitionState === 'entered' ? 0 : 50;
+            const finalTranslateY = transitionState === 'entered' ? 0 : 50;
 
             return (
               <Motion
                 style={{
-                  translateY: spring(translateY, translateYSpringSettings),
+                  translateY: spring(finalTranslateY, translateYSpringSettings),
                   opacity: spring(inTransit ? 0 : 1, opacitySpringSettings),
                 }}
               >

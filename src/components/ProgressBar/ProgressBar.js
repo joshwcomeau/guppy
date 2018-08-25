@@ -22,13 +22,19 @@ class ProgressBar extends Component<Props> {
   };
 
   render() {
-    const { height, progress, stiffness, damping, colors } = this.props;
+    const {
+      height,
+      progress: finalProgress,
+      stiffness,
+      damping,
+      colors,
+    } = this.props;
 
     return (
       <Wrapper height={height}>
         <Motion
           style={{
-            progress: spring(progress, {
+            progress: spring(finalProgress, {
               stiffness,
               damping,
               precision: 0.0001,

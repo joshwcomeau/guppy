@@ -16,7 +16,6 @@ require('../config/env');
 
 const { spawn } = require('child_process');
 const chalk = require('chalk');
-const path = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const clearConsole = require('react-dev-utils/clearConsole');

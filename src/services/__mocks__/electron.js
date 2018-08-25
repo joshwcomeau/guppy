@@ -5,7 +5,7 @@ module.exports = {
       getAppPath: () => path.resolve(__dirname, '..', '..', '..'),
       getPath: () =>
         process.env.APPDATA ||
-        (process.platform == 'darwin'
+        (process.platform === 'darwin'
           ? process.env.HOME + 'Library/Preferences'
           : '/var/local'),
     },
