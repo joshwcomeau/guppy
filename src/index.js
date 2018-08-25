@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { HashRouter as Router } from 'react-router-dom';
 
 import configureStore from './store';
 import { getInitialState } from './services/redux-persistence.service';
@@ -21,12 +20,10 @@ const root = document.getElementById('root');
 ReactDOM.render(
   <Provider store={store}>
     <NodeProvider>
-      <Router>
-        <Fragment>
-          <App />
-          <DevTools />
-        </Fragment>
-      </Router>
+      <Fragment>
+        <App />
+        <DevTools />
+      </Fragment>
     </NodeProvider>
   </Provider>,
   root

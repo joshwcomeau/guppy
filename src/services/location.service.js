@@ -44,9 +44,3 @@ export const extractSelectedTaskFromUrl = (location: Location) => {
 
   return task;
 };
-
-export const buildUrlForProjectId = (projectId: string) =>
-  `/project/${projectId}`;
-
-export const buildUrlForProjectTask = (projectId: string, taskName: string) =>
-  `${buildUrlForProjectId(projectId)}/tasks/${taskName}`;

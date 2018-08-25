@@ -1,7 +1,6 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
@@ -21,9 +20,6 @@ import type { Project } from '../../types';
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
-  location: any, // provided by react-router
-  match: any, // provided by react-router
-  history: any, // provided by withRouter HOC
 };
 
 class ProjectPage extends Component<Props> {
@@ -34,7 +30,7 @@ class ProjectPage extends Component<Props> {
       behavior: 'smooth',
     });
 
-    this.loadNewProjectOrBail(this.props.project);
+    this.loadProjectDependencies(this.props.project);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -43,12 +39,12 @@ class ProjectPage extends Component<Props> {
       !nextProps.project ||
       this.props.project.id !== nextProps.project.id
     ) {
-      this.loadNewProjectOrBail(nextProps.project);
+      this.loadProjectDependencies(nextProps.project);
     }
   }
 
-  loadNewProjectOrBail(project: Project) {
-    const { history, loadDependencyInfoFromDisk } = this.props;
+  loadProjectDependencies(project: Project) {
+    const { loadDependencyInfoFromDisk } = this.props;
 
     if (project) {
       loadDependencyInfoFromDisk(project.id, project.path);
@@ -56,7 +52,7 @@ class ProjectPage extends Component<Props> {
       // If the selected project was not successfully resolved, that means
       // it must have been deleted. We should redirect the user to the main
       // screen.
-      history.push('/');
+      // history.push('/');
     }
   }
 
@@ -112,9 +108,7 @@ const mapStateToProps = state => ({
   project: getSelectedProject(state),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    { loadDependencyInfoFromDisk }
-  )(ProjectPage)
-);
+export default connect(
+  mapStateToProps,
+  { loadDependencyInfoFromDisk }
+)(ProjectPage);
