@@ -31,10 +31,6 @@ type Props = {
 };
 
 class App extends Component<Props> {
-  componentDidMount() {
-    this.props.refreshProjects();
-  }
-
   render() {
     const { selectedProject } = this.props;
 
