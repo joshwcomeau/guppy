@@ -24,35 +24,23 @@ type Props = {
 
 class ProjectPage extends Component<Props> {
   componentDidMount() {
+    const { project, loadDependencyInfoFromDisk } = this.props;
+
     window.scroll({
       top: 0,
       left: 0,
       behavior: 'smooth',
     });
 
-    this.loadProjectDependencies(this.props.project);
+    loadDependencyInfoFromDisk(project.id, project.path);
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (
-      !this.props.project ||
-      !nextProps.project ||
-      this.props.project.id !== nextProps.project.id
-    ) {
-      this.loadProjectDependencies(nextProps.project);
-    }
-  }
-
-  loadProjectDependencies(project: Project) {
-    const { loadDependencyInfoFromDisk } = this.props;
-
-    if (project) {
-      loadDependencyInfoFromDisk(project.id, project.path);
-    } else {
-      // If the selected project was not successfully resolved, that means
-      // it must have been deleted. We should redirect the user to the main
-      // screen.
-      // history.push('/');
+    if (this.props.project.id !== nextProps.project.id) {
+      this.props.loadDependencyInfoFromDisk(
+        nextProps.project.id,
+        nextProps.project.path
+      );
     }
   }
 

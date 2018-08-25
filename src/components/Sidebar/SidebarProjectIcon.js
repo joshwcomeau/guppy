@@ -14,7 +14,7 @@ type Props = {
   color?: string,
   iconSrc?: string,
   isSelected: boolean,
-  handleSelect: () => any,
+  handleSelect: () => void,
 };
 
 const SidebarProjectIcon = ({
