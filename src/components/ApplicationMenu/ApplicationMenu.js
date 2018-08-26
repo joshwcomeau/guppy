@@ -10,6 +10,7 @@ import {
   createNewProjectStart,
   showImportExistingProjectPrompt,
   clearConsole,
+  showDeleteProjectPrompt,
 } from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import { isMac } from '../../services/platform.service';
@@ -21,11 +22,13 @@ import type { Task } from '../../types';
 const { app, process, Menu } = remote;
 
 type Props = {
+  selectedProject: ?string,
   selectedProjectId: ?string,
   devServerTask: ?Task,
   createNewProjectStart: () => any,
   showImportExistingProjectPrompt: () => any,
   clearConsole: (task: Task) => any,
+  showDeleteProjectPrompt: (project: any) => any,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -47,11 +50,13 @@ class ApplicationMenu extends Component<Props> {
 
   buildMenu = () => {
     const {
+      selectedProject,
       selectedProjectId,
       devServerTask,
       createNewProjectStart,
       showImportExistingProjectPrompt,
       clearConsole,
+      showDeleteProjectPrompt,
     } = this.props;
 
     const template = [
@@ -168,6 +173,10 @@ class ApplicationMenu extends Component<Props> {
             click: () => clearConsole(devServerTask),
             accelerator: 'CmdOrCtrl+K',
           },
+          {
+            label: isMac ? 'Delete Project' : 'Delete project',
+            click: () => showDeleteProjectPrompt(selectedProject),
+          },
         ],
       });
     }
@@ -202,13 +211,14 @@ const mapStateToProps = state => {
       )
     : null;
 
-  return { selectedProjectId, devServerTask };
+  return { selectedProject, selectedProjectId, devServerTask };
 };
 
 const mapDispatchToProps = {
   createNewProjectStart,
   showImportExistingProjectPrompt,
   clearConsole,
+  showDeleteProjectPrompt,
 };
 
 export default connect(
