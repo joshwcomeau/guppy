@@ -85,7 +85,7 @@ const fadeIn = keyframes`
 `;
 
 const FadeIn = styled.div`
-  animation: ${fadeIn} 1ms;
+  animation: ${fadeIn} 400ms;
 `;
 
 const mapStateToProps = state => ({

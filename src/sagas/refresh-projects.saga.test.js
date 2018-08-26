@@ -10,14 +10,6 @@ import {
 import { getPathsArray } from '../reducers/paths.reducer';
 import { loadGuppyProjects } from '../services/read-from-disk.service';
 
-// TODO: this?
-jest.mock('electron', () => ({
-  remote: {
-    app: { getAppPath: () => '' },
-    dialog: { showOpenDialog: jest.fn(), showErrorBox: jest.fn() },
-  },
-}));
-
 describe('refresh-projects saga', () => {
   describe('root import-project saga', () => {
     it('should watching for start actions', () => {
