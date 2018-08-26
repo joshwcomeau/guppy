@@ -159,20 +159,26 @@ class ApplicationMenu extends Component<Props> {
     // During onboarding, there is no selected project (because none exists
     // yet). Therefore, we only want to show the 'Project' menu when a project
     // is selected.
-    if (selectedProjectId && devServerTask) {
+    if (selectedProjectId) {
       // The `Project` menu should be inserted right after `Edit`, which will
       // have a different index depending on the platform.
       const editMenuIndex = template.findIndex(menu => menu.id === 'edit');
+
+      // If there's no devServerTask then hide that menu item
+      // this will happen if the project doesn't have any start tasks
+      const clearConsoleMenuItems = devServerTask
+        ? {
+            label: isMac ? 'Clear Server Logs' : 'Clear server logs',
+            click: () => clearConsole(devServerTask),
+            accelerator: 'CmdOrCtrl+K',
+          }
+        : { visible: false };
 
       template.splice(editMenuIndex, 0, {
         id: 'project',
         label: isMac ? 'Project' : '&Project',
         submenu: [
-          {
-            label: isMac ? 'Clear Server Logs' : 'Clear server logs',
-            click: () => clearConsole(devServerTask),
-            accelerator: 'CmdOrCtrl+K',
-          },
+          clearConsoleMenuItems,
           {
             label: isMac ? 'Delete Project' : 'Delete project',
             click: () => showDeleteProjectPrompt(selectedProject),
