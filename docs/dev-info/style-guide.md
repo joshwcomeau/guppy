@@ -54,22 +54,7 @@ class GoodExample extends Component<Props> {
 }
 ```
 
-### File structure
 
-Files are grouped by type. This means that there is a directory for components, reducers, services, etc.
+---
 
-Components are stored in directories. This way, we can colocate component-specific things like stories, helpers, and tests:
-
-```
-components
-└── Button
-    ├── Button.js
-    ├── Button.stories.js
-    ├── Button.test.js
-    ├── Button.helpers.js
-    └── index.js
-```
-
-Occasionally, files won't fit neatly into this structure. For example, there are stories that are not component-specific, like [colors](https://github.com/joshwcomeau/guppy/blob/master/src/stories/colors.stories.js). In these cases, we have folders for them; `src/stories` holds all non-specific stories, for example.
-
-In general, though, you ought to be able to colocate them.
+More to come!
