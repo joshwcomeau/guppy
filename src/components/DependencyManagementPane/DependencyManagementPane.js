@@ -18,6 +18,7 @@ import Card from '../Card';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import OnlyOn from '../OnlyOn';
+import MountAfter from '../MountAfter';
 
 import type { Project } from '../../types';
 
@@ -140,14 +141,33 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 </DependencyButton>
               ))}
             </Dependencies>
-            <AddDependencyButton onClick={this.openAddNewDependencyModal}>
-              <IconBase icon={plus} size={20} />
-              <Spacer size={6} />
-              Add New
-              <OnlyOn size="mdMin" style={{ paddingLeft: 3 }}>
-                Dependency
-              </OnlyOn>
-            </AddDependencyButton>
+            <MountAfter
+              delay={1000}
+              reason={`
+                A _really weird_ Chrome bug means that for a brief moment
+                during initial mount, a large grey rectangle shows up on the
+                screen.
+
+                I traced it back to AddDependencyButton, and the fact that it
+                has a "dashed" border. If I change that border to "solid", it
+                fixes the bug o_O
+
+                For reasons unknown, if I delay the rendering of this component,
+                the bug is fixed. And because this component isn't needed
+                immediately, that's ok!
+
+                See the bug in action: https://imgur.com/a/SanrY61
+              `}
+            >
+              <AddDependencyButton onClick={this.openAddNewDependencyModal}>
+                <IconBase icon={plus} size={20} />
+                <Spacer size={6} />
+                Add New
+                <OnlyOn size="mdMin" style={{ paddingLeft: 3 }}>
+                  Dependency
+                </OnlyOn>
+              </AddDependencyButton>
+            </MountAfter>
           </DependencyList>
           <MainContent>
             {selectedDependency.status === 'installing' ? (
