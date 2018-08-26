@@ -4,7 +4,7 @@
  * other issues by offsetting the mount of a component by a certain amount of
  * time.
  */
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 type Props = {
   delay: number,
