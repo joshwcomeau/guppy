@@ -70,9 +70,9 @@ export const deleteProjectFromDisk = (project: string) => ({
   project,
 });
 
-export const deleteProjectFromDiskFinish = (deletedProjectId: string) => ({
+export const deleteProjectFromDiskFinish = (deletedProject: string) => ({
   type: FINISH_DELETING_PROJECT_FROM_DISK,
-  deletedProjectId,
+  deletedProject,
 });
 
 export const refreshProjects = () => {

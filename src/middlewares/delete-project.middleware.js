@@ -11,6 +11,8 @@ import {
   createNewProjectStart,
 } from '../actions';
 
+import { getProjectsArray } from '../reducers/projects.reducer';
+
 const { dialog, shell } = remote;
 
 export default (store: any) => (next: any) => (action: any) => {
@@ -40,45 +42,42 @@ export default (store: any) => (next: any) => (action: any) => {
     }
 
     case DELETE_PROJECT_FROM_DISK: {
-      const { path, id } = action.project;
+      const { project } = action;
+      const { path } = project;
 
       // Returns true if successfully deleted
       const successfullyDeleted = shell.moveItemToTrash(path);
 
       if (successfullyDeleted) {
-        store.dispatch(deleteProjectFromDiskFinish(id));
+        store.dispatch(deleteProjectFromDiskFinish(project));
+        store.dispatch(refreshProjects());
       }
       break;
     }
 
     case FINISH_DELETING_PROJECT_FROM_DISK: {
-      // Make sure we get an updated project list
-      store.dispatch(refreshProjects());
+      // Get the deleted project from the action
+      // so we know what was deleted
+      const { deletedProject } = action;
 
-      // Get the deleted project id from the action
-      // so we know what is deleted
-      const { deletedProjectId } = action;
+      // Get a fresh projects array from state
+      const projects = getProjectsArray(store.getState());
 
-      // Get the fresh projects list from state
-      const { projects } = store.getState();
-
-      // Calculate the remaining projects by filtering
-      // out the deletedProjectId
-      const remainingProjects = Object.keys(projects.byId).filter(
-        id => id !== deletedProjectId
+      // Calculate remaining projects by filtering out deletedProject.id
+      const remainingProjects = projects.filter(
+        project => project.id !== deletedProject.id
       );
 
+      // If remainingProjects array has at least one project
+      // then there's a project to select next
       if (remainingProjects.length >= 1) {
-        // If remainingProjects array has at least one project
-        // there's a project to select
-        const nextId = remainingProjects[0];
-        store.dispatch(selectProject(nextId));
+        const nextProject = remainingProjects[0];
+        store.dispatch(selectProject(nextProject.id));
       } else {
-        // Otherwise there are no more projects
-        // so spit out to the new project screen
+        // Otherwise there are no more projects left
+        // so just render the create/import screen
         store.dispatch(createNewProjectStart());
       }
-
       break;
     }
   }
