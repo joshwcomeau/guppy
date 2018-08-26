@@ -7,7 +7,6 @@ import {
   REFRESH_PROJECTS_START,
 } from '../actions';
 import { loadGuppyProjects } from '../services/read-from-disk.service';
-
 import { getPathsArray } from '../reducers/paths.reducer';
 
 import type { Saga } from 'redux-saga';
