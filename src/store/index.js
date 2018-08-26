@@ -34,7 +34,7 @@ export default function configureStore() {
 
   // We don't want to store task info.
   // Tasks
-  engine = filter(engine, null, [['tasks']]);
+  engine = filter(engine, null, [['appLoaded', 'tasks']]);
   const storageMiddleware = storage.createMiddleware(engine);
 
   const wrappedReducer = storage.reducer(rootReducer);

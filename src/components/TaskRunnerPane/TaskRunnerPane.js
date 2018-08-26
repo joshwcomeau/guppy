@@ -71,12 +71,9 @@ class TaskRunnerPane extends Component<Props, State> {
     const { selectedTaskId } = this.state;
 
     if (tasks.length === 0) {
-      // For the initial paint, there won't be any tasks, as tasks aren't
-      // persisted and need to be read from the disk.
-      // TODO: Differentiate between "the tasks haven't loaded" and "there
-      // are no tasks"
-      // TODO: Add "skeleton" structure to make it clear it's loading,
-      // and to prevent content from jumping around.
+      // If the user deletes all `scripts` from their package.json, we don't
+      // need to show this module.
+      // (this shouldn't really ever happen)
       return null;
     }
 

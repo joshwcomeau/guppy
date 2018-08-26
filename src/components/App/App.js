@@ -5,6 +5,7 @@ import styled, { keyframes } from 'styled-components';
 
 import { COLORS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -16,25 +17,28 @@ import CreateNewProjectWizard from '../CreateNewProjectWizard';
 import type { Project } from '../../types';
 
 type Props = {
+  isAppLoaded: boolean,
   selectedProject: ?Project,
 };
 
 class App extends Component<Props> {
   render() {
-    const { selectedProject } = this.props;
+    const { isAppLoaded, selectedProject } = this.props;
 
     return (
       <Fragment>
         <Titlebar />
         <ApplicationMenu />
 
-        <Wrapper>
-          <Sidebar />
+        {isAppLoaded && (
+          <Wrapper>
+            <Sidebar />
 
-          <MainContent>
-            {selectedProject ? <ProjectPage /> : <IntroScreen />}
-          </MainContent>
-        </Wrapper>
+            <MainContent>
+              {selectedProject ? <ProjectPage /> : <IntroScreen />}
+            </MainContent>
+          </Wrapper>
+        )}
 
         <CreateNewProjectWizard />
       </Fragment>
@@ -64,6 +68,7 @@ const MainContent = styled.div`
 
 const mapStateToProps = state => ({
   selectedProject: getSelectedProject(state),
+  isAppLoaded: getAppLoaded(state),
 });
 
 export default connect(mapStateToProps)(App);

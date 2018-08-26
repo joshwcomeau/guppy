@@ -47,10 +47,6 @@ class ProjectPage extends Component<Props> {
   render() {
     const { project } = this.props;
 
-    if (!project) {
-      return null;
-    }
-
     return (
       <FadeIn>
         <MainContentWrapper>
@@ -89,7 +85,7 @@ const fadeIn = keyframes`
 `;
 
 const FadeIn = styled.div`
-  animation: ${fadeIn} 400ms;
+  animation: ${fadeIn} 1ms;
 `;
 
 const mapStateToProps = state => ({

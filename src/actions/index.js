@@ -88,6 +88,9 @@ export const refreshProjectsFinish = (projects: ProjectsMap) => ({
  *
  * TODO: This should really have a "START" and "COMPLETE" action pair, so that
  * we can show some loading UI while it works.
+ *
+ * TODO: This is our last thunk! We should convert it to a saga, so we can
+ * be rid of thunks altogether.
  */
 
 export const loadDependencyInfoFromDisk = (
@@ -298,21 +301,3 @@ export const importExistingProjectFinish = (
   path,
   project,
 });
-
-// export const ejectProjectStart = (task: Task, timestamp: Date) => ({
-//   type: EJECT_PROJECT_START,
-//   task,
-//   timestamp,
-// });
-
-// export const ejectProjectError = (task: Task, timestamp: Date) => ({
-//   type: EJECT_PROJECT_ERROR,
-//   task,
-//   timestamp,
-// });
-
-// export const ejectProjectFinish = (task: Task, timestamp: Date) => ({
-//   type: EJECT_PROJECT_START,
-//   task,
-//   timestamp,
-// });
