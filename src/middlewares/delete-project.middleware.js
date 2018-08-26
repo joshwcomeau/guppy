@@ -8,7 +8,7 @@ import {
   deleteProjectFromDiskFinish,
   refreshProjects,
   selectProject,
-  dismissSidebarIntro,
+  createNewProjectStart,
 } from '../actions';
 
 const { dialog, shell } = remote;
@@ -76,7 +76,7 @@ export default (store: any) => (next: any) => (action: any) => {
       } else {
         // Otherwise there are no more projects
         // so spit out to the new project screen
-        store.dispatch(dismissSidebarIntro());
+        store.dispatch(createNewProjectStart());
       }
 
       break;
