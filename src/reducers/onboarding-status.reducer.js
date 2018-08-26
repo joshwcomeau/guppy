@@ -7,7 +7,6 @@ import {
   IMPORT_EXISTING_PROJECT_START,
   IMPORT_EXISTING_PROJECT_ERROR,
   IMPORT_EXISTING_PROJECT_FINISH,
-  REFRESH_PROJECTS,
   SELECT_PROJECT,
 } from '../actions';
 
@@ -46,18 +45,6 @@ export default (state: State = initialState, action: Action) => {
     case DISMISS_SIDEBAR_INTRO:
     case SELECT_PROJECT: {
       return state === 'introducing-sidebar' ? 'done' : state;
-    }
-
-    case REFRESH_PROJECTS: {
-      // If the disk reveals that this user already has guppy projects, we
-      // should assume that the onboarding has been completed previously.
-      // This can happen when Guppy has to rebuild the local storage from
-      // disk (which might happen after the app updates?)
-      if (Object.keys(action.projects).length) {
-        return 'done';
-      }
-
-      return state;
     }
 
     default:

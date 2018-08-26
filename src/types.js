@@ -102,3 +102,5 @@ export type Project = {
   // `path` is the project's on-disk location.
   path: string,
 };
+
+export type ProjectsMap = { [id: string]: Project };

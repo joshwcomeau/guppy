@@ -7,7 +7,7 @@ import {
   IMPORT_EXISTING_PROJECT_FINISH,
   FINISH_DELETING_PROJECT_FROM_DISK,
   ADD_DEPENDENCY_FINISH,
-  REFRESH_PROJECTS,
+  REFRESH_PROJECTS_FINISH,
   SELECT_PROJECT,
 } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
@@ -35,7 +35,7 @@ export const initialState = {
 
 const byId = (state: ById = initialState.byId, action: Action) => {
   switch (action.type) {
-    case REFRESH_PROJECTS: {
+    case REFRESH_PROJECTS_FINISH: {
       return action.projects;
     }
 
@@ -79,7 +79,7 @@ const selectedId = (
       return action.project.guppy.id;
     }
 
-    case REFRESH_PROJECTS: {
+    case REFRESH_PROJECTS_FINISH: {
       // It's possible that the selected project no longer exists (say if the
       // user deletes that folder and then refreshes Guppy).
       // In that case, un-select it.
