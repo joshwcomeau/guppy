@@ -50,10 +50,13 @@ class DevelopmentServerPane extends PureComponent<Props> {
     const { project, task } = this.props;
 
     if (!task) {
-      // This can happen if the user modifies the package.json to not have a
-      // script named `start` (or `deploy` for Gatsby projects)
-      // TODO: Helpful error screen
-      return 'No "start" task found. :(';
+      // For the initial paint, there won't be any tasks, as tasks aren't
+      // persisted and need to be read from the disk.
+      // TODO: Differentiate between "the tasks haven't loaded" and "there
+      // are no tasks"
+      // TODO: Add "skeleton" structure to make it clear it's loading,
+      // and to prevent content from jumping around.
+      return null;
     }
 
     // TODO: There's currently no DevelopmentServerStatus for smaller windows.
