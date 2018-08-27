@@ -10,6 +10,7 @@ import {
   createNewProjectStart,
   showImportExistingProjectPrompt,
   clearConsole,
+  showDeleteProjectPrompt,
 } from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import { isMac } from '../../services/platform.service';
@@ -21,18 +22,22 @@ import type { Task } from '../../types';
 const { app, process, Menu } = remote;
 
 type Props = {
+  selectedProject: ?string,
   selectedProjectId: ?string,
   devServerTask: ?Task,
   createNewProjectStart: () => any,
   showImportExistingProjectPrompt: () => any,
   clearConsole: (task: Task) => any,
+  showDeleteProjectPrompt: (project: any) => any,
 };
 
 class ApplicationMenu extends Component<Props> {
   menu: any;
 
   componentDidMount() {
-    this.buildMenu();
+    setTimeout(() => {
+      this.buildMenu();
+    }, 1000);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -42,16 +47,20 @@ class ApplicationMenu extends Component<Props> {
   }
 
   componentDidUpdate() {
-    this.buildMenu();
+    setTimeout(() => {
+      this.buildMenu();
+    }, 1000);
   }
 
   buildMenu = () => {
     const {
+      selectedProject,
       selectedProjectId,
       devServerTask,
       createNewProjectStart,
       showImportExistingProjectPrompt,
       clearConsole,
+      showDeleteProjectPrompt,
     } = this.props;
 
     const template = [
@@ -154,21 +163,31 @@ class ApplicationMenu extends Component<Props> {
     // During onboarding, there is no selected project (because none exists
     // yet). Therefore, we only want to show the 'Project' menu when a project
     // is selected.
-    if (selectedProjectId && devServerTask) {
+    if (selectedProjectId) {
       // The `Project` menu should be inserted right after `Edit`, which will
       // have a different index depending on the platform.
       const editMenuIndex = template.findIndex(menu => menu.id === 'edit');
 
+      // Only include clear console menu item if devServerTask exists
+      let submenu = [];
+
+      if (devServerTask) {
+        submenu.push({
+          label: isMac ? 'Clear Server Logs' : 'Clear server logs',
+          click: () => clearConsole(devServerTask),
+          accelerator: 'CmdOrCtrl+K',
+        });
+      }
+
+      submenu.push({
+        label: isMac ? 'Delete Project' : 'Delete project',
+        click: () => showDeleteProjectPrompt(selectedProject),
+      });
+
       template.splice(editMenuIndex, 0, {
         id: 'project',
         label: isMac ? 'Project' : '&Project',
-        submenu: [
-          {
-            label: isMac ? 'Clear Server Logs' : 'Clear server logs',
-            click: () => clearConsole(devServerTask),
-            accelerator: 'CmdOrCtrl+K',
-          },
-        ],
+        submenu,
       });
     }
 
@@ -202,13 +221,14 @@ const mapStateToProps = state => {
       )
     : null;
 
-  return { selectedProjectId, devServerTask };
+  return { selectedProject, selectedProjectId, devServerTask };
 };
 
 const mapDispatchToProps = {
   createNewProjectStart,
   showImportExistingProjectPrompt,
   clearConsole,
+  showDeleteProjectPrompt,
 };
 
 export default connect(

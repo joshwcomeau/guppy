@@ -10,6 +10,7 @@ import rootReducer from '../reducers';
 import taskMiddleware from '../middlewares/task.middleware';
 import dependencyMiddleware from '../middlewares/dependency.middleware';
 import importProjectMiddleware from '../middlewares/import-project.middleware';
+import deleteProjectMiddleware from '../middlewares/delete-project.middleware';
 import createEngine from './storage-engine';
 import handleMigrations from './migrations';
 
@@ -42,6 +43,7 @@ export default function configureStore() {
         taskMiddleware,
         dependencyMiddleware,
         importProjectMiddleware,
+        deleteProjectMiddleware,
         storageMiddleware
       ),
       DevTools.instrument()
