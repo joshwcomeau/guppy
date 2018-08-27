@@ -8,17 +8,21 @@ It is not an exhaustive resource; if you have any questions not covered in this 
 
 ### Tools Used
 
-Guppy is an Electron application, which means it's a desktop application written in web technologies.
+Guppy is an [Electron](https://electronjs.org/) application, which means that it's a desktop application written using web technologies.
 
-Guppy is written in React and Redux. We use styled-components for styling.
+In addition, we use the following libraries and tools:
 
-Guppy uses Prettier to enforce many code styles, as well as a modest set of ESLint rules. You can learn more about our code styles in our [style guide](https://github.com/joshwcomeau/guppy/blob/master/docs/dev-info/style-guide.md).
-
-Guppy uses Flow for static type-checking.
-
-Guppy uses Storybook to present its reusable components as a library.
+- [React](https://reactjs.org/)
+- [Redux](https://redux.js.org/) (with [Redux Saga](https://github.com/redux-saga/redux-saga) for side-effects and orchestration)
+- [styled-components](styled-components.com)
+- [Prettier](https://github.com/prettier/prettier)
+- [ESLint](https://eslint.org/)
+- [Flow](https://flow.org/)
+- [Storybook](https://github.com/storybooks/storybook)
 
 Some of these tools, like Electron and Flow, might be intimidating if you haven't used them before. Don't worry too much about this, though; we're a helpful bunch, and we're glad to answer any questions you have, or point you in the right direction in pull requests.
+
+You can learn a bit more about how we use these tools in our [style guide](https://github.com/joshwcomeau/guppy/blob/master/docs/dev-info/style-guide.md).
 
 ### Bundling and Electron
 
@@ -64,7 +68,7 @@ To understand the distinction between "utils" and "services", think of it this w
 
 ### Redux Philosophy
 
-This project uses redux, and we're pretty opinionated in how we use it.
+This project uses Redux, and we're pretty opinionated in how we use it.
 
 Actions should describe things happening in the application; either things that the user is doing, or things happening asynchronously because of events. In most cases, they should not be thought of as "setters", or be tightly coupled to a specific reducer.
 
@@ -78,11 +82,11 @@ ADD_DEPENDENCY_START
 ADD_DEPENDENCY_FINISH
 ```
 
-See how you can trace what the user has done? Actions are descriptive, and Redux works _so much nicer_ (in our opinion) when used this way. The big advantage to doing things this way is that it's easier to keep a consistent mental model: actions describe what's happening, and reducers implement the code required to change the state based on those actions.
+Actions are descriptive, like a narration of what the user is doing. In our opinion, Redux works _so much nicer_ when used this way. The big advantage to doing things this way is that it's easier to keep a consistent mental model: actions describe what's happening, and reducers implement the code required to change the state based on those actions.
 
-It's hard to put into words why this is such a powerful idea, but in the original author's opinion, this perspective-shift is the difference between hating redux and loving it.
+It's hard to put into words why this is such a powerful idea, but this perspective-shift can be the difference between hating Redux and loving it.
 
-Here's the kind of thing we'd like to avoid:
+In contrast, here's the kind of thing we'd like to avoid:
 
 ```
 // Bad:
@@ -90,15 +94,13 @@ SET_PROJECT
 SET_TASK_STATUS
 SPAWN_TASK
 UPDATE_TASK_LOG
-SET_DEPENDENCY_STATUS
 LOCK_DEPENDENCIES_FOR_PROJECT
+SET_DEPENDENCY_STATUS
 SET_DEPENDENCY_LIST
 SET_DEPENDENCY_STATUS
 ```
 
-By having lots of actions that just set a value, we're losing the abstraction benefit of descriptive actions.
-
-Another issue with this alternative is that we're dispatching far more actions. When actions are descriptive, a single action can affect multiple reducers, instead of needing to dispatch multiple actions to do the same thing.
+This example uses actions as MVC setters, and as a result you need a lot more actions to set all the different reducers. In addition to the cost of all those extra renders, the big issue is that it is harder to understand what's happening; it's harder to debug, harder for new developers to understand what's happening.
 
 ### Redux Side Effects
 
@@ -106,4 +108,4 @@ By default, Redux doesn't come with any convention to manage side effects, or to
 
 In its early days, Guppy used `redux-thunk` to handle sequencing, and Redux middlewares to manage side-effects like writing to disk. This approach worked, but it was hard to test, and often felt too complicated.
 
-We're in the middle of switching over to [`Redux Saga`](https://github.com/redux-saga/redux-saga). Redux Saga is really powerful for both sequencing actions as well as managing side-effects. It's easier to test, and comes with many great tools for advanced sequencing.
+We're in the middle of switching over to [Redux Saga](https://github.com/redux-saga/redux-saga). Redux Saga is really powerful for both sequencing actions as well as managing side-effects. It's easier to test, and comes with many great tools for advanced sequencing.
