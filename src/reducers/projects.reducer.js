@@ -5,6 +5,7 @@ import produce from 'immer';
 import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
+  FINISH_DELETING_PROJECT_FROM_DISK,
   ADD_DEPENDENCY_FINISH,
   REFRESH_PROJECTS,
   SELECT_PROJECT,
@@ -52,6 +53,14 @@ const byId = (state: ById = initialState.byId, action: Action) => {
       return produce(state, draftState => {
         draftState[projectId].dependencies[dependency.name] =
           dependency.version;
+      });
+    }
+
+    case FINISH_DELETING_PROJECT_FROM_DISK: {
+      const { projectId } = action;
+
+      return produce(state, draftState => {
+        delete draftState[projectId];
       });
     }
 
