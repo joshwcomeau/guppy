@@ -54,17 +54,17 @@ export default (store: any) => (next: any) => (action: any) => {
             project => project.id !== action.project.id
           );
 
-          // Get the index for the next project
-          // It's either the next project after deleted project's position
-          // or if deleted project was last, then select the new last element
-          const nextIndex =
-            index < remainingProjects.length
-              ? index
-              : remainingProjects.length - 1;
-
           // If remainingProjects array has at least one project
           // then there's a project to select next
           if (remainingProjects.length >= 1) {
+            // Get the index for the next project
+            // It's either the next project after deleted project's position
+            // or if deleted project was last, then select the new last element
+            const nextIndex =
+              index < remainingProjects.length
+                ? index
+                : remainingProjects.length - 1;
+
             // Select the next project
             const nextProject = remainingProjects[nextIndex];
             store.dispatch(selectProject(nextProject.id));
