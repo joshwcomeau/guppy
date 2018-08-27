@@ -164,26 +164,26 @@ class ApplicationMenu extends Component<Props> {
       // have a different index depending on the platform.
       const editMenuIndex = template.findIndex(menu => menu.id === 'edit');
 
-      // If there's no devServerTask then hide that menu item
-      // this will happen if the project doesn't have any start tasks
-      const clearConsoleMenuItems = devServerTask
-        ? {
-            label: isMac ? 'Clear Server Logs' : 'Clear server logs',
-            click: () => clearConsole(devServerTask),
-            accelerator: 'CmdOrCtrl+K',
-          }
-        : { visible: false };
+      // Only include clear console menu item if devServerTask exists
+      let submenu = [];
+
+      if (devServerTask) {
+        submenu.push({
+          label: isMac ? 'Clear Server Logs' : 'Clear server logs',
+          click: () => clearConsole(devServerTask),
+          accelerator: 'CmdOrCtrl+K',
+        });
+      }
+
+      submenu.push({
+        label: isMac ? 'Delete Project' : 'Delete project',
+        click: () => showDeleteProjectPrompt(selectedProject),
+      });
 
       template.splice(editMenuIndex, 0, {
         id: 'project',
         label: isMac ? 'Project' : '&Project',
-        submenu: [
-          clearConsoleMenuItems,
-          {
-            label: isMac ? 'Delete Project' : 'Delete project',
-            click: () => showDeleteProjectPrompt(selectedProject),
-          },
-        ],
+        submenu,
       });
     }
 
