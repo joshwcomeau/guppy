@@ -58,16 +58,6 @@ export const addProject = (project: Project) => ({
   project,
 });
 
-export const showDeleteProjectPrompt = (project: Project) => ({
-  type: SHOW_DELETE_PROJECT_PROMPT,
-  project,
-});
-
-export const finishDeletingProjectFromDisk = (projectId: string) => ({
-  type: FINISH_DELETING_PROJECT_FROM_DISK,
-  projectId,
-});
-
 export const refreshProjectsStart = () => ({
   type: REFRESH_PROJECTS_START,
 });
@@ -300,4 +290,14 @@ export const importExistingProjectFinish = (
   type: IMPORT_EXISTING_PROJECT_FINISH,
   projectPath,
   project,
+});
+
+export const showDeleteProjectPrompt = (project: Project) => ({
+  type: SHOW_DELETE_PROJECT_PROMPT,
+  project,
+});
+
+export const finishDeletingProjectFromDisk = (projectId: string) => ({
+  type: FINISH_DELETING_PROJECT_FROM_DISK,
+  projectId,
 });
