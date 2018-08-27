@@ -35,7 +35,9 @@ class ApplicationMenu extends Component<Props> {
   menu: any;
 
   componentDidMount() {
-    this.buildMenu();
+    setTimeout(() => {
+      this.buildMenu();
+    }, 1000);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -45,7 +47,9 @@ class ApplicationMenu extends Component<Props> {
   }
 
   componentDidUpdate() {
-    this.buildMenu();
+    setTimeout(() => {
+      this.buildMenu();
+    }, 1000);
   }
 
   buildMenu = () => {
