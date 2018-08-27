@@ -1,5 +1,5 @@
 import {
-  REFRESH_PROJECTS,
+  REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
   RUN_TASK,
   COMPLETE_TASK,
@@ -10,12 +10,12 @@ import reducer, { getTaskDescription } from './tasks.reducer';
 jest.mock('electron');
 
 describe('Tasks reducer', () => {
-  describe(REFRESH_PROJECTS, () => {
+  describe(REFRESH_PROJECTS_FINISH, () => {
     test('captures task data from new projects', () => {
       const initialState = reducer(undefined, {});
 
       const action = {
-        type: REFRESH_PROJECTS,
+        type: REFRESH_PROJECTS_FINISH,
         projects: {
           foo: {
             name: 'foo',
@@ -113,7 +113,7 @@ describe('Tasks reducer', () => {
       };
 
       const action = {
-        type: REFRESH_PROJECTS,
+        type: REFRESH_PROJECTS_FINISH,
         projects: {
           foo: {
             name: 'foo',

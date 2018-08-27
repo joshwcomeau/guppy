@@ -1,17 +1,17 @@
 import {
   IMPORT_EXISTING_PROJECT_FINISH,
   ADD_DEPENDENCY_FINISH,
-  REFRESH_PROJECTS,
+  REFRESH_PROJECTS_FINISH,
   SELECT_PROJECT,
   ADD_PROJECT,
-} from '../../actions';
+} from '../actions';
 
 import reducer, {
   initialState as projectsInitialState,
   getById,
   getSelectedProjectId,
   getInternalProjectById,
-} from '../projects.reducer';
+} from './projects.reducer';
 
 describe('Projects Reducer', () => {
   describe(ADD_PROJECT, () => {
@@ -120,7 +120,7 @@ describe('Projects Reducer', () => {
     });
   });
 
-  describe(REFRESH_PROJECTS, () => {
+  describe(REFRESH_PROJECTS_FINISH, () => {
     it('returns a null selectedId if selected project does not exist in the list of projects', () => {
       const initialState = {
         ...projectsInitialState,
@@ -128,7 +128,7 @@ describe('Projects Reducer', () => {
       };
 
       const action = {
-        type: REFRESH_PROJECTS,
+        type: REFRESH_PROJECTS_FINISH,
         projects: {},
       };
 
@@ -147,7 +147,7 @@ describe('Projects Reducer', () => {
       };
 
       const action = {
-        type: REFRESH_PROJECTS,
+        type: REFRESH_PROJECTS_FINISH,
         projects: {},
       };
 
@@ -174,7 +174,7 @@ describe('Projects Reducer', () => {
       };
 
       const action = {
-        type: REFRESH_PROJECTS,
+        type: REFRESH_PROJECTS_FINISH,
         projects: initialState.byId,
       };
 

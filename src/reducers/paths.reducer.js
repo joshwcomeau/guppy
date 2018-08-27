@@ -58,5 +58,6 @@ export const getDefaultPath = (projectId: string) =>
 //
 //
 // Selectors
+export const getPathsArray = (state: any) => Object.values(state.paths);
 export const getPathForProjectId = (state: any, projectId: string) =>
   state.paths[projectId] || getDefaultPath(projectId);

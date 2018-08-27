@@ -1,20 +1,11 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
-import * as actions from '../../actions';
 import { COLORS } from '../../constants';
-import {
-  extractProjectIdFromUrl,
-  buildUrlForProjectId,
-} from '../../services/location.service';
-import {
-  getProjectsArray,
-  getSelectedProject,
-} from '../../reducers/projects.reducer';
-import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
+import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -23,67 +14,32 @@ import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
-import type { Action } from 'redux';
 import type { Project } from '../../types';
-import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 type Props = {
-  onboardingStatus: OnboardingStatus,
+  isAppLoaded: boolean,
   selectedProject: ?Project,
-  projects: Array<Project>,
-  refreshProjects: Action,
-  selectProject: Action,
-  history: any, // Provided by `withRouter`
 };
 
 class App extends Component<Props> {
-  componentDidMount() {
-    const {
-      history,
-      selectedProject,
-      selectProject,
-      refreshProjects,
-    } = this.props;
-
-    refreshProjects();
-
-    if (selectedProject) {
-      history.replace(buildUrlForProjectId(selectedProject.id));
-    }
-
-    history.listen(location => {
-      const projectId = extractProjectIdFromUrl(location);
-
-      if (projectId) {
-        selectProject(projectId);
-      }
-    });
-  }
-
   render() {
+    const { isAppLoaded, selectedProject } = this.props;
+
     return (
       <Fragment>
         <Titlebar />
-        <ApplicationMenu />
 
-        <Wrapper>
-          <Sidebar />
+        {isAppLoaded && (
+          <Wrapper>
+            <ApplicationMenu />
 
-          <MainContent>
-            <Switch>
-              <Route exact path="/" component={IntroScreen} />
-              <Route
-                path="/project/:projectId"
-                render={routerProps => (
-                  <ProjectPage
-                    key={routerProps.match.params.projectId}
-                    {...routerProps}
-                  />
-                )}
-              />
-            </Switch>
-          </MainContent>
-        </Wrapper>
+            <Sidebar />
+
+            <MainContent>
+              {selectedProject ? <ProjectPage /> : <IntroScreen />}
+            </MainContent>
+          </Wrapper>
+        )}
 
         <CreateNewProjectWizard />
       </Fragment>
@@ -112,17 +68,8 @@ const MainContent = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  onboardingStatus: getOnboardingStatus(state),
-  projects: getProjectsArray(state),
   selectedProject: getSelectedProject(state),
+  isAppLoaded: getAppLoaded(state),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      refreshProjects: actions.refreshProjects,
-      selectProject: actions.selectProject,
-    }
-  )(App)
-);
+export default connect(mapStateToProps)(App);
