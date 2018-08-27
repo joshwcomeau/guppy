@@ -28,10 +28,11 @@ class App extends Component<Props> {
     return (
       <Fragment>
         <Titlebar />
-        <ApplicationMenu />
 
         {isAppLoaded && (
           <Wrapper>
+            <ApplicationMenu />
+
             <Sidebar />
 
             <MainContent>

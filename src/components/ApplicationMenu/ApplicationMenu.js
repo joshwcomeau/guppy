@@ -35,24 +35,16 @@ class ApplicationMenu extends Component<Props> {
   menu: any;
 
   componentDidMount() {
-    setTimeout(() => {
-      this.buildMenu();
-    }, 1000);
+    this.buildMenu(this.props);
   }
 
-  shouldComponentUpdate(nextProps) {
-    // We currently only need to rebuild the menu whenever the selected project
-    // changes (so that we can clear the right project's console)
-    return this.props.selectedProjectId !== nextProps.selectedProjectId;
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.props.selectedProjectId !== nextProps.selectedProjectId) {
+      this.buildMenu(nextProps);
+    }
   }
 
-  componentDidUpdate() {
-    setTimeout(() => {
-      this.buildMenu();
-    }, 1000);
-  }
-
-  buildMenu = () => {
+  buildMenu = (props: Props) => {
     const {
       selectedProject,
       selectedProjectId,
@@ -61,7 +53,7 @@ class ApplicationMenu extends Component<Props> {
       showImportExistingProjectPrompt,
       clearConsole,
       showDeleteProjectPrompt,
-    } = this.props;
+    } = props;
 
     const template = [
       {
