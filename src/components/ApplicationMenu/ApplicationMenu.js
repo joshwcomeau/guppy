@@ -160,10 +160,10 @@ class ApplicationMenu extends Component<Props> {
       // have a different index depending on the platform.
       const editMenuIndex = template.findIndex(menu => menu.id === 'edit');
 
-      // Only include clear console menu item if devServerTask exists
       let submenu = [];
 
       if (devServerTask) {
+        // Only include clear console menu item if devServerTask exists
         submenu.push({
           label: isMac ? 'Clear Server Logs' : 'Clear server logs',
           click: () => clearConsole(devServerTask),
@@ -177,8 +177,8 @@ class ApplicationMenu extends Component<Props> {
       });
 
       template.splice(editMenuIndex, 0, {
-        id: 'project',
-        label: isMac ? 'Project' : '&Project',
+        id: 'current-project',
+        label: isMac ? 'Current Project' : '&Current Project',
         submenu,
       });
     }
