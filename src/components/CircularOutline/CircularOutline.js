@@ -103,18 +103,18 @@ class RoundedOutline extends Component<Props, State> {
 
     const svgId = `${color1.replace('#', '')}-${color2.replace('#', '')}`;
 
-    const finalDashOffset = isShown ? 0 : pathLength;
+    const dashOffset = isShown ? 0 : pathLength;
 
     return (
       <Motion
         style={{
-          dashOffset:
+          interpolatedDashOffset:
             animateChanges && finishedAllMountingSteps
-              ? spring(finalDashOffset, springSettings)
-              : finalDashOffset,
+              ? spring(dashOffset, springSettings)
+              : dashOffset,
         }}
       >
-        {({ dashOffset }) => (
+        {({ interpolatedDashOffset }) => (
           <Svg
             innerRef={node => (this.wrapperNode = node)}
             width="100%"
@@ -154,7 +154,7 @@ class RoundedOutline extends Component<Props, State> {
                   strokeLinecap="round"
                   style={{
                     strokeDasharray: `${pathLength}, ${pathLength + 1}`,
-                    strokeDashoffset: dashOffset,
+                    strokeDashoffset: interpolatedDashOffset,
                   }}
                 />
               )}

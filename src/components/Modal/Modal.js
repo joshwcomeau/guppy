@@ -80,23 +80,26 @@ class Modal extends PureComponent<Props, State> {
             const inTransit =
               transitionState === 'entering' || transitionState === 'exiting';
 
-            const finalTranslateY = transitionState === 'entered' ? 0 : 50;
+            const translateY = transitionState === 'entered' ? 0 : 50;
 
             return (
               <Motion
                 style={{
-                  translateY: spring(finalTranslateY, translateYSpringSettings),
+                  interpolatedTranslateY: spring(
+                    translateY,
+                    translateYSpringSettings
+                  ),
                   opacity: spring(inTransit ? 0 : 1, opacitySpringSettings),
                 }}
               >
-                {({ translateY, opacity }) => (
+                {({ interpolatedTranslateY, opacity }) => (
                   <Wrapper opacity={opacity} clickable={!inTransit}>
                     <Backdrop onClick={onDismiss} />
 
                     <PaneWrapper
                       width={width}
                       height={height}
-                      translateY={translateY}
+                      translateY={interpolatedTranslateY}
                     >
                       {outdatedChildren || children}
                     </PaneWrapper>

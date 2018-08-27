@@ -85,7 +85,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
       transitionState === 'entering' || transitionState === 'exiting';
 
     // prettier-ignore
-    const finalTransitTranslate = transitionState === 'entering' || isBeingDismissed
+    const transitTranslate = transitionState === 'entering' || isBeingDismissed
         ? 50
         : transitionState === 'exiting'
           ? -50
@@ -99,8 +99,8 @@ class TwoPaneModal extends PureComponent<Props, State> {
             isFolded ? -25 : 0,
             foldSpringSettings
           ),
-          transitTranslate: spring(
-            finalTransitTranslate,
+          interpolatedTransitTranslate: spring(
+            transitTranslate,
             transitTranslateSpringSettings
           ),
           transitOpacity: spring(
@@ -112,7 +112,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
         {({
           foldDegrees,
           foldCenteringTranslate,
-          transitTranslate,
+          interpolatedTransitTranslate,
           transitOpacity,
         }) => (
           <Wrapper opacity={transitOpacity} clickable={!inTransit}>
@@ -120,7 +120,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
 
             <PaneWrapper
               translateX={foldCenteringTranslate}
-              translateY={transitTranslate}
+              translateY={interpolatedTransitTranslate}
             >
               <LeftHalf foldDegrees={foldDegrees}>
                 <LeftPaneWrapper>
