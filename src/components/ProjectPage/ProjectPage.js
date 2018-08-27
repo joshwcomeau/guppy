@@ -47,10 +47,6 @@ class ProjectPage extends Component<Props> {
   render() {
     const { project } = this.props;
 
-    if (!project) {
-      return null;
-    }
-
     return (
       <FadeIn>
         <MainContentWrapper>

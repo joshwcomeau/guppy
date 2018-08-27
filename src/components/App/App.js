@@ -3,13 +3,9 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
-import { refreshProjects, selectProject } from '../../actions';
 import { COLORS } from '../../constants';
-import {
-  getProjectsArray,
-  getSelectedProject,
-} from '../../reducers/projects.reducer';
-import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
+import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -18,34 +14,31 @@ import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 
-import type { Action } from 'redux';
 import type { Project } from '../../types';
-import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 type Props = {
-  onboardingStatus: OnboardingStatus,
+  isAppLoaded: boolean,
   selectedProject: ?Project,
-  projects: Array<Project>,
-  refreshProjects: Action,
-  selectProject: Action,
 };
 
 class App extends Component<Props> {
   render() {
-    const { selectedProject } = this.props;
+    const { isAppLoaded, selectedProject } = this.props;
 
     return (
       <Fragment>
         <Titlebar />
         <ApplicationMenu />
 
-        <Wrapper>
-          <Sidebar />
+        {isAppLoaded && (
+          <Wrapper>
+            <Sidebar />
 
-          <MainContent>
-            {selectedProject ? <ProjectPage /> : <IntroScreen />}
-          </MainContent>
-        </Wrapper>
+            <MainContent>
+              {selectedProject ? <ProjectPage /> : <IntroScreen />}
+            </MainContent>
+          </Wrapper>
+        )}
 
         <CreateNewProjectWizard />
       </Fragment>
@@ -74,12 +67,8 @@ const MainContent = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  onboardingStatus: getOnboardingStatus(state),
-  projects: getProjectsArray(state),
   selectedProject: getSelectedProject(state),
+  isAppLoaded: getAppLoaded(state),
 });
 
-export default connect(
-  mapStateToProps,
-  { refreshProjects, selectProject }
-)(App);
+export default connect(mapStateToProps)(App);

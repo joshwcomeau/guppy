@@ -50,13 +50,10 @@ class DevelopmentServerPane extends PureComponent<Props> {
     const { project, task } = this.props;
 
     if (!task) {
-      // For the initial paint, there won't be any tasks, as tasks aren't
-      // persisted and need to be read from the disk.
-      // TODO: Differentiate between "the tasks haven't loaded" and "there
-      // are no tasks"
-      // TODO: Add "skeleton" structure to make it clear it's loading,
-      // and to prevent content from jumping around.
-      return null;
+      // If the package.json is missing a server task (as defined by the
+      // `getDevServerTaskForProjectId` selector), we can't show this module.
+      // TODO: Better errors
+      return 'This project does not appear to have a development server task';
     }
 
     // TODO: There's currently no DevelopmentServerStatus for smaller windows.

@@ -18,7 +18,7 @@
 
 import produce from 'immer';
 import {
-  REFRESH_PROJECTS,
+  REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
   LAUNCH_DEV_SERVER,
   RUN_TASK,
@@ -40,7 +40,7 @@ const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case REFRESH_PROJECTS: {
+    case REFRESH_PROJECTS_FINISH: {
       return produce(state, draftState => {
         Object.keys(action.projects).forEach(projectId => {
           const project = action.projects[projectId];
@@ -125,8 +125,8 @@ export default (state: State = initialState, action: Action) => {
 
       return produce(state, draftState => {
         // For the eject task, we simply want to delete this task altogether.
-        // TODO: We should probably do this in `REFRESH_PROJECTS`, which is
-        // called right after the eject task succeeds!
+        // TODO: We should probably do this in `REFRESH_PROJECTS_FINISH`, which
+        // is called right after the eject task succeeds!
         if (task.name === 'eject') {
           delete draftState[task.id];
           return;

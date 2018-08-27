@@ -20,7 +20,7 @@
  * So this is on a per-project basis.
  */
 import {
-  REFRESH_PROJECTS,
+  REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
   ADD_DEPENDENCY_START,
   ADD_DEPENDENCY_ERROR,
@@ -43,7 +43,7 @@ const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case REFRESH_PROJECTS:
+    case REFRESH_PROJECTS_FINISH:
       return Object.keys(action.projects).reduce(
         (acc, projectId) => ({
           ...acc,
