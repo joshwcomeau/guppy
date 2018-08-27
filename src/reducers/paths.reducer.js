@@ -26,7 +26,7 @@ export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { path: projectPath, project } = action;
+      const { projectPath, project } = action;
 
       return {
         ...state,
