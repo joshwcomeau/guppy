@@ -1,5 +1,4 @@
 import * as path from 'path';
-
 module.exports = {
   remote: {
     app: {
