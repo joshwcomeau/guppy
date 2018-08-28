@@ -2,10 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import {
-  createNewProjectStart,
-  importExistingProjectStart,
-} from '../../actions';
+import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
@@ -84,5 +81,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { createNewProjectStart, importExistingProjectStart }
+  { createNewProjectStart: actions.createNewProjectStart }
 )(IntroScreen);

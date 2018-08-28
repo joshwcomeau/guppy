@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
 import { storiesOf } from '@storybook/react';
 import { decorateAction } from '@storybook/addon-actions';
 import { withInfo } from '@storybook/addon-info';

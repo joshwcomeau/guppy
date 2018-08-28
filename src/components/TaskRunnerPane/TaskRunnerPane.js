@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { runTask, abortTask } from '../../actions';
+import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getTasksInTaskListForProjectId } from '../../reducers/tasks.reducer';
@@ -44,6 +44,7 @@ class TaskRunnerPane extends Component<Props, State> {
   handleToggleTask = taskId => {
     const { tasks, runTask, abortTask } = this.props;
 
+    // eslint-disable-next-line no-shadow
     const task = tasks.find(task => task.id === taskId);
 
     // Should be impossible, this is for Flow.
@@ -117,5 +118,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { runTask, abortTask }
+  { runTask: actions.runTask, abortTask: actions.abortTask }
 )(TaskRunnerPane);

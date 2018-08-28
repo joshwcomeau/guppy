@@ -294,10 +294,10 @@ export const importExistingProjectError = () => ({
 });
 
 export const importExistingProjectFinish = (
-  path: string,
+  projectPath: string,
   project: Project
 ) => ({
   type: IMPORT_EXISTING_PROJECT_FINISH,
-  path,
+  projectPath,
   project,
 });

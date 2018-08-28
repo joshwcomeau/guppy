@@ -97,9 +97,7 @@ export default (store: any) => (next: any) => (action: any) => {
     // it probably makes sense to have separate actions (eg. RUN_TESTS,
     // BUILD_FOR_PRODUCTION), and use RUN_TASK just for user-added tasks.
     case RUN_TASK: {
-      const { projectId, name } = action.task;
-
-      const project = getProjectById(store.getState(), projectId);
+      const { name } = action.task;
 
       // TEMPORARY HACK
       // By default, create-react-app runs tests in interactive watch mode.
@@ -172,7 +170,6 @@ export default (store: any) => (next: any) => (action: any) => {
     }
 
     case ABORT_TASK: {
-      const { task } = action;
       const { processId, name } = task;
 
       killProcessId(processId);
@@ -194,7 +191,7 @@ export default (store: any) => (next: any) => (action: any) => {
     }
 
     case COMPLETE_TASK: {
-      const { task, wasSuccessful } = action;
+      const { wasSuccessful } = action;
 
       // Send a message to add info to the terminal about the task being done.
       // TODO: ASCII fish art?
@@ -214,8 +211,6 @@ export default (store: any) => (next: any) => (action: any) => {
       // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
       // this instead.
       if (task.name === 'eject') {
-        const project = getProjectById(store.getState(), task.projectId);
-
         store.dispatch(loadDependencyInfoFromDisk(project.id, project.path));
       }
 

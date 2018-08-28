@@ -26,11 +26,11 @@ export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { path, project } = action;
+      const { projectPath, project } = action;
 
       return {
         ...state,
-        [project.guppy.id]: path || getDefaultPath(project.guppy.id),
+        [project.guppy.id]: projectPath || getDefaultPath(project.guppy.id),
       };
     }
 

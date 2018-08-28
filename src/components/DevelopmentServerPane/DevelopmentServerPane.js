@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { launchDevServer, abortTask } from '../../actions';
+import * as actions from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getDocumentationLink } from '../../services/project-type-specifics';
@@ -185,7 +185,10 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { launchDevServer, abortTask };
+const mapDispatchToProps = {
+  launchDevServer: actions.launchDevServer,
+  abortTask: actions.abortTask,
+};
 
 export default connect(
   mapStateToProps,

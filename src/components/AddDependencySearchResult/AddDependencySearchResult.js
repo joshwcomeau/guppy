@@ -8,7 +8,7 @@ import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C
 import { u1F553 as clockIcon } from 'react-icons-kit/noto_emoji_regular/u1F553';
 import { check } from 'react-icons-kit/feather/check';
 
-import { addDependencyStart } from '../../actions';
+import * as actions from '../../actions';
 import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
@@ -280,7 +280,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = { addDependencyStart };
+const mapDispatchToProps = { addDependencyStart: actions.addDependencyStart };
 
 export default connect(
   mapStateToProps,

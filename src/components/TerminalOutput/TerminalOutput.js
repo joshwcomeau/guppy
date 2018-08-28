@@ -3,7 +3,7 @@ import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { clearConsole } from '../../actions';
+import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 
 import Button from '../Button';
@@ -156,5 +156,5 @@ const LogRow = styled.div`
 
 export default connect(
   null,
-  { clearConsole }
+  { clearConsole: actions.clearConsole }
 )(TerminalOutput);

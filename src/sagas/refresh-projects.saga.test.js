@@ -1,4 +1,4 @@
-import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import rootSaga, { refreshProjects } from './refresh-projects.saga';
 

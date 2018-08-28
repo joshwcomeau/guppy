@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
 
-import { updateDependencyStart } from '../../actions';
+import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 
@@ -138,5 +138,5 @@ const mapStateToProps = (state, ownProps) => ({
 
 export default connect(
   mapStateToProps,
-  { updateDependencyStart }
+  { updateDependencyStart: actions.updateDependencyStart }
 )(DependencyUpdateRow);

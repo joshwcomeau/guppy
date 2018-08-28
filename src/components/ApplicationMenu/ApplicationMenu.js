@@ -6,12 +6,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { shell, remote } from 'electron';
 
-import {
-  createNewProjectStart,
-  showImportExistingProjectPrompt,
-  clearConsole,
-  showDeleteProjectPrompt,
-} from '../../actions';
+import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import { isMac } from '../../services/platform.service';
 import { getSelectedProject } from '../../reducers/projects.reducer';
@@ -217,10 +212,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  createNewProjectStart,
-  showImportExistingProjectPrompt,
-  clearConsole,
-  showDeleteProjectPrompt,
+  createNewProjectStart: actions.createNewProjectStart,
+  showImportExistingProjectPrompt: actions.showImportExistingProjectPrompt,
+  clearConsole: actions.clearConsole,
+  showDeleteProjectPrompt: actions.showDeleteProjectPrompt,
 };
 
 export default connect(

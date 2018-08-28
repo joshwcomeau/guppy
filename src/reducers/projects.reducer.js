@@ -33,7 +33,7 @@ export const initialState = {
   selectedId: null,
 };
 
-const byId = (state: ById = initialState.byId, action: Action) => {
+const byIdReducer = (state: ById = initialState.byId, action: Action) => {
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH: {
       return action.projects;
@@ -69,7 +69,7 @@ const byId = (state: ById = initialState.byId, action: Action) => {
   }
 };
 
-const selectedId = (
+const selectedIdReducer = (
   state: SelectedId = initialState.selectedId,
   action: Action
 ) => {
@@ -103,7 +103,10 @@ const selectedId = (
   }
 };
 
-export default combineReducers({ byId, selectedId });
+export default combineReducers({
+  byId: byIdReducer,
+  selectedId: selectedIdReducer,
+});
 
 //
 //

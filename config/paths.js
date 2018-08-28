@@ -12,14 +12,14 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 
-function ensureSlash(path, needsSlash) {
-  const hasSlash = path.endsWith('/');
+function ensureSlash(filepath, needsSlash) {
+  const hasSlash = filepath.endsWith('/');
   if (hasSlash && !needsSlash) {
-    return path.substr(path, path.length - 1);
+    return filepath.substr(filepath, filepath.length - 1);
   } else if (!hasSlash && needsSlash) {
-    return `${path}/`;
+    return `${filepath}/`;
   } else {
-    return path;
+    return filepath;
   }
 }
 
@@ -56,8 +56,6 @@ module.exports = {
 };
 
 let checkForMonorepo = true;
-
-
 
 module.exports.srcPaths = [module.exports.appSrc];
 

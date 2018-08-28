@@ -80,38 +80,42 @@ export default (
   process.on('close', () => {
     onStatusUpdate('Dependencies installed');
 
-    fs.readFile(path.join(projectPath, 'package.json'), 'utf8', (err, data) => {
-      if (err) {
-        return console.error(err);
-      }
-
-      const packageJson = JSON.parse(data);
-
-      packageJson.guppy = {
-        id,
-        name: projectName,
-        type: projectType,
-        icon: projectIcon,
-        // The project color is currently unused for freshly-created projects,
-        // however it's used for imported non-guppy projects, and it seems like
-        // a good thing to be consistent about (may be useful in other ways).
-        color: getColorForProject(projectName),
-        createdAt: Date.now(),
-      };
-
-      const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
-
-      fs.writeFile(
-        path.join(projectPath, 'package.json'),
-        prettyPrintedPackageJson,
-        err => {
-          if (err) {
-            return console.error(err);
-          }
-          onComplete(packageJson);
+    fs.readFile(
+      path.join(projectPath, 'package.json'),
+      'utf8',
+      (readErr, data) => {
+        if (readErr) {
+          return console.error(readErr);
         }
-      );
-    });
+
+        const packageJson = JSON.parse(data);
+
+        packageJson.guppy = {
+          id,
+          name: projectName,
+          type: projectType,
+          icon: projectIcon,
+          // The project color is currently unused for freshly-created projects,
+          // however it's used for imported non-guppy projects, and it seems like
+          // a good thing to be consistent about (may be useful in other ways).
+          color: getColorForProject(projectName),
+          createdAt: Date.now(),
+        };
+
+        const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
+
+        fs.writeFile(
+          path.join(projectPath, 'package.json'),
+          prettyPrintedPackageJson,
+          err => {
+            if (err) {
+              return console.error(err);
+            }
+            onComplete(packageJson);
+          }
+        );
+      }
+    );
   });
 };
 
@@ -137,7 +141,7 @@ export const getColorForProject = (projectName: string) => {
 
 export const getBuildInstructions = (
   projectType: ProjectType,
-  path: string
+  projectPath: string
 ) => {
   // For Windows Support
   // Windows tries to run command as a script rather than on a cmd
@@ -145,9 +149,9 @@ export const getBuildInstructions = (
   const command = formatCommandForPlatform('npx');
   switch (projectType) {
     case 'create-react-app':
-      return [command, 'create-react-app', path];
+      return [command, 'create-react-app', projectPath];
     case 'gatsby':
-      return [command, 'gatsby', 'new', path];
+      return [command, 'gatsby', 'new', projectPath];
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }

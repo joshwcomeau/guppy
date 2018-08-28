@@ -11,7 +11,6 @@ import reducer, {
   getById,
   getSelectedProjectId,
   getInternalProjectById,
-  getProjectsArray,
 } from './projects.reducer';
 
 describe('Projects Reducer', () => {

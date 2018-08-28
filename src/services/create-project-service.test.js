@@ -30,10 +30,14 @@ describe('getBuildInstructions', () => {
 
   it('should return the build instructions for a `create-react-app` project', () => {
     const expectedOutput = ['npx', 'create-react-app', path];
+    expect(getBuildInstructions('create-react-app', path)).toEqual(
+      expectedOutput
+    );
   });
 
   it('should return the build instructions for a Gatsby project', () => {
     const expectedOutput = ['npx', 'gatsby', path];
+    expect(getBuildInstructions('gatsby', path)).toEqual(expectedOutput);
   });
 
   it('should throw an exception when passed an unknown project type', () => {

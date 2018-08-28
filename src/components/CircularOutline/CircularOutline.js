@@ -108,13 +108,13 @@ class RoundedOutline extends Component<Props, State> {
     return (
       <Motion
         style={{
-          dashOffset:
+          interpolatedDashOffset:
             animateChanges && finishedAllMountingSteps
               ? spring(dashOffset, springSettings)
               : dashOffset,
         }}
       >
-        {({ dashOffset }) => (
+        {({ interpolatedDashOffset }) => (
           <Svg
             innerRef={node => (this.wrapperNode = node)}
             width="100%"
@@ -154,7 +154,7 @@ class RoundedOutline extends Component<Props, State> {
                   strokeLinecap="round"
                   style={{
                     strokeDasharray: `${pathLength}, ${pathLength + 1}`,
-                    strokeDashoffset: dashOffset,
+                    strokeDashoffset: interpolatedDashOffset,
                   }}
                 />
               )}

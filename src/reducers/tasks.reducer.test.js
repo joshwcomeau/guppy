@@ -2,7 +2,6 @@ import {
   REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
   RUN_TASK,
-  ABORT_TASK,
   COMPLETE_TASK,
 } from '../actions';
 
