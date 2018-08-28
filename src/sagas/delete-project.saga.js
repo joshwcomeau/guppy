@@ -46,7 +46,15 @@ export const getNextProjectId = (
 };
 
 export function* deleteProject({ project }: Action): Saga<void> {
-  const response = yield call(dialog.showMessageBox, {
+  // NOTE: we're using this form of `call` because it appears to work best
+  // with Flow. Once https://github.com/joshwcomeau/guppy/pull/154 is merged,
+  // we should try changing this to:
+  //
+  //  yield call(dialog.showMessageBox, {
+  //
+  // It may not work, but we should try and figure it out, since it's more
+  // intuitive.
+  const response = yield call([dialog, dialog.showMessageBox], {
     type: 'warning',
     buttons: ['Delete from Disk', 'Cancel'],
     defaultId: 0,
@@ -69,14 +77,21 @@ export function* deleteProject({ project }: Action): Saga<void> {
   const nextSelectedProjectId = getNextProjectId(projects, project.id);
 
   // Run the deletion
-  const successfullyDeleted = yield call(shell.moveItemToTrash, project.path);
+  const successfullyDeleted = yield call(
+    [shell, shell.moveItemToTrash],
+    project.path
+  );
 
   // If for some reason it was _not_ successfully deleted, bail early and log
-  // an error. This really shouldn't happen unless maybe the user deletes the
-  // project themselves from the disk right beforehand?
+  // an error. This can happen if the filesystem can't delete it (maybe if
+  // a file is open?)
   // TODO: Actually show something in the UI in this case.
   if (!successfullyDeleted) {
-    yield call(console.error, 'Project could not be deleted.');
+    yield call(
+      [console, console.error],
+      'Project could not be deleted. Please make sure no tasks are running, ' +
+        'and no applications are using files in that directory.'
+    );
     return;
   }
 

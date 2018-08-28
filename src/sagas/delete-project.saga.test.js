@@ -1,5 +1,5 @@
 import electron from 'electron';
-import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import rootSaga, {
   deleteProject,
@@ -14,23 +14,9 @@ import {
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
-jest.mock('electron', () => ({
-  remote: {
-    app: {
-      getAppPath: () => '/',
-    },
-    dialog: {
-      showMessageBox: jest.fn(),
-    },
-    shell: {
-      moveItemToTrash: jest.fn(),
-    },
-  },
-}));
-
 describe('delete-project saga', () => {
   describe('root delete-project saga', () => {
-    it('should watching for start actions', () => {
+    it('should watch for start actions', () => {
       const saga = rootSaga();
       expect(saga.next().value).toEqual(
         takeEvery(SHOW_DELETE_PROJECT_PROMPT, deleteProject)
@@ -54,7 +40,7 @@ describe('delete-project saga', () => {
       const saga = deleteProject({ project });
 
       expect(saga.next().value).toEqual(
-        call(electron.remote.dialog.showMessageBox, {
+        call([electron.remote.dialog, electron.remote.dialog.showMessageBox], {
           type: 'warning',
           buttons: ['Delete from Disk', 'Cancel'],
           defaultId: 0,
@@ -69,7 +55,10 @@ describe('delete-project saga', () => {
       expect(saga.next(0).value).toEqual(select(getProjectsArray));
 
       expect(saga.next(projects).value).toEqual(
-        call(electron.remote.shell.moveItemToTrash, project.path)
+        call(
+          [electron.remote.shell, electron.remote.shell.moveItemToTrash],
+          project.path
+        )
       );
 
       expect(saga.next(true).value).toEqual(
@@ -129,7 +118,11 @@ describe('delete-project saga', () => {
 
       // Return `false` to `successfullyDeleted`
       expect(saga.next(false).value).toEqual(
-        call(console.error, 'Project could not be deleted.')
+        call(
+          [console, console.error],
+          'Project could not be deleted. Please make sure no tasks are running, ' +
+            'and no applications are using files in that directory.'
+        )
       );
 
       // Ensure it bails early
@@ -142,7 +135,6 @@ describe('delete-project saga', () => {
       const projects = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
       const idToDelete = 'b';
 
-      // $FlowF
       expect(getNextProjectId(projects, idToDelete)).toEqual('c');
     });
 

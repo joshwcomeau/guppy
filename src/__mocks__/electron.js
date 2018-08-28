@@ -1,4 +1,5 @@
 import * as path from 'path';
+
 module.exports = {
   remote: {
     app: {
@@ -8,6 +9,12 @@ module.exports = {
         (process.platform === 'darwin'
           ? process.env.HOME + 'Library/Preferences'
           : '/var/local'),
+    },
+    dialog: {
+      showMessageBox: jest.fn(),
+    },
+    shell: {
+      moveItemToTrash: jest.fn(),
     },
   },
 };
