@@ -1,14 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
+
 import { sum } from '../../utils';
 
-const Resizer = ({ between, startResize }) => (
-  <div
-    style={{ width: 5, background: '#AAA' }}
-    onMouseDown={ev => startResize(ev, ...between)}
-  />
-);
+import Resizer from './Resizer';
 
 type Props = {
   orientation: 'horizontal' | 'vertical',
@@ -50,14 +46,15 @@ class Workspace extends Component<Props, State> {
     document.removeEventListener('mouseup', this.endResize);
   }
 
-  startResize = (ev: any, first: number, second: number) => {
+  startResize = (ev: any, resizerIndex: number) => {
+    console.log('start', ev, resizerIndex);
     document.addEventListener('mousemove', this.dragResize);
     document.addEventListener('mouseup', this.endResize);
 
     this.startClientX = ev.clientX;
     this.startClientY = ev.clientY;
 
-    this.resizerIndex = first;
+    this.resizerIndex = resizerIndex;
     this.snapshot = [...this.state.panelFlexList];
   };
 
@@ -151,7 +148,7 @@ class Workspace extends Component<Props, State> {
               React.cloneElement(child, { flex: panelFlexList[index] }),
               <Resizer
                 key={index}
-                between={[index, index + 1]}
+                index={index}
                 startResize={this.startResize}
               />,
             ]
@@ -175,6 +172,8 @@ const Wrapper = styled.div`
     props.orientation === 'horizontal' ? 'row' : 'column'};
   flex: 1;
   height: 100%;
+  overflow: hidden;
+  user-select: text;
 `;
 
 export default Workspace;
