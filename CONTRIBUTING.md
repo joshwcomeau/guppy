@@ -6,6 +6,12 @@ The most important thing to be aware of is that Guppy is a side-project without 
 
 We'd also like to emphasize that, outside of specific cases like quick bug fixes, we'd prefer if **pull requests were opened in response to issues** (and ideally ones that have a consensus already established as to the solution). We don't want to have to reject a pull request because we disagree with the direction or the implementation. For more information, see [Sending a Pull Request](https://github.com/joshwcomeau/guppy/blob/master/CONTRIBUTING.md#sending-a-pull-request)
 
+There are two must-read documents related to our code structure and style:
+
+- [Code Structure](https://github.com/joshwcomeau/guppy/blob/master/docs/dev-info/code-structure.md) details which tools we use, how we use them, etc.
+- [Style Guide](https://github.com/joshwcomeau/guppy/blob/master/docs/dev-info/style-guide.md) lists our conventions for code formatting and style.
+
+
 ## Reporting Issues and Asking Questions
 
 Before opening an issue, please search the [issue tracker](https://github.com/joshwcomeau/guppy/issues) to make sure your issue hasn't already been reported.
