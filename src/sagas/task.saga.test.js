@@ -10,7 +10,6 @@ import {
   taskAbort,
   displayTaskComplete,
   taskComplete,
-  getBaseProjectEnvironment,
   getDevServerCommand,
 } from './task.saga';
 import {
@@ -23,14 +22,13 @@ import killProcessId from '../services/kill-process-id.service';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import findAvailablePort from '../services/find-available-port.service';
-import { PACKAGE_MANAGER_CMD } from '../services/platform.service';
+import {
+  getBaseProjectEnvironment,
+  PACKAGE_MANAGER_CMD,
+} from '../services/platform.service';
 import { ipcRenderer } from 'electron';
 
 const chalk = new chalkRaw.constructor({ level: 3 });
-
-// we want to watch and ensure that caught errors
-// are logged to the error log
-global.console = { error: jest.fn() };
 
 jest.mock('electron', () => ({
   ipcRenderer: {
@@ -66,8 +64,12 @@ const mockSpawn = processId => ({
 });
 
 describe('task saga', () => {
-  beforeEach(() => {
-    window.process = { env: {} };
+  beforeAll(() => {
+    // `getBaseProjectEnvironment` appends to the existing
+    // `window.process.env.PATH`, so make sure it's defined
+    if (!window.process) {
+      window.process = { env: { PATH: '' } };
+    }
   });
 
   describe('launchDevServer saga', () => {
@@ -96,11 +98,18 @@ describe('task saga', () => {
     });
 
     it('should log to console.error on error', () => {
+      // spy on `console.error`
+      const consoleErrorOriginal = global.console.error;
+      global.console.error = jest.fn();
+
       const clone = saga.clone();
       clone.next(port);
       // destructuring undefined should throw
       clone.next(undefined);
       expect(console.error).toBeCalled();
+
+      // restore `console.error` to its original function
+      global.console.error = consoleErrorOriginal;
     });
 
     it('should spawn a child process', () => {
@@ -131,9 +140,9 @@ describe('task saga', () => {
       // `take` a log message
       clone.next();
 
-      expect(
-        clone.next({ channel: 'stdout', text, isError: true }).value
-      ).toEqual(put(receiveDataFromTaskExecution(task, text, true)));
+      expect(clone.next({ channel: 'stderr', text }).value).toEqual(
+        put(receiveDataFromTaskExecution(task, text, true))
+      );
     });
 
     it('should display logs from stderr', () => {
@@ -157,7 +166,7 @@ describe('task saga', () => {
 
       expect(
         clone.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
-      ).toEqual(call(displayTaskComplete, task));
+      ).toEqual(call(displayTaskComplete, task, true));
 
       expect(clone.next().value).toEqual(
         put(completeTask(task, timestamp, true))
@@ -266,7 +275,7 @@ describe('task saga', () => {
 
       expect(
         saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
-      ).toEqual(call(displayTaskComplete, task));
+      ).toEqual(call(displayTaskComplete, task, true));
 
       expect(saga.next().value).toEqual(
         put(completeTask(task, timestamp, true))
@@ -278,6 +287,7 @@ describe('task saga', () => {
       // constructed with identical arguments will return unique
       // copies of the same anonymous function. As such, their JSON
       // stringified representations are used for testing equality.
+      // TODO: remove `JSON.stringify` once `redux-saga` is removed
       expect(JSON.stringify(saga.next().value)).toEqual(
         JSON.stringify(
           put(loadDependencyInfoFromDisk(task.projectId, projectPath))
@@ -358,6 +368,7 @@ describe('task saga', () => {
 
       expect(saga.next().value).toEqual(select(getProjectById, task.projectId));
       // stringify to avoid deep equal inconsistencies from thunk
+      // TODO: remove `JSON.stringify` once `redux-saga` is removed
       expect(JSON.stringify(saga.next(project).value)).toEqual(
         JSON.stringify(
           put(loadDependencyInfoFromDisk(project.id, project.path))

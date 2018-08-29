@@ -1,3 +1,4 @@
+// @flow
 import { select, call, put, takeEvery } from 'redux-saga/effects';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import {
@@ -17,11 +18,18 @@ import {
   deleteDependencyError,
 } from '../actions';
 
+import type { Action } from 'redux';
+import type { Saga } from 'redux-saga';
+
 /**
  * Trying to install new dependency, if success dispatching "finish" action
  * if not - dispatching "error" ection
  */
-export function* addDependency({ projectId, dependencyName, version }) {
+export function* addDependency({
+  projectId,
+  dependencyName,
+  version,
+}: Action): Saga<void> {
   const projectPath = yield select(getPathForProjectId, projectId);
   try {
     yield call(installDependency, projectPath, dependencyName, version);
@@ -45,7 +53,7 @@ export function* updateDependency({
   projectId,
   dependencyName,
   latestVersion,
-}) {
+}: Action): Saga<void> {
   const projectPath = yield select(getPathForProjectId, projectId);
   try {
     yield call(installDependency, projectPath, dependencyName, latestVersion);
@@ -60,7 +68,10 @@ export function* updateDependency({
  * Trying to delete dependency, if success dispatching "finish" action,
  * if not - dispatching "error" action
  */
-export function* deleteDependency({ projectId, dependencyName }) {
+export function* deleteDependency({
+  projectId,
+  dependencyName,
+}: Action): Saga<void> {
   const projectPath = yield select(getPathForProjectId, projectId);
   try {
     yield call(uninstallDependency, projectPath, dependencyName);
@@ -74,7 +85,7 @@ export function* deleteDependency({ projectId, dependencyName }) {
 /**
  * Root dependencies saga, watching for "start" actions
  */
-export default function* rootSaga() {
+export default function* rootSaga(): Saga<void> {
   yield takeEvery(ADD_DEPENDENCY_START, addDependency);
   yield takeEvery(UPDATE_DEPENDENCY_START, updateDependency);
   yield takeEvery(DELETE_DEPENDENCY_START, deleteDependency);

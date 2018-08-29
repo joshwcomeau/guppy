@@ -1,8 +1,5 @@
 // @flow
-import type { Saga } from 'redux-saga';
-import type { Action } from 'redux';
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
-
 import {
   importExistingProjectStart,
   importExistingProjectFinish,
@@ -16,16 +13,15 @@ import {
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
+
+import type { Action } from 'redux';
+import type { Saga } from 'redux-saga';
 import type { ProjectType } from '../types';
 
 const { showOpenDialog, showErrorBox } = window.require(
   'electron'
 ).remote.dialog;
 
-/**
- * Handle path to project
- * @param {Array<string>} paths
- */
 export function* handlePathInput(paths: Array<string>): Saga<void> {
   // The user might cancel out without selecting a directory.
   // In that case, do nothing.
@@ -36,9 +32,6 @@ export function* handlePathInput(paths: Array<string>): Saga<void> {
   yield put(importExistingProjectStart(path));
 }
 
-/**
- * Show import dialog
- */
 export function* showImportDialog(): Saga<void> {
   const paths = yield call(showOpenDialog, {
     message: 'Select the directory of an existing React app',
@@ -47,10 +40,6 @@ export function* showImportDialog(): Saga<void> {
   yield call(handlePathInput, paths);
 }
 
-/**
- * Show alert with error message that depends from error type
- * @param {Error} err
- */
 export function* handleImportError(err: Error): Saga<void> {
   switch (err.message) {
     case 'project-name-already-exists': {
@@ -78,7 +67,6 @@ export function* handleImportError(err: Error): Saga<void> {
         'Unknown error',
         'An unknown error has occurred. Sorry about that! Details have been printed to the console.'
       );
-      break;
     }
   }
 }

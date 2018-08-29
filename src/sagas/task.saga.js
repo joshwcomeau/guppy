@@ -1,9 +1,8 @@
 // @flow
 import { select, call, put, take, takeEvery } from 'redux-saga/effects';
-import { buffers, eventChannel, END } from 'redux-saga';
+import { eventChannel, END } from 'redux-saga';
 import { ipcRenderer } from 'electron';
 import * as childProcess from 'child_process';
-import * as path from 'path';
 import chalkRaw from 'chalk';
 
 import {
@@ -21,14 +20,19 @@ import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
 import findAvailablePort from '../services/find-available-port.service';
 import killProcessId from '../services/kill-process-id.service';
-import { isWin, PACKAGE_MANAGER_CMD } from '../services/platform.service';
+import {
+  isWin,
+  getBaseProjectEnvironment,
+  PACKAGE_MANAGER_CMD,
+} from '../services/platform.service';
 
-import type { Task, ProjectType } from '../types';
+import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
+import type { Task, ProjectType } from '../types';
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
-export function* launchDevServer({ task }: { task: Task }): Saga<void> {
+export function* launchDevServer({ task }: Action): Saga<void> {
   const project = yield select(getProjectById, task.projectId);
   const projectPath = yield select(getPathForProjectId, task.projectId);
 
@@ -67,7 +71,7 @@ export function* launchDevServer({ task }: { task: Task }): Saga<void> {
 
         const isError = text.includes('Failed to compile');
 
-        emitter({ channel: 'stdout', text, isError });
+        emitter({ channel: isError ? 'stderr' : 'stdout', text });
       },
       stderr: emitter => data => {
         emitter({ channel: 'stderr', text: data.toString() });
@@ -80,36 +84,30 @@ export function* launchDevServer({ task }: { task: Task }): Saga<void> {
         const timestamp = new Date();
 
         emitter({ channel: 'exit', timestamp, wasSuccessful });
-        // calling emitter(END) will break out of the try block of any
+        // calling emitter(END) will break out of the while loop of any
         // actively listening subscribers when they take() it
         emitter(END);
       },
     });
 
-    try {
-      while (true) {
-        const message = yield take(stdioChannel);
+    while (true) {
+      const message = yield take(stdioChannel);
 
-        // eslint-disable-next-line default-case
-        switch (message.channel) {
-          case 'stdout':
-            yield put(
-              receiveDataFromTaskExecution(task, message.text, message.isError)
-            );
-            break;
-          case 'stderr':
-            yield put(receiveDataFromTaskExecution(task, message.text));
-            break;
-          case 'exit':
-            yield call(displayTaskComplete, task);
-            yield put(
-              completeTask(task, message.timestamp, message.wasSuccessful)
-            );
-            break;
-        }
+      // eslint-disable-next-line default-case
+      switch (message.channel) {
+        case 'stdout':
+          yield put(receiveDataFromTaskExecution(task, message.text));
+          break;
+        case 'stderr':
+          yield put(receiveDataFromTaskExecution(task, message.text, true));
+          break;
+        case 'exit':
+          yield call(displayTaskComplete, task, message.wasSuccessful);
+          yield put(
+            completeTask(task, message.timestamp, message.wasSuccessful)
+          );
+          break;
       }
-    } finally {
-      /* child process has completed */
     }
   } catch (err) {
     // TODO: Error handling (this can happen if the first 15 ports are occupied,
@@ -118,7 +116,7 @@ export function* launchDevServer({ task }: { task: Task }): Saga<void> {
   }
 }
 
-export function* taskRun({ task }: { task: Task }): Saga<void> {
+export function* taskRun({ task }: Action): Saga<void> {
   const project = yield select(getProjectById, task.projectId);
   const projectPath = yield select(getPathForProjectId, task.projectId);
   const { name } = task;
@@ -187,35 +185,29 @@ export function* taskRun({ task }: { task: Task }): Saga<void> {
     },
   });
 
-  try {
-    while (true) {
-      const message = yield take(stdioChannel);
+  while (true) {
+    const message = yield take(stdioChannel);
 
-      // eslint-disable-next-line default-case
-      switch (message.channel) {
-        case 'stdout':
-          yield put(receiveDataFromTaskExecution(task, message.text));
-          break;
-        case 'stderr':
-          yield put(receiveDataFromTaskExecution(task, message.text));
-          break;
-        case 'exit':
-          yield call(displayTaskComplete, task);
-          yield put(
-            completeTask(task, message.timestamp, message.wasSuccessful)
-          );
-          if (task.name === 'eject') {
-            yield put(loadDependencyInfoFromDisk(project.id, project.path));
-          }
-          break;
-      }
+    // eslint-disable-next-line default-case
+    switch (message.channel) {
+      case 'stdout':
+        yield put(receiveDataFromTaskExecution(task, message.text));
+        break;
+      case 'stderr':
+        yield put(receiveDataFromTaskExecution(task, message.text, true));
+        break;
+      case 'exit':
+        yield call(displayTaskComplete, task, message.wasSuccessful);
+        yield put(completeTask(task, message.timestamp, message.wasSuccessful));
+        if (task.name === 'eject') {
+          yield put(loadDependencyInfoFromDisk(project.id, project.path));
+        }
+        break;
     }
-  } finally {
-    /* child process has completed */
   }
 }
 
-export function* taskAbort({ task }: { task: Task }): Saga<void> {
+export function* taskAbort({ task }: Action): Saga<void> {
   const { processId, name } = task;
 
   yield call(killProcessId, processId);
@@ -234,16 +226,21 @@ export function* taskAbort({ task }: { task: Task }): Saga<void> {
   yield put(receiveDataFromTaskExecution(task, chalk.bold.red(abortMessage)));
 }
 
-export function* displayTaskComplete(task: Task): Saga<void> {
+export function* displayTaskComplete(
+  task: Task,
+  wasSuccessful: boolean
+): Saga<void> {
   // Send a message to add info to the terminal about the task being done.
   // TODO: ASCII fish art?
 
-  const message = 'Task completed';
+  const message = wasSuccessful
+    ? chalk.bold.green('Task completed')
+    : chalk.bold.red('Task failed');
 
-  yield put(receiveDataFromTaskExecution(task, chalk.bold.green(message)));
+  yield put(receiveDataFromTaskExecution(task, message));
 }
 
-export function* taskComplete({ task }: { task: Task }): Saga<void> {
+export function* taskComplete({ task }: Action): Saga<void> {
   if (task.processId) {
     yield call(
       [ipcRenderer, ipcRenderer.send],
@@ -277,27 +274,21 @@ const createStdioChannel = (
     child.on('exit', handlers.exit(emitter));
 
     return () => {
-      /* unsubscribe any listeners */
+      // unsubscribe any listeners
+      // since we don't have to worry about removing listeners
+      // from EventEmitters, we don't need to return anything
+      // here, but `eventChannel` must return a function or
+      // it will throw
     };
 
-    // use an expanding buffer because we don't want to lose any information
-    // passed up by the child process. initialize it at a length of 2 because
+    // TODO: if this channel is ever used with async handlers, make sure to
+    // use an expanding buffer in order to avoid losing any information
+    // passed up by the child process. Initialize it at a length of 2 because
     // at bare minimum we expect to have 2 messages queued at some point (as
     // the exit channel completes, it should emit the return code of the process
-    // and then immediately END
-  }, buffers.expanding(2));
+    // and then immediately END.
+  });
 };
-
-export const getBaseProjectEnvironment = (projectPath: string) => ({
-  // Forward the host env, and append the
-  // project's .bin directory to PATH to allow
-  // package scripts to function properly.
-  ...window.process.env,
-  PATH:
-    window.process.env.PATH +
-    path.delimiter +
-    path.join(projectPath, 'node_modules', '.bin'),
-});
 
 export const getDevServerCommand = (
   task: Task,

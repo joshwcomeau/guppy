@@ -44,7 +44,6 @@
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",
-    "redux-saga": "0.16.0",
     "yarn": "1.9.2"
   },
   "devDependencies": {

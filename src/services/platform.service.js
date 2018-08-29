@@ -40,3 +40,14 @@ export const PACKAGE_MANAGER_CMD = path.join(
   'node_modules/yarn/bin',
   formatCommandForPlatform(PACKAGE_MANAGER)
 );
+
+// Forward the host env, and append the
+// project's .bin directory to PATH to allow
+// package scripts to function properly.
+export const getBaseProjectEnvironment = (projectPath: string) => ({
+  ...window.process.env,
+  PATH:
+    window.process.env.PATH +
+    path.delimiter +
+    path.join(projectPath, 'node_modules', '.bin'),
+});
