@@ -56,8 +56,6 @@ class ApplicationMenu extends Component<Props> {
       showDeleteProjectPrompt,
     } = props;
 
-    console.log(selectedProject);
-
     const template = [
       {
         id: 'file',
