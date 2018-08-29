@@ -8,10 +8,15 @@ type Props = {
 class Panel extends PureComponent<Props> {
   static defaultProps = {
     initialFlex: 1,
+    style: {},
   };
   render() {
-    const { flex } = this.props;
-    return <div style={{ flex }}>{this.props.children}</div>;
+    const { flex, style, ...delegated } = this.props;
+    return (
+      <div {...delegated} style={{ flex, ...style }}>
+        {this.props.children}
+      </div>
+    );
   }
 }
 
