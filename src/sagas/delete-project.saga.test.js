@@ -1,4 +1,4 @@
-import electron from 'electron';
+import electron from 'electron'; // Mocked
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import rootSaga, {
