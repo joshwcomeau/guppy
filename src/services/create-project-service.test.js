@@ -1,4 +1,3 @@
-jest.mock('electron');
 jest.mock('os', () => ({
   homedir: jest.fn(),
   platform: () => process.platform,
@@ -36,7 +35,7 @@ describe('getBuildInstructions', () => {
   });
 
   it('should return the build instructions for a Gatsby project', () => {
-    const expectedOutput = ['npx', 'gatsby', path];
+    const expectedOutput = ['npx', 'gatsby', 'new', path];
     expect(getBuildInstructions('gatsby', path)).toEqual(expectedOutput);
   });
 

@@ -9,5 +9,11 @@ module.exports = {
           ? process.env.HOME + 'Library/Preferences'
           : '/var/local'),
     },
+    dialog: {
+      showMessageBox: jest.fn(),
+    },
+    shell: {
+      moveItemToTrash: jest.fn(),
+    },
   },
 };
