@@ -76,6 +76,7 @@ class Workspace extends Component<Props, State> {
     //   parentWidth        totalFlex
     //
     const totalFlex = sum(this.state.panelFlexList);
+    const originalTotalFlex = sum(this.snapshot);
 
     // Get the flex for all the space left of the cursor:
     //  ___________________________________
@@ -99,19 +100,26 @@ class Workspace extends Component<Props, State> {
     //          <--------------->
     //               newFlex
     //
-    const sumOfEarlierFlex = sum(
+    const sumOfLeftOrTopPanels = sum(
       this.state.panelFlexList.filter((_, i) => i < this.resizerIndex)
     );
-    const newFlex = newProportionOfSpace - sumOfEarlierFlex;
+    const newFlex = newProportionOfSpace - sumOfLeftOrTopPanels;
 
-    const difference = newFlex - this.state.panelFlexList[this.resizerIndex];
+    // const difference = newFlex - this.state.panelFlexList[this.resizerIndex];
 
-    const regionalFlexTotal = sum([
-      this.state.panelFlexList[this.resizerIndex],
-      this.state.panelFlexList[this.resizerIndex + 1],
-    ]);
+    // const regionalFlexTotal = sum([
+    //   this.state.panelFlexList[this.resizerIndex],
+    //   this.state.panelFlexList[this.resizerIndex + 1],
+    // ]);
 
     const nextPanelFlexList = this.state.panelFlexList.map((flex, index) => {
+      if (index < this.resizerIndex) {
+        // For left-hand panels, we want to preserve their proportion to the
+        // total flex, because they shouldn't move at all.
+        const originalFlex = this.snapshot[index];
+        console.log((originalFlex * totalFlex) / originalTotalFlex);
+        return (originalFlex * totalFlex) / originalTotalFlex;
+      }
       if (index === this.resizerIndex) {
         return newFlex;
       }
