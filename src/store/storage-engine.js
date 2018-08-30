@@ -18,6 +18,8 @@ function rejectWithMessage(error) {
 export default function createEngine(key: string) {
   const store = new ElectronStore();
 
+  window.electronStore = store;
+
   return {
     load: () =>
       new Promise(resolve => {
