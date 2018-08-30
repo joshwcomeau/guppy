@@ -3,11 +3,11 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { launchDevServer, abortTask } from '../../actions';
+import * as actions from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getDocumentationLink } from '../../services/project-type-specifics';
-import { BREAKPOINTS } from '../../constants';
+import { BREAKPOINTS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
 import Card from '../Card';
@@ -50,10 +50,10 @@ class DevelopmentServerPane extends PureComponent<Props> {
     const { project, task } = this.props;
 
     if (!task) {
-      // This can happen if the user modifies the package.json to not have a
-      // script named `start` (or `deploy` for Gatsby projects)
-      // TODO: Helpful error screen
-      return 'No "start" task found. :(';
+      // If the package.json is missing a server task (as defined by the
+      // `getDevServerTaskForProjectId` selector), we can't show this module.
+      // TODO: Better errors
+      return 'This project does not appear to have a development server task';
     }
 
     // TODO: There's currently no DevelopmentServerStatus for smaller windows.
@@ -79,7 +79,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
     return (
       <Module
         title="Development Server"
-        moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#development-server"
+        moreInfoHref={`${GUPPY_REPO_URL}/blob/master/docs/getting-started.md#development-server`}
         primaryActionChildren={
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
@@ -92,7 +92,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
               {docLink}
             </InfoWrapper>
             <TerminalWrapper>
-              <TerminalOutput height={300} logs={task.logs} />
+              <TerminalOutput height={300} title="Server Logs" task={task} />
             </TerminalWrapper>
           </Wrapper>
         </OnlyOn>
@@ -107,7 +107,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
               </SmallInfoWrapper>
             </InfoWrapper>
             <TerminalWrapper>
-              <TerminalOutput height={300} logs={task.logs} />
+              <TerminalOutput height={300} task={task} />
             </TerminalWrapper>
           </Wrapper>
         </OnlyOn>
@@ -155,11 +155,16 @@ const Description = styled.div`
 `;
 
 const TerminalWrapper = styled.div`
-  overflow: auto;
-
   @media ${BREAKPOINTS.mdMin} {
     flex: 11;
     padding-left: 20px;
+    /*
+      overflow: hidden is needed so that the column won't expand when the
+      terminal output is really long. This way, it will be scrollable.
+    */
+    overflow: hidden;
+    /* Offset by the Card padding amount. */
+    margin-top: -15px;
   }
 `;
 
@@ -180,7 +185,10 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { launchDevServer, abortTask };
+const mapDispatchToProps = {
+  launchDevServer: actions.launchDevServer,
+  abortTask: actions.abortTask,
+};
 
 export default connect(
   mapStateToProps,

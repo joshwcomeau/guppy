@@ -1,6 +1,4 @@
 import {
-  buildUrlForProjectId,
-  buildUrlForProjectTask,
   extractSelectedTaskFromUrl,
   extractProjectIdFromUrl,
   extractProjectTabFromUrl,
@@ -50,21 +48,6 @@ describe('Location Service', () => {
       };
 
       expect(extractSelectedTaskFromUrl(projectLocation)).toEqual(null);
-    });
-  });
-
-  describe('buildUrlForProjectId', () => {
-    it('should return the correct project url based on the project ID', () => {
-      expect(buildUrlForProjectId('some-project-id')).toEqual(
-        '/project/some-project-id'
-      );
-    });
-  });
-  describe('buildUrlForProjectTask', () => {
-    it('should return the correct task url based on the project ID and task name', () => {
-      expect(
-        buildUrlForProjectTask('some-project-id', 'some-task-name')
-      ).toEqual('/project/some-project-id/tasks/some-task-name');
     });
   });
 });

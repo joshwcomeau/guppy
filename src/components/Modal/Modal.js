@@ -84,18 +84,21 @@ class Modal extends PureComponent<Props, State> {
             return (
               <Motion
                 style={{
-                  translateY: spring(translateY, translateYSpringSettings),
+                  interpolatedTranslateY: spring(
+                    translateY,
+                    translateYSpringSettings
+                  ),
                   opacity: spring(inTransit ? 0 : 1, opacitySpringSettings),
                 }}
               >
-                {({ translateY, opacity }) => (
+                {({ interpolatedTranslateY, opacity }) => (
                   <Wrapper opacity={opacity} clickable={!inTransit}>
                     <Backdrop onClick={onDismiss} />
 
                     <PaneWrapper
                       width={width}
                       height={height}
-                      translateY={translateY}
+                      translateY={interpolatedTranslateY}
                     >
                       {outdatedChildren || children}
                     </PaneWrapper>
@@ -125,6 +128,11 @@ const Wrapper = styled.div.attrs({
   display: flex;
   justify-content: center;
   align-items: center;
+  /*
+    If items are too large to fit in the modal, we want them to be
+    scrollable.
+  */
+  overflow: auto;
 `;
 
 const Backdrop = styled.div`

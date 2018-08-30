@@ -1,21 +1,18 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import ReactRedux, { connect } from 'react-redux';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
-import { refreshProjects, selectProject, hideModal } from '../../actions';
-
 import { COLORS } from '../../constants';
-import {
-  extractProjectIdFromUrl,
-  buildUrlForProjectId,
-} from '../../services/location.service';
-import {
-  getProjectsArray,
-  getSelectedProject,
-} from '../../reducers/projects.reducer';
-import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
+import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getAppLoaded } from '../../reducers/app-loaded.reducer';
+// import {
+//   // refreshProjects,
+//   // selectProject,
+//   // hideModal,
+//   getProjectsArray,
+//   getOnboardingStatus,
+// } from '../../actions';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -25,70 +22,39 @@ import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 import ProjectConfigurationModal from '../ProjectConfigurationModal';
 
-import type { Action } from 'redux';
 import type { Project } from '../../types';
-import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 type Props = {
-  onboardingStatus: OnboardingStatus,
+  isAppLoaded: boolean,
   selectedProject: ?Project,
   projects: Array<Project>,
   refreshProjects: Action,
-  selectProject: Action,
+  // selectProject: Action,
   history: any, // Provided by `withRouter`
-  hideModal: () => void,
+  // hideModal: () => void,
   isVisible: boolean,
-  ModalContent: Object,
+  // ModalContent: Object,
 };
 
 class App extends Component<Props> {
-  componentDidMount() {
-    const {
-      history,
-      selectedProject,
-      selectProject,
-      refreshProjects,
-    } = this.props;
-
-    refreshProjects();
-
-    if (selectedProject) {
-      history.replace(buildUrlForProjectId(selectedProject.id));
-    }
-
-    history.listen(location => {
-      const projectId = extractProjectIdFromUrl(location);
-
-      if (projectId) {
-        selectProject(projectId);
-      }
-    });
-  }
-
   render() {
+    const { isAppLoaded, selectedProject } = this.props;
+
     return (
       <Fragment>
         <Titlebar />
-        <ApplicationMenu />
 
-        <Wrapper>
-          <Sidebar />
+        {isAppLoaded && (
+          <Wrapper>
+            <ApplicationMenu />
 
-          <MainContent>
-            <Switch>
-              <Route exact path="/" component={IntroScreen} />
-              <Route
-                path="/project/:projectId"
-                render={routerProps => (
-                  <ProjectPage
-                    key={routerProps.match.params.projectId}
-                    {...routerProps}
-                  />
-                )}
-              />
-            </Switch>
-          </MainContent>
-        </Wrapper>
+            <Sidebar />
+
+            <MainContent>
+              {selectedProject ? <ProjectPage /> : <IntroScreen />}
+            </MainContent>
+          </Wrapper>
+        )}
 
         <CreateNewProjectWizard />
         <ProjectConfigurationModal />
@@ -119,15 +85,11 @@ const MainContent = styled.div`
 
 const mapStateToProps = state => {
   return {
-    onboardingStatus: getOnboardingStatus(state),
-    projects: getProjectsArray(state),
+    // onboardingStatus: getOnboardingStatus(state),
+    // projects: getProjectsArray(state),
     selectedProject: getSelectedProject(state),
+    isAppLoaded: getAppLoaded(state),
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    { refreshProjects, selectProject }
-  )(App)
-);
+export default connect(mapStateToProps)(App);

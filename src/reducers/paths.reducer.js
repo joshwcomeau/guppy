@@ -26,11 +26,11 @@ export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { path, project } = action;
+      const { projectPath, project } = action;
 
       return {
         ...state,
-        [project.guppy.id]: path || getDefaultPath(project.guppy.id),
+        [project.guppy.id]: projectPath || getDefaultPath(project.guppy.id),
       };
     }
 
@@ -44,21 +44,20 @@ export default (state: State = initialState, action: Action) => {
 //
 // Helpers
 const homedir = isWin ? windowsHomeDir : os.homedir();
-export const getDefaultParentPath = () => {
-  // Noticing some weird quirks when I try to use a dev project on the compiled
-  // "production" app, so separating their home paths should help.
-
-  return process.env.NODE_ENV === 'development'
+// Noticing some weird quirks when I try to use a dev project on the compiled
+// "production" app, so separating their home paths should help.
+export const defaultParentPath =
+  process.env.NODE_ENV === 'development'
     ? path.join(homedir, '/guppy-projects-dev')
     : path.join(homedir, '/guppy-projects');
-};
 
 export const getDefaultPath = (projectId: string) =>
-  path.join(getDefaultParentPath(), projectId);
+  path.join(defaultParentPath, projectId);
 
 //
 //
 //
 // Selectors
+export const getPathsArray = (state: any) => Object.values(state.paths);
 export const getPathForProjectId = (state: any, projectId: string) =>
   state.paths[projectId] || getDefaultPath(projectId);

@@ -26,9 +26,17 @@ class ProgressBar extends Component<Props> {
 
     return (
       <Wrapper height={height}>
-        <Motion style={{ progress: spring(progress, { stiffness, damping }) }}>
-          {({ progress }) => (
-            <ProgressGradient colors={colors} progress={progress} />
+        <Motion
+          style={{
+            interpolatedProgress: spring(progress, {
+              stiffness,
+              damping,
+              precision: 0.0001,
+            }),
+          }}
+        >
+          {({ interpolatedProgress }) => (
+            <ProgressGradient colors={colors} progress={interpolatedProgress} />
           )}
         </Motion>
       </Wrapper>

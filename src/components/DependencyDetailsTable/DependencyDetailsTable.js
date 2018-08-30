@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import { COLORS } from '../../constants';
+import { COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import ExternalLink from '../ExternalLink';
 import Label from '../Label';
@@ -45,7 +45,7 @@ class DependencyDetailsTable extends Component<Props> {
                 Location
                 <HelpButton
                   size={16}
-                  href="https://github.com/joshwcomeau/guppy/blob/master/docs/understanding-package.json.md#dependencies-vs-devdependencies"
+                  href={`${GUPPY_REPO_URL}/blob/master/docs/understanding-package.json.md#dependencies-vs-devdependencies`}
                 />
               </Label>
             </FirstCell>

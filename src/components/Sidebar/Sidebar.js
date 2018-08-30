@@ -2,12 +2,11 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
-import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 
 import { COLORS, Z_INDICES } from '../../constants';
-import { selectProject, createNewProjectStart } from '../../actions';
+import * as actions from '../../actions';
 import {
   getProjectsArray,
   getSelectedProjectId,
@@ -16,13 +15,13 @@ import {
   getOnboardingStatus,
   getSidebarVisibility,
 } from '../../reducers/onboarding-status.reducer';
-import { buildUrlForProjectId } from '../../services/location.service';
 
 import Spacer from '../Spacer';
 import SidebarProjectIcon from './SidebarProjectIcon';
 import AddProjectButton from './AddProjectButton';
 import IntroductionBlurb from './IntroductionBlurb';
 
+import type { Action } from 'redux';
 import type { Project } from '../../types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
@@ -32,8 +31,7 @@ type Props = {
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
   createNewProjectStart: () => void,
-  selectProject: (projectId: string) => void,
-  location: any, // Provided by React Router
+  selectProject: (projectId: string) => Action,
 };
 
 type State = {
@@ -96,6 +94,7 @@ class Sidebar extends PureComponent<Props, State> {
       isVisible,
       onboardingStatus,
       createNewProjectStart,
+      selectProject,
     } = this.props;
     const { introSequenceStep } = this.state;
 
@@ -127,19 +126,17 @@ class Sidebar extends PureComponent<Props, State> {
                 {projects.map(project => (
                   <Fragment key={project.id}>
                     <Tooltip title={project.name} position="right">
-                      <Link to={buildUrlForProjectId(project.id)}>
-                        <SidebarProjectIcon
-                          size={SIDEBAR_ICON_SIZE}
-                          id={project.id}
-                          name={project.name}
-                          color={project.color}
-                          iconSrc={project.icon}
-                          isSelected={
-                            finishedOnboarding &&
-                            project.id === selectedProjectId
-                          }
-                        />
-                      </Link>
+                      <SidebarProjectIcon
+                        size={SIDEBAR_ICON_SIZE}
+                        id={project.id}
+                        name={project.name}
+                        color={project.color}
+                        iconSrc={project.icon}
+                        isSelected={
+                          finishedOnboarding && project.id === selectedProjectId
+                        }
+                        handleSelect={() => selectProject(project.id)}
+                      />
                     </Tooltip>
                     <Spacer size={18} />
                   </Fragment>
@@ -205,13 +202,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  createNewProjectStart,
-  selectProject,
+  createNewProjectStart: actions.createNewProjectStart,
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Sidebar)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Sidebar);

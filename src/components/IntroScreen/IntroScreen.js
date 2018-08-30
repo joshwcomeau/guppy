@@ -2,10 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import {
-  createNewProjectStart,
-  importExistingProjectStart,
-} from '../../actions';
+import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
@@ -13,7 +10,6 @@ import Button from '../Button';
 import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
-import Swimming from '../Swimming';
 
 type Props = {
   shouldHideContent: boolean,
@@ -28,9 +24,8 @@ class IntroScreen extends Component<Props> {
       <Fragment>
         <Wrapper isVisible={!shouldHideContent}>
           <Header>
-            <Swimming>
-              <Logo size="medium" />
-            </Swimming>
+            <Logo size="large" />
+
             <AppName>Guppy</AppName>
           </Header>
 
@@ -73,7 +68,6 @@ const Header = styled.div`
 
 const AppName = styled.div`
   font-size: 42px;
-  transform: translateY(-10px);
 `;
 
 const Actions = styled.div`
@@ -87,5 +81,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { createNewProjectStart, importExistingProjectStart }
+  { createNewProjectStart: actions.createNewProjectStart }
 )(IntroScreen);

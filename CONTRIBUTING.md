@@ -6,6 +6,12 @@ The most important thing to be aware of is that Guppy is a side-project without 
 
 We'd also like to emphasize that, outside of specific cases like quick bug fixes, we'd prefer if **pull requests were opened in response to issues** (and ideally ones that have a consensus already established as to the solution). We don't want to have to reject a pull request because we disagree with the direction or the implementation. For more information, see [Sending a Pull Request](https://github.com/joshwcomeau/guppy/blob/master/CONTRIBUTING.md#sending-a-pull-request)
 
+There are two must-read documents related to our code structure and style:
+
+- [Code Structure](https://github.com/joshwcomeau/guppy/blob/master/docs/dev-info/code-structure.md) details which tools we use, how we use them, etc.
+- [Style Guide](https://github.com/joshwcomeau/guppy/blob/master/docs/dev-info/style-guide.md) lists our conventions for code formatting and style.
+
+
 ## Reporting Issues and Asking Questions
 
 Before opening an issue, please search the [issue tracker](https://github.com/joshwcomeau/guppy/issues) to make sure your issue hasn't already been reported.
@@ -67,7 +73,7 @@ git clone https://github.com/your-username/guppy.git
 
 ### Running
 
-#### Local development
+#### Local development server
 
 To get started, install all of Guppy's dependencies with [yarn](https://yarnpkg.com/en/docs/getting-started). While you can also use npm for this, we use a `yarn.lock` file to keep everyone's dependecy versions consistent.
 
@@ -85,6 +91,8 @@ This should open an Electron window with the application running.
 
 In development, all projects are created at `~/guppy-projects-dev`
 
+#### Building an executable
+
 You can build an executable by running:
 
 ```
@@ -99,6 +107,17 @@ yarn dist:linux
 ```
 
 The result will be in the `release-builds` folder.
+
+#### Storybook
+
+This project uses [Storybook](https://github.com/storybooks/storybook) to host a suite of reusable components. Storybook runs on its own server, and you can start it by running:
+
+```
+yarn storybook
+```
+
+Storybook is a great way to discover our library of components when building new UIs. When building new components that are meant to be reusable (eg. not one-off views), please create a story for them, so that other developers can discover it!
+
 
 ### Testing and Type-Checking
 

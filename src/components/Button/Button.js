@@ -6,7 +6,7 @@ import { COLORS } from '../../constants';
 
 import CircularOutline from '../CircularOutline';
 
-type Size = 'small' | 'medium' | 'large';
+type Size = 'xsmall' | 'small' | 'medium' | 'large';
 type Type = 'fill' | 'stroke';
 
 type Props = {
@@ -16,9 +16,9 @@ type Props = {
   color2: string,
   textColor?: string,
   showOutline: boolean,
-  noPadding: boolean,
+  noPadding?: boolean,
   style: { [key: string]: any },
-  disabled: boolean,
+  disabled?: boolean,
   children: React$Node,
 };
 
@@ -38,6 +38,8 @@ class Button extends Component<Props, State> {
 
   getButtonElem = (size: Size) => {
     switch (size) {
+      case 'xsmall':
+        return XSmallButton;
       case 'small':
         return SmallButton;
       default:
@@ -120,6 +122,13 @@ const ButtonBase = styled.button`
       ${COLORS.gray[300]}
     ) !important`};
   }
+`;
+
+const XSmallButton = styled(ButtonBase)`
+  padding: ${props => (props.noPadding ? '0px' : '0px 12px')};
+  height: ${props => (props.noPadding ? 'auto' : '22px')};
+  border-radius: 15px;
+  font-size: 12px;
 `;
 
 const SmallButton = styled(ButtonBase)`

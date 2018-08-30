@@ -5,9 +5,11 @@ import produce from 'immer';
 import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
+  FINISH_DELETING_PROJECT_FROM_DISK,
   ADD_DEPENDENCY_FINISH,
-  REFRESH_PROJECTS,
+  // REFRESH_PROJECTS,
   SAVE_PROJECT_SETTINGS_FINISH,
+  REFRESH_PROJECTS_FINISH,
   SELECT_PROJECT,
 } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
@@ -20,6 +22,7 @@ import type { ProjectInternal, Project } from '../types';
 type ById = {
   [key: string]: ProjectInternal,
 };
+
 type SelectedId = ?string;
 
 type State = {
@@ -27,14 +30,14 @@ type State = {
   selectedId: SelectedId,
 };
 
-const initialState = {
+export const initialState = {
   byId: {},
   selectedId: null,
 };
 
-const byId = (state: ById = initialState.byId, action: Action) => {
+const byIdReducer = (state: ById = initialState.byId, action: Action) => {
   switch (action.type) {
-    case REFRESH_PROJECTS: {
+    case REFRESH_PROJECTS_FINISH: {
       return action.projects;
     }
 
@@ -55,7 +58,7 @@ const byId = (state: ById = initialState.byId, action: Action) => {
       });
     }
 
-    case SAVE_PROJECT_SETTINGS_FINISH: {
+    case SAVE_PROJECT_SETTINGS_FINISH:
       let newState = {
         ...state,
         [action.project.guppy.id]: {
@@ -68,6 +71,13 @@ const byId = (state: ById = initialState.byId, action: Action) => {
         delete newState[action.oldProjectId];
       }
       return newState;
+
+    case FINISH_DELETING_PROJECT_FROM_DISK: {
+      const { projectId } = action;
+
+      return produce(state, draftState => {
+        delete draftState[projectId];
+      });
     }
 
     default:
@@ -75,7 +85,7 @@ const byId = (state: ById = initialState.byId, action: Action) => {
   }
 };
 
-const selectedId = (
+const selectedIdReducer = (
   state: SelectedId = initialState.selectedId,
   action: Action
 ) => {
@@ -85,7 +95,7 @@ const selectedId = (
       return action.project.guppy.id;
     }
 
-    case REFRESH_PROJECTS: {
+    case REFRESH_PROJECTS_FINISH: {
       // It's possible that the selected project no longer exists (say if the
       // user deletes that folder and then refreshes Guppy).
       // In that case, un-select it.
@@ -114,7 +124,10 @@ const selectedId = (
   }
 };
 
-export default combineReducers({ byId, selectedId });
+export default combineReducers({
+  byId: byIdReducer,
+  selectedId: selectedIdReducer,
+});
 
 //
 //

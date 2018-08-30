@@ -1,22 +1,19 @@
 import {
-  REFRESH_PROJECTS,
+  REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
   RUN_TASK,
-  ABORT_TASK,
   COMPLETE_TASK,
 } from '../actions';
 
 import reducer, { getTaskDescription } from './tasks.reducer';
 
-jest.mock('electron');
-
 describe('Tasks reducer', () => {
-  describe(REFRESH_PROJECTS, () => {
+  describe(REFRESH_PROJECTS_FINISH, () => {
     test('captures task data from new projects', () => {
       const initialState = reducer(undefined, {});
 
       const action = {
-        type: REFRESH_PROJECTS,
+        type: REFRESH_PROJECTS_FINISH,
         projects: {
           foo: {
             name: 'foo',
@@ -114,7 +111,7 @@ describe('Tasks reducer', () => {
       };
 
       const action = {
-        type: REFRESH_PROJECTS,
+        type: REFRESH_PROJECTS_FINISH,
         projects: {
           foo: {
             name: 'foo',
@@ -295,7 +292,7 @@ describe('Tasks reducer', () => {
   });
 
   describe(COMPLETE_TASK, () => {
-    test('marks a task as idle, on success', () => {
+    test('marks a sustained task as idle, when it was successful', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -331,13 +328,14 @@ describe('Tasks reducer', () => {
         type: COMPLETE_TASK,
         task: mainTask,
         timestamp,
+        wasSuccessful: true,
       };
 
       const actualState = reducer(initialState, action);
       const expectedState = {
         'foo-start': {
           ...mainTask,
-          status: 'failed',
+          status: 'idle',
           timeSinceStatusChange: timestamp,
         },
         'foo-build': otherTask,
@@ -346,7 +344,7 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test('marks a task as failed, on failure', () => {
+    test('marks a sustained task as idle, when it fails', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -382,6 +380,111 @@ describe('Tasks reducer', () => {
         type: COMPLETE_TASK,
         task: mainTask,
         timestamp,
+        wasSuccessful: false,
+      };
+
+      const actualState = reducer(initialState, action);
+      const expectedState = {
+        'foo-start': {
+          ...mainTask,
+          status: 'idle',
+          timeSinceStatusChange: timestamp,
+        },
+        'foo-build': otherTask,
+      };
+
+      expect(actualState).toEqual(expectedState);
+    });
+
+    test('marks a short-term task as success, when it was successful', () => {
+      const mainTask = {
+        id: 'foo-start',
+        projectId: 'foo',
+        name: 'start',
+        command: 'react-scripts start',
+        description: getTaskDescription('start'),
+        status: 'success',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'short-term',
+      };
+
+      const otherTask = {
+        id: 'foo-build',
+        projectId: 'foo',
+        name: 'build',
+        command: 'react-scripts build',
+        description: getTaskDescription('build'),
+        status: 'pending',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'short-term',
+      };
+
+      const initialState = {
+        'foo-start': mainTask,
+        'foo-build': otherTask,
+      };
+
+      const timestamp = new Date();
+
+      const action = {
+        type: COMPLETE_TASK,
+        task: mainTask,
+        timestamp,
+        wasSuccessful: true,
+      };
+
+      const actualState = reducer(initialState, action);
+      const expectedState = {
+        'foo-start': {
+          ...mainTask,
+          status: 'success',
+          timeSinceStatusChange: timestamp,
+        },
+        'foo-build': otherTask,
+      };
+
+      expect(actualState).toEqual(expectedState);
+    });
+
+    test('marks a short-term task as failed, when it fails', () => {
+      const mainTask = {
+        id: 'foo-start',
+        projectId: 'foo',
+        name: 'start',
+        command: 'react-scripts start',
+        description: getTaskDescription('start'),
+        status: 'success',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'short-term',
+      };
+
+      const otherTask = {
+        id: 'foo-build',
+        projectId: 'foo',
+        name: 'build',
+        command: 'react-scripts build',
+        description: getTaskDescription('build'),
+        status: 'pending',
+        timeSinceStatusChange: null,
+        logs: [],
+        type: 'short-term',
+      };
+
+      const initialState = {
+        'foo-start': mainTask,
+        'foo-build': otherTask,
+      };
+
+      const timestamp = new Date();
+
+      const action = {
+        type: COMPLETE_TASK,
+        task: mainTask,
+        timestamp,
+        wasSuccessful: false,
       };
 
       const actualState = reducer(initialState, action);

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { settings } from 'react-icons-kit/feather/settings';
 import { COLORS } from '../../constants';
-import type { Project } from '../../types';
 
 type Props = {
   size: number,

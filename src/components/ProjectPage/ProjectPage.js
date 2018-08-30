@@ -1,12 +1,11 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
-import { loadDependencyInfoFromDisk, showModal } from '../../actions';
+import * as actions from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
@@ -21,43 +20,28 @@ import type { Project } from '../../types';
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
-  location: any, // provided by react-router
-  match: any, // provided by react-router
-  history: any, // provided by withRouter HOC
-  showModal: string => void,
+  showModal: () => void,
 };
 
 class ProjectPage extends Component<Props> {
   componentDidMount() {
+    const { project, loadDependencyInfoFromDisk } = this.props;
+
     window.scroll({
       top: 0,
       left: 0,
       behavior: 'smooth',
     });
 
-    this.loadNewProjectOrBail(this.props.project);
+    loadDependencyInfoFromDisk(project.id, project.path);
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (
-      !this.props.project ||
-      !nextProps.project ||
-      this.props.project.id !== nextProps.project.id
-    ) {
-      this.loadNewProjectOrBail(nextProps.project);
-    }
-  }
-
-  loadNewProjectOrBail(project: Project) {
-    const { history, loadDependencyInfoFromDisk } = this.props;
-
-    if (project) {
-      loadDependencyInfoFromDisk(project.id, project.path);
-    } else {
-      // If the selected project was not successfully resolved, that means
-      // it must have been deleted. We should redirect the user to the main
-      // screen.
-      history.push('/');
+    if (this.props.project.id !== nextProps.project.id) {
+      this.props.loadDependencyInfoFromDisk(
+        nextProps.project.id,
+        nextProps.project.path
+      );
     }
   }
 
@@ -68,10 +52,6 @@ class ProjectPage extends Component<Props> {
 
   render() {
     const { project } = this.props;
-
-    if (!project) {
-      return null;
-    }
 
     return (
       <FadeIn>
@@ -126,9 +106,10 @@ const mapStateToProps = state => ({
   project: getSelectedProject(state),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    { loadDependencyInfoFromDisk, showModal }
-  )(ProjectPage)
-);
+export default connect(
+  mapStateToProps,
+  {
+    loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDisk,
+    showModal: actions.showModal,
+  }
+)(ProjectPage);

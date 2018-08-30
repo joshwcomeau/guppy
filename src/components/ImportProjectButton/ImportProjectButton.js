@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { showImportExistingProjectPrompt } from '../../actions';
+import * as actions from '../../actions';
 
 import TextButton from '../TextButton';
 
@@ -26,5 +26,5 @@ class ImportProjectButton extends Component<Props> {
 
 export default connect(
   null,
-  { showImportExistingProjectPrompt }
+  { showImportExistingProjectPrompt: actions.showImportExistingProjectPrompt }
 )(ImportProjectButton);

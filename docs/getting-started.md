@@ -125,6 +125,10 @@ You can update dependencies to their latest version in 1 click by clicking "Upda
 
 > It is not currently possible to downgrade a dependency, or to select a specific dependency. This'll be added in the future. For now, you'll need to use a terminal to do this. Learn more at the [npm docs](https://docs.npmjs.com/cli/install)
 
+### Editing your project
+
+Guppy creates a folder inside of your home directory called `guppy-projects`. When you create a new project with Guppy, it lives in a folder inside of `guppy-projects`. Find your project there, and edit away!
+
 ## Modifying and Deleting Projects
 
 In future versions, we hope to make it much easier to tweak the configuration of your projects.

@@ -99,7 +99,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
             isFolded ? -25 : 0,
             foldSpringSettings
           ),
-          transitTranslate: spring(
+          interpolatedTransitTranslate: spring(
             transitTranslate,
             transitTranslateSpringSettings
           ),
@@ -112,7 +112,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
         {({
           foldDegrees,
           foldCenteringTranslate,
-          transitTranslate,
+          interpolatedTransitTranslate,
           transitOpacity,
         }) => (
           <Wrapper opacity={transitOpacity} clickable={!inTransit}>
@@ -120,7 +120,7 @@ class TwoPaneModal extends PureComponent<Props, State> {
 
             <PaneWrapper
               translateX={foldCenteringTranslate}
-              translateY={transitTranslate}
+              translateY={interpolatedTransitTranslate}
             >
               <LeftHalf foldDegrees={foldDegrees}>
                 <LeftPaneWrapper>

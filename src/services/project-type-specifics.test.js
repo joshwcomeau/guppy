@@ -1,7 +1,5 @@
 import { getDocumentationLink } from './project-type-specifics';
 
-import type { ProjectType } from '../types';
-
 describe('getDocumentationLink', () => {
   it('should get the documentation links by project type', () => {
     const gatsbyString = getDocumentationLink('gatsby');

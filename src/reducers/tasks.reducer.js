@@ -18,7 +18,7 @@
 
 import produce from 'immer';
 import {
-  REFRESH_PROJECTS,
+  REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
   LAUNCH_DEV_SERVER,
   RUN_TASK,
@@ -26,7 +26,8 @@ import {
   ATTACH_TASK_METADATA,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
   IMPORT_EXISTING_PROJECT_FINISH,
-  SAVE_PROJECT_SETTINGS_FINISH,
+  // SAVE_PROJECT_SETTINGS_FINISH,
+  CLEAR_CONSOLE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -40,7 +41,7 @@ const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case REFRESH_PROJECTS: {
+    case REFRESH_PROJECTS_FINISH: {
       return produce(state, draftState => {
         Object.keys(action.projects).forEach(projectId => {
           const project = action.projects[projectId];
@@ -112,26 +113,44 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
+    case CLEAR_CONSOLE: {
+      const { task } = action;
+
+      return produce(state, draftState => {
+        draftState[task.id].logs = [];
+      });
+    }
+
     case COMPLETE_TASK: {
       const { task, timestamp, wasSuccessful } = action;
 
       return produce(state, draftState => {
         // For the eject task, we simply want to delete this task altogether.
-        // TODO: We should probably do this in `REFRESH_PROJECTS`, which is
-        // called right after the eject task succeeds!
+        // TODO: We should probably do this in `REFRESH_PROJECTS_FINISH`, which
+        // is called right after the eject task succeeds!
         if (task.name === 'eject') {
           delete draftState[task.id];
           return;
         }
 
-        const nextStatus = !wasSuccessful
-          ? 'failed'
-          : task.type === 'short-term'
-            ? 'success'
-            : 'idle';
+        // For short-term tasks like building for production, we want to show
+        // either a success or failed status.
+        // For long-running tasks, though, once a task is completed, it goes
+        // back to being "idle" regardless of whether it was successful or not.
+        // Long-running tasks reserve "failed" for cases where the task is
+        // still running, it's just hit an error.
+        //
+        // TODO: Come up with a better model for all of this :/
+        let nextStatus;
+        if (task.type === 'short-term') {
+          nextStatus = wasSuccessful ? 'success' : 'failed';
+        } else {
+          nextStatus = 'idle';
+        }
 
         draftState[task.id].status = nextStatus;
         draftState[task.id].timeSinceStatusChange = timestamp;
+
         delete draftState[task.id].processId;
       });
     }

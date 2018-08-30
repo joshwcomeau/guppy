@@ -29,22 +29,24 @@ class ModalHeader extends Component<Props> {
 
     return (
       <Wrapper colors={colors}>
-        <PixelShifter y={-5} reason="line-height fix">
-          <PixelShifter
-            x={-1}
-            reason="Align left edge of header with subheader"
-          >
-            <Heading
-              style={{
-                color: theme === 'standard' ? COLORS.gray[900] : COLORS.white,
-              }}
+        <MainContent>
+          <PixelShifter y={-5} reason="line-height fix">
+            <PixelShifter
+              x={-1}
+              reason="Align left edge of header with subheader"
             >
-              {title}
-            </Heading>
-          </PixelShifter>
+              <Heading
+                style={{
+                  color: theme === 'standard' ? COLORS.gray[900] : COLORS.white,
+                }}
+              >
+                {title}
+              </Heading>
+            </PixelShifter>
 
-          {children}
-        </PixelShifter>
+            {children}
+          </PixelShifter>
+        </MainContent>
 
         <ActionWrapper>{action}</ActionWrapper>
       </Wrapper>
@@ -58,6 +60,10 @@ const Wrapper = styled.header`
   padding: 25px 25px 15px 25px;
   background-image: linear-gradient(15deg, ${props => props.colors.join(', ')});
   border-radius: 8px 8px 0 0;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
 `;
 
 const ActionWrapper = styled.div`
