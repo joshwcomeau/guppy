@@ -8,9 +8,6 @@ import filter from 'redux-storage-decorator-filter';
 
 import { refreshProjectsStart } from '../actions';
 import rootReducer from '../reducers';
-import taskMiddleware from '../middlewares/task.middleware';
-import dependencyMiddleware from '../middlewares/dependency.middleware';
-import importProjectMiddleware from '../middlewares/import-project.middleware';
 import rootSaga from '../sagas';
 import createEngine from './storage-engine';
 import handleMigrations from './migrations';
@@ -41,14 +38,7 @@ export default function configureStore() {
   const store = createStore(
     wrappedReducer,
     compose(
-      applyMiddleware(
-        thunk,
-        taskMiddleware,
-        dependencyMiddleware,
-        importProjectMiddleware,
-        storageMiddleware,
-        sagaMiddleware
-      ),
+      applyMiddleware(thunk, storageMiddleware, sagaMiddleware),
       DevTools.instrument()
     )
   );

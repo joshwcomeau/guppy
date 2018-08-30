@@ -69,9 +69,22 @@ export function* launchDevServer({ task }: Action): Saga<void> {
         // to trigger an error state, and so we need to parse it.
         const text = data.toString();
 
-        const isError = text.includes('Failed to compile');
+        // Ok, so this workflow really needs to be rewritten.
+        // We can't safely assume that all `stderr` output indicates
+        // a breaking/blocking error, since Jest writes its standard
+        // output to `stderr` (presumably to keep it from displaying in
+        // CI logs). Currently the only thing we know for sure is a
+        // breaking error is when the dev server fails to compile, so we're
+        // specifically handling that case, but we need a better, more
+        // generalized solution.
+        // TODO: refactor error handling
+        const isDevServerFail = text.includes('Failed to compile');
 
-        emitter({ channel: isError ? 'stderr' : 'stdout', text });
+        emitter({
+          channel: isDevServerFail ? 'stderr' : 'stdout',
+          text,
+          isDevServerFail,
+        });
       },
       stderr: emitter => data => {
         emitter({ channel: 'stderr', text: data.toString() });
@@ -99,7 +112,13 @@ export function* launchDevServer({ task }: Action): Saga<void> {
           yield put(receiveDataFromTaskExecution(task, message.text));
           break;
         case 'stderr':
-          yield put(receiveDataFromTaskExecution(task, message.text, true));
+          yield put(
+            receiveDataFromTaskExecution(
+              task,
+              message.text,
+              message.isDevServerFail
+            )
+          );
           break;
         case 'exit':
           yield call(displayTaskComplete, task, message.wasSuccessful);
@@ -194,7 +213,7 @@ export function* taskRun({ task }: Action): Saga<void> {
         yield put(receiveDataFromTaskExecution(task, message.text));
         break;
       case 'stderr':
-        yield put(receiveDataFromTaskExecution(task, message.text, true));
+        yield put(receiveDataFromTaskExecution(task, message.text));
         break;
       case 'exit':
         yield call(displayTaskComplete, task, message.wasSuccessful);
