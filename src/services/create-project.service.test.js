@@ -1,3 +1,9 @@
+import {
+  possibleProjectColors,
+  getColorForProject,
+  getBuildInstructions,
+} from './create-project.service';
+
 jest.mock('os', () => ({
   homedir: jest.fn(),
   platform: () => process.platform,
@@ -7,12 +13,9 @@ jest.mock('../reducers/paths.reducer.js', () => ({
   defaultParentPath: 'test',
 }));
 
-// eslint-disable-next-line import/first
-import {
-  possibleProjectColors,
-  getColorForProject,
-  getBuildInstructions,
-} from './create-project.service';
+jest.mock('../services/platform.service', () => ({
+  formatCommandForPlatform: cmd => cmd,
+}));
 
 describe('getColorForProject', () => {
   it('should pick a color from the defined project colours', () => {

@@ -1,5 +1,9 @@
 import * as path from 'path';
+
 module.exports = {
+  ipcRenderer: {
+    send: jest.fn(),
+  },
   remote: {
     app: {
       getAppPath: () => path.resolve(__dirname, '..', '..', '..'),
@@ -10,6 +14,8 @@ module.exports = {
           : '/var/local'),
     },
     dialog: {
+      showErrorBox: jest.fn(),
+      showOpenDialog: jest.fn(),
       showMessageBox: jest.fn(),
     },
     shell: {
