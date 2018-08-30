@@ -140,9 +140,9 @@ describe('task saga', () => {
       // `take` a log message
       clone.next();
 
-      expect(clone.next({ channel: 'stderr', text }).value).toEqual(
-        put(receiveDataFromTaskExecution(task, text, true))
-      );
+      expect(
+        clone.next({ channel: 'stderr', text, isDevServerFail: true }).value
+      ).toEqual(put(receiveDataFromTaskExecution(task, text, true)));
     });
 
     it('should display logs from stderr', () => {
