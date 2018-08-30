@@ -32,7 +32,7 @@ function createWindow() {
     width: 1120,
     height: 768,
     minWidth: 777,
-    titleBarStyle: 'hidden',
+    frame: false,
     icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
   });
 

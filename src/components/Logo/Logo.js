@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import guppyLogoSrc from '../../assets/images/guppy-logo.svg';
 
-type Size = 'small' | 'medium' | 'large';
+type Size = 'icon' | 'small' | 'medium' | 'large';
 
 type Props = {
   size?: Size,
@@ -36,6 +36,8 @@ class Logo extends Component<Props> {
 
 const getLogoWidth = (size: ?Size) => {
   switch (size) {
+    case 'icon':
+      return 18;
     case 'small':
       return 24;
     case 'medium':

@@ -163,7 +163,7 @@ const Wrapper = styled.nav.attrs({
 })`
   position: fixed;
   z-index: ${Z_INDICES.sidebar};
-  top: 0;
+  top: 30px;
   left: -${SIDEBAR_OVERFLOW}px;
   bottom: 0;
   width: ${SIDEBAR_WIDTH + SIDEBAR_OVERFLOW}px;

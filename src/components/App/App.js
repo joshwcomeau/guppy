@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
@@ -9,7 +9,6 @@ import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
-import Titlebar from '../Titlebar';
 import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
@@ -21,18 +20,17 @@ type Props = {
   selectedProject: ?Project,
 };
 
+// TODO: add in blank draggable Titlebar while
+// application is loading
 class App extends Component<Props> {
   render() {
     const { isAppLoaded, selectedProject } = this.props;
 
     return (
-      <Fragment>
-        <Titlebar />
-
+      <ApplicationMenuWrapper>
+        <ApplicationMenu />
         {isAppLoaded && (
           <Wrapper>
-            <ApplicationMenu />
-
             <Sidebar />
 
             <MainContent>
@@ -42,7 +40,7 @@ class App extends Component<Props> {
         )}
 
         <CreateNewProjectWizard />
-      </Fragment>
+      </ApplicationMenuWrapper>
     );
   }
 }
@@ -52,11 +50,22 @@ const fadeIn = keyframes`
   to { opacity: 1 }
 `;
 
+const ApplicationMenuWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: hidden;
+  height: 100vh;
+`;
+
 const Wrapper = styled.div`
   display: flex;
   position: relative;
   z-index: 1;
   background: ${COLORS.gray[50]};
+  overflow-x: hidden;
+  overflow-y: auto;
 
   animation: ${fadeIn} 500ms ease-in;
 `;
