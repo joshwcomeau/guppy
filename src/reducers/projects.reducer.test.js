@@ -14,59 +14,80 @@ import reducer, {
 } from './projects.reducer';
 
 describe('Projects Reducer', () => {
-  describe(ADD_PROJECT, () => {
-    it('adds a project', () => {
-      const action = {
-        type: ADD_PROJECT,
-        project: {
-          name: 'testing',
-          guppy: { id: 'best-id' },
-          scripts: {
-            start: 'react-scripts start',
+  [ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH].forEach(ACTION => {
+    describe(ACTION, () => {
+      it('adds the project to the state', () => {
+        const action = {
+          type: ACTION, // ADD_PROJECT or IMPORT_EXISTING_PROJECT_FINISH
+          project: {
+            name: 'testing',
+            guppy: { id: 'best-id' },
+            scripts: {
+              start: 'react-scripts start',
+            },
           },
-        },
-      };
-      const actualState = reducer(projectsInitialState, action);
+        };
+        const actualState = reducer(projectsInitialState, action);
 
-      const { name, guppy, scripts } = action.project;
+        const { name, guppy, scripts } = action.project;
 
-      expect(actualState).toEqual({
-        byId: {
-          [guppy.id]: {
-            name,
-            guppy,
-            scripts,
+        expect(actualState).toEqual({
+          byId: {
+            [guppy.id]: {
+              name,
+              guppy,
+              scripts,
+            },
           },
-        },
-        selectedId: guppy.id,
+          selectedId: null,
+        });
       });
-    });
-  });
 
-  describe(IMPORT_EXISTING_PROJECT_FINISH, () => {
-    it('imports existing project', () => {
-      const action = {
-        type: IMPORT_EXISTING_PROJECT_FINISH,
-        project: {
-          name: 'testing',
-          guppy: { id: 'best-id' },
-          scripts: {
-            start: 'react-scripts start',
+      it("selects it, when it isn't the first one", () => {
+        const initialState = {
+          byId: {
+            preexisting: {
+              name: 'I pre-exist!',
+              guppy: {},
+              scripts: {
+                start: 'react-scripts start',
+              },
+            },
           },
-        },
-      };
-      const actualState = reducer(projectsInitialState, action);
+          selectedId: 'preexisting',
+        };
 
-      const { name, guppy, scripts } = action.project;
-      expect(actualState).toEqual({
-        byId: {
-          [guppy.id]: {
-            name,
-            guppy,
-            scripts,
+        const action = {
+          type: ACTION, // ADD_PROJECT or IMPORT_EXISTING_PROJECT_FINISH
+          project: {
+            name: 'next project',
+            guppy: { id: 'next-project' },
+            scripts: {
+              start: 'react-scripts start',
+            },
           },
-        },
-        selectedId: guppy.id,
+        };
+        const actualState = reducer(initialState, action);
+
+        const { name, guppy, scripts } = action.project;
+
+        expect(actualState).toEqual({
+          byId: {
+            preexisting: {
+              name: 'I pre-exist!',
+              guppy: {},
+              scripts: {
+                start: 'react-scripts start',
+              },
+            },
+            [guppy.id]: {
+              name,
+              guppy,
+              scripts,
+            },
+          },
+          selectedId: guppy.id,
+        });
       });
     });
   });
