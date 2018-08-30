@@ -203,6 +203,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   createNewProjectStart: actions.createNewProjectStart,
+  selectProject: actions.selectProject,
 };
 
 export default connect(
