@@ -1,4 +1,3 @@
-import electron from 'electron'; // mocked
 import { call, put, select } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
 import * as childProcess from 'child_process';
@@ -170,16 +169,11 @@ describe('task saga', () => {
   });
 
   describe('taskRun saga', () => {
-    const task = { name: 'eject', projectId: 'pickled-tulip' };
-    const saga = cloneableGenerator(taskRun)({ task });
     const projectReact = { type: 'create-react-app' };
     const projectGatsby = { type: 'gatsby' };
     const projectPath = '/path/to/project';
     const processId = 12345;
     const mockProcess = mockSpawn(processId);
-
-    // select project
-    saga.next();
 
     it('should add --coverage arg to create-react-app tests', () => {
       const name = 'test';
@@ -238,56 +232,64 @@ describe('task saga', () => {
       );
     });
 
-    it('should attach task metadata and notify renderer', () => {
-      saga.next(projectReact);
-      saga.next(projectPath);
+    describe('running', () => {
+      const task = { name: 'eject', projectId: 'pickled-tulip' };
+      const saga = cloneableGenerator(taskRun)({ task });
 
-      expect(saga.next(mockProcess).value).toEqual(
-        put(attachTaskMetadata(task, processId))
-      );
-      expect(saga.next().value).toEqual(
-        call([ipcRenderer, ipcRenderer.send], 'addProcessId', processId)
-      );
-    });
-
-    it('should display logs from stderr', () => {
-      const clone = saga.clone();
-      const text = "Oops, something went wrong but it's probably not fatal";
-
-      // `take` a log message
-      clone.next();
-
-      expect(clone.next({ channel: 'stdout', text }).value).toEqual(
-        put(receiveDataFromTaskExecution(task, text))
-      );
-    });
-
-    it('should complete on exit', () => {
-      const timestamp = new Date();
-
-      // `take` a log message
+      // select project
       saga.next();
 
-      expect(
-        saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
-      ).toEqual(call(displayTaskComplete, task, true));
+      it('should attach task metadata and notify renderer', () => {
+        saga.next(projectReact);
+        saga.next(projectPath);
 
-      expect(saga.next().value).toEqual(
-        put(completeTask(task, timestamp, true))
-      );
-    });
+        expect(saga.next(mockProcess).value).toEqual(
+          put(attachTaskMetadata(task, processId))
+        );
+        expect(saga.next().value).toEqual(
+          call([ipcRenderer, ipcRenderer.send], 'addProcessId', processId)
+        );
+      });
 
-    it('should reload dependencies after eject', () => {
-      // `loadDependencyInfoFromDisk` is a thunk, thus two copies
-      // constructed with identical arguments will return unique
-      // copies of the same anonymous function. As such, their JSON
-      // stringified representations are used for testing equality.
-      // TODO: remove `JSON.stringify` once `redux-thunk` is removed
-      expect(JSON.stringify(saga.next().value)).toEqual(
-        JSON.stringify(
-          put(loadDependencyInfoFromDisk(task.projectId, projectPath))
-        )
-      );
+      it('should display logs from stderr', () => {
+        const clone = saga.clone();
+        const text = "Oops, something went wrong but it's probably not fatal";
+
+        // `take` a log message
+        clone.next();
+
+        expect(clone.next({ channel: 'stdout', text }).value).toEqual(
+          put(receiveDataFromTaskExecution(task, text))
+        );
+      });
+
+      it('should complete on exit', () => {
+        const timestamp = new Date();
+
+        // `take` a log message
+        saga.next();
+
+        expect(
+          saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
+        ).toEqual(call(displayTaskComplete, task, true));
+
+        expect(saga.next().value).toEqual(
+          put(completeTask(task, timestamp, true))
+        );
+      });
+
+      it('should reload dependencies after eject', () => {
+        // `loadDependencyInfoFromDisk` is a thunk, thus two copies
+        // constructed with identical arguments will return unique
+        // copies of the same anonymous function. As such, their JSON
+        // stringified representations are used for testing equality.
+        // TODO: remove `JSON.stringify` once `redux-thunk` is removed
+        expect(JSON.stringify(saga.next().value)).toEqual(
+          JSON.stringify(
+            put(loadDependencyInfoFromDisk(task.projectId, projectPath))
+          )
+        );
+      });
     });
   });
 
