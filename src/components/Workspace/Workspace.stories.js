@@ -31,11 +31,17 @@ class PanelToggler extends Component {
             orientation="horizontal"
             style={{ height: 600, border: '1px solid' }}
           >
-            <Panel initialFlex={40} style={{ minWidth: 200 }}>
+            <Panel id="sidebar" initialFlex={40} style={{ minWidth: 200 }}>
               foo
             </Panel>
-            <Panel initialFlex={20}>bar</Panel>
-            {renderThirdPanel && <Panel initialFlex={40}>baz</Panel>}
+            <Panel id="server" initialFlex={20}>
+              bar
+            </Panel>
+            {renderThirdPanel && (
+              <Panel id="dependencies" initialFlex={40}>
+                baz
+              </Panel>
+            )}
           </Workspace>
         </div>
       </Fragment>

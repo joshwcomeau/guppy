@@ -2,7 +2,10 @@
 import React, { PureComponent } from 'react';
 
 type Props = {
+  initialFlex: number,
+  style: Object,
   flex: number,
+  children: React$Node,
 };
 
 class Panel extends PureComponent<Props> {
@@ -11,7 +14,7 @@ class Panel extends PureComponent<Props> {
     style: {},
   };
   render() {
-    const { flex, style, ...delegated } = this.props;
+    const { flex, initialFlex, style, ...delegated } = this.props;
     return (
       <div {...delegated} style={{ flex, ...style }}>
         {this.props.children}
