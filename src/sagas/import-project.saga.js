@@ -1,4 +1,5 @@
 // @flow
+import electron from 'electron';
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
 import {
   importExistingProjectStart,
@@ -18,9 +19,7 @@ import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { ProjectType } from '../types';
 
-const { showOpenDialog, showErrorBox } = window.require(
-  'electron'
-).remote.dialog;
+const { showOpenDialog, showErrorBox } = electron.remote.dialog;
 
 export function* handlePathInput(paths: Array<string>): Saga<void> {
   // The user might cancel out without selecting a directory.

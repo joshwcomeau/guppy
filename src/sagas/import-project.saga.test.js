@@ -1,3 +1,4 @@
+import electron from 'electron'; // Mocked
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
 import rootSaga, {
   handlePathInput,
@@ -20,17 +21,8 @@ import {
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import { getColorForProject } from '../services/create-project.service';
 
-jest.mock('electron', () => ({
-  remote: {
-    app: { getAppPath: () => '' },
-    dialog: { showOpenDialog: jest.fn(), showErrorBox: jest.fn() },
-  },
-}));
-
 describe('import-project saga', () => {
-  const { showOpenDialog, showErrorBox } = window.require(
-    'electron'
-  ).remote.dialog;
+  const { showOpenDialog, showErrorBox } = electron.remote.dialog;
 
   describe('handlePathInput saga', () => {
     it('should do nothing if argument paths is undefined', () => {

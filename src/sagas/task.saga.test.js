@@ -1,3 +1,4 @@
+import electron from 'electron'; // mocked
 import { call, put, select } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
 import * as childProcess from 'child_process';
@@ -29,15 +30,6 @@ import {
 import { ipcRenderer } from 'electron';
 
 const chalk = new chalkRaw.constructor({ level: 3 });
-
-jest.mock('electron', () => ({
-  ipcRenderer: {
-    send: jest.fn(),
-  },
-  remote: {
-    app: { getAppPath: () => '' },
-  },
-}));
 
 jest.mock('uuid/v1', () => () => 'mocked-uuid-v1');
 
@@ -98,18 +90,21 @@ describe('task saga', () => {
     });
 
     it('should log to console.error on error', () => {
-      // spy on `console.error`
       const consoleErrorOriginal = global.console.error;
-      global.console.error = jest.fn();
 
-      const clone = saga.clone();
-      clone.next(port);
-      // destructuring undefined should throw
-      clone.next(undefined);
-      expect(console.error).toBeCalled();
+      // spy on `console.error`
+      try {
+        global.console.error = jest.fn();
 
-      // restore `console.error` to its original function
-      global.console.error = consoleErrorOriginal;
+        const clone = saga.clone();
+        clone.next(port);
+        // destructuring undefined should throw
+        clone.next(undefined);
+        expect(console.error).toBeCalled();
+      } finally {
+        // restore `console.error` to its original function
+        global.console.error = consoleErrorOriginal;
+      }
     });
 
     it('should spawn a child process', () => {
@@ -287,7 +282,7 @@ describe('task saga', () => {
       // constructed with identical arguments will return unique
       // copies of the same anonymous function. As such, their JSON
       // stringified representations are used for testing equality.
-      // TODO: remove `JSON.stringify` once `redux-saga` is removed
+      // TODO: remove `JSON.stringify` once `redux-thunk` is removed
       expect(JSON.stringify(saga.next().value)).toEqual(
         JSON.stringify(
           put(loadDependencyInfoFromDisk(task.projectId, projectPath))
@@ -368,7 +363,7 @@ describe('task saga', () => {
 
       expect(saga.next().value).toEqual(select(getProjectById, task.projectId));
       // stringify to avoid deep equal inconsistencies from thunk
-      // TODO: remove `JSON.stringify` once `redux-saga` is removed
+      // TODO: remove `JSON.stringify` once `redux-thunk` is removed
       expect(JSON.stringify(saga.next(project).value)).toEqual(
         JSON.stringify(
           put(loadDependencyInfoFromDisk(project.id, project.path))
