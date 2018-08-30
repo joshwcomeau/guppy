@@ -2,7 +2,7 @@
 /**
  * Customize the application menu (file/edit/etc outside of the window).
  */
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { shell, remote } from 'electron';
 
@@ -12,9 +12,11 @@ import { isMac } from '../../services/platform.service';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 
+import FramelessMenu from './FramelessMenu';
+
 import type { Task } from '../../types';
 
-const { app, process, Menu } = remote;
+const { app, process } = remote;
 
 type Props = {
   selectedProject: ?string,
@@ -25,9 +27,14 @@ type Props = {
   clearConsole: (task: Task) => any,
   showDeleteProjectPrompt: (project: any) => any,
 };
+type State = {
+  template: any,
+};
 
-class ApplicationMenu extends Component<Props> {
-  menu: any;
+class ApplicationMenu extends Component<Props, State> {
+  state = {
+    template: null,
+  };
 
   componentDidMount() {
     this.buildMenu(this.props);
@@ -178,9 +185,7 @@ class ApplicationMenu extends Component<Props> {
       });
     }
 
-    this.menu = Menu.buildFromTemplate(template);
-
-    Menu.setApplicationMenu(this.menu);
+    this.setState({ template });
   };
 
   openGettingStartedDocs = () => {
@@ -192,7 +197,8 @@ class ApplicationMenu extends Component<Props> {
   };
 
   render() {
-    return null;
+    const { template } = this.state;
+    return <FramelessMenu template={template} />;
   }
 }
 
