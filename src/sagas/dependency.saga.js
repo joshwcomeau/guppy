@@ -21,10 +21,6 @@ import {
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 
-/**
- * Trying to install new dependency, if success dispatching "finish" action
- * if not - dispatching "error" ection
- */
 export function* addDependency({
   projectId,
   dependencyName,
@@ -45,10 +41,6 @@ export function* addDependency({
   }
 }
 
-/**
- * Trying to update existing dependency, if success dispatching "finish" action,
- * if not - dispatching "error" action
- */
 export function* updateDependency({
   projectId,
   dependencyName,
@@ -64,10 +56,6 @@ export function* updateDependency({
   }
 }
 
-/**
- * Trying to delete dependency, if success dispatching "finish" action,
- * if not - dispatching "error" action
- */
 export function* deleteDependency({
   projectId,
   dependencyName,
@@ -82,9 +70,6 @@ export function* deleteDependency({
   }
 }
 
-/**
- * Root dependencies saga, watching for "start" actions
- */
 export default function* rootSaga(): Saga<void> {
   yield takeEvery(ADD_DEPENDENCY_START, addDependency);
   yield takeEvery(UPDATE_DEPENDENCY_START, updateDependency);

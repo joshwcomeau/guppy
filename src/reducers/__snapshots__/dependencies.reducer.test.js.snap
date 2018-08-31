@@ -1,0 +1,233 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dependencies reducer should handle ADD_DEPENDENCY 1`] = `
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "",
+      "homepage": "",
+      "license": "",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "",
+        "url": "",
+      },
+      "status": "queued-install",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`dependencies reducer should handle DELETE_DEPENDENCY 1`] = `
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "queued-delete",
+      "version": "3.2",
+    },
+  },
+}
+`;
+
+exports[`dependencies reducer should handle INSTALL_DEPENDENCIES_ERROR 1`] = `
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "idle",
+      "version": "3.2",
+    },
+  },
+}
+`;
+
+exports[`dependencies reducer should handle INSTALL_DEPENDENCIES_FINISH 1`] = `
+Object {
+  "foo": Object {
+    "react-redux": Object {
+      "description": "other description",
+      "homepage": "https://dependency-homepage2.io",
+      "keywords": Array [
+        "foo",
+        "bar",
+      ],
+      "license": "ISC",
+      "location": "dependencies",
+      "name": "react-redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/bar/foo.git",
+      },
+      "status": "idle",
+      "version": "3.0",
+    },
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "idle",
+      "version": "3.3",
+    },
+  },
+}
+`;
+
+exports[`dependencies reducer should handle INSTALL_DEPENDENCIES_START 1`] = `
+Object {
+  "foo": Object {
+    "react-redux": Object {
+      "description": "",
+      "homepage": "",
+      "license": "",
+      "location": "dependencies",
+      "name": "react-redux",
+      "repository": Object {
+        "type": "",
+        "url": "",
+      },
+      "status": "installing",
+      "version": "",
+    },
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "updating",
+      "version": "3.2",
+    },
+  },
+}
+`;
+
+exports[`dependencies reducer should handle LOAD_DEPENDENCY_INFO_FROM_DISK 1`] = `
+Object {
+  "baz": Object {},
+  "foo": Object {
+    "redux": Object {},
+  },
+}
+`;
+
+exports[`dependencies reducer should handle UNINSTALL_DEPENDENCIES_ERROR 1`] = `
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "idle",
+      "version": "3.2",
+    },
+  },
+}
+`;
+
+exports[`dependencies reducer should handle UNINSTALL_DEPENDENCIES_FINISH 1`] = `
+Object {
+  "foo": Object {},
+}
+`;
+
+exports[`dependencies reducer should handle UNINSTALL_DEPENDENCIES_START 1`] = `
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "deleting",
+      "version": "3.2",
+    },
+  },
+}
+`;
+
+exports[`dependencies reducer should handle UPDATE_DEPENDENCY 1`] = `
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "queued-update",
+      "version": "3.2",
+    },
+  },
+}
+`;
