@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { pick } from '../utils';
-import { defaultParentPath } from '../reducers/paths.reducer';
 
 import type { DependencyLocation, ProjectInternal } from '../types';
 
@@ -52,33 +51,8 @@ export const writePackageJson = (projectPath: string, json: any) => {
  * Given an array of paths, load each one as a distinct Guppy project.
  * Parses the `package.json` to find Guppy's saved info.
  */
-export function loadGuppyProjects(projectPathsInput: Array<string>) {
-  const { readdirSync, statSync } = fs;
-
-  // Create a clone of paths so we aren't mutating the provided array.
-  const projectPaths = [...projectPathsInput];
-
-  // In addition to the paths recovered from localStorage, we also want to
-  // parse the default parent path, to collect any local projects that Guppy
-  // doesn't know about
-  // (this is mainly useful for dev, so that I can clear localStorage to
-  // emulate a clean slate, but might also be useful for users who want to
-  // create projects outside of Guppy but have them managed internally)
-  try {
-    readdirSync(defaultParentPath).forEach(f => {
-      const projectPath = path.join(defaultParentPath, f);
-      const isDirectory = statSync(projectPath).isDirectory();
-
-      if (isDirectory && !projectPaths.includes(projectPath)) {
-        projectPaths.push(projectPath);
-      }
-    });
-  } catch (e) {
-    // If the default parent path doesn't exist, it'll throw an error.
-    // This is fine, though; it just means that we have
-  }
-
-  return new Promise((resolve, reject) => {
+export const loadGuppyProjects = (projectPaths: Array<string>) =>
+  new Promise((resolve, reject) => {
     // Each project in a Guppy directory should have a package.json.
     // We'll read all the project info we need from this file.
     // TODO: Maybe use asyncReduce to handle the output format in 1 neat step?
@@ -126,7 +100,6 @@ export function loadGuppyProjects(projectPathsInput: Array<string>) {
       }
     );
   });
-}
 
 /**
  * Find a specific project's dependency information.

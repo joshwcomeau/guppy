@@ -76,7 +76,15 @@ const selectedIdReducer = (
   switch (action.type) {
     case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
-      return action.project.guppy.id;
+      // When a new project is created/imported, we generally want to select
+      // it! The only exception is during onboarding. We want the user to
+      // manually click the icon, to teach them what these icons are.
+      //
+      // NOTE: This is knowable because after onboarding, a project will
+      // _always_ be selected. This is a fundamental truth about how Guppy
+      // works. In the future, though, we may want to have non-project screens,
+      // and so this will have to be rethought.
+      return state ? action.project.guppy.id : null;
     }
 
     case REFRESH_PROJECTS_FINISH: {
