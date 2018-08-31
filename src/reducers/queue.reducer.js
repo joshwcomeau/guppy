@@ -7,15 +7,7 @@ import {
 } from '../actions';
 
 import type { Action } from 'redux';
-import type { Dependency, QueueAction } from '../actions';
-
-// Installing a new dependency and updating an existing one
-// both use the same yarn command (yarn add) and as such can
-// be bulked together into a single install. However, we want
-// to display either 'Installing...' or 'Updating...', respectively,
-// so we have to track the install's purpose per dependency in
-// the install queue
-type QueuedDependency = Dependency & { updating?: boolean };
+import type { QueuedDependency, QueueAction } from '../types';
 
 type State = {
   [projectId: string]: Array<{

@@ -5,7 +5,7 @@ import * as path from 'path';
 
 import { pick } from '../utils';
 
-import type { Dependency, DependencyLocation } from '../types';
+import type { QueuedDependency, DependencyLocation } from '../types';
 
 /**
  * Load a project's package.json
@@ -169,7 +169,7 @@ export function loadProjectDependency(
  */
 export function loadProjectDependencies(
   projectPath: string,
-  dependencies: Array<Dependency>
+  dependencies: Array<QueuedDependency>
 ) {
   return new Promise((resolve, reject) => {
     asyncMap(

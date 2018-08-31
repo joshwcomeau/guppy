@@ -2,7 +2,7 @@
 import { PACKAGE_MANAGER_CMD } from './platform.service';
 import * as childProcess from 'child_process';
 
-import type { Dependency } from '../types';
+import type { QueuedDependency } from '../types';
 
 const spawnProcess = (cmd: string, cmdArgs: string[], projectPath: string) =>
   new Promise((resolve, reject) => {
@@ -16,15 +16,18 @@ const spawnProcess = (cmd: string, cmdArgs: string[], projectPath: string) =>
     // logger(child) // service will be used here later
   });
 
-export const toPackageManagerArgs = (dependencies: Array<Dependency>) => {
+export const toPackageManagerArgs = (
+  dependencies: Array<QueuedDependency>
+): Array<string> => {
   return dependencies.map(
-    ({ name, version }: Dependency) => name + (version ? `@${version}` : '')
+    ({ name, version }: QueuedDependency) =>
+      name + (version ? `@${version}` : '')
   );
 };
 
 export const installDependencies = (
   projectPath: string,
-  dependencies: Array<Dependency>
+  dependencies: Array<QueuedDependency>
 ) =>
   spawnProcess(
     PACKAGE_MANAGER_CMD,
@@ -34,7 +37,7 @@ export const installDependencies = (
 
 export const uninstallDependencies = (
   projectPath: string,
-  dependencies: Array<Dependency>
+  dependencies: Array<QueuedDependency>
 ) =>
   spawnProcess(
     PACKAGE_MANAGER_CMD,

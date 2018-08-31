@@ -69,7 +69,9 @@ describe('Dependency sagas', () => {
         select(getPackageJsonLockedForProjectId, projectId)
       );
       expect(saga.next(packageJsonLocked).value).toEqual(
-        put(installDependencyStart(projectId, dependency))
+        put(
+          installDependencyStart(projectId, dependency.name, dependency.version)
+        )
       );
       expect(saga.next().done).toBe(true);
     });
@@ -81,7 +83,9 @@ describe('Dependency sagas', () => {
         select(getPackageJsonLockedForProjectId, projectId)
       );
       expect(saga.next(packageJsonLocked).value).toEqual(
-        put(queueDependencyInstall(projectId, dependency))
+        put(
+          queueDependencyInstall(projectId, dependency.name, dependency.version)
+        )
       );
       expect(saga.next().done).toBe(true);
     });
@@ -111,7 +115,14 @@ describe('Dependency sagas', () => {
         select(getPackageJsonLockedForProjectId, projectId)
       );
       expect(saga.next(packageJsonLocked).value).toEqual(
-        put(installDependencyStart(projectId, dependency))
+        put(
+          installDependencyStart(
+            projectId,
+            dependency.name,
+            dependency.version,
+            dependency.updating
+          )
+        )
       );
       expect(saga.next().done).toBe(true);
     });
@@ -123,7 +134,14 @@ describe('Dependency sagas', () => {
         select(getPackageJsonLockedForProjectId, projectId)
       );
       expect(saga.next(packageJsonLocked).value).toEqual(
-        put(queueDependencyInstall(projectId, dependency))
+        put(
+          queueDependencyInstall(
+            projectId,
+            dependency.name,
+            dependency.version,
+            dependency.updating
+          )
+        )
       );
       expect(saga.next().done).toBe(true);
     });
@@ -151,7 +169,7 @@ describe('Dependency sagas', () => {
         select(getPackageJsonLockedForProjectId, projectId)
       );
       expect(saga.next(packageJsonLocked).value).toEqual(
-        put(uninstallDependencyStart(projectId, dependency))
+        put(uninstallDependencyStart(projectId, dependency.name))
       );
       expect(saga.next().done).toBe(true);
     });
@@ -163,7 +181,7 @@ describe('Dependency sagas', () => {
         select(getPackageJsonLockedForProjectId, projectId)
       );
       expect(saga.next(packageJsonLocked).value).toEqual(
-        put(queueDependencyUninstall(projectId, dependency))
+        put(queueDependencyUninstall(projectId, dependency.name))
       );
       expect(saga.next().done).toBe(true);
     });

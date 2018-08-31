@@ -75,7 +75,7 @@ const getColorForDownloadNumber = (num: number) => {
 
 class AddDependencySearchResult extends PureComponent<Props> {
   renderActionArea() {
-    const { hit, projectId, currentStatus, addDependencyStart } = this.props;
+    const { hit, projectId, currentStatus, addDependency } = this.props;
 
     if (currentStatus === 'installing') {
       return (
@@ -104,7 +104,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
           color1={COLORS.green[700]}
           color2={COLORS.lightGreen[500]}
           textColor={COLORS.green[700]}
-          onClick={() => addDependencyStart(projectId, hit.name, hit.version)}
+          onClick={() => addDependency(projectId, hit.name, hit.version)}
         >
           Add To Project
         </Button>

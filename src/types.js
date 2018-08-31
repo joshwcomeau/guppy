@@ -26,6 +26,11 @@ export type DependencyStatus =
   | 'deleting';
 export type DependencyLocation = 'dependencies' | 'devDependencies';
 export type QueueAction = 'install' | 'uninstall';
+export type QueuedDependency = {
+  name: string,
+  version?: string,
+  updating?: boolean,
+};
 
 export type Task = {
   id: string,
