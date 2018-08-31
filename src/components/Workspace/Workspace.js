@@ -4,7 +4,10 @@ import styled from 'styled-components';
 
 import { sum } from '../../utils';
 
+import { createPixelFlexConverter } from './Workspace.helpers';
 import Resizer from './Resizer';
+
+type FlexMap = { [id: string]: number };
 
 type Props = {
   id: string,
@@ -13,12 +16,16 @@ type Props = {
 };
 
 type State = {
-  panelFlexList: { [id: string]: number },
+  panelFlexMap: FlexMap,
 };
 
 class Workspace extends Component<Props, State> {
   node: HTMLElement;
   parentBox: ClientRect;
+  startClientX: ?number;
+  startClientY: ?number;
+  startPanelFlexMap: FlexMap;
+  resizerIndex: ?number;
 
   static getDerivedStateFromProps(props: Props, state: State) {
     const childrenArray = React.Children.toArray(props.children);
@@ -44,7 +51,7 @@ class Workspace extends Component<Props, State> {
       // In this case, the `totalFlex` is 4.
       // We want to normalize this to be 100, though, so we need to update
       // each flex entity to be out of 100.
-      const panelFlexList = childrenArray.reduce((acc, child) => {
+      const panelFlexMap = childrenArray.reduce((acc, child) => {
         // Normalize the flex from 0-100, using cross-multiplication.
         //
         //    flex            newFlex
@@ -59,7 +66,7 @@ class Workspace extends Component<Props, State> {
         };
       }, {});
 
-      return { panelFlexList };
+      return { panelFlexMap };
     } else {
       // This can happen when the actual number of childen changes (say, if
       // a panel is toggled off, or a new one is added). We want to recalculate
@@ -72,10 +79,10 @@ class Workspace extends Component<Props, State> {
        */
 
       const totalFlex = sum(
-        childrenArray.map(child => state.panelFlexList[child.props.id])
+        childrenArray.map(child => state.panelFlexMap[child.props.id])
       );
 
-      const panelFlexList = childrenArray.reduce((acc, child) => {
+      const panelFlexMap = childrenArray.reduce((acc, child) => {
         // Normalize the flex from 0-100, using cross-multiplication.
         //
         //    flex            newFlex
@@ -83,7 +90,7 @@ class Workspace extends Component<Props, State> {
         //  totalFlex           100
         //
         const normalizedFlex =
-          (state.panelFlexList[child.props.id] * 100) / totalFlex;
+          (state.panelFlexMap[child.props.id] * 100) / totalFlex;
 
         return {
           ...acc,
@@ -91,7 +98,7 @@ class Workspace extends Component<Props, State> {
         };
       }, {});
 
-      return { panelFlexList };
+      return { panelFlexMap };
     }
   }
 
@@ -111,78 +118,92 @@ class Workspace extends Component<Props, State> {
     // TODO: Clean these up, make them all part of 1 property, Flow-tracked
     this.startClientX = ev.clientX;
     this.startClientY = ev.clientY;
+    this.startPanelFlexMap = { ...this.state.panelFlexMap };
 
     this.resizerIndex = resizerIndex;
-    this.panelFlexListSnapshot = { ...this.state.panelFlexList };
   };
 
   dragResize = (ev: any) => {
+    const {
+      startClientX,
+      startClientY,
+      startPanelFlexMap,
+      resizerIndex,
+    } = this;
+
+    // Impossible conditions for Flow
+    if (
+      typeof startClientX !== 'number' ||
+      typeof startClientY !== 'number' ||
+      typeof resizerIndex !== 'number'
+    ) {
+      console.error('Missing required variables to do panel resizing', this);
+      return;
+    }
+
     // We need to convert the window coordinates to the relative positions
     // within this box.
     // Start by getting the raw window coordinates
     const { clientX, clientY } = ev;
-    // Get them relative to the box they're in
-    const relativeX = clientX - this.parentBox.left;
-    const relativeY = clientY - this.parentBox.top;
 
-    const { panelFlexList } = this.state;
+    // TODO: totalPixels based on orientation
+    const totalWidth = this.parentBox.width;
 
-    const panelIds = Object.keys(panelFlexList);
-    const panelValues = panelIds.map(id => panelFlexList[id]);
+    const convertPixelsToFlex = createPixelFlexConverter(totalWidth, 100);
+    const convertFlexToPixels = createPixelFlexConverter(100, totalWidth);
 
-    // TODO: Generalize for vertical
-    // Convert them to work in the Flex system we've defined.
-    // This is cross-multiplication, solving for X:
-    //
-    //    relativeX          X
-    //  -------------   = -------
-    //   parentWidth        100
-    //
+    const { panelFlexMap } = this.state;
 
-    // This will give us the amount of flex between the left edge and the
-    // cursor position:
-    //  ___________________________________
-    // |        |                |        |
-    // |        |                |        |
-    // |        |                |        |
-    // |________|________________|________|
-    //                           ^ Cursor
-    // <------------------------>
-    //    newProportionOfSpace
-    //
-    const newProportionOfSpace = (relativeX * 100) / this.parentBox.width;
+    const panelIds = Object.keys(panelFlexMap);
+    const panelFlexValues = panelIds.map(id => panelFlexMap[id]);
+    const panelWidths = panelFlexValues.map(convertFlexToPixels);
 
-    // Now, get the actual flex for the left-hand element
-    //  ___________________________________
-    // |        |                |        |
-    // |        |                |        |
-    // |        |                |        |
-    // |________|________________|________|
-    //                           ^ Cursor
-    //          <--------------->
-    //               newFlex
-    //
-    const sumOfLeftOrTopPanels = sum(
-      panelValues.filter((_, i) => i < this.resizerIndex)
+    // Check and see if this change would push us below our min-width
+    const childrenArray = React.Children.toArray(this.props.children);
+
+    // TODO: Handle vertical
+    let deltaInPixels = startClientX - clientX;
+    let deltaInFlex = convertPixelsToFlex(deltaInPixels);
+
+    const firstAffectedPanelId = panelIds[resizerIndex];
+    const secondAffectedPanelId = panelIds[resizerIndex + 1];
+
+    const firstAffectedPanel = childrenArray.find(
+      child => child.props.id === firstAffectedPanelId
+    );
+    const secondAffectedPanel = childrenArray.find(
+      child => child.props.id === secondAffectedPanelId
     );
 
-    const newFlex = newProportionOfSpace - sumOfLeftOrTopPanels;
+    if (!firstAffectedPanel || !secondAffectedPanel) {
+      return;
+    }
 
-    // Get the difference between the current flex for this panel, and the new
-    // flex
-    const difference = newFlex - panelValues[this.resizerIndex];
+    const firstAffectedPanelMinWidth = firstAffectedPanel.props.minWidth;
 
-    const leftOfResizer = panelIds[this.resizerIndex];
-    const rightOfResizer = panelIds[this.resizerIndex + 1];
+    const prospectiveFirstPanelWidth = convertFlexToPixels(
+      panelFlexMap[firstAffectedPanelId] + deltaInFlex
+    );
 
-    const nextPanelFlexList = {
-      ...panelFlexList,
-      [leftOfResizer]: panelFlexList[leftOfResizer] + difference,
-      [rightOfResizer]: panelFlexList[rightOfResizer] - difference,
+    if (prospectiveFirstPanelWidth < firstAffectedPanelMinWidth) {
+      const overshotByPixels =
+        firstAffectedPanelMinWidth - prospectiveFirstPanelWidth;
+
+      const overshotByFlex = convertPixelsToFlex(overshotByPixels);
+
+      deltaInFlex -= overshotByFlex;
+    }
+
+    const nextpanelFlexMap = {
+      ...panelFlexMap,
+      [firstAffectedPanelId]:
+        startPanelFlexMap[firstAffectedPanelId] - deltaInFlex,
+      [secondAffectedPanelId]:
+        startPanelFlexMap[secondAffectedPanelId] + deltaInFlex,
     };
 
     this.setState({
-      panelFlexList: nextPanelFlexList,
+      panelFlexMap: nextpanelFlexMap,
     });
   };
 
@@ -195,7 +216,7 @@ class Workspace extends Component<Props, State> {
 
   render() {
     const { orientation, children, ...delegated } = this.props;
-    const { panelFlexList } = this.state;
+    const { panelFlexMap } = this.state;
 
     const childrenArray = React.Children.toArray(children).filter(
       child => child
@@ -205,10 +226,10 @@ class Workspace extends Component<Props, State> {
     const interleavedChildren = childrenArray.map(
       (child, index) =>
         index === childrenArray.length - 1
-          ? React.cloneElement(child, { flex: panelFlexList[child.props.id] })
+          ? React.cloneElement(child, { flex: panelFlexMap[child.props.id] })
           : [
               React.cloneElement(child, {
-                flex: panelFlexList[child.props.id],
+                flex: panelFlexMap[child.props.id],
               }),
               <Resizer
                 key={index}
