@@ -5,9 +5,12 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
+const fixPath = require('fix-path');
+const chalkRaw = require('chalk');
+
 const killProcessId = require('./services/kill-process-id.service');
 
-const fixPath = require('fix-path');
+const chalk = new chalkRaw.constructor({ level: 3 });
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
@@ -57,7 +60,7 @@ function createWindow() {
     try {
       installExtension(extension);
     } catch (e) {
-      console.error(e);
+      console.error(chalk.red(`[ELECTRON] Extension installation failed`), e);
     }
   }
 
