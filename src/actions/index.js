@@ -2,7 +2,6 @@
 import uuid from 'uuid/v1';
 
 import { loadAllProjectDependencies } from '../services/read-from-disk.service';
-import { getInternalProjectById } from '../reducers/projects.reducer';
 
 import type { Project, ProjectsMap, Task, Dependency } from '../types';
 
@@ -90,20 +89,13 @@ export const loadDependencyInfoFromDisk = (
   projectPath: string
 ) => {
   return (dispatch: any, getState: Function) => {
-    // The `project` this action receives is the "fit-for-consumption" one.
-    // We need the internal version, `ProjectInternal`, so that we can see the
-    // raw dependency information.
-    const internalProject = getInternalProjectById(getState(), projectId);
-
-    loadAllProjectDependencies(internalProject, projectPath).then(
-      dependencies => {
-        dispatch({
-          type: LOAD_DEPENDENCY_INFO_FROM_DISK,
-          projectId,
-          dependencies,
-        });
-      }
-    );
+    loadAllProjectDependencies(projectPath).then(dependencies => {
+      dispatch({
+        type: LOAD_DEPENDENCY_INFO_FROM_DISK,
+        projectId,
+        dependencies,
+      });
+    });
   };
 };
 

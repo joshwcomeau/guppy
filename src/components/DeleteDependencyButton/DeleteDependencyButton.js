@@ -5,7 +5,6 @@ import { remote } from 'electron';
 
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
-import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 
 import Button from '../Button';
 import Spinner from '../Spinner';
@@ -18,8 +17,7 @@ type Props = {
   dependencyName: string,
   isBeingDeleted?: boolean,
   // From redux:
-  isPackageJsonLocked: boolean,
-  deleteDependencyStart: (projectId: string, dependencyName: string) => any,
+  deleteDependency: (projectId: string, dependencyName: string) => any,
 };
 
 // TODO: Wouldn't it be neat if it parsed your project to see if it was being
@@ -27,7 +25,7 @@ type Props = {
 // an actively-used dependency?
 class DeleteDependencyButton extends PureComponent<Props> {
   handleClick = () => {
-    const { projectId, dependencyName, deleteDependencyStart } = this.props;
+    const { projectId, dependencyName, deleteDependency } = this.props;
 
     dialog.showMessageBox(
       {
@@ -44,14 +42,14 @@ class DeleteDependencyButton extends PureComponent<Props> {
         const isConfirmed = response === 0;
 
         if (isConfirmed) {
-          deleteDependencyStart(projectId, dependencyName);
+          deleteDependency(projectId, dependencyName);
         }
       }
     );
   };
 
   render() {
-    const { isBeingDeleted, isPackageJsonLocked } = this.props;
+    const { isBeingDeleted } = this.props;
     return (
       <Button
         size="small"
@@ -59,7 +57,6 @@ class DeleteDependencyButton extends PureComponent<Props> {
         color1={COLORS.pink[300]}
         color2={COLORS.red[500]}
         onClick={this.handleClick}
-        disabled={isPackageJsonLocked}
         style={{ width: 75 }}
       >
         {isBeingDeleted ? (
@@ -77,14 +74,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  isPackageJsonLocked: getPackageJsonLockedForProjectId(
-    state,
-    ownProps.projectId
-  ),
-});
-
 export default connect(
-  mapStateToProps,
-  { deleteDependencyStart: actions.deleteDependencyStart }
+  null,
+  { deleteDependency: actions.deleteDependency }
 )(DeleteDependencyButton);

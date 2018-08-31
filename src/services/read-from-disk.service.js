@@ -5,7 +5,7 @@ import * as path from 'path';
 
 import { pick } from '../utils';
 
-import type { Dependency, DependencyLocation, ProjectInternal } from '../types';
+import type { Dependency, DependencyLocation } from '../types';
 
 /**
  * Load a project's package.json

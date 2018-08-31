@@ -13,7 +13,6 @@ import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
 } from '../../reducers/projects.reducer';
-import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 import { COLORS } from '../../constants';
 
 import Spacer from '../Spacer';
@@ -29,8 +28,7 @@ import type { DependencyStatus } from '../../types';
 type Props = {
   projectId: string,
   currentStatus: ?DependencyStatus,
-  isPackageJsonLocked: boolean,
-  addDependencyStart: (
+  addDependency: (
     projectId: string,
     dependencyName: string,
     version: string
@@ -77,13 +75,7 @@ const getColorForDownloadNumber = (num: number) => {
 
 class AddDependencySearchResult extends PureComponent<Props> {
   renderActionArea() {
-    const {
-      hit,
-      projectId,
-      currentStatus,
-      isPackageJsonLocked,
-      addDependencyStart,
-    } = this.props;
+    const { hit, projectId, currentStatus, addDependencyStart } = this.props;
 
     if (currentStatus === 'installing') {
       return (
@@ -111,8 +103,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
           size="small"
           color1={COLORS.green[700]}
           color2={COLORS.lightGreen[500]}
-          textColor={isPackageJsonLocked ? COLORS.gray[400] : COLORS.green[700]}
-          disabled={isPackageJsonLocked}
+          textColor={COLORS.green[700]}
           onClick={() => addDependencyStart(projectId, hit.name, hit.version)}
         >
           Add To Project
@@ -273,14 +264,10 @@ const mapStateToProps = (state, ownProps) => {
   return {
     currentStatus,
     projectId: selectedProjectId,
-    isPackageJsonLocked: getPackageJsonLockedForProjectId(
-      state,
-      selectedProjectId
-    ),
   };
 };
 
-const mapDispatchToProps = { addDependencyStart: actions.addDependencyStart };
+const mapDispatchToProps = { addDependency: actions.addDependency };
 
 export default connect(
   mapStateToProps,

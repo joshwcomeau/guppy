@@ -6,7 +6,7 @@ import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
   FINISH_DELETING_PROJECT,
-  ADD_DEPENDENCY_FINISH,
+  INSTALL_DEPENDENCIES_FINISH,
   REFRESH_PROJECTS_FINISH,
   SELECT_PROJECT,
 } from '../actions';
@@ -47,12 +47,14 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
       };
     }
 
-    case ADD_DEPENDENCY_FINISH: {
-      const { projectId, dependency } = action;
+    case INSTALL_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
 
       return produce(state, draftState => {
-        draftState[projectId].dependencies[dependency.name] =
-          dependency.version;
+        dependencies.forEach(dependency => {
+          draftState[projectId].dependencies[dependency.name] =
+            dependency.version;
+        });
       });
     }
 
