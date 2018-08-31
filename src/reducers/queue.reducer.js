@@ -117,3 +117,6 @@ export const getPackageJsonLockedForProjectId = (
   state: any,
   projectId: string
 ) => !!state.queue[projectId];
+
+export const getNextActionForProjectId = (state: any, projectId: string) =>
+  state.queue[projectId] && state.queue[projectId][0];

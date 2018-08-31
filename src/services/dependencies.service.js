@@ -2,6 +2,8 @@
 import { PACKAGE_MANAGER_CMD } from './platform.service';
 import * as childProcess from 'child_process';
 
+import type { Dependency } from '../types';
+
 const spawnProcess = (cmd: string, cmdArgs: string[], projectPath: string) =>
   new Promise((resolve, reject) => {
     const child = childProcess.spawn(cmd, cmdArgs, {
@@ -14,21 +16,31 @@ const spawnProcess = (cmd: string, cmdArgs: string[], projectPath: string) =>
     // logger(child) // service will be used here later
   });
 
-export const installDependency = (
+export const toPackageManagerArgs = (dependencies: Array<Dependency>) => {
+  return dependencies.map(
+    ({ name, version }: Dependency) => name + (version ? `@${version}` : '')
+  );
+};
+
+export const installDependencies = (
   projectPath: string,
-  dependencyName: string,
-  version: string
+  dependencies: Array<Dependency>
 ) =>
   spawnProcess(
     PACKAGE_MANAGER_CMD,
-    ['add', `${dependencyName}@${version}`, '-SE'],
+    ['add', ...toPackageManagerArgs(dependencies), '-SE'],
     projectPath
   );
 
-export const uninstallDependency = (
+export const uninstallDependencies = (
   projectPath: string,
-  dependencyName: string
-) => spawnProcess(PACKAGE_MANAGER_CMD, ['remove', dependencyName], projectPath);
+  dependencies: Array<Dependency>
+) =>
+  spawnProcess(
+    PACKAGE_MANAGER_CMD,
+    ['remove', ...toPackageManagerArgs(dependencies)],
+    projectPath
+  );
 
 export const reinstallDependencies = (projectPath: string) =>
   spawnProcess(PACKAGE_MANAGER_CMD, ['install'], projectPath);

@@ -1,4 +1,7 @@
-import reducer, { getPackageJsonLockedForProjectId } from './queue.reducer';
+import reducer, {
+  getPackageJsonLockedForProjectId,
+  getNextActionForProjectId,
+} from './queue.reducer';
 import {
   QUEUE_DEPENDENCY_INSTALL,
   QUEUE_DEPENDENCY_UNINSTALL,
@@ -157,6 +160,30 @@ describe('queue reducer', () => {
       const projectId = 'foo';
 
       expect(getPackageJsonLockedForProjectId(state, projectId)).toBe(true);
+    });
+  });
+
+  describe('getNextActionForProjectId', () => {
+    it('should return next action when one is present', () => {
+      const state = {
+        queue: {
+          foo: [{ action: 'install', dependencies: [{ name: 'redux' }] }],
+        },
+      };
+
+      const projectId = 'foo';
+
+      expect(getNextActionForProjectId(state, projectId)).toMatchSnapshot();
+    });
+
+    it('should return undefined when no actions are present', () => {
+      const state = {
+        queue: {},
+      };
+
+      const projectId = 'foo';
+
+      expect(getNextActionForProjectId(state, projectId)).toBe(undefined);
     });
   });
 });

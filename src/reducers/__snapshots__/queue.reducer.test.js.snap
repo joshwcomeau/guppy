@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`queue reducer getNextActionForProjectId should return next action when one is present 1`] = `
+Object {
+  "action": "install",
+  "dependencies": Array [
+    Object {
+      "name": "redux",
+    },
+  ],
+}
+`;
+
 exports[`queue reducer should handle QUEUE_DEPENDENCY_INSTALL for mixed existing queue 1`] = `
 Object {
   "foo": Array [
