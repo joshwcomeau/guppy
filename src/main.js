@@ -118,6 +118,10 @@ ipcMain.on('removeProcessId', (event, processId) => {
   processIds = processIds.filter(id => id !== processId);
 });
 
+ipcMain.on('killAllRunningProcesses', event => {
+  killAllRunningProcesses();
+});
+
 const killAllRunningProcesses = () => {
   try {
     processIds.forEach(processId => {
