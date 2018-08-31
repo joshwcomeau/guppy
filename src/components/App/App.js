@@ -1,6 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { ipcRenderer } from 'electron';
 import styled, { keyframes } from 'styled-components';
 
 import { COLORS } from '../../constants';
@@ -22,6 +23,18 @@ type Props = {
 };
 
 class App extends Component<Props> {
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.killAllRunningProcesses);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.killAllRunningProcesses);
+  }
+
+  killAllRunningProcesses = () => {
+    ipcRenderer.send('killAllRunningProcesses');
+  };
+
   render() {
     const { isAppLoaded, selectedProject } = this.props;
 
