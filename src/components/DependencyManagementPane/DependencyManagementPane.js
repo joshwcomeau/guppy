@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
-import { plus } from 'react-icons-kit/feather/plus';
+import { moreHorizontal, plus } from 'react-icons-kit/feather';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
@@ -132,6 +132,17 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                           : undefined
                       }
                     />
+                  ) : dependency.status.match(/^queued-/) ? (
+                    <span
+                      style={{
+                        color:
+                          selectedDependencyIndex === index
+                            ? COLORS.white
+                            : undefined,
+                      }}
+                    >
+                      <IconBase size={20} icon={moreHorizontal} />
+                    </span>
                   ) : (
                     <DependencyVersion
                       isSelected={selectedDependencyIndex === index}
