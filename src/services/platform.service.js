@@ -51,3 +51,8 @@ export const getBaseProjectEnvironment = (projectPath: string) => ({
     path.delimiter +
     path.join(projectPath, 'node_modules', '.bin'),
 });
+
+export const getPlatformSpecificFolderName = () =>
+  // For Mac users, use the more-common term 'Finder'.
+  // For Windows and Linux users, 'folder' should be meaningful enough.
+  isMac ? 'Finder' : 'folder';

@@ -8,7 +8,10 @@ import { shell, remote } from 'electron';
 
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
-import { isMac } from '../../services/platform.service';
+import {
+  isMac,
+  getPlatformSpecificFolderName,
+} from '../../services/platform.service';
 import {
   openProjectInFolder,
   openProjectInEditor,
@@ -161,9 +164,11 @@ class ApplicationMenu extends Component<Props> {
       // have a different index depending on the platform.
       const editMenuIndex = template.findIndex(menu => menu.id === 'edit');
 
+      const platformSpecificFolderName = getPlatformSpecificFolderName();
+
       let submenu = [
         {
-          label: isMac ? 'Open in Finder' : 'Open in Explorer',
+          label: `Open in ${platformSpecificFolderName}`,
           click: () => openProjectInFolder(selectedProject),
           accelerator: 'CmdOrCtrl+shift+F',
         },
