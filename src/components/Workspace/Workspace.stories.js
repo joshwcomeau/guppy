@@ -1,12 +1,9 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import styled from 'styled-components';
 import { storiesOf } from '@storybook/react';
-import { decorateAction } from '@storybook/addon-actions';
 import { withInfo } from '@storybook/addon-info';
 
-import Showcase from '../../../.storybook/components/Showcase';
-import Workspace from './Workspace';
+import HorizontalPanels from './HorizontalPanels';
 import Panel from './Panel';
 
 class PanelToggler extends Component {
@@ -57,20 +54,18 @@ storiesOf('Workspace', module)
   .add(
     'Horizontal split',
     withInfo()(() => (
-      <Workspace
-        orientation="horizontal"
+      <HorizontalPanels
+        width={650}
         style={{ height: 600, border: '1px solid' }}
       >
-        <Panel id="sidebar" initialFlex={40}>
+        <Panel id="sidebar" initialWidth={200} style={{ minWidth: 150 }}>
           foo
         </Panel>
-        <Panel id="server" initialFlex={20}>
+        <Panel id="server" style={{ minWidth: 50 }}>
           bar
         </Panel>
-        <Panel id="dependencies" initialFlex={40}>
-          baz
-        </Panel>
-      </Workspace>
+        <Panel id="dependencies">baz</Panel>
+      </HorizontalPanels>
     ))
   )
   .add(
