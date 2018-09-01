@@ -2,7 +2,7 @@
  * This is our main Electron process.
  * It handles opening our app window, and quitting the application.
  */
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
@@ -30,6 +30,11 @@ let mainWindow;
 let processIds = [];
 
 function createWindow() {
+  // Verify on opening if guppy is in the Applications Folder
+  if (!app.isInApplicationsFolder()) {
+    showMoveToApplicationsFolderDialog();
+  }
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1120,
@@ -137,4 +142,31 @@ const killAllRunningProcesses = () => {
   } catch (err) {
     console.error('Got error when trying to kill children', err);
   }
+};
+
+const showMoveToApplicationsFolderDialog = () => {
+  dialog.showMessageBox(
+    {
+      type: 'question',
+      buttons: ['Yes, move', 'Cancel'],
+      message: 'Move to applications folder?',
+      detail:
+        "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
+      icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
+      defaultId: 0,
+      setAlwaysOnTop: true,
+    },
+    res => {
+      if (res === 0) {
+        try {
+          app.moveToApplicationsFolder();
+        } catch (err) {
+          console.error(
+            'Got error when trying to move guppy to the Applications Folder',
+            err
+          );
+        }
+      }
+    }
+  );
 };
