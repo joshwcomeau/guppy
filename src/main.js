@@ -144,6 +144,12 @@ const killAllRunningProcesses = () => {
 };
 
 const manageApplicationLocation = () => {
+  if (canApplicationBeMoved()) {
+    showMoveToApplicationsFolderDialog();
+  }
+};
+
+const canApplicationBeMoved = () => {
   // The dialog should only be showed if :
   //  - The platform is MacOS
   //  - The app is running in production
@@ -156,9 +162,13 @@ const manageApplicationLocation = () => {
   const isProduction = process.env.NODE_ENV === 'production';
 
   if (!hasApplicationsFolder || !isProduction || app.isInApplicationsFolder()) {
-    return;
+    return false;
   }
 
+  return true;
+};
+
+const showMoveToApplicationsFolderDialog = () => {
   dialog.showMessageBox(
     {
       type: 'question',
