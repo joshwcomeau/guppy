@@ -91,7 +91,8 @@ const selectedIdReducer = (
 ) => {
   switch (action.type) {
     case ADD_PROJECT:
-    case IMPORT_EXISTING_PROJECT_FINISH: {
+    case IMPORT_EXISTING_PROJECT_FINISH:
+    case SAVE_PROJECT_SETTINGS_FINISH: {
       // When a new project is created/imported, we generally want to select
       // it! The only exception is during onboarding. We want the user to
       // manually click the icon, to teach them what these icons are.
@@ -121,11 +122,6 @@ const selectedIdReducer = (
 
     case SELECT_PROJECT: {
       return action.projectId;
-    }
-
-    case SAVE_PROJECT_SETTINGS_FINISH: {
-      console.log('projects reducer selectId', action);
-      return action.project.id;
     }
 
     default:

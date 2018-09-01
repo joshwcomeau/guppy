@@ -326,11 +326,13 @@ export const saveProjectSettingsStart = (
 
 export const saveProjectSettingsFinish = (
   project: Project,
-  oldProjectId: string
+  oldProjectId: string,
+  projectPath: string
 ) => ({
   type: SAVE_PROJECT_SETTINGS_FINISH,
   project,
   oldProjectId,
+  projectPath,
 });
 
 export const finishDeletingProjectFromDisk = (projectId: string) => ({

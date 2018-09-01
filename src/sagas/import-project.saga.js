@@ -100,7 +100,7 @@ export function* importProject({ path }: Action): Saga<void> {
     const packageJsonWithGuppy = {
       ...json,
       guppy: {
-        id: json.name,
+        id: json.name, // TODO: Check if there are data in json.guppy & only use defaults if it is missing
         name: json.name,
         type,
         color,

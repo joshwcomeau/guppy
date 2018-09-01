@@ -11,10 +11,15 @@
  */
 import * as path from 'path';
 import * as os from 'os';
-import { ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
+import {
+  ADD_PROJECT,
+  IMPORT_EXISTING_PROJECT_FINISH,
+  SAVE_PROJECT_SETTINGS_FINISH,
+} from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
 
 import type { Action } from 'redux';
+import produce from 'immer';
 
 type State = {
   [projectId: string]: string,
@@ -33,7 +38,17 @@ export default (state: State = initialState, action: Action) => {
         [project.guppy.id]: projectPath || getDefaultPath(project.guppy.id),
       };
     }
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      const { project, projectPath, oldProjectId } = action;
 
+      return produce(state, draftState => {
+        // remove oldId if id changed & add new path
+        if (oldProjectId !== project.guppy.id) {
+          delete draftState[oldProjectId];
+          draftState[project.guppy.id] = projectPath;
+        }
+      });
+    }
     default:
       return state;
   }

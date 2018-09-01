@@ -26,7 +26,7 @@ import {
   ATTACH_TASK_METADATA,
   RECEIVE_DATA_FROM_TASK_EXECUTION,
   IMPORT_EXISTING_PROJECT_FINISH,
-  // SAVE_PROJECT_SETTINGS_FINISH,
+  SAVE_PROJECT_SETTINGS_FINISH,
   CLEAR_CONSOLE,
 } from '../actions';
 
@@ -77,8 +77,9 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case ADD_PROJECT:
-    case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { project } = action;
+    case IMPORT_EXISTING_PROJECT_FINISH:
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      const { project, oldProjectId } = action;
 
       const projectId = project.guppy.id;
 
@@ -94,6 +95,15 @@ export default (state: State = initialState, action: Action) => {
             name,
             command
           );
+
+          if (
+            action.type === SAVE_PROJECT_SETTINGS_FINISH &&
+            projectId !== oldProjectId
+          ) {
+            // remove old taskId because we changed the id
+            const oldUniqueTaskId = buildUniqueTaskId(oldProjectId, name);
+            delete draftState[oldUniqueTaskId];
+          }
         });
       });
     }

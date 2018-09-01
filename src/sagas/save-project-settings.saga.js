@@ -6,10 +6,11 @@ import {
   loadPackageJson,
   writePackageJson,
 } from '../services/read-from-disk.service';
+import { defaultParentPath } from '../reducers/paths.reducer';
 
 import * as fs from 'fs';
 import * as path from 'path';
-// import { remote } from 'electron';
+import { remote } from 'electron';
 
 import {
   // saveProjectSettingsStart,
@@ -19,7 +20,7 @@ import {
   SAVE_PROJECT_SETTINGS_FINISH,
 } from '../actions';
 
-// const { dialog } = remote;
+const { dialog } = remote;
 
 function* renameFolder(projectPath, newPath): Saga<void> {
   // console.log('rename', projectPath, newPath);
@@ -32,37 +33,38 @@ export function* finishSettings(): Saga<void> {
 }
 
 export function* saveSettings(action: any): Saga<void> {
-  const { project } = action;
+  const { project, name, icon } = action;
   const { path: projectPath } = project;
-  const id = slug(action.name).toLowerCase();
-  const { icon } = project;
+  const id = slug(name).toLowerCase();
   const workspace = path.resolve(projectPath, '../'); // we could use getDefaultParentPath from path.reducers as well - what's better?
-  let newPath = path.join(workspace, id);
-  console.log('save settings', id, workspace, newPath);
+  let newPath = projectPath;
+  console.log('save settings', id, workspace, newPath, icon, project);
   try {
     // Let's load the basic project info for the path specified, if possible.
     const json = yield call(loadPackageJson, projectPath);
     console.log('json', json); //, json.guppy.isImported, json.guppy);
     // check if imported project & name changed
     const nameChanged = id !== project.id;
-    // const confirmRequired = json.guppy.isImported && nameChanged;
+    const confirmRequired = workspace !== defaultParentPath && nameChanged;
 
     // rename confirmed by default
     let confirmed = true;
-    // if (confirmRequired) {
-    //   const response = yield call([dialog, dialog.showMessageBox], {
-    //     type: 'warning',
-    //     buttons: ['Yeah', 'Nope'],
-    //     defaultId: 1,
-    //     title: 'Are you sure?',
-    //     message: 'Do you also want to rename the project folder?',
-    //   });
-    //   confirmed = response === 0;
-    // }
+    if (confirmRequired) {
+      const response = yield call([dialog, dialog.showMessageBox], {
+        type: 'warning',
+        buttons: ['Yeah', 'Nope'],
+        defaultId: 1,
+        cancelId: 1,
+        title: 'Are you sure?',
+        message: 'Do you also want to rename the project folder?',
+      });
+      confirmed = response === 0;
+    }
     // TODO: check if imported
     // TODO: show prompt if imported project name change - also change folder ?
-
+    console.log('confirmed', confirmed);
     if (confirmed && nameChanged) {
+      newPath = path.join(workspace, id);
       console.log('renaming', renameFolder, projectPath, newPath);
       yield call(renameFolder, projectPath, newPath);
     }
@@ -72,14 +74,14 @@ export function* saveSettings(action: any): Saga<void> {
       name: id,
       guppy: {
         ...json.guppy,
-        name: action.name,
+        name,
         id,
         icon,
       },
     });
 
     // apply changes to packageJSON
-    yield put(saveProjectSettingsFinish(newProject, project.id));
+    yield put(saveProjectSettingsFinish(newProject, project.id, newPath));
   } catch (err) {
     console.log(err); // TODO add handling
     // yield call(handleSaveError, err);
