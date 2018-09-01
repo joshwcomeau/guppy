@@ -5,7 +5,7 @@ import { call, put, select, takeEvery } from 'redux-saga/effects';
 import {
   SHOW_DELETE_PROJECT_PROMPT,
   finishDeletingProjectFromDisk,
-  finishDeletingProjectFromGuppy,
+  removeDeletedProjectPath,
   selectProject,
   createNewProjectStart,
 } from '../actions';
@@ -109,7 +109,7 @@ export function* deleteProject({ project }: Action): Saga<void> {
   // We also want to remove the path from state, so it doesn't re-appear
   // again on refresh. If it's imported again eventually, path will be restored
   // and project appears as normal.
-  yield put(finishDeletingProjectFromGuppy(project.id));
+  yield put(removeDeletedProjectPath(project.id));
 
   // If there are any projects left, select the next one. Otherwise, it's
   // time for the user to create a new project!

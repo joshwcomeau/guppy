@@ -9,7 +9,7 @@ import rootSaga, {
 import {
   SHOW_DELETE_PROJECT_PROMPT,
   finishDeletingProjectFromDisk,
-  finishDeletingProjectFromGuppy,
+  removeDeletedProjectPath,
   selectProject,
   createNewProjectStart,
 } from '../actions';
@@ -70,7 +70,7 @@ describe('delete-project saga', () => {
       );
 
       expect(saga.next(true).value).toEqual(
-        put(finishDeletingProjectFromGuppy(project.id))
+        put(removeDeletedProjectPath(project.id))
       );
 
       // Because there's another project, it should select the next one.
@@ -115,7 +115,7 @@ describe('delete-project saga', () => {
       );
 
       expect(saga.next(true).value).toEqual(
-        put(finishDeletingProjectFromGuppy(project.id))
+        put(removeDeletedProjectPath(project.id))
       );
 
       // Because there's another project, it should select the next one.

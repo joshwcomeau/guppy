@@ -48,8 +48,7 @@ export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 export const SHOW_DELETE_PROJECT_PROMPT = 'SHOW_DELETE_PROJECT_PROMPT';
 export const FINISH_DELETING_PROJECT_FROM_DISK =
   'FINISH_DELETING_PROJECT_FROM_DISK';
-export const FINISH_DELETING_PROJECT_FROM_GUPPY =
-  'FINISH_DELETING_PROJECT_FROM_GUPPY';
+export const REMOVE_DELETED_PROJECT_PATH = 'REMOVE_DELETED_PROJECT_PATH';
 
 //
 //
@@ -304,7 +303,7 @@ export const finishDeletingProjectFromDisk = (projectId: string) => ({
   projectId,
 });
 
-export const finishDeletingProjectFromGuppy = (projectId: string) => ({
-  type: FINISH_DELETING_PROJECT_FROM_GUPPY,
+export const removeDeletedProjectPath = (projectId: string) => ({
+  type: REMOVE_DELETED_PROJECT_PATH,
   projectId,
 });
