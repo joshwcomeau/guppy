@@ -44,6 +44,7 @@ describe('delete-project saga', () => {
           type: 'warning',
           buttons: ['Delete from Disk', 'Cancel'],
           defaultId: 0,
+          cancelId: 1,
           title: `Delete ${project.name}`,
           message: `Are you sure you want to delete ${project.name}?`,
           detail: 'WARNING! Deleting from disk will send the project to trash!',
