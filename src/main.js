@@ -30,10 +30,9 @@ let mainWindow;
 let processIds = [];
 
 function createWindow() {
-  // Verify on opening if guppy is in the Applications Folder
-  if (!app.isInApplicationsFolder()) {
-    showMoveToApplicationsFolderDialog();
-  }
+  // Verifies if Guppy is already in the Applications folder
+  // and prompts the user to move it if it isn't
+  manageApplicationLocation();
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -144,7 +143,22 @@ const killAllRunningProcesses = () => {
   }
 };
 
-const showMoveToApplicationsFolderDialog = () => {
+const manageApplicationLocation = () => {
+  // The dialog should only be showed if :
+  //  - The platform is MacOS
+  //  - The app is running in production
+  //  - The function 'isInApplicationsFolder' exists
+  //  - Guppy is not already in the Applications folder
+  const hasApplicationsFolder =
+    process.platform === 'darwin' &&
+    typeof app.isInApplicationsFolder === 'function';
+
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (!hasApplicationsFolder || !isProduction || app.isInApplicationsFolder()) {
+    return;
+  }
+
   dialog.showMessageBox(
     {
       type: 'question',
@@ -154,16 +168,18 @@ const showMoveToApplicationsFolderDialog = () => {
         "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
       icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
       defaultId: 0,
+      cancelId: 1,
     },
     res => {
       if (res === 0) {
         try {
           app.moveToApplicationsFolder();
         } catch (err) {
-          console.error(
-            'Got error when trying to move guppy to the Applications Folder',
-            err
+          dialog.showErrorBox(
+            'Error',
+            'Could not move Guppy to the Applications folder'
           );
+          console.error('Could not move Guppy to the Applications folder', err);
         }
       }
     }
