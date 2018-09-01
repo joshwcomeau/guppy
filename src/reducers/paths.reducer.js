@@ -11,7 +11,14 @@
  */
 import * as path from 'path';
 import * as os from 'os';
-import { ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH } from '../actions';
+import produce from 'immer';
+
+import {
+  ADD_PROJECT,
+  IMPORT_EXISTING_PROJECT_FINISH,
+  FINISH_DELETING_PROJECT_FROM_GUPPY,
+  FINISH_DELETING_PROJECT_FROM_DISK,
+} from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
 
 import type { Action } from 'redux';
@@ -32,6 +39,15 @@ export default (state: State = initialState, action: Action) => {
         ...state,
         [project.guppy.id]: projectPath || getDefaultPath(project.guppy.id),
       };
+    }
+
+    case FINISH_DELETING_PROJECT_FROM_DISK:
+    case FINISH_DELETING_PROJECT_FROM_GUPPY: {
+      const { projectId } = action;
+
+      return produce(state, draftState => {
+        delete draftState[projectId];
+      });
     }
 
     default:
