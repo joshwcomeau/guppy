@@ -34,6 +34,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
         type: 'warning',
         buttons: ['Yeah', 'Nope'],
         defaultId: 1,
+        cancelId: 1,
         title: 'Are you sure?',
         message: 'Are you sure you want to delete this dependency?',
       },

@@ -24,6 +24,7 @@ class EjectButton extends PureComponent<Props> {
         type: 'warning',
         buttons: ['Yes, light this candle', "Ahhh no don't do that"],
         defaultId: 1,
+        cancelId: 1,
         title: 'Are you sure?',
         message:
           'Ejecting is a permanent one-time task that unwraps the create-react-app environment.',
