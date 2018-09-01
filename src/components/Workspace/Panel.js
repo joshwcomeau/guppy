@@ -21,7 +21,15 @@ class Panel extends PureComponent<Props> {
     return (
       <div
         {...delegated}
-        style={{ width, height, ...style, userSelect: 'text' }}
+        style={{
+          width,
+          height,
+          ...style,
+          userSelect: 'text',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
         {this.props.children}
       </div>

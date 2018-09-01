@@ -11,7 +11,7 @@ type Props = {
 
 const HorizontalPanels = ({ width, children, ...delegated }: Props) => (
   <Panels {...delegated} orientation="horizontal" size={width}>
-    {React.Children.toArray(children)}
+    {children}
   </Panels>
 );
 

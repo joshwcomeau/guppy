@@ -4,6 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 
 import HorizontalPanels from './HorizontalPanels';
+import VerticalPanels from './VerticalPanels';
 import Panel from './Panel';
 
 class PanelToggler extends Component<{}, { renderThirdPanel: boolean }> {
@@ -82,6 +83,53 @@ storiesOf('Workspace', module)
           bar
         </Panel>
         <Panel id="dependencies">baz</Panel>
+      </HorizontalPanels>
+    ))
+  )
+  .add(
+    'Vertical split',
+    withInfo()(() => (
+      <VerticalPanels
+        height={650}
+        style={{ width: 600, boxSizing: 'content-box', border: '1px solid' }}
+      >
+        <Panel id="sidebar" initialWidth={200} style={{ minWidth: 150 }}>
+          foo
+        </Panel>
+        <Panel id="server" style={{ minWidth: 50 }}>
+          bar
+        </Panel>
+        <Panel id="dependencies">baz</Panel>
+      </VerticalPanels>
+    ))
+  )
+  .add(
+    'Nested',
+    withInfo()(() => (
+      <HorizontalPanels
+        width={900}
+        style={{
+          boxSizing: 'content-box',
+          border: '1px solid',
+        }}
+      >
+        <Panel id="hello">Hello</Panel>
+        <Panel id="world">World</Panel>
+        <Panel id="vert">
+          <VerticalPanels
+            height={650}
+            style={{
+              width: 600,
+            }}
+          >
+            <Panel id="sidebar" initialWidth={200} style={{ minWidth: 150 }}>
+              foo
+            </Panel>
+            <Panel id="server" style={{ minWidth: 50 }}>
+              bar
+            </Panel>
+          </VerticalPanels>
+        </Panel>
       </HorizontalPanels>
     ))
   )

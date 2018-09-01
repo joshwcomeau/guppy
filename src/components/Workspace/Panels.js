@@ -17,14 +17,13 @@ type Props = {
 };
 
 type State = {
-  panelWidths: PanelWidths,
+  panelSizes: PanelWidths,
 };
 
-class HorizontalPanels extends Component<Props, State> {
+class Panels extends Component<Props, State> {
   node: HTMLElement;
   parentBox: ClientRect;
-  startClientX: ?number;
-  startClientY: ?number;
+  startClientCoordinate: ?number;
   startPanelWidths: PanelWidths;
   resizerIndex: ?number;
 
@@ -36,12 +35,12 @@ class HorizontalPanels extends Component<Props, State> {
     const isFirstRender = !state;
 
     if (isFirstRender) {
-      return { panelWidths: HorizontalPanels.calculateInitialSizes(props) };
+      return { panelSizes: Panels.calculateInitialSizes(props) };
     }
 
     // If new panels are introduced, it's not really clear what should happen.
     // For now, we're just having it split up the right-most panel
-    const panelIds = Object.keys(state.panelWidths);
+    const panelIds = Object.keys(state.panelSizes);
     const childrenArray = React.Children.toArray(props.children);
 
     // For now, we are assuming that no more than 1 child will be added
@@ -54,33 +53,32 @@ class HorizontalPanels extends Component<Props, State> {
         id => !childrenArray.find(child => child.props.id === id)
       );
       const disappearingPanelId = panelIds[disappearingPanelIndex];
-      const disappearingPanelWidth = state.panelWidths[disappearingPanelId];
+      const disappearingPanelSize = state.panelSizes[disappearingPanelId];
 
       const siblingIndexToGiveSizeTo =
         disappearingPanelIndex === 0 ? 0 : disappearingPanelIndex - 1;
       const siblingId = panelIds[siblingIndexToGiveSizeTo];
 
-      const nextPanelWidths = panelIds.reduce((panelWidths, id) => {
+      const nextPanelWidths = panelIds.reduce((panelSizes, id) => {
         if (id === disappearingPanelId) {
-          return panelWidths;
+          return panelSizes;
         }
 
-        let width;
+        let size;
         if (id === siblingId) {
-          width =
-            state.panelWidths[id] + disappearingPanelWidth + RESIZER_WIDTH;
+          size = state.panelSizes[id] + disappearingPanelSize + RESIZER_WIDTH;
         } else {
-          width = state.panelWidths[id];
+          size = state.panelSizes[id];
         }
 
         return {
-          ...panelWidths,
-          [id]: width,
+          ...panelSizes,
+          [id]: size,
         };
       }, {});
 
       return {
-        panelWidths: nextPanelWidths,
+        panelSizes: nextPanelWidths,
       };
     }
 
@@ -91,73 +89,76 @@ class HorizontalPanels extends Component<Props, State> {
       );
       const newChildId = childrenArray[newChildIndex].props.id;
 
-      // This new child will steal half of the width of its left-most sibling.
+      // This new child will steal half of the size of its left-most sibling.
       // If this is the first child, it steals from its right-most sibling.
       const siblingIndexToStealFrom =
         newChildIndex === 0 ? 0 : newChildIndex - 1;
 
       const siblingPanelId = panelIds[siblingIndexToStealFrom];
-      const siblingPanelWidth = state.panelWidths[siblingPanelId];
+      const siblingPanelSize = state.panelSizes[siblingPanelId];
 
-      const nextPanelWidths = props.children.reduce((panelWidths, child) => {
+      const nextPanelWidths = childrenArray.reduce((panelSizes, child) => {
         const { id } = child.props;
 
-        let width;
+        let size;
         if (id === newChildId) {
-          width = Math.floor(siblingPanelWidth / 2) - RESIZER_WIDTH;
+          size = Math.floor(siblingPanelSize / 2) - RESIZER_WIDTH;
         } else if (id === siblingPanelId) {
-          width = Math.ceil(siblingPanelWidth / 2);
+          size = Math.ceil(siblingPanelSize / 2);
         } else {
-          width = state.panelWidths[id];
+          size = state.panelSizes[id];
         }
 
         return {
-          ...panelWidths,
-          [id]: width,
+          ...panelSizes,
+          [id]: size,
         };
       }, {});
 
       return {
-        panelWidths: nextPanelWidths,
+        panelSizes: nextPanelWidths,
       };
     }
   }
 
-  static calculateInitialSizes = ({ width, children }: Props) => {
+  static calculateInitialSizes = ({ size, orientation, children }: Props) => {
     const childrenArray = React.Children.toArray(children);
 
     const numOfResizers = childrenArray.length - 1;
-    const availableWidth = width - numOfResizers * RESIZER_WIDTH;
+    const availableSize = size - numOfResizers * RESIZER_WIDTH;
+
+    const initialSizeKey =
+      orientation === 'horizontal' ? 'initialWidth' : 'initialHeight';
 
     // TODO: vertical
     const childrenWithSpecifiedSize = childrenArray.filter(
-      child => typeof child.props.initialWidth === 'number'
+      child => typeof child.props[initialSizeKey] === 'number'
     );
     const childrenWithoutSpecifiedSize = childrenArray.filter(
-      child => typeof child.props.initialWidth === 'undefined'
+      child => typeof child.props[initialSizeKey] === 'undefined'
     );
 
     const totalClaimedSpace = childrenWithSpecifiedSize.reduce(
-      (acc, child) => acc + child.props.initialWidth,
+      (acc, child) => acc + child.props[initialSizeKey],
       0
     );
 
     const widthPerUnspecifiedChildren =
-      (availableWidth - totalClaimedSpace) /
-      childrenWithoutSpecifiedSize.length;
+      (availableSize - totalClaimedSpace) / childrenWithoutSpecifiedSize.length;
 
-    return childrenArray.reduce((panelWidths, child) => {
-      const { id, initialWidth } = child.props;
+    return childrenArray.reduce((panelSizes, child) => {
+      const { id } = child.props;
+      const initialSize = child.props[initialSizeKey];
 
-      if (typeof initialWidth === 'number') {
+      if (typeof initialSize === 'number') {
         return {
-          ...panelWidths,
-          [id]: initialWidth,
+          ...panelSizes,
+          [id]: initialSize,
         };
       }
 
       return {
-        ...panelWidths,
+        ...panelSizes,
         [id]: widthPerUnspecifiedChildren,
       };
     }, {});
@@ -169,25 +170,26 @@ class HorizontalPanels extends Component<Props, State> {
   }
 
   startResize = (ev: any, resizerIndex: number) => {
+    const { orientation } = this.props;
     document.addEventListener('mousemove', this.dragResize);
     document.addEventListener('mouseup', this.endResize);
 
     // TODO: Clean these up, make them all part of 1 property, Flow-tracked
-    this.startClientX = ev.clientX;
-    this.startClientY = ev.clientY;
-    this.startPanelWidths = { ...this.state.panelWidths };
+    this.startClientCoordinate =
+      orientation === 'horizontal' ? ev.clientX : ev.clientY;
+    this.startPanelWidths = { ...this.state.panelSizes };
 
     this.resizerIndex = resizerIndex;
   };
 
   dragResize = (ev: any) => {
-    const { startClientX, startClientY, startPanelWidths, resizerIndex } = this;
-    const { panelWidths } = this.state;
+    const { startClientCoordinate, startPanelWidths, resizerIndex } = this;
+    const { orientation } = this.props;
+    const { panelSizes } = this.state;
 
     // Impossible conditions for Flow
     if (
-      typeof startClientX !== 'number' ||
-      typeof startClientY !== 'number' ||
+      typeof startClientCoordinate !== 'number' ||
       typeof resizerIndex !== 'number'
     ) {
       console.error('Missing required variables to do panel resizing', this);
@@ -197,14 +199,15 @@ class HorizontalPanels extends Component<Props, State> {
     // We need to convert the window coordinates to the relative positions
     // within this box.
     // Start by getting the raw window coordinates
-    const { clientX } = ev;
+    const clientCoordinate =
+      orientation === 'horizontal' ? ev.clientX : ev.clientY;
 
-    const panelIds = Object.keys(panelWidths);
+    const panelIds = Object.keys(panelSizes);
 
     // Check and see if this change would push us below our min-width
     const childrenArray = React.Children.toArray(this.props.children);
 
-    let delta = startClientX - clientX;
+    let delta = startClientCoordinate - clientCoordinate;
 
     const firstAffectedPanelId = panelIds[resizerIndex];
     const secondAffectedPanelId = panelIds[resizerIndex + 1];
@@ -241,13 +244,13 @@ class HorizontalPanels extends Component<Props, State> {
     }
 
     const nextPanelWidths = {
-      ...panelWidths,
+      ...panelSizes,
       [firstAffectedPanelId]: startPanelWidths[firstAffectedPanelId] - delta,
       [secondAffectedPanelId]: startPanelWidths[secondAffectedPanelId] + delta,
     };
 
     this.setState({
-      panelWidths: nextPanelWidths,
+      panelSizes: nextPanelWidths,
     });
   };
 
@@ -259,8 +262,10 @@ class HorizontalPanels extends Component<Props, State> {
   };
 
   render() {
-    const { width, children, style, ...delegated } = this.props;
-    const { panelWidths } = this.state;
+    const { size, children, style, orientation, ...delegated } = this.props;
+    const { panelSizes } = this.state;
+
+    const dimension = orientation === 'horizontal' ? 'width' : 'height';
 
     const childrenArray = React.Children.toArray(children).filter(
       child => child
@@ -273,15 +278,16 @@ class HorizontalPanels extends Component<Props, State> {
         (child, index) =>
           index === childrenArray.length - 1
             ? React.cloneElement(child, {
-                width: Math.round(panelWidths[child.props.id]),
+                [dimension]: Math.round(panelSizes[child.props.id]),
               })
             : [
                 React.cloneElement(child, {
-                  width: Math.round(panelWidths[child.props.id]),
+                  [dimension]: Math.round(panelSizes[child.props.id]),
                 }),
                 <Resizer
                   key={index}
                   index={index}
+                  orientation={orientation}
                   startResize={this.startResize}
                 />,
               ]
@@ -290,7 +296,8 @@ class HorizontalPanels extends Component<Props, State> {
     return (
       <Wrapper
         {...delegated}
-        style={{ ...style, width }}
+        orientation={orientation}
+        style={{ ...style, [dimension]: size }}
         innerRef={node => (this.node = node)}
       >
         {interleavedChildren}
@@ -301,11 +308,12 @@ class HorizontalPanels extends Component<Props, State> {
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${props =>
+    props.orientation === 'horizontal' ? 'row' : 'column'};
   flex: 1;
   height: 100%;
   overflow: hidden;
   user-select: none;
 `;
 
-export default HorizontalPanels;
+export default Panels;
