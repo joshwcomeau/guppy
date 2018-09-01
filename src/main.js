@@ -150,7 +150,7 @@ const manageApplicationLocation = () => {
 };
 
 const canApplicationBeMoved = () => {
-  // The dialog should only be showed if :
+  // The application can be moved if :
   //  - The platform is MacOS
   //  - The app is running in production
   //  - The function 'isInApplicationsFolder' exists
@@ -177,10 +177,12 @@ const showMoveToApplicationsFolderDialog = () => {
       detail:
         "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
       icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
-      defaultId: 0,
       cancelId: 1,
+      defaultId: 0,
+      checkboxLabel: 'Do not show this message again',
     },
-    res => {
+    (res, checkboxChecked) => {
+      // User wants the application to be moved
       if (res === 0) {
         try {
           app.moveToApplicationsFolder();
@@ -191,6 +193,11 @@ const showMoveToApplicationsFolderDialog = () => {
           );
           console.error('Could not move Guppy to the Applications folder', err);
         }
+      }
+
+      // User doesn't want to see the message again
+      if (checkboxChecked === true) {
+        // TODO: Store choice in electron-store
       }
     }
   );
