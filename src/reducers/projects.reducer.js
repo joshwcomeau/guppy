@@ -65,11 +65,11 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
           ...action.project,
         },
       };
-
       if (action.oldProjectId !== action.project.guppy.id) {
         // remove old project id --> renamed to new id
         delete newState[action.oldProjectId];
       }
+      console.log('apply changes', newState);
       return newState;
 
     case FINISH_DELETING_PROJECT_FROM_DISK: {
@@ -116,6 +116,7 @@ const selectedIdReducer = (
     }
 
     case SAVE_PROJECT_SETTINGS_FINISH: {
+      console.log('projects reducer selectId', action);
       return action.project.id;
     }
 

@@ -7,7 +7,7 @@ import IconBase from 'react-icons-kit';
 import { edit2 } from 'react-icons-kit/feather/edit2';
 import importAll from 'import-all.macro';
 
-import { saveProjectSettingsStart } from '../../actions';
+import { hideModal, saveProjectSettingsStart } from '../../actions';
 
 import { COLORS, BREAKPOINTS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
@@ -94,7 +94,7 @@ class ProjectConfigurationModal extends Component<Props, State> {
   };
 
   render() {
-    const { project, hideModal, isVisible } = this.props;
+    const { project, hideModal: hide, isVisible } = this.props; // todo: how to properly handle 'hideModal' is already declared in the upper scope  no-shadow  --- renaming feels hacky but works
     const { activeField } = this.state;
 
     // const { name } = project;
@@ -103,7 +103,7 @@ class ProjectConfigurationModal extends Component<Props, State> {
 
     // NOTE: No isVisible check as this is used as the ModalContent component --> maybe rename the component so this is clear
     return (
-      <Modal isVisible={isVisible} onDismiss={hideModal}>
+      <Modal isVisible={isVisible} onDismiss={hide}>
         <Fragment>
           <ModalHeader title="Project settings">
             <Description>Change the settings of project {name}</Description>
@@ -211,5 +211,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { saveProjectSettingsStart }
+  { hideModal, saveProjectSettingsStart }
 )(ProjectConfigurationModal);
