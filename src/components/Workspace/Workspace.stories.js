@@ -6,9 +6,9 @@ import { withInfo } from '@storybook/addon-info';
 import HorizontalPanels from './HorizontalPanels';
 import Panel from './Panel';
 
-class PanelToggler extends Component {
+class PanelToggler extends Component<{}, { renderThirdPanel: boolean }> {
   state = {
-    renderThirdPanel: true,
+    renderThirdPanel: false,
   };
 
   togglePanel = () => {
@@ -19,31 +19,48 @@ class PanelToggler extends Component {
 
   render() {
     const { renderThirdPanel } = this.state;
+
+    const centerStyles = {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+
     return (
       <Fragment>
         <button onClick={this.togglePanel}>Toggle Panel</button>
 
         <div>
-          <Workspace
-            orientation="horizontal"
-            style={{ height: 600, border: '1px solid' }}
+          <HorizontalPanels
+            width={650}
+            style={{
+              height: 600,
+              boxSizing: 'content-box',
+              border: '1px solid',
+            }}
           >
             <Panel
               id="sidebar"
-              initialFlex={40}
-              style={{ minWidth: 100, maxWidth: 300 }}
+              initialWidth={200}
+              style={{ ...centerStyles, minWidth: 100, background: '#a0fc20' }}
             >
               foo
             </Panel>
-            <Panel id="server" initialFlex={20}>
+            <Panel
+              id="server"
+              style={{ ...centerStyles, background: '#ff416c' }}
+            >
               bar
             </Panel>
             {renderThirdPanel && (
-              <Panel id="dependencies" initialFlex={40}>
+              <Panel
+                id="dependencies"
+                style={{ ...centerStyles, background: '#3f6cff' }}
+              >
                 baz
               </Panel>
             )}
-          </Workspace>
+          </HorizontalPanels>
         </div>
       </Fragment>
     );
@@ -56,7 +73,7 @@ storiesOf('Workspace', module)
     withInfo()(() => (
       <HorizontalPanels
         width={650}
-        style={{ height: 600, border: '1px solid' }}
+        style={{ height: 600, boxSizing: 'content-box', border: '1px solid' }}
       >
         <Panel id="sidebar" initialWidth={200} style={{ minWidth: 150 }}>
           foo

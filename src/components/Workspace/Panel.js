@@ -6,8 +6,8 @@ type Props = {
   style: Object,
   children: React$Node,
   // Provided magically by the parent wrapper
-  width: number,
-  height: number,
+  width?: number,
+  height?: number,
 };
 
 class Panel extends PureComponent<Props> {
