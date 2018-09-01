@@ -5,7 +5,7 @@ import produce from 'immer';
 import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
-  FINISH_DELETING_PROJECT_FROM_DISK,
+  FINISH_DELETING_PROJECT,
   ADD_DEPENDENCY_FINISH,
   REFRESH_PROJECTS_FINISH,
   SELECT_PROJECT,
@@ -56,7 +56,7 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
       });
     }
 
-    case FINISH_DELETING_PROJECT_FROM_DISK: {
+    case FINISH_DELETING_PROJECT: {
       const { projectId } = action;
 
       return produce(state, draftState => {

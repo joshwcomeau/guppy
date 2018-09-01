@@ -4,7 +4,7 @@ import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
-  finishDeletingProjectFromDisk,
+  finishDeletingProject,
   selectProject,
   createNewProjectStart,
 } from '../actions';
@@ -56,18 +56,20 @@ export function* deleteProject({ project }: Action): Saga<void> {
   // intuitive.
   const response = yield call([dialog, dialog.showMessageBox], {
     type: 'warning',
-    buttons: ['Delete from Disk', 'Cancel'],
+    buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
     defaultId: 0,
-    cancelId: 1,
+    cancelId: 2,
     title: `Delete ${project.name}`,
     message: `Are you sure you want to delete ${project.name}?`,
-    detail: 'WARNING! Deleting from disk will send the project to trash!',
+    detail: `Deleting from Guppy will remove ${
+      project.name
+    } from the app, but doesn't remove it from your computer. IMPORTANT! Deleting from disk will send the project to trash!`,
   });
 
-  // TODO: Eventually need to do shouldDeleteFromGuppy as well
-  const shouldDeleteFromDisk = response === 0;
+  const shouldDeleteFromDisk = response === 1;
+  const cancel = response === 2;
 
-  if (!shouldDeleteFromDisk) {
+  if (cancel) {
     return;
   }
 
@@ -77,28 +79,31 @@ export function* deleteProject({ project }: Action): Saga<void> {
   // Calculate which project should be selected after this project is deleted.
   const nextSelectedProjectId = getNextProjectId(projects, project.id);
 
-  // Run the deletion
-  const successfullyDeleted = yield call(
-    [shell, shell.moveItemToTrash],
-    project.path
-  );
-
-  // If for some reason it was _not_ successfully deleted, bail early and log
-  // an error. This can happen if the filesystem can't delete it (maybe if
-  // a file is open?)
-  // TODO: Actually show something in the UI in this case.
-  if (!successfullyDeleted) {
-    yield call(
-      [console, console.error],
-      'Project could not be deleted. Please make sure no tasks are running, ' +
-        'and no applications are using files in that directory.'
+  if (shouldDeleteFromDisk) {
+    // Run the deletion from disk
+    const successfullyDeletedFromDisk = yield call(
+      [shell, shell.moveItemToTrash],
+      project.path
     );
-    return;
+
+    // If for some reason it was _not_ successfully deleted, bail early and log
+    // an error. This can happen if the filesystem can't delete it (maybe if
+    // a file is open?)
+    // TODO: Actually show something in the UI in this case.
+    if (!successfullyDeletedFromDisk) {
+      yield call(
+        [console, console.error],
+        'Project could not be deleted. Please make sure no tasks are running, ' +
+          'and no applications are using files in that directory.'
+      );
+      return;
+    }
   }
 
   // We need to remove this project from redux state, so that it's consistent
-  // with the filesystem.
-  yield put(finishDeletingProjectFromDisk(project.id));
+  // with the filesystem. This is done regardless if deleting from Guppy or
+  // from disk.
+  yield put(finishDeletingProject(project.id));
 
   // If there are any projects left, select the next one. Otherwise, it's
   // time for the user to create a new project!

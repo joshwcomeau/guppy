@@ -8,7 +8,7 @@ import rootSaga, {
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
-  finishDeletingProjectFromDisk,
+  finishDeletingProject,
   selectProject,
   createNewProjectStart,
 } from '../actions';
@@ -25,7 +25,7 @@ describe('delete-project saga', () => {
   });
 
   describe('deleteProject', () => {
-    it('deletes a specified project', () => {
+    it('deletes a specified project from disk', () => {
       const project = {
         id: 'a',
         name: 'apple',
@@ -42,18 +42,20 @@ describe('delete-project saga', () => {
       expect(saga.next().value).toEqual(
         call([electron.remote.dialog, electron.remote.dialog.showMessageBox], {
           type: 'warning',
-          buttons: ['Delete from Disk', 'Cancel'],
+          buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
           defaultId: 0,
-          cancelId: 1,
+          cancelId: 2,
           title: `Delete ${project.name}`,
           message: `Are you sure you want to delete ${project.name}?`,
-          detail: 'WARNING! Deleting from disk will send the project to trash!',
+          detail: `Deleting from Guppy will remove ${
+            project.name
+          } from the app, but doesn't remove it from your computer. IMPORTANT! Deleting from disk will send the project to trash!`,
         })
       );
 
-      // Next, we select the projects, passing in `0` to confirm the prompt
+      // Next, we select the projects, passing in `1` to confirm the prompt
       // (`0` is the ID of the "Delete from Disk" option).
-      expect(saga.next(0).value).toEqual(select(getProjectsArray));
+      expect(saga.next(1).value).toEqual(select(getProjectsArray));
 
       expect(saga.next(projects).value).toEqual(
         call(
@@ -63,7 +65,49 @@ describe('delete-project saga', () => {
       );
 
       expect(saga.next(true).value).toEqual(
-        put(finishDeletingProjectFromDisk(project.id))
+        put(finishDeletingProject(project.id))
+      );
+
+      // Because there's another project, it should select the next one.
+      expect(saga.next().value).toEqual(put(selectProject('b')));
+      expect(saga.next().done).toEqual(true);
+    });
+
+    it('deletes a specified project from guppy', () => {
+      const project = {
+        id: 'a',
+        name: 'apple',
+        path: '/path/to/apple',
+      };
+
+      const projects = [
+        project,
+        { id: 'b', name: 'berry', path: '/path/to/berry' },
+      ];
+
+      const saga = deleteProject({ project });
+
+      expect(saga.next().value).toEqual(
+        call([electron.remote.dialog, electron.remote.dialog.showMessageBox], {
+          type: 'warning',
+          buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
+          defaultId: 0,
+          cancelId: 2,
+          title: `Delete ${project.name}`,
+          message: `Are you sure you want to delete ${project.name}?`,
+          detail: `Deleting from Guppy will remove ${
+            project.name
+          } from the app, but doesn't remove it from your computer. IMPORTANT! Deleting from disk will send the project to trash!`,
+        })
+      );
+
+      // Next, we select the projects, passing in `0` to confirm the prompt
+      // (`0` is the ID of the "Delete from Guppy" option).
+      expect(saga.next(0).value).toEqual(select(getProjectsArray));
+
+      // We are not deleting anything from disk so we simply move on to refresh state
+      expect(saga.next(projects).value).toEqual(
+        put(finishDeletingProject(project.id))
       );
 
       // Because there's another project, it should select the next one.
@@ -88,11 +132,9 @@ describe('delete-project saga', () => {
       saga.next(0);
       // Pass in the projects to the select call
       saga.next(projects);
-      // Confirm deletion
-      saga.next(true);
 
-      // Verify that it prompts to create a new project
-      expect(saga.next().value).toEqual(put(createNewProjectStart()));
+      // Confirm deletion and verify that it prompts to create a new project
+      expect(saga.next(true).value).toEqual(put(createNewProjectStart()));
       expect(saga.next().done).toEqual(true);
     });
 
@@ -113,7 +155,7 @@ describe('delete-project saga', () => {
       // Show dialog
       saga.next();
       // Confirm dialog
-      saga.next(0);
+      saga.next(1);
       // Pass in the projects to the select call
       saga.next(projects);
 
