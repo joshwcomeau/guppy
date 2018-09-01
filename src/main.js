@@ -148,9 +148,10 @@ const killAllRunningProcesses = () => {
 const canApplicationBeMoved = () => {
   // The application can be moved if :
   //  - The platform is MacOS
-  //  - The app is running in production
   //  - The function 'isInApplicationsFolder' exists
+  //  - The app is running in production
   //  - Guppy is not already in the Applications folder
+  //  - The user hasn't chosen to not see the dialog prompt again
   const hasApplicationsFolder =
     process.platform === 'darwin' &&
     typeof app.isInApplicationsFolder === 'function';
