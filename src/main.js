@@ -7,10 +7,12 @@ const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
 const chalkRaw = require('chalk');
+const Store = require('electron-store');
 
 const killProcessId = require('./services/kill-process-id.service');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
+const store = new Store();
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
@@ -143,12 +145,6 @@ const killAllRunningProcesses = () => {
   }
 };
 
-const manageApplicationLocation = () => {
-  if (canApplicationBeMoved()) {
-    showMoveToApplicationsFolderDialog();
-  }
-};
-
 const canApplicationBeMoved = () => {
   // The application can be moved if :
   //  - The platform is MacOS
@@ -161,44 +157,54 @@ const canApplicationBeMoved = () => {
 
   const isProduction = process.env.NODE_ENV === 'production';
 
-  if (!hasApplicationsFolder || !isProduction || app.isInApplicationsFolder()) {
+  if (
+    !hasApplicationsFolder ||
+    !isProduction ||
+    app.isInApplicationsFolder() ||
+    store.has('leave-application-in-original-location')
+  ) {
     return false;
   }
 
   return true;
 };
 
-const showMoveToApplicationsFolderDialog = () => {
-  dialog.showMessageBox(
-    {
-      type: 'question',
-      buttons: ['Yes, move', 'Cancel'],
-      message: 'Move to applications folder?',
-      detail:
-        "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
-      icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
-      cancelId: 1,
-      defaultId: 0,
-      checkboxLabel: 'Do not show this message again',
-    },
-    (res, checkboxChecked) => {
-      // User wants the application to be moved
-      if (res === 0) {
-        try {
-          app.moveToApplicationsFolder();
-        } catch (err) {
-          dialog.showErrorBox(
-            'Error',
-            'Could not move Guppy to the Applications folder'
-          );
-          console.error('Could not move Guppy to the Applications folder', err);
+const manageApplicationLocation = () => {
+  if (canApplicationBeMoved()) {
+    dialog.showMessageBox(
+      {
+        type: 'question',
+        buttons: ['Yes, move', 'Cancel'],
+        message: 'Move to applications folder?',
+        detail:
+          "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
+        icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
+        cancelId: 1,
+        defaultId: 0,
+        checkboxLabel: 'Do not show this message again',
+      },
+      (res, checkboxChecked) => {
+        // User wants the application to be moved
+        if (res === 0) {
+          try {
+            app.moveToApplicationsFolder();
+          } catch (err) {
+            dialog.showErrorBox(
+              'Error',
+              'Could not move Guppy to the Applications folder'
+            );
+            console.error(
+              'Could not move Guppy to the Applications folder',
+              err
+            );
+          }
+        }
+
+        // User doesn't want to see the message again
+        if (checkboxChecked === true) {
+          store.set('leave-application-in-original-location', true);
         }
       }
-
-      // User doesn't want to see the message again
-      if (checkboxChecked === true) {
-        // TODO: Store choice in electron-store
-      }
-    }
-  );
+    );
+  }
 };
