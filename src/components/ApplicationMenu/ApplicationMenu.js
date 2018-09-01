@@ -24,6 +24,7 @@ type Props = {
   showImportExistingProjectPrompt: () => any,
   clearConsole: (task: Task) => any,
   showDeleteProjectPrompt: (project: any) => any,
+  showResetStatePrompt: () => any,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -48,6 +49,7 @@ class ApplicationMenu extends Component<Props> {
       showImportExistingProjectPrompt,
       clearConsole,
       showDeleteProjectPrompt,
+      showResetStatePrompt,
     } = props;
 
     const template = [
@@ -66,6 +68,15 @@ class ApplicationMenu extends Component<Props> {
               : '&Import existing project...',
             click: showImportExistingProjectPrompt,
             accelerator: 'CmdOrCtrl+I',
+          },
+          {
+            label: isMac ? 'Development' : '&Development',
+            submenu: [
+              {
+                label: isMac ? 'Reset State...' : 'Reset state...',
+                click: showResetStatePrompt,
+              },
+            ],
           },
         ],
       },
@@ -216,6 +227,7 @@ const mapDispatchToProps = {
   showImportExistingProjectPrompt: actions.showImportExistingProjectPrompt,
   clearConsole: actions.clearConsole,
   showDeleteProjectPrompt: actions.showDeleteProjectPrompt,
+  showResetStatePrompt: actions.showResetStatePrompt,
 };
 
 export default connect(
