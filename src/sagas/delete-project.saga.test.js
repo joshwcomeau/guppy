@@ -8,8 +8,7 @@ import rootSaga, {
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
-  finishDeletingProjectFromDisk,
-  removeDeletedProjectPath,
+  finishDeletingProject,
   selectProject,
   createNewProjectStart,
 } from '../actions';
@@ -45,7 +44,7 @@ describe('delete-project saga', () => {
           type: 'warning',
           buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
           defaultId: 0,
-          cancelId: 1,
+          cancelId: 2,
           title: `Delete ${project.name}`,
           message: `Are you sure you want to delete ${project.name}?`,
           detail: `Deleting from Guppy will remove ${
@@ -66,11 +65,7 @@ describe('delete-project saga', () => {
       );
 
       expect(saga.next(true).value).toEqual(
-        put(finishDeletingProjectFromDisk(project.id))
-      );
-
-      expect(saga.next(true).value).toEqual(
-        put(removeDeletedProjectPath(project.id))
+        put(finishDeletingProject(project.id))
       );
 
       // Because there's another project, it should select the next one.
@@ -97,6 +92,7 @@ describe('delete-project saga', () => {
           type: 'warning',
           buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
           defaultId: 0,
+          cancelId: 2,
           title: `Delete ${project.name}`,
           message: `Are you sure you want to delete ${project.name}?`,
           detail: `Deleting from Guppy will remove ${
@@ -111,11 +107,7 @@ describe('delete-project saga', () => {
 
       // We are not deleting anything from disk so we simply move on to refresh state
       expect(saga.next(projects).value).toEqual(
-        put(finishDeletingProjectFromDisk(project.id))
-      );
-
-      expect(saga.next(true).value).toEqual(
-        put(removeDeletedProjectPath(project.id))
+        put(finishDeletingProject(project.id))
       );
 
       // Because there's another project, it should select the next one.
@@ -140,11 +132,9 @@ describe('delete-project saga', () => {
       saga.next(0);
       // Pass in the projects to the select call
       saga.next(projects);
-      // Confirm deletion
-      saga.next(true);
 
-      // Verify that it prompts to create a new project
-      expect(saga.next().value).toEqual(put(createNewProjectStart()));
+      // Confirm deletion and verify that it prompts to create a new project
+      expect(saga.next(true).value).toEqual(put(createNewProjectStart()));
       expect(saga.next().done).toEqual(true);
     });
 

@@ -4,8 +4,7 @@ import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
-  finishDeletingProjectFromDisk,
-  removeDeletedProjectPath,
+  finishDeletingProject,
   selectProject,
   createNewProjectStart,
 } from '../actions';
@@ -59,7 +58,7 @@ export function* deleteProject({ project }: Action): Saga<void> {
     type: 'warning',
     buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
     defaultId: 0,
-    cancelId: 1,
+    cancelId: 2,
     title: `Delete ${project.name}`,
     message: `Are you sure you want to delete ${project.name}?`,
     detail: `Deleting from Guppy will remove ${
@@ -104,12 +103,7 @@ export function* deleteProject({ project }: Action): Saga<void> {
   // We need to remove this project from redux state, so that it's consistent
   // with the filesystem. This is done regardless if deleting from Guppy or
   // from disk.
-  yield put(finishDeletingProjectFromDisk(project.id));
-
-  // We also want to remove the path from state, so it doesn't re-appear
-  // again on refresh. If it's imported again eventually, path will be restored
-  // and project appears as normal.
-  yield put(removeDeletedProjectPath(project.id));
+  yield put(finishDeletingProject(project.id));
 
   // If there are any projects left, select the next one. Otherwise, it's
   // time for the user to create a new project!

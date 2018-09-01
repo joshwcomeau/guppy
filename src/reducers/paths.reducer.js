@@ -16,7 +16,7 @@ import produce from 'immer';
 import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
-  REMOVE_DELETED_PROJECT_PATH,
+  FINISH_DELETING_PROJECT,
 } from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
 
@@ -40,7 +40,7 @@ export default (state: State = initialState, action: Action) => {
       };
     }
 
-    case REMOVE_DELETED_PROJECT_PATH: {
+    case FINISH_DELETING_PROJECT: {
       const { projectId } = action;
 
       return produce(state, draftState => {

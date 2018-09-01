@@ -46,9 +46,7 @@ export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_ERROR = 'IMPORT_EXISTING_PROJECT_ERROR';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 export const SHOW_DELETE_PROJECT_PROMPT = 'SHOW_DELETE_PROJECT_PROMPT';
-export const FINISH_DELETING_PROJECT_FROM_DISK =
-  'FINISH_DELETING_PROJECT_FROM_DISK';
-export const REMOVE_DELETED_PROJECT_PATH = 'REMOVE_DELETED_PROJECT_PATH';
+export const FINISH_DELETING_PROJECT = 'FINISH_DELETING_PROJECT';
 
 //
 //
@@ -298,12 +296,7 @@ export const showDeleteProjectPrompt = (project: Project) => ({
   project,
 });
 
-export const finishDeletingProjectFromDisk = (projectId: string) => ({
-  type: FINISH_DELETING_PROJECT_FROM_DISK,
-  projectId,
-});
-
-export const removeDeletedProjectPath = (projectId: string) => ({
-  type: REMOVE_DELETED_PROJECT_PATH,
+export const finishDeletingProject = (projectId: string) => ({
+  type: FINISH_DELETING_PROJECT,
   projectId,
 });
