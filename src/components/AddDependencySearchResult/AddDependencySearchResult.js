@@ -77,15 +77,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
   renderActionArea() {
     const { hit, projectId, currentStatus, addDependency } = this.props;
 
-    if (currentStatus === 'installing') {
-      return (
-        <NoActionAvailable>
-          <Spinner size={24} />
-          <Spacer size={6} />
-          Installing...
-        </NoActionAvailable>
-      );
-    } else if (typeof currentStatus === 'string') {
+    if (currentStatus === 'idle') {
       return (
         <NoActionAvailable>
           <IconBase
@@ -97,19 +89,38 @@ class AddDependencySearchResult extends PureComponent<Props> {
           Installed
         </NoActionAvailable>
       );
-    } else {
+    }
+
+    if (currentStatus) {
       return (
-        <Button
-          size="small"
-          color1={COLORS.green[700]}
-          color2={COLORS.lightGreen[500]}
-          textColor={COLORS.green[700]}
-          onClick={() => addDependency(projectId, hit.name, hit.version)}
-        >
-          Add To Project
-        </Button>
+        <NoActionAvailable>
+          <Spinner size={24} />
+          <Spacer size={6} />
+          {
+            {
+              installing: 'Installing..',
+              updating: 'Updating..',
+              deleting: 'Deleting..',
+              'queued-install': 'Queued for Install',
+              'queued-update': 'Queued for Update',
+              'queued-delete': 'Queued for Delete',
+            }[currentStatus]
+          }
+        </NoActionAvailable>
       );
     }
+
+    return (
+      <Button
+        size="small"
+        color1={COLORS.green[700]}
+        color2={COLORS.lightGreen[500]}
+        textColor={COLORS.green[700]}
+        onClick={() => addDependency(projectId, hit.name, hit.version)}
+      >
+        Add To Project
+      </Button>
+    );
   }
 
   render() {

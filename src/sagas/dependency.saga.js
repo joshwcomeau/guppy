@@ -47,12 +47,10 @@ export function* addDependency({
     projectId
   );
 
-  // if there are ongoing actions, queue this dependency
-  if (packageJsonLocked) {
-    yield put(queueDependencyInstall(projectId, dependencyName, version));
-  } else {
-    // if the queue for this project is empty, go ahead and install
-    // the dependency
+  yield put(queueDependencyInstall(projectId, dependencyName, version));
+
+  // if there are no other ongoing operations, begin install
+  if (!packageJsonLocked) {
     yield put(installDependencyStart(projectId, dependencyName, version));
   }
 }
@@ -67,11 +65,11 @@ export function* updateDependency({
     projectId
   );
 
-  if (packageJsonLocked) {
-    yield put(
-      queueDependencyInstall(projectId, dependencyName, latestVersion, true)
-    );
-  } else {
+  yield put(
+    queueDependencyInstall(projectId, dependencyName, latestVersion, true)
+  );
+
+  if (!packageJsonLocked) {
     yield put(
       installDependencyStart(projectId, dependencyName, latestVersion, true)
     );
@@ -87,9 +85,9 @@ export function* deleteDependency({
     projectId
   );
 
-  if (packageJsonLocked) {
-    yield put(queueDependencyUninstall(projectId, dependencyName));
-  } else {
+  yield put(queueDependencyUninstall(projectId, dependencyName));
+
+  if (!packageJsonLocked) {
     yield put(uninstallDependencyStart(projectId, dependencyName));
   }
 }

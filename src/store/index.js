@@ -28,9 +28,9 @@ export default function configureStore() {
   // Batch updates, so that frequent dispatches don't cause performance issues
   engine = debounce(engine, 1000);
 
-  // We don't want to store task info.
-  // Tasks
-  engine = filter(engine, null, ['appLoaded', 'tasks']);
+  // We don't want to store ephemeral info, such as application
+  // status, tasks, or the dependency queue.
+  engine = filter(engine, null, ['appLoaded', 'tasks', 'queue']);
   const storageMiddleware = storage.createMiddleware(engine);
 
   const wrappedReducer = storage.reducer(rootReducer);

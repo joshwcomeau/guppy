@@ -187,17 +187,7 @@ export function loadProjectDependencies(
         // Filter out any unloaded dependencies
         const filteredResults = results.filter(result => result);
 
-        // The results will be an array of package.jsons.
-        // I want a database-style map.
-        const dependenciesFromPackageJson = filteredResults.reduce(
-          (dependenciesMap, dependency) => ({
-            ...dependenciesMap,
-            [dependency.name]: dependency,
-          }),
-          {}
-        );
-
-        resolve(dependenciesFromPackageJson);
+        resolve(filteredResults);
       }
     );
   });
@@ -220,13 +210,27 @@ export function loadAllProjectDependencies(projectPath: string) {
         // We can reasonably assume all projects have dependencies
         // but some may not have devDependencies
         const deps = Object.keys(packageJson.dependencies);
-        const devDeps = Object.keys(packageJson.devDependencies || []);
+        const devDeps = Object.keys(packageJson.devDependencies || {});
         const dependencies = [...deps, ...devDeps].map(name => ({
           name,
           location: devDeps.includes(name) ? 'devDependencies' : 'dependencies',
         }));
 
-        return loadProjectDependencies(projectPath, dependencies);
+        loadProjectDependencies(projectPath, dependencies).then(
+          dependenciesFromPackageJson => {
+            // The results will be an array of package.jsons.
+            // I want a database-style map.
+            const dependenciesByName = dependenciesFromPackageJson.reduce(
+              (dependenciesMap, dependency) => ({
+                ...dependenciesMap,
+                [dependency.name]: dependency,
+              }),
+              {}
+            );
+
+            resolve(dependenciesByName);
+          }
+        );
       })
   );
 }

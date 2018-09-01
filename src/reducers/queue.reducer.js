@@ -3,6 +3,8 @@ import produce from 'immer';
 import {
   QUEUE_DEPENDENCY_INSTALL,
   QUEUE_DEPENDENCY_UNINSTALL,
+  INSTALL_DEPENDENCIES_START,
+  UNINSTALL_DEPENDENCIES_START,
   START_NEXT_ACTION_IN_QUEUE,
 } from '../actions';
 
@@ -12,6 +14,7 @@ import type { QueuedDependency, QueueAction } from '../types';
 type State = {
   [projectId: string]: Array<{
     action: QueueAction,
+    active: boolean,
     dependencies: Array<QueuedDependency>,
   }>,
 };
@@ -46,10 +49,13 @@ export default (state: State = initialState, action: Action) => {
 
         // get existing install queue for this project, or
         // create it if it doesn't exist
-        let installQueue = projectQueue.find(q => q.action === 'install');
+        let installQueue = projectQueue.find(
+          q => q.action === 'install' && !q.active
+        );
         if (!installQueue) {
           installQueue = {
             action: 'install',
+            active: false,
             dependencies: [],
           };
           projectQueue.push(installQueue);
@@ -77,10 +83,13 @@ export default (state: State = initialState, action: Action) => {
 
         // get existing uninstall queue for this project, or
         // create it if it doesn't exist
-        let installQueue = projectQueue.find(q => q.action === 'uninstall');
+        let installQueue = projectQueue.find(
+          q => q.action === 'uninstall' && !q.active
+        );
         if (!installQueue) {
           installQueue = {
             action: 'uninstall',
+            active: false,
             dependencies: [],
           };
           projectQueue.push(installQueue);
@@ -93,6 +102,16 @@ export default (state: State = initialState, action: Action) => {
 
         // update the project's uninstall queue
         draftState[projectId] = projectQueue;
+      });
+    }
+
+    case INSTALL_DEPENDENCIES_START:
+    case UNINSTALL_DEPENDENCIES_START: {
+      const { projectId } = action;
+
+      return produce(state, draftState => {
+        // mark the next item in the queue as active
+        draftState[projectId][0].active = true;
       });
     }
 

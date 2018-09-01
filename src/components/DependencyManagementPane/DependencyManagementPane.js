@@ -63,9 +63,10 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     }
 
     // If the last dependency was deleted, we need to shift focus to the new last dependency
-    // in the list.
+    // in the list. It's possible that a group of dependencies was deleted from the end of
+    // the list as a batch, so check >= and not just ===.
     if (
-      this.state.selectedDependencyIndex ===
+      this.state.selectedDependencyIndex >=
       nextProps.project.dependencies.length
     ) {
       this.setState({
@@ -170,8 +171,12 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             </MountAfter>
           </DependencyList>
           <MainContent>
-            {selectedDependency.status === 'installing' ? (
-              <DependencyInstalling name={selectedDependency.name} />
+            {selectedDependency.status === 'installing' ||
+            selectedDependency.status === 'queued-install' ? (
+              <DependencyInstalling
+                name={selectedDependency.name}
+                queued={selectedDependency.status === 'queued-install'}
+              />
             ) : (
               <DependencyDetails
                 projectId={id}

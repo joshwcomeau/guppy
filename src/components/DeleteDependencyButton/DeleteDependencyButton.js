@@ -15,7 +15,7 @@ const { dialog } = remote;
 type Props = {
   projectId: string,
   dependencyName: string,
-  isBeingDeleted?: boolean,
+  dependencyStatus: string,
   // From redux:
   deleteDependency: (projectId: string, dependencyName: string) => any,
 };
@@ -25,7 +25,16 @@ type Props = {
 // an actively-used dependency?
 class DeleteDependencyButton extends PureComponent<Props> {
   handleClick = () => {
-    const { projectId, dependencyName, deleteDependency } = this.props;
+    const {
+      projectId,
+      dependencyName,
+      deleteDependency,
+      dependencyStatus,
+    } = this.props;
+
+    // if the dependency is currently changing/queued for change,
+    // this button shouldn't do anything
+    if (dependencyStatus !== 'idle') return;
 
     dialog.showMessageBox(
       {
@@ -49,7 +58,8 @@ class DeleteDependencyButton extends PureComponent<Props> {
   };
 
   render() {
-    const { isBeingDeleted } = this.props;
+    const { dependencyStatus } = this.props;
+
     return (
       <Button
         size="small"
@@ -57,9 +67,8 @@ class DeleteDependencyButton extends PureComponent<Props> {
         color1={COLORS.pink[300]}
         color2={COLORS.red[500]}
         onClick={this.handleClick}
-        style={{ width: 75 }}
       >
-        {isBeingDeleted ? (
+        {dependencyStatus === 'deleting' ? (
           <PixelShifter
             y={2}
             reason="visually center the spinner within the button"
@@ -67,7 +76,10 @@ class DeleteDependencyButton extends PureComponent<Props> {
             <Spinner size={18} color={COLORS.white} />
           </PixelShifter>
         ) : (
-          'Delete'
+          {
+            idle: 'Delete',
+            'queued-delete': 'Queued for Delete..',
+          }[dependencyStatus]
         )}
       </Button>
     );

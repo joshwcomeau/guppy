@@ -44,6 +44,7 @@ Object {
   "foo": Array [
     Object {
       "action": "install",
+      "active": false,
       "dependencies": Array [
         Object {
           "name": "redux",
@@ -81,6 +82,7 @@ Object {
   "foo": Array [
     Object {
       "action": "install",
+      "active": false,
       "dependencies": Array [
         Object {
           "name": "redux",
@@ -98,6 +100,7 @@ Object {
   "foo": Array [
     Object {
       "action": "uninstall",
+      "active": false,
       "dependencies": Array [
         Object {
           "name": "redux",
