@@ -31,7 +31,11 @@ class PanelToggler extends Component {
             orientation="horizontal"
             style={{ height: 600, border: '1px solid' }}
           >
-            <Panel id="sidebar" initialFlex={40} style={{ minWidth: 200 }}>
+            <Panel
+              id="sidebar"
+              initialFlex={40}
+              style={{ minWidth: 100, maxWidth: 300 }}
+            >
               foo
             </Panel>
             <Panel id="server" initialFlex={20}>
@@ -57,9 +61,15 @@ storiesOf('Workspace', module)
         orientation="horizontal"
         style={{ height: 600, border: '1px solid' }}
       >
-        <Panel initialFlex={40}>foo</Panel>
-        <Panel initialFlex={20}>bar</Panel>
-        <Panel initialFlex={40}>baz</Panel>
+        <Panel id="sidebar" initialFlex={40}>
+          foo
+        </Panel>
+        <Panel id="server" initialFlex={20}>
+          bar
+        </Panel>
+        <Panel id="dependencies" initialFlex={40}>
+          baz
+        </Panel>
       </Workspace>
     ))
   )

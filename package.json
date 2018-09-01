@@ -61,7 +61,7 @@
     "babel-loader": "8.0.0-beta.0",
     "babel-plugin-named-asset-import": "1.0.0-next.66cc7a90",
     "babel-plugin-react-docgen": "2.0.0-babel7.0",
-    "babel-preset-react-app": "4.0.0-next.66cc7a90",
+    "babel-preset-react-app": "3.1.2",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",

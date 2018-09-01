@@ -155,8 +155,6 @@ class Workspace extends Component<Props, State> {
     const { panelFlexMap } = this.state;
 
     const panelIds = Object.keys(panelFlexMap);
-    const panelFlexValues = panelIds.map(id => panelFlexMap[id]);
-    const panelWidths = panelFlexValues.map(convertFlexToPixels);
 
     // Check and see if this change would push us below our min-width
     const childrenArray = React.Children.toArray(this.props.children);
@@ -179,10 +177,11 @@ class Workspace extends Component<Props, State> {
       return;
     }
 
-    const firstAffectedPanelMinWidth = firstAffectedPanel.props.minWidth;
+    const firstAffectedPanelMinWidth = firstAffectedPanel.props.style.minWidth;
+    const firstAffectedPanelMaxWidth = firstAffectedPanel.props.style.maxWidth;
 
     const prospectiveFirstPanelWidth = convertFlexToPixels(
-      panelFlexMap[firstAffectedPanelId] + deltaInFlex
+      startPanelFlexMap[firstAffectedPanelId] - deltaInFlex
     );
 
     if (prospectiveFirstPanelWidth < firstAffectedPanelMinWidth) {
@@ -192,6 +191,15 @@ class Workspace extends Component<Props, State> {
       const overshotByFlex = convertPixelsToFlex(overshotByPixels);
 
       deltaInFlex -= overshotByFlex;
+    }
+
+    if (prospectiveFirstPanelWidth > firstAffectedPanelMaxWidth) {
+      const overshotByPixels =
+        prospectiveFirstPanelWidth - firstAffectedPanelMaxWidth;
+
+      const overshotByFlex = convertPixelsToFlex(overshotByPixels);
+
+      deltaInFlex += overshotByFlex;
     }
 
     const nextpanelFlexMap = {
@@ -258,7 +266,7 @@ const Wrapper = styled.div`
   flex: 1;
   height: 100%;
   overflow: hidden;
-  user-select: text;
+  user-select: none;
 `;
 
 export default Workspace;
