@@ -176,7 +176,7 @@ const manageApplicationLocation = () => {
       {
         type: 'question',
         buttons: ['Yes, move', 'Cancel'],
-        message: 'Move to applications folder?',
+        message: 'Move to Applications folder?',
         detail:
           "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
         icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
