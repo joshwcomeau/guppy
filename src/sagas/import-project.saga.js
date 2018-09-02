@@ -109,7 +109,7 @@ export function* importProject({ path }: Action): Saga<void> {
         name: hasGuppyKey ? json.guppy.name : json.name,
         type,
         color,
-        icon: null,
+        icon: hasGuppyKey ? json.guppy.icon : null,
         createdAt: Date.now(),
       },
     };
