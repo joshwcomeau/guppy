@@ -52,7 +52,7 @@ export const getBaseProjectEnvironment = (projectPath: string) => ({
     path.join(projectPath, 'node_modules', '.bin'),
 });
 
-export const getPlatformSpecificFolderName = () =>
+export const getCopyForOpeningFolder = () =>
   // For Mac users, use the more-common term 'Finder'.
   // For Windows and Linux users, 'folder' should be meaningful enough.
-  isMac ? 'Finder' : 'folder';
+  isMac ? 'Open in Finder' : 'Open folder';

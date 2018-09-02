@@ -10,7 +10,7 @@ import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import {
   isMac,
-  getPlatformSpecificFolderName,
+  getCopyForOpeningFolder,
 } from '../../services/platform.service';
 import {
   openProjectInFolder,
@@ -164,11 +164,11 @@ class ApplicationMenu extends Component<Props> {
       // have a different index depending on the platform.
       const editMenuIndex = template.findIndex(menu => menu.id === 'edit');
 
-      const platformSpecificFolderName = getPlatformSpecificFolderName();
+      const openFolderCopy = getCopyForOpeningFolder();
 
       let submenu = [
         {
-          label: `Open in ${platformSpecificFolderName}`,
+          label: openFolderCopy,
           click: () => openProjectInFolder(selectedProject),
           accelerator: 'CmdOrCtrl+shift+F',
         },
