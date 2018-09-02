@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, PureComponent, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
@@ -57,7 +57,7 @@ const INTRO_SEQUENCE_STEPS = [
 // TODO: this component re-renders whenever _anything_ with a project changes
 // (like adding a log to a task). It might be prudent to add a selector that
 // only provides the fields necessary for the sidebar.
-class Sidebar extends Component<Props, State> {
+class Sidebar extends PureComponent<Props, State> {
   static defaultProps = {
     projects: [],
   };
