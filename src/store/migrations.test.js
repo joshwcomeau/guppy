@@ -1,5 +1,5 @@
 // @flow
-import { migrationFromZeroToOne } from './migrations';
+import { migrateToReduxStorage } from './migrations';
 
 const ENGINE_KEY = 'test-key';
 
@@ -9,7 +9,7 @@ describe('Redux migrations', () => {
       const persistedState = null;
 
       const expectedOutput = persistedState;
-      const actualOutput = migrationFromZeroToOne(persistedState);
+      const actualOutput = migrateToReduxStorage(persistedState);
 
       expect(actualOutput).toEqual(expectedOutput);
     });
@@ -25,7 +25,7 @@ describe('Redux migrations', () => {
       };
 
       const expectedOutput = persistedState;
-      const actualOutput = migrationFromZeroToOne(persistedState);
+      const actualOutput = migrateToReduxStorage(persistedState);
 
       expect(actualOutput).toEqual(expectedOutput);
     });
@@ -54,7 +54,7 @@ describe('Redux migrations', () => {
           },
         },
       };
-      const actualOutput = migrationFromZeroToOne(persistedState);
+      const actualOutput = migrateToReduxStorage(persistedState);
 
       expect(actualOutput).toEqual(expectedOutput);
     });

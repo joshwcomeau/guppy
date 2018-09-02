@@ -21,12 +21,8 @@ import migrate from 'redux-storage-decorator-migrate';
 // not-backwards-incompatible way:
 const STATE_VERSION = 1;
 
-export function migrationFromZeroToOne(state: any) {
-  if (!state) {
-    return state;
-  }
-
-  // UPDATE TO REDUX STORAGE.
+export function migrateToReduxStorage(state: any) {
+  // 1. UPDATE TO REDUX STORAGE.
   // In initial versions, we had our own bespoke Redux persistence layer.
   // We updated to redux-storage in 0.3.0.
   // While the state shape changed a fair bit, only two migration changes
@@ -35,6 +31,10 @@ export function migrationFromZeroToOne(state: any) {
   // - Parse the state, as it was stored previously as a string
   // - Delete `tasks`, which are no longer persisted.
   //
+  if (!state) {
+    return state;
+  }
+
   const parsedState = typeof state === 'string' ? JSON.parse(state) : state;
   delete parsedState.tasks;
 
@@ -44,7 +44,7 @@ export function migrationFromZeroToOne(state: any) {
 export default function handleMigrations(engine: any) {
   engine = migrate(engine, STATE_VERSION);
 
-  engine.addMigration(1, migrationFromZeroToOne);
+  engine.addMigration(1, migrateToReduxStorage);
 
   return engine;
 }
