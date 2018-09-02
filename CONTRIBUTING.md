@@ -42,7 +42,7 @@ After you have submitted your pull request, we'll try to get back to you as soon
 
 Thank you for contributing!
 
-### Collaborators
+## Collaborators
 
 If you contribute a valuable code change, you may receive an invitation to become a collaborator on the Guppy repo. Collaborators are contributors who are given full write access; they can create branches on the repo, merge code, close issues, etc.
 
@@ -50,7 +50,7 @@ We really like the idea of empowering contributors by giving them these privileg
 
 This is a new project, and we're still figuring out the conventions, but here's what you need to know about becoming a collaborator:
 
-- You can clone the repo directly and open pull requests from feature branches, instead of using a fork
+- You can work directly on the main repo, instead of using your own fork. Create branches for yourself and open pull requests from them. This makes it easier for other collaborators to quickly try out your changes locally, so it's encouraged. Please don't commit directly to `master` though :)
 - You can moderate issues, closing ones that are duplicates or not relevant, or reopening ones you feel deserve more discussion
 - You can submit code reviews for other folks' changes, accepting or requesting changes.
 - When reviewing small changes that don't affect the UI, feel free to merge it in when you feel the code is good to go. At least for now, the owner (@joshwcomeau) wants to keep an eye on visual/design changes, so please don't merge in design changes. And for large, non-trivial changes, it might be good to get at least a couple approvals before landing.

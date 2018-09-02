@@ -1,92 +1,174 @@
 // @flow
 import { select, call, put, takeEvery } from 'redux-saga/effects';
 import { getPathForProjectId } from '../reducers/paths.reducer';
+import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
-  installDependency,
-  uninstallDependency,
+  installDependencies,
+  uninstallDependencies,
 } from '../services/dependencies.service';
-import { loadProjectDependency } from '../services/read-from-disk.service';
+import { loadProjectDependencies } from '../services/read-from-disk.service';
 import {
-  ADD_DEPENDENCY_START,
-  UPDATE_DEPENDENCY_START,
-  DELETE_DEPENDENCY_START,
-  addDependencyFinish,
-  addDependencyError,
-  updateDependencyFinish,
-  updateDependencyError,
-  deleteDependencyFinish,
-  deleteDependencyError,
+  ADD_DEPENDENCY,
+  UPDATE_DEPENDENCY,
+  DELETE_DEPENDENCY,
+  INSTALL_DEPENDENCIES_START,
+  INSTALL_DEPENDENCIES_ERROR,
+  INSTALL_DEPENDENCIES_FINISH,
+  UNINSTALL_DEPENDENCIES_START,
+  UNINSTALL_DEPENDENCIES_ERROR,
+  UNINSTALL_DEPENDENCIES_FINISH,
+  START_NEXT_ACTION_IN_QUEUE,
+  queueDependencyInstall,
+  queueDependencyUninstall,
+  installDependencyStart,
+  installDependenciesStart,
+  installDependenciesError,
+  installDependenciesFinish,
+  uninstallDependencyStart,
+  uninstallDependenciesStart,
+  uninstallDependenciesError,
+  uninstallDependenciesFinish,
+  startNextActionInQueue,
 } from '../actions';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 
-/**
- * Trying to install new dependency, if success dispatching "finish" action
- * if not - dispatching "error" ection
- */
-export function* addDependency({
+export function* handleAddDependency({
   projectId,
   dependencyName,
   version,
 }: Action): Saga<void> {
-  const projectPath = yield select(getPathForProjectId, projectId);
-  try {
-    yield call(installDependency, projectPath, dependencyName, version);
-    const dependency = yield call(
-      loadProjectDependency,
-      projectPath,
-      dependencyName
-    );
-    yield put(addDependencyFinish(projectId, dependency));
-  } catch (err) {
-    yield call([console, 'error'], 'Failed to install dependency', err);
-    yield put(addDependencyError(projectId, dependencyName));
+  const queuedAction = yield select(getNextActionForProjectId, projectId);
+
+  yield put(queueDependencyInstall(projectId, dependencyName, version));
+
+  // if there are no other ongoing operations, begin install
+  if (!queuedAction) {
+    yield put(installDependencyStart(projectId, dependencyName, version));
   }
 }
 
-/**
- * Trying to update existing dependency, if success dispatching "finish" action,
- * if not - dispatching "error" action
- */
-export function* updateDependency({
+export function* handleUpdateDependency({
   projectId,
   dependencyName,
   latestVersion,
 }: Action): Saga<void> {
-  const projectPath = yield select(getPathForProjectId, projectId);
-  try {
-    yield call(installDependency, projectPath, dependencyName, latestVersion);
-    yield put(updateDependencyFinish(projectId, dependencyName, latestVersion));
-  } catch (err) {
-    yield call([console, 'error'], 'Failed to update dependency', err);
-    yield put(updateDependencyError(projectId, dependencyName));
+  const queuedAction = yield select(getNextActionForProjectId, projectId);
+
+  yield put(
+    queueDependencyInstall(projectId, dependencyName, latestVersion, true)
+  );
+
+  if (!queuedAction) {
+    yield put(
+      installDependencyStart(projectId, dependencyName, latestVersion, true)
+    );
   }
 }
 
-/**
- * Trying to delete dependency, if success dispatching "finish" action,
- * if not - dispatching "error" action
- */
-export function* deleteDependency({
+export function* handleDeleteDependency({
   projectId,
   dependencyName,
 }: Action): Saga<void> {
-  const projectPath = yield select(getPathForProjectId, projectId);
-  try {
-    yield call(uninstallDependency, projectPath, dependencyName);
-    yield put(deleteDependencyFinish(projectId, dependencyName));
-  } catch (err) {
-    yield call([console, 'error'], 'Failed to delete dependency', err);
-    yield put(deleteDependencyError(projectId, dependencyName));
+  const queuedAction = yield select(getNextActionForProjectId, projectId);
+
+  yield put(queueDependencyUninstall(projectId, dependencyName));
+
+  if (!queuedAction) {
+    yield put(uninstallDependencyStart(projectId, dependencyName));
   }
 }
 
-/**
- * Root dependencies saga, watching for "start" actions
- */
+export function* handleInstallDependenciesStart({
+  projectId,
+  dependencies,
+}: Action): Saga<void> {
+  const projectPath = yield select(getPathForProjectId, projectId);
+
+  try {
+    yield call(installDependencies, projectPath, dependencies);
+    const storedDependencies = yield call(
+      loadProjectDependencies,
+      projectPath,
+      dependencies
+    );
+    yield put(installDependenciesFinish(projectId, storedDependencies));
+  } catch (err) {
+    yield call([console, console.error], 'Failed to install dependencies', err);
+    yield put(installDependenciesError(projectId, dependencies));
+  }
+}
+
+export function* handleUninstallDependenciesStart({
+  projectId,
+  dependencies,
+}: Action): Saga<void> {
+  const projectPath = yield select(getPathForProjectId, projectId);
+
+  try {
+    yield call(uninstallDependencies, projectPath, dependencies);
+    yield put(uninstallDependenciesFinish(projectId, dependencies));
+  } catch (err) {
+    yield call(
+      [console, console.error],
+      'Failed to uninstall dependencies',
+      err
+    );
+    yield put(uninstallDependenciesError(projectId, dependencies));
+  }
+}
+
+export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
+  const nextAction = yield select(getNextActionForProjectId, projectId);
+
+  // if there is another item in the queue, start it
+  if (nextAction) {
+    yield put(startNextActionInQueue(projectId));
+  }
+}
+
+export function* handleStartNextActionInQueue({
+  projectId,
+}: Action): Saga<void> {
+  const nextAction = yield select(getNextActionForProjectId, projectId);
+
+  // if the queue is empty, log an error
+  if (!nextAction) {
+    return console.error(
+      `attempted to start next action in empty queue for project ${projectId}`
+    );
+  }
+
+  const actionCreator =
+    nextAction.action === 'install'
+      ? installDependenciesStart
+      : uninstallDependenciesStart;
+  yield put(actionCreator(projectId, nextAction.dependencies));
+}
+
+// Installs/uninstalls fail silently - the only notice of a failed action
+// visible to the user is either the dependency disappearing entirely or
+// having its status set back to `idle`.
+// TODO: display an error message outside of the console when a dependency
+// action fails
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(ADD_DEPENDENCY_START, addDependency);
-  yield takeEvery(UPDATE_DEPENDENCY_START, updateDependency);
-  yield takeEvery(DELETE_DEPENDENCY_START, deleteDependency);
+  yield takeEvery(ADD_DEPENDENCY, handleAddDependency);
+  yield takeEvery(UPDATE_DEPENDENCY, handleUpdateDependency);
+  yield takeEvery(DELETE_DEPENDENCY, handleDeleteDependency);
+  yield takeEvery(INSTALL_DEPENDENCIES_START, handleInstallDependenciesStart);
+  yield takeEvery(
+    UNINSTALL_DEPENDENCIES_START,
+    handleUninstallDependenciesStart
+  );
+  yield takeEvery(
+    [
+      INSTALL_DEPENDENCIES_ERROR,
+      INSTALL_DEPENDENCIES_FINISH,
+      UNINSTALL_DEPENDENCIES_ERROR,
+      UNINSTALL_DEPENDENCIES_FINISH,
+    ],
+    handleQueueActionCompleted
+  );
+  yield takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue);
 }

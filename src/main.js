@@ -2,15 +2,17 @@
  * This is our main Electron process.
  * It handles opening our app window, and quitting the application.
  */
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
 const chalkRaw = require('chalk');
+const ElectronStore = require('electron-store');
 
 const killProcessId = require('./services/kill-process-id.service');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
+const electronStore = new ElectronStore();
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
@@ -29,7 +31,13 @@ let mainWindow;
 // before the app quits.
 let processIds = [];
 
+const MOVE_TO_APP_FOLDER_KEY = 'leave-application-in-original-location';
+
 function createWindow() {
+  // Verifies if Guppy is already in the Applications folder
+  // and prompts the user to move it if it isn't
+  manageApplicationLocation();
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1120,
@@ -136,5 +144,74 @@ const killAllRunningProcesses = () => {
     });
   } catch (err) {
     console.error('Got error when trying to kill children', err);
+  }
+};
+
+const canApplicationBeMoved = () => {
+  // The application can be moved if :
+  //  - The platform is MacOS
+  //  - The function 'isInApplicationsFolder' exists
+  //  - The app is running in production
+  //  - Guppy is not already in the Applications folder
+  //  - The user hasn't chosen to not see the dialog prompt again
+  const hasApplicationsFolder =
+    process.platform === 'darwin' &&
+    typeof app.isInApplicationsFolder === 'function';
+
+  // NOTE: Because this file isn't compiled by Webpack, `process.env.NODE_ENV`
+  // will be undefined in the bundled application. Rather than check to see if
+  // it's set to `production`, we just care that it ISN'T set to `development`
+  // (development is set in package.json when running the 'start' script).
+  const isProduction = process.env.NODE_ENV !== 'development';
+
+  if (
+    hasApplicationsFolder &&
+    isProduction &&
+    !app.isInApplicationsFolder() &&
+    !electronStore.has(MOVE_TO_APP_FOLDER_KEY)
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+const manageApplicationLocation = () => {
+  if (canApplicationBeMoved()) {
+    dialog.showMessageBox(
+      {
+        type: 'question',
+        buttons: ['Yes, move to Applications', 'No thanks'],
+        message: 'Move to Applications folder?',
+        detail:
+          "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
+        icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
+        cancelId: 1,
+        defaultId: 0,
+        checkboxLabel: 'Do not show this message again',
+      },
+      (res, checkboxChecked) => {
+        // User wants the application to be moved
+        if (res === 0) {
+          try {
+            app.moveToApplicationsFolder();
+          } catch (err) {
+            dialog.showErrorBox(
+              'Error',
+              'Could not move Guppy to the Applications folder'
+            );
+            console.error(
+              'Could not move Guppy to the Applications folder',
+              err
+            );
+          }
+        }
+
+        // User doesn't want to see the message again
+        if (checkboxChecked === true) {
+          electronStore.set(MOVE_TO_APP_FOLDER_KEY, true);
+        }
+      }
+    );
   }
 };

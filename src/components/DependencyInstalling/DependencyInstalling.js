@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
@@ -10,11 +10,15 @@ import Spacer from '../Spacer';
 
 type Props = {
   name: string,
+  queued: boolean,
 };
 
 class DependencyInstalling extends Component<Props> {
   render() {
-    const { name } = this.props;
+    const { name, queued } = this.props;
+    const stylizedName = (
+      <span style={{ color: COLORS.purple[500] }}>{name}</span>
+    );
 
     return (
       <Wrapper>
@@ -22,7 +26,11 @@ class DependencyInstalling extends Component<Props> {
           <GuppyImage src={guppyLoaderSrc} />
           <Spacer size={50} />
           <Heading size="small">
-            Installing <span style={{ color: COLORS.purple[500] }}>{name}</span>…
+            {queued ? (
+              <Fragment>{stylizedName} is queued for install...</Fragment>
+            ) : (
+              <Fragment>Installing {stylizedName}...</Fragment>
+            )}
           </Heading>
         </InnerWrapper>
       </Wrapper>

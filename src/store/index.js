@@ -19,7 +19,7 @@ const sagaMiddleware = createSagaMiddleware();
 export default function configureStore() {
   // Store all Redux changes in an electron-store, handled by redux-storage.
   let engine = createEngine(
-    process.env.NODE_ENV === 'development' ? 'redux-data-dev' : 'redux-data'
+    process.env.NODE_ENV === 'development' ? 'redux-state-dev' : 'redux-state'
   );
 
   // Handle migrating state as the redux reducers change
@@ -28,20 +28,24 @@ export default function configureStore() {
   // Batch updates, so that frequent dispatches don't cause performance issues
   engine = debounce(engine, 1000);
 
-  // We don't want to store task info.
-  // Tasks
-  engine = filter(engine, null, ['appLoaded', 'tasks']);
+  // We don't want to store ephemeral info, such as application
+  // status, tasks, or the dependency queue.
+  engine = filter(engine, null, ['appLoaded', 'tasks', 'queue']);
   const storageMiddleware = storage.createMiddleware(engine);
 
   const wrappedReducer = storage.reducer(rootReducer);
 
-  const store = createStore(
-    wrappedReducer,
-    compose(
-      applyMiddleware(thunk, storageMiddleware, sagaMiddleware),
-      DevTools.instrument()
-    )
-  );
+  const middlewares = [thunk, storageMiddleware, sagaMiddleware];
+
+  const enhancers =
+    process.env.NODE_ENV === 'production'
+      ? applyMiddleware(...middlewares)
+      : compose(
+          applyMiddleware(...middlewares),
+          DevTools.instrument()
+        );
+
+  const store = createStore(wrappedReducer, enhancers);
 
   sagaMiddleware.run(rootSaga);
 
