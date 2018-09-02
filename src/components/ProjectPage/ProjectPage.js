@@ -7,7 +7,6 @@ import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
 import { loadDependencyInfoFromDisk } from '../../actions';
 
-import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
@@ -53,31 +52,29 @@ class ProjectPage extends Component<Props> {
 
     return (
       <FadeIn>
-        <MainContentWrapper>
-          <PixelShifter
-            x={-2}
-            reason="Align left edge of title with the modules on page"
-          >
-            <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
-              {project.name}
-            </Heading>
-          </PixelShifter>
+        <PixelShifter
+          x={-2}
+          reason="Align left edge of title with the modules on page"
+        >
+          <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
+            {project.name}
+          </Heading>
+        </PixelShifter>
 
-          <Spacer size={30} />
-          <DevelopmentServerPane leftSideWidth={300} />
+        <Spacer size={30} />
+        <DevelopmentServerPane leftSideWidth={300} />
 
-          <Spacer size={30} />
-          <TaskRunnerPane leftSideWidth={200} />
+        <Spacer size={30} />
+        <TaskRunnerPane leftSideWidth={200} />
 
-          {project.dependencies.length > 0 && (
-            <Fragment>
-              <Spacer size={30} />
-              <DependencyManagementPane />
-            </Fragment>
-          )}
+        {project.dependencies.length > 0 && (
+          <Fragment>
+            <Spacer size={30} />
+            <DependencyManagementPane />
+          </Fragment>
+        )}
 
-          <Spacer size={60} />
-        </MainContentWrapper>
+        <Spacer size={60} />
       </FadeIn>
     );
   }

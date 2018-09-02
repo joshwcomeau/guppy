@@ -17,6 +17,7 @@ import Titlebar from '../Titlebar';
 import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
+import { HorizontalPanels, Panel } from '../Panels';
 
 import type { Action } from 'redux';
 import type { Project } from '../../types';
@@ -40,11 +41,20 @@ class App extends Component<Props> {
         <ApplicationMenu />
 
         <Wrapper>
-          <Sidebar />
-
-          <MainContent>
-            {selectedProject ? <ProjectPage /> : <IntroScreen />}
-          </MainContent>
+          <HorizontalPanels width={window.innerWidth}>
+            <Panel
+              id="sidebar"
+              initialWidth={70}
+              style={{ minWidth: 70, maxWidth: 300 }}
+            >
+              <Sidebar />
+            </Panel>
+            <Panel id="main-content">
+              <MainContent>
+                {selectedProject ? <ProjectPage /> : <IntroScreen />}
+              </MainContent>
+            </Panel>
+          </HorizontalPanels>
         </Wrapper>
 
         <CreateNewProjectWizard />

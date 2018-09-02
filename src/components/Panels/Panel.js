@@ -26,9 +26,6 @@ class Panel extends PureComponent<Props> {
           height,
           ...style,
           userSelect: 'text',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
         }}
       >
         {this.props.children}

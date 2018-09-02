@@ -27,12 +27,14 @@ class Panels extends Component<Props, State> {
   startPanelWidths: PanelWidths;
   resizerIndex: ?number;
 
+  state = {};
+
   static defaultProps = {
     style: {},
   };
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    const isFirstRender = !state;
+    const isFirstRender = Object.keys(state).length === 0;
 
     if (isFirstRender) {
       return { panelSizes: Panels.calculateInitialSizes(props) };
@@ -264,6 +266,8 @@ class Panels extends Component<Props, State> {
   render() {
     const { size, children, style, orientation, ...delegated } = this.props;
     const { panelSizes } = this.state;
+
+    console.log({ panelSizes });
 
     const dimension = orientation === 'horizontal' ? 'width' : 'height';
 

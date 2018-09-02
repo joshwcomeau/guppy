@@ -42,8 +42,6 @@ type State = {
     | null,
 };
 
-export const SIDEBAR_WIDTH = 70;
-const SIDEBAR_OVERFLOW = 20;
 const SIDEBAR_ICON_SIZE = 45;
 
 const springSettings = { stiffness: 200, damping: 20, precision: 0.75 };
@@ -124,8 +122,12 @@ class Sidebar extends PureComponent<Props, State> {
 
               <Projects offset={`${firstProjectPosition}px`}>
                 {projects.map(project => (
-                  <Fragment key={project.id}>
-                    <Tooltip title={project.name} position="right">
+                  <Tooltip
+                    title={project.name}
+                    position="right"
+                    key={project.id}
+                  >
+                    <ProjectWrapper>
                       <SidebarProjectIcon
                         size={SIDEBAR_ICON_SIZE}
                         id={project.id}
@@ -137,18 +139,22 @@ class Sidebar extends PureComponent<Props, State> {
                         }
                         handleSelect={() => selectProject(project.id)}
                       />
-                    </Tooltip>
-                    <Spacer size={18} />
-                  </Fragment>
+                      <Spacer size={12} />
+                      <ProjectName>{project.name}</ProjectName>
+                    </ProjectWrapper>
+                  </Tooltip>
                 ))}
-                <AddProjectButton
-                  size={SIDEBAR_ICON_SIZE}
-                  onClick={createNewProjectStart}
-                  isVisible={finishedOnboarding || introSequenceStepIndex >= 2}
-                />
+                <ProjectWrapper>
+                  <AddProjectButton
+                    size={SIDEBAR_ICON_SIZE}
+                    onClick={createNewProjectStart}
+                    isVisible={
+                      finishedOnboarding || introSequenceStepIndex >= 2
+                    }
+                  />
+                </ProjectWrapper>
               </Projects>
             </Wrapper>
-            {isVisible && <SidebarSpacer />}
           </Fragment>
         )}
       </Motion>
@@ -161,14 +167,13 @@ const Wrapper = styled.nav.attrs({
     transform: `translateX(${props.offset})`,
   }),
 })`
-  position: fixed;
-  z-index: ${Z_INDICES.sidebar};
+  position: relative;
   top: 0;
-  left: -${SIDEBAR_OVERFLOW}px;
+  left: 0;
   bottom: 0;
-  width: ${SIDEBAR_WIDTH + SIDEBAR_OVERFLOW}px;
+  width: 100%;
+  height: 100%;
   padding-top: 40px;
-  padding-left: ${SIDEBAR_OVERFLOW}px;
   background-image: linear-gradient(
     85deg,
     ${COLORS.blue[900]},
@@ -178,12 +183,6 @@ const Wrapper = styled.nav.attrs({
   will-change: transform;
 `;
 
-const SidebarSpacer = styled.div`
-  position: relative;
-  height: 100vh;
-  width: ${SIDEBAR_WIDTH}px;
-`;
-
 const Projects = styled.div.attrs({
   style: props => ({
     transform: `translateY(${props.offset})`,
@@ -191,7 +190,25 @@ const Projects = styled.div.attrs({
 })`
   display: flex;
   flex-direction: column;
+`;
+
+const ProjectWrapper = styled.div`
+  display: flex;
   align-items: center;
+  max-width: 100%;
+  padding-left: 12.5px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+`;
+
+const ProjectName = styled.div`
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${COLORS.white};
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 `;
 
 const mapStateToProps = state => ({

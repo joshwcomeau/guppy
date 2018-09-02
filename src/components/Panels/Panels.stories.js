@@ -136,4 +136,31 @@ storiesOf('Workspace', module)
   .add(
     'Horizontal split with toggleable third',
     withInfo()(() => <PanelToggler />)
+  )
+  .add(
+    'Fullscreen Panels',
+    withInfo()(() => (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100vw',
+          height: '100vh',
+        }}
+      >
+        <HorizontalPanels width={window.innerWidth}>
+          <Panel
+            id="sidebar"
+            initialWidth={70}
+            style={{ minWidth: 70, maxWidth: 300 }}
+          >
+            Hello
+          </Panel>
+          <Panel id="world">World</Panel>
+        </HorizontalPanels>
+      </div>
+    ))
   );
