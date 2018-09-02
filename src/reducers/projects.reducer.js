@@ -9,6 +9,7 @@ import {
   ADD_DEPENDENCY_FINISH,
   REFRESH_PROJECTS_FINISH,
   SELECT_PROJECT,
+  RESET_ALL_STATE,
 } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
 import { getDependenciesForProjectId } from './dependencies.reducer';
@@ -64,6 +65,9 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
       });
     }
 
+    case RESET_ALL_STATE:
+      return initialState.byId;
+
     default:
       return state;
   }
@@ -105,6 +109,9 @@ const selectedIdReducer = (
     case SELECT_PROJECT: {
       return action.projectId;
     }
+
+    case RESET_ALL_STATE:
+      return initialState.selectedId;
 
     default:
       return state;

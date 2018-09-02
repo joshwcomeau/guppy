@@ -9,6 +9,7 @@ import {
   IMPORT_EXISTING_PROJECT_FINISH,
   SELECT_PROJECT,
   REFRESH_PROJECTS_FINISH,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -23,9 +24,9 @@ export type State =
 const initialState = 'brand-new';
 
 export default (state: State = initialState, action: Action) => {
-  if (state === 'done') {
-    return state;
-  }
+  // if (state === 'done') { // Reset all not working with this --> does this break something?
+  //   return state;
+  // }
 
   switch (action.type) {
     case CREATE_NEW_PROJECT_START:
@@ -65,6 +66,9 @@ export default (state: State = initialState, action: Action) => {
 
       return projectKeys.length > 0 ? 'done' : state;
     }
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;

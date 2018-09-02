@@ -69,15 +69,6 @@ class ApplicationMenu extends Component<Props> {
             click: showImportExistingProjectPrompt,
             accelerator: 'CmdOrCtrl+I',
           },
-          {
-            label: isMac ? 'Development' : '&Development',
-            submenu: [
-              {
-                label: isMac ? 'Reset State...' : 'Reset state...',
-                click: showResetStatePrompt,
-              },
-            ],
-          },
         ],
       },
       {
@@ -91,10 +82,7 @@ class ApplicationMenu extends Component<Props> {
           { role: 'copy' },
           { role: 'paste' },
           { role: 'delete' },
-          {
-            role: 'selectall',
-            label: isMac ? 'Select All' : 'Select all',
-          },
+          { role: 'selectall', label: isMac ? 'Select All' : 'Select all' },
         ],
       },
       {
@@ -106,21 +94,27 @@ class ApplicationMenu extends Component<Props> {
             role: 'forcereload',
             label: isMac ? 'Force Reload' : 'Force reload',
           },
-          {
-            role: 'toggledevtools',
-            label: isMac ? 'Toggle Developer Tools' : 'Toggle developer tools',
-          },
           { type: 'separator' },
-          {
-            role: 'resetzoom',
-            label: isMac ? 'Actual Size' : 'Actual size',
-          },
+          { role: 'resetzoom', label: isMac ? 'Actual Size' : 'Actual size' },
           { role: 'zoomin', label: isMac ? 'Zoom In' : 'Zoom in' },
           { role: 'zoomout', label: isMac ? 'Zoom Out' : 'Zoom out' },
           { type: 'separator' },
           {
             role: 'togglefullscreen',
             label: isMac ? 'Toggle Full Screen' : 'Toggle full screen',
+          },
+        ],
+      },
+      {
+        label: isMac ? 'Development' : '&Development',
+        submenu: [
+          {
+            role: 'toggledevtools',
+            label: isMac ? 'Toggle Developer Tools' : 'Toggle developer tools',
+          },
+          {
+            label: isMac ? 'Reset State...' : 'Reset state...',
+            click: showResetStatePrompt,
           },
         ],
       },

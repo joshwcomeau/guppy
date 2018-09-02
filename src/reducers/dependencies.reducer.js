@@ -11,6 +11,7 @@ import {
   ADD_DEPENDENCY_START,
   ADD_DEPENDENCY_ERROR,
   ADD_DEPENDENCY_FINISH,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -120,6 +121,9 @@ export default (state: State = initialState, action: Action) => {
         delete draftState[projectId][dependencyName];
       });
     }
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;

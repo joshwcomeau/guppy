@@ -9,6 +9,7 @@ import {
   CREATE_NEW_PROJECT_CANCEL,
   CREATE_NEW_PROJECT_FINISH,
   IMPORT_EXISTING_PROJECT_START,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -26,6 +27,9 @@ export default (state: State = initialState, action: Action) => {
     case CREATE_NEW_PROJECT_FINISH:
     case IMPORT_EXISTING_PROJECT_START:
       return null;
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;
