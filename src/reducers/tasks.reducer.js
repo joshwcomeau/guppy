@@ -37,7 +37,7 @@ type State = {
   [uniqueTaskId: string]: Task,
 };
 
-const initialState = {};
+export const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {

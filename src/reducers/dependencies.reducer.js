@@ -23,7 +23,7 @@ type State = {
   },
 };
 
-const initialState = {};
+export const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {

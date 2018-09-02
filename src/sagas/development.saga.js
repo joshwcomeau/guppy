@@ -19,7 +19,6 @@ export function* showResetDialog(): Saga<void> {
 
   const confirmed = response === 0;
   if (confirmed) {
-    console.log('store clear', window.electronStore.clear);
     window.electronStore.clear();
     yield put(resetAllState());
   }

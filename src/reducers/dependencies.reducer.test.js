@@ -1,4 +1,7 @@
-import reducer, { getDependenciesForProjectId } from './dependencies.reducer';
+import reducer, {
+  getDependenciesForProjectId,
+  initialState as dependenciesInitialState,
+} from './dependencies.reducer';
 import {
   LOAD_DEPENDENCY_INFO_FROM_DISK,
   ADD_DEPENDENCY_START,
@@ -10,6 +13,7 @@ import {
   DELETE_DEPENDENCY_START,
   DELETE_DEPENDENCY_ERROR,
   DELETE_DEPENDENCY_FINISH,
+  RESET_ALL_STATE,
 } from '../actions';
 
 describe('dependencies reducer', () => {
@@ -387,6 +391,27 @@ Object {
   "foo": Object {},
 }
 `);
+  });
+
+  test('reset to initialState on RESET_ALL_STATE action', () => {
+    const initialState = {
+      foo: {
+        redux: {
+          name: 'redux',
+          status: 'deleting',
+          description: 'dependency description',
+          keywords: ['key', 'words'],
+          version: '3.2',
+          homepage: 'https://dependency-homepage.io',
+          license: 'MIT',
+          repository: 'https://github.com',
+        },
+      },
+    };
+    const action = { type: RESET_ALL_STATE };
+    const actualState = reducer(initialState, action);
+
+    expect(actualState).toEqual(dependenciesInitialState);
   });
 });
 

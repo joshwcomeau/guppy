@@ -106,6 +106,7 @@ class ApplicationMenu extends Component<Props> {
         ],
       },
       {
+        id: 'development',
         label: isMac ? 'Development' : '&Development',
         submenu: [
           {
