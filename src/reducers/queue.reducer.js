@@ -5,40 +5,29 @@ import {
   QUEUE_DEPENDENCY_UNINSTALL,
   INSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_START,
-  START_NEXT_ACTION_IN_QUEUE,
+  INSTALL_DEPENDENCIES_ERROR,
+  INSTALL_DEPENDENCIES_FINISH,
+  UNINSTALL_DEPENDENCIES_ERROR,
+  UNINSTALL_DEPENDENCIES_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
 import type { QueuedDependency, QueueAction } from '../types';
 
+type QueueEntry = {
+  action: QueueAction,
+  active: boolean,
+  dependencies: Array<QueuedDependency>,
+};
+
 type State = {
-  [projectId: string]: Array<{
-    action: QueueAction,
-    active: boolean,
-    dependencies: Array<QueuedDependency>,
-  }>,
+  [projectId: string]: Array<QueueEntry>,
 };
 
 const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case START_NEXT_ACTION_IN_QUEUE: {
-      const { projectId } = action;
-
-      return produce(state, draftState => {
-        // remove oldest item in queue (it's just been
-        // completed by the dependency saga)
-        draftState[projectId].shift();
-
-        // remove the project's queue if this was the
-        // last entry
-        if (draftState[projectId].length === 0) {
-          delete draftState[projectId];
-        }
-      });
-    }
-
     case QUEUE_DEPENDENCY_INSTALL: {
       const { projectId, name, version, updating } = action;
 
@@ -115,6 +104,25 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
+    case INSTALL_DEPENDENCIES_ERROR:
+    case INSTALL_DEPENDENCIES_FINISH:
+    case UNINSTALL_DEPENDENCIES_ERROR:
+    case UNINSTALL_DEPENDENCIES_FINISH: {
+      const { projectId } = action;
+
+      return produce(state, draftState => {
+        // remove oldest item in queue (it's just been
+        // completed by the dependency saga)
+        draftState[projectId].shift();
+
+        // remove the project's queue if this was the
+        // last entry
+        if (draftState[projectId].length === 0) {
+          delete draftState[projectId];
+        }
+      });
+    }
+
     default:
       return state;
   }
@@ -124,10 +132,5 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Selectors
-export const getPackageJsonLockedForProjectId = (
-  state: any,
-  projectId: string
-) => !!state.queue[projectId];
-
 export const getNextActionForProjectId = (state: any, projectId: string) =>
   state.queue[projectId] && state.queue[projectId][0];

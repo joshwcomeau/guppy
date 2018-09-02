@@ -1,10 +1,7 @@
 // @flow
 import { select, call, put, takeEvery } from 'redux-saga/effects';
 import { getPathForProjectId } from '../reducers/paths.reducer';
-import {
-  getPackageJsonLockedForProjectId,
-  getNextActionForProjectId,
-} from '../reducers/queue.reducer';
+import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
   installDependencies,
   uninstallDependencies,
@@ -37,62 +34,53 @@ import {
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 
-export function* addDependency({
+export function* handleAddDependency({
   projectId,
   dependencyName,
   version,
 }: Action): Saga<void> {
-  const packageJsonLocked = yield select(
-    getPackageJsonLockedForProjectId,
-    projectId
-  );
+  const queuedAction = yield select(getNextActionForProjectId, projectId);
 
   yield put(queueDependencyInstall(projectId, dependencyName, version));
 
   // if there are no other ongoing operations, begin install
-  if (!packageJsonLocked) {
+  if (!queuedAction) {
     yield put(installDependencyStart(projectId, dependencyName, version));
   }
 }
 
-export function* updateDependency({
+export function* handleUpdateDependency({
   projectId,
   dependencyName,
   latestVersion,
 }: Action): Saga<void> {
-  const packageJsonLocked = yield select(
-    getPackageJsonLockedForProjectId,
-    projectId
-  );
+  const queuedAction = yield select(getNextActionForProjectId, projectId);
 
   yield put(
     queueDependencyInstall(projectId, dependencyName, latestVersion, true)
   );
 
-  if (!packageJsonLocked) {
+  if (!queuedAction) {
     yield put(
       installDependencyStart(projectId, dependencyName, latestVersion, true)
     );
   }
 }
 
-export function* deleteDependency({
+export function* handleDeleteDependency({
   projectId,
   dependencyName,
 }: Action): Saga<void> {
-  const packageJsonLocked = yield select(
-    getPackageJsonLockedForProjectId,
-    projectId
-  );
+  const queuedAction = yield select(getNextActionForProjectId, projectId);
 
   yield put(queueDependencyUninstall(projectId, dependencyName));
 
-  if (!packageJsonLocked) {
+  if (!queuedAction) {
     yield put(uninstallDependencyStart(projectId, dependencyName));
   }
 }
 
-export function* startInstallingDependencies({
+export function* handleInstallDependenciesStart({
   projectId,
   dependencies,
 }: Action): Saga<void> {
@@ -112,7 +100,7 @@ export function* startInstallingDependencies({
   }
 }
 
-export function* startUninstallingDependencies({
+export function* handleUninstallDependenciesStart({
   projectId,
   dependencies,
 }: Action): Saga<void> {
@@ -132,14 +120,25 @@ export function* startUninstallingDependencies({
 }
 
 export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
-  yield put(startNextActionInQueue(projectId));
-}
-
-export function* handleNextActionInQueue({ projectId }: Action): Saga<void> {
   const nextAction = yield select(getNextActionForProjectId, projectId);
 
-  // if the queue is empty, take no further action
-  if (!nextAction) return;
+  // if there is another item in the queue, start it
+  if (nextAction) {
+    yield put(startNextActionInQueue(projectId));
+  }
+}
+
+export function* handleStartNextActionInQueue({
+  projectId,
+}: Action): Saga<void> {
+  const nextAction = yield select(getNextActionForProjectId, projectId);
+
+  // if the queue is empty, log an error
+  if (!nextAction) {
+    return console.error(
+      `attempted to start next action in empty queue for project ${projectId}`
+    );
+  }
 
   const actionCreator =
     nextAction.action === 'install'
@@ -154,11 +153,14 @@ export function* handleNextActionInQueue({ projectId }: Action): Saga<void> {
 // TODO: display an error message outside of the console when a dependency
 // action fails
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(ADD_DEPENDENCY, addDependency);
-  yield takeEvery(UPDATE_DEPENDENCY, updateDependency);
-  yield takeEvery(DELETE_DEPENDENCY, deleteDependency);
-  yield takeEvery(INSTALL_DEPENDENCIES_START, startInstallingDependencies);
-  yield takeEvery(UNINSTALL_DEPENDENCIES_START, startUninstallingDependencies);
+  yield takeEvery(ADD_DEPENDENCY, handleAddDependency);
+  yield takeEvery(UPDATE_DEPENDENCY, handleUpdateDependency);
+  yield takeEvery(DELETE_DEPENDENCY, handleDeleteDependency);
+  yield takeEvery(INSTALL_DEPENDENCIES_START, handleInstallDependenciesStart);
+  yield takeEvery(
+    UNINSTALL_DEPENDENCIES_START,
+    handleUninstallDependenciesStart
+  );
   yield takeEvery(
     [
       INSTALL_DEPENDENCIES_ERROR,
@@ -168,5 +170,5 @@ export default function* rootSaga(): Saga<void> {
     ],
     handleQueueActionCompleted
   );
-  yield takeEvery(START_NEXT_ACTION_IN_QUEUE, handleNextActionInQueue);
+  yield takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue);
 }

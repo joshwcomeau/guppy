@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
-import { moreHorizontal, plus } from 'react-icons-kit/feather';
+import { plus } from 'react-icons-kit/feather/plus';
 
 import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
@@ -102,6 +102,44 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     this.setState({ addingNewDependency: false });
   };
 
+  renderListAddon = (dependency, isSelected) => {
+    if (
+      dependency.status === 'installing' ||
+      dependency.status.match(/^queued-/)
+    ) {
+      return (
+        <Spinner size={20} color={isSelected ? COLORS.white : undefined} />
+      );
+    }
+
+    return (
+      <DependencyVersion isSelected={isSelected}>
+        {dependency.version}
+      </DependencyVersion>
+    );
+  };
+
+  renderMainContents = (selectedDependency, projectId) => {
+    if (
+      selectedDependency.status === 'installing' ||
+      selectedDependency.status === 'queued-install'
+    ) {
+      return (
+        <DependencyInstalling
+          name={selectedDependency.name}
+          queued={selectedDependency.status === 'queued-install'}
+        />
+      );
+    }
+
+    return (
+      <DependencyDetails
+        projectId={projectId}
+        dependency={selectedDependency}
+      />
+    );
+  };
+
   render() {
     const { id, dependencies } = this.props.project;
     const { selectedDependencyIndex, addingNewDependency } = this.state;
@@ -123,32 +161,9 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                   onClick={() => this.selectDependency(dependency.name)}
                 >
                   <DependencyName>{dependency.name}</DependencyName>
-                  {dependency.status === 'installing' ? (
-                    <Spinner
-                      size={20}
-                      color={
-                        selectedDependencyIndex === index
-                          ? COLORS.white
-                          : undefined
-                      }
-                    />
-                  ) : dependency.status.match(/^queued-/) ? (
-                    <span
-                      style={{
-                        color:
-                          selectedDependencyIndex === index
-                            ? COLORS.white
-                            : undefined,
-                      }}
-                    >
-                      <IconBase size={20} icon={moreHorizontal} />
-                    </span>
-                  ) : (
-                    <DependencyVersion
-                      isSelected={selectedDependencyIndex === index}
-                    >
-                      {dependency.version}
-                    </DependencyVersion>
+                  {this.renderListAddon(
+                    dependency,
+                    selectedDependencyIndex === index
                   )}
                 </DependencyButton>
               ))}
@@ -182,18 +197,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             </MountAfter>
           </DependencyList>
           <MainContent>
-            {selectedDependency.status === 'installing' ||
-            selectedDependency.status === 'queued-install' ? (
-              <DependencyInstalling
-                name={selectedDependency.name}
-                queued={selectedDependency.status === 'queued-install'}
-              />
-            ) : (
-              <DependencyDetails
-                projectId={id}
-                dependency={selectedDependency}
-              />
-            )}
+            {this.renderMainContents(selectedDependency, id)}
           </MainContent>
         </Wrapper>
 

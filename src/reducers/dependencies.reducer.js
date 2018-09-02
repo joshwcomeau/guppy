@@ -102,11 +102,8 @@ export default (state: State = initialState, action: Action) => {
 
       return produce(state, draftState => {
         dependencies.forEach(dependency => {
-          draftState[projectId][dependency.name] = {
-            ...draftState[projectId][dependency.name],
-            ...dependency,
-            status: 'idle',
-          };
+          draftState[projectId][dependency.name] = dependency;
+          draftState[projectId][dependency.name].status = 'idle';
         });
       });
     }

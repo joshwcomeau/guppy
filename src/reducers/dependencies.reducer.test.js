@@ -28,7 +28,14 @@ describe('dependencies reducer', () => {
       dependencies: { redux: {} },
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "baz": Object {},
+  "foo": Object {
+    "redux": Object {},
+  },
+}
+`);
   });
 
   it(`should handle ${ADD_DEPENDENCY}`, () => {
@@ -42,7 +49,25 @@ describe('dependencies reducer', () => {
       dependencyName: 'redux',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "",
+      "homepage": "",
+      "license": "",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "",
+        "url": "",
+      },
+      "status": "queued-install",
+      "version": "",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${UPDATE_DEPENDENCY}`, () => {
@@ -69,7 +94,29 @@ describe('dependencies reducer', () => {
       latestVersion: '3.3',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "queued-update",
+      "version": "3.2",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${DELETE_DEPENDENCY}`, () => {
@@ -96,7 +143,29 @@ describe('dependencies reducer', () => {
       latestVersion: '3.3',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "queued-delete",
+      "version": "3.2",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${INSTALL_DEPENDENCIES_START}`, () => {
@@ -141,7 +210,42 @@ describe('dependencies reducer', () => {
       ],
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "react-redux": Object {
+      "description": "",
+      "homepage": "",
+      "license": "",
+      "location": "dependencies",
+      "name": "react-redux",
+      "repository": Object {
+        "type": "",
+        "url": "",
+      },
+      "status": "installing",
+      "version": "",
+    },
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "updating",
+      "version": "3.2",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${INSTALL_DEPENDENCIES_ERROR}`, () => {
@@ -186,7 +290,29 @@ describe('dependencies reducer', () => {
       ],
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "idle",
+      "version": "3.2",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${INSTALL_DEPENDENCIES_FINISH}`, () => {
@@ -222,10 +348,17 @@ describe('dependencies reducer', () => {
       dependencies: [
         {
           name: 'redux',
+          location: 'dependencies',
+          description: 'dependency description',
+          keywords: ['key', 'words'],
           version: '3.3',
+          homepage: 'https://dependency-homepage.io',
+          license: 'MIT',
+          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
         },
         {
           name: 'react-redux',
+          location: 'dependencies',
           description: 'other description',
           keywords: ['foo', 'bar'],
           version: '3.0',
@@ -236,7 +369,46 @@ describe('dependencies reducer', () => {
       ],
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "react-redux": Object {
+      "description": "other description",
+      "homepage": "https://dependency-homepage2.io",
+      "keywords": Array [
+        "foo",
+        "bar",
+      ],
+      "license": "ISC",
+      "location": "dependencies",
+      "name": "react-redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/bar/foo.git",
+      },
+      "status": "idle",
+      "version": "3.0",
+    },
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "idle",
+      "version": "3.3",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${UNINSTALL_DEPENDENCIES_START}`, () => {
@@ -265,7 +437,28 @@ describe('dependencies reducer', () => {
       ],
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "deleting",
+      "version": "3.2",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${UNINSTALL_DEPENDENCIES_ERROR}`, () => {
@@ -295,7 +488,29 @@ describe('dependencies reducer', () => {
       ],
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {
+    "redux": Object {
+      "description": "dependency description",
+      "homepage": "https://dependency-homepage.io",
+      "keywords": Array [
+        "key",
+        "words",
+      ],
+      "license": "MIT",
+      "location": "dependencies",
+      "name": "redux",
+      "repository": Object {
+        "type": "git",
+        "url": "https://github.com/foo/bar.git",
+      },
+      "status": "idle",
+      "version": "3.2",
+    },
+  },
+}
+`);
   });
 
   it(`should handle ${UNINSTALL_DEPENDENCIES_FINISH}`, () => {
@@ -325,7 +540,11 @@ describe('dependencies reducer', () => {
       ],
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Object {},
+}
+`);
   });
 });
 

@@ -25,6 +25,16 @@ import CustomHighlight from '../CustomHighlight';
 
 import type { DependencyStatus } from '../../types';
 
+const DEPENDENCY_ACTIONS_COPY = {
+  idle: 'Installed',
+  installing: 'Installing…',
+  updating: 'Updating…',
+  deleting: 'Deleting…',
+  'queued-install': 'Queued for Install',
+  'queued-update': 'Queued for Update',
+  'queued-delete': 'Queued for Delete',
+};
+
 type Props = {
   projectId: string,
   currentStatus: ?DependencyStatus,
@@ -76,8 +86,9 @@ const getColorForDownloadNumber = (num: number) => {
 class AddDependencySearchResult extends PureComponent<Props> {
   renderActionArea() {
     const { hit, projectId, currentStatus, addDependency } = this.props;
+    const isAlreadyInstalled = currentStatus === 'idle';
 
-    if (currentStatus === 'idle') {
+    if (isAlreadyInstalled) {
       return (
         <NoActionAvailable>
           <IconBase
@@ -96,16 +107,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
         <NoActionAvailable>
           <Spinner size={24} />
           <Spacer size={6} />
-          {
-            {
-              installing: 'Installing..',
-              updating: 'Updating..',
-              deleting: 'Deleting..',
-              'queued-install': 'Queued for Install',
-              'queued-update': 'Queued for Update',
-              'queued-delete': 'Queued for Delete',
-            }[currentStatus]
-          }
+          {DEPENDENCY_ACTIONS_COPY[currentStatus]}
         </NoActionAvailable>
       );
     }

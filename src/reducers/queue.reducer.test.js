@@ -1,11 +1,9 @@
-import reducer, {
-  getPackageJsonLockedForProjectId,
-  getNextActionForProjectId,
-} from './queue.reducer';
+import reducer, { getNextActionForProjectId } from './queue.reducer';
 import {
   QUEUE_DEPENDENCY_INSTALL,
   QUEUE_DEPENDENCY_UNINSTALL,
-  START_NEXT_ACTION_IN_QUEUE,
+  INSTALL_DEPENDENCIES_START,
+  INSTALL_DEPENDENCIES_FINISH,
 } from '../actions';
 
 describe('queue reducer', () => {
@@ -13,7 +11,36 @@ describe('queue reducer', () => {
     expect(reducer(undefined, {})).toEqual({});
   });
 
-  it(`should handle ${START_NEXT_ACTION_IN_QUEUE} for queue with next action`, () => {
+  it(`should handle queue item start`, () => {
+    const prevState = {
+      foo: [
+        { action: 'install', active: false, dependencies: [{ name: 'redux' }] },
+      ],
+    };
+
+    const action = {
+      type: INSTALL_DEPENDENCIES_START,
+      projectId: 'foo',
+    };
+
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "install",
+      "active": true,
+      "dependencies": Array [
+        Object {
+          "name": "redux",
+        },
+      ],
+    },
+  ],
+}
+`);
+  });
+
+  it(`should handle queue item completion for queue with next action`, () => {
     const prevState = {
       foo: [
         { action: 'install', dependencies: [{ name: 'redux' }] },
@@ -22,24 +49,37 @@ describe('queue reducer', () => {
     };
 
     const action = {
-      type: START_NEXT_ACTION_IN_QUEUE,
+      type: INSTALL_DEPENDENCIES_FINISH,
       projectId: 'foo',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "uninstall",
+      "dependencies": Array [
+        Object {
+          "name": "react-redux",
+        },
+      ],
+    },
+  ],
+}
+`);
   });
 
-  it(`should handle ${START_NEXT_ACTION_IN_QUEUE} for queue with no more actions`, () => {
+  it(`should handle queue item completion for queue with no more actions`, () => {
     const prevState = {
       foo: [{ action: 'install', dependencies: [{ name: 'redux' }] }],
     };
 
     const action = {
-      type: START_NEXT_ACTION_IN_QUEUE,
+      type: INSTALL_DEPENDENCIES_FINISH,
       projectId: 'foo',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`Object {}`);
   });
 
   it(`should handle ${QUEUE_DEPENDENCY_INSTALL} for new dependency on empty queue`, () => {
@@ -52,7 +92,23 @@ describe('queue reducer', () => {
       version: '3.2',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "install",
+      "active": false,
+      "dependencies": Array [
+        Object {
+          "name": "redux",
+          "updating": undefined,
+          "version": "3.2",
+        },
+      ],
+    },
+  ],
+}
+`);
   });
 
   it(`should handle ${QUEUE_DEPENDENCY_INSTALL} for new dependency on existing queue`, () => {
@@ -71,7 +127,25 @@ describe('queue reducer', () => {
       name: 'redux',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "install",
+      "dependencies": Array [
+        Object {
+          "name": "react-redux",
+        },
+        Object {
+          "name": "redux",
+          "updating": undefined,
+          "version": undefined,
+        },
+      ],
+    },
+  ],
+}
+`);
   });
 
   it(`should handle ${QUEUE_DEPENDENCY_INSTALL} for updating dependency`, () => {
@@ -85,7 +159,23 @@ describe('queue reducer', () => {
       updating: true,
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "install",
+      "active": false,
+      "dependencies": Array [
+        Object {
+          "name": "redux",
+          "updating": true,
+          "version": "3.3",
+        },
+      ],
+    },
+  ],
+}
+`);
   });
 
   it(`should handle ${QUEUE_DEPENDENCY_UNINSTALL}`, () => {
@@ -97,7 +187,21 @@ describe('queue reducer', () => {
       name: 'redux',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "uninstall",
+      "active": false,
+      "dependencies": Array [
+        Object {
+          "name": "redux",
+        },
+      ],
+    },
+  ],
+}
+`);
   });
 
   it(`should handle ${QUEUE_DEPENDENCY_INSTALL} for mixed existing queue`, () => {
@@ -114,7 +218,33 @@ describe('queue reducer', () => {
       name: 'lodash',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "install",
+      "dependencies": Array [
+        Object {
+          "name": "react-redux",
+        },
+        Object {
+          "name": "lodash",
+          "updating": undefined,
+          "version": undefined,
+        },
+      ],
+    },
+    Object {
+      "action": "uninstall",
+      "dependencies": Array [
+        Object {
+          "name": "redux",
+        },
+      ],
+    },
+  ],
+}
+`);
   });
 
   it(`should handle ${QUEUE_DEPENDENCY_UNINSTALL} for mixed existing queue`, () => {
@@ -131,36 +261,31 @@ describe('queue reducer', () => {
       name: 'lodash',
     };
 
-    expect(reducer(prevState, action)).toMatchSnapshot();
-  });
-
-  describe('getPackageJsonLockedForProjectId', () => {
-    it('should return false when no dependencies are queued', () => {
-      const state = {
-        queue: {},
-      };
-
-      const projectId = 'foo';
-
-      expect(getPackageJsonLockedForProjectId(state, projectId)).toBe(false);
-    });
-
-    it('should return true when dependencies are queued', () => {
-      const state = {
-        queue: {
-          foo: [
-            {
-              action: 'install',
-              dependencies: [{ name: 'redux' }],
-            },
-          ],
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "foo": Array [
+    Object {
+      "action": "install",
+      "dependencies": Array [
+        Object {
+          "name": "react-redux",
         },
-      };
-
-      const projectId = 'foo';
-
-      expect(getPackageJsonLockedForProjectId(state, projectId)).toBe(true);
-    });
+      ],
+    },
+    Object {
+      "action": "uninstall",
+      "dependencies": Array [
+        Object {
+          "name": "redux",
+        },
+        Object {
+          "name": "lodash",
+        },
+      ],
+    },
+  ],
+}
+`);
   });
 
   describe('getNextActionForProjectId', () => {
@@ -173,7 +298,17 @@ describe('queue reducer', () => {
 
       const projectId = 'foo';
 
-      expect(getNextActionForProjectId(state, projectId)).toMatchSnapshot();
+      expect(getNextActionForProjectId(state, projectId))
+        .toMatchInlineSnapshot(`
+Object {
+  "action": "install",
+  "dependencies": Array [
+    Object {
+      "name": "redux",
+    },
+  ],
+}
+`);
     });
 
     it('should return undefined when no actions are present', () => {

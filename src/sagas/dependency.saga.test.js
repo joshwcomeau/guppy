@@ -1,18 +1,15 @@
 import { select, call, put, takeEvery } from 'redux-saga/effects';
 import rootSaga, {
-  addDependency,
-  updateDependency,
-  deleteDependency,
-  startInstallingDependencies,
-  startUninstallingDependencies,
+  handleAddDependency,
+  handleUpdateDependency,
+  handleDeleteDependency,
+  handleInstallDependenciesStart,
+  handleUninstallDependenciesStart,
   handleQueueActionCompleted,
-  handleNextActionInQueue,
+  handleStartNextActionInQueue,
 } from './dependency.saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
-import {
-  getPackageJsonLockedForProjectId,
-  getNextActionForProjectId,
-} from '../reducers/queue.reducer';
+import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
   installDependencies,
   uninstallDependencies,
@@ -59,21 +56,21 @@ describe('Dependency sagas', () => {
 
     let saga;
     beforeEach(() => {
-      saga = addDependency(action);
+      saga = handleAddDependency(action);
     });
 
     it('should immediately install on empty queue', () => {
-      const packageJsonLocked = false;
+      const queuedAction = null;
 
       expect(saga.next().value).toEqual(
-        select(getPackageJsonLockedForProjectId, projectId)
+        select(getNextActionForProjectId, projectId)
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next(queuedAction).value).toEqual(
         put(
           queueDependencyInstall(projectId, dependency.name, dependency.version)
         )
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next().value).toEqual(
         put(
           installDependencyStart(projectId, dependency.name, dependency.version)
         )
@@ -82,12 +79,16 @@ describe('Dependency sagas', () => {
     });
 
     it('should queue install on non-empty queue', () => {
-      const packageJsonLocked = true;
+      const queuedAction = {
+        action: 'install',
+        active: true,
+        dependencies: [{ name: 'redux' }],
+      };
 
       expect(saga.next().value).toEqual(
-        select(getPackageJsonLockedForProjectId, projectId)
+        select(getNextActionForProjectId, projectId)
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next(queuedAction).value).toEqual(
         put(
           queueDependencyInstall(projectId, dependency.name, dependency.version)
         )
@@ -110,16 +111,16 @@ describe('Dependency sagas', () => {
 
     let saga;
     beforeEach(() => {
-      saga = updateDependency(action);
+      saga = handleUpdateDependency(action);
     });
 
     it('should immediately install on empty queue', () => {
-      const packageJsonLocked = false;
+      const queuedAction = false;
 
       expect(saga.next().value).toEqual(
-        select(getPackageJsonLockedForProjectId, projectId)
+        select(getNextActionForProjectId, projectId)
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next(queuedAction).value).toEqual(
         put(
           queueDependencyInstall(
             projectId,
@@ -129,7 +130,7 @@ describe('Dependency sagas', () => {
           )
         )
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next().value).toEqual(
         put(
           installDependencyStart(
             projectId,
@@ -143,12 +144,16 @@ describe('Dependency sagas', () => {
     });
 
     it('should queue install on non-empty queue', () => {
-      const packageJsonLocked = true;
+      const queuedAction = {
+        action: 'install',
+        active: true,
+        dependencies: [{ name: 'redux' }],
+      };
 
       expect(saga.next().value).toEqual(
-        select(getPackageJsonLockedForProjectId, projectId)
+        select(getNextActionForProjectId, projectId)
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next(queuedAction).value).toEqual(
         put(
           queueDependencyInstall(
             projectId,
@@ -174,31 +179,35 @@ describe('Dependency sagas', () => {
 
     let saga;
     beforeEach(() => {
-      saga = deleteDependency(action);
+      saga = handleDeleteDependency(action);
     });
 
     it('should immediately uninstall on empty queue', () => {
-      const packageJsonLocked = false;
+      const queuedAction = null;
 
       expect(saga.next().value).toEqual(
-        select(getPackageJsonLockedForProjectId, projectId)
+        select(getNextActionForProjectId, projectId)
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next(queuedAction).value).toEqual(
         put(queueDependencyUninstall(projectId, dependency.name))
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next().value).toEqual(
         put(uninstallDependencyStart(projectId, dependency.name))
       );
       expect(saga.next().done).toBe(true);
     });
 
     it('should queue uninstall on non-empty queue', () => {
-      const packageJsonLocked = true;
+      const queuedAction = {
+        action: 'install',
+        active: true,
+        dependencies: [{ name: 'redux' }],
+      };
 
       expect(saga.next().value).toEqual(
-        select(getPackageJsonLockedForProjectId, projectId)
+        select(getNextActionForProjectId, projectId)
       );
-      expect(saga.next(packageJsonLocked).value).toEqual(
+      expect(saga.next(queuedAction).value).toEqual(
         put(queueDependencyUninstall(projectId, dependency.name))
       );
       expect(saga.next().done).toBe(true);
@@ -216,7 +225,7 @@ describe('Dependency sagas', () => {
 
     let saga;
     beforeEach(() => {
-      saga = startInstallingDependencies(action);
+      saga = handleInstallDependenciesStart(action);
     });
 
     it('should install dependencies', () => {
@@ -271,7 +280,7 @@ describe('Dependency sagas', () => {
 
     let saga;
     beforeEach(() => {
-      saga = startUninstallingDependencies(action);
+      saga = handleUninstallDependenciesStart(action);
     });
 
     it('should uninstall dependencies', () => {
@@ -305,10 +314,29 @@ describe('Dependency sagas', () => {
   });
 
   describe('handleQueueActionCompleted saga', () => {
-    it(`should dispatch ${START_NEXT_ACTION_IN_QUEUE}`, () => {
+    it(`should dispatch ${START_NEXT_ACTION_IN_QUEUE} when next queue action exists`, () => {
+      const saga = handleQueueActionCompleted({ projectId });
+      const nextAction = {
+        action: 'install',
+        active: false,
+        dependencies: [{ name: 'redux' }],
+      };
+
+      expect(saga.next().value).toEqual(
+        select(getNextActionForProjectId, projectId)
+      );
+      expect(saga.next(nextAction).value).toEqual(
+        put(startNextActionInQueue(projectId))
+      );
+      expect(saga.next().done).toBe(true);
+    });
+
+    it(`should dispatch ${START_NEXT_ACTION_IN_QUEUE} when queue is empty`, () => {
       const saga = handleQueueActionCompleted({ projectId });
 
-      expect(saga.next().value).toEqual(put(startNextActionInQueue(projectId)));
+      expect(saga.next().value).toEqual(
+        select(getNextActionForProjectId, projectId)
+      );
       expect(saga.next().done).toBe(true);
     });
   });
@@ -316,17 +344,21 @@ describe('Dependency sagas', () => {
   describe('handleNextActionInQueue saga', () => {
     let saga;
     beforeEach(() => {
-      saga = handleNextActionInQueue({ projectId });
+      saga = handleStartNextActionInQueue({ projectId });
     });
 
     it('should do nothing if the queue is empty', () => {
-      const nextAction = null;
+      const consoleErrorOriginal = global.console.error;
+      global.console.error = jest.fn();
 
       expect(saga.next().value).toEqual(
         select(getNextActionForProjectId, projectId)
       );
-      expect(saga.next(nextAction).value).toEqual(undefined);
+      saga.next();
+      expect(console.error).toBeCalled();
       expect(saga.next().done).toBe(true);
+
+      global.console.error = consoleErrorOriginal;
     });
 
     it(`should dispatch ${INSTALL_DEPENDENCIES_START} if an install action is queued`, () => {
@@ -363,19 +395,22 @@ describe('Dependency sagas', () => {
       const saga = rootSaga();
 
       expect(saga.next().value).toEqual(
-        takeEvery(ADD_DEPENDENCY, addDependency)
+        takeEvery(ADD_DEPENDENCY, handleAddDependency)
       );
       expect(saga.next().value).toEqual(
-        takeEvery(UPDATE_DEPENDENCY, updateDependency)
+        takeEvery(UPDATE_DEPENDENCY, handleUpdateDependency)
       );
       expect(saga.next().value).toEqual(
-        takeEvery(DELETE_DEPENDENCY, deleteDependency)
+        takeEvery(DELETE_DEPENDENCY, handleDeleteDependency)
       );
       expect(saga.next().value).toEqual(
-        takeEvery(INSTALL_DEPENDENCIES_START, startInstallingDependencies)
+        takeEvery(INSTALL_DEPENDENCIES_START, handleInstallDependenciesStart)
       );
       expect(saga.next().value).toEqual(
-        takeEvery(UNINSTALL_DEPENDENCIES_START, startUninstallingDependencies)
+        takeEvery(
+          UNINSTALL_DEPENDENCIES_START,
+          handleUninstallDependenciesStart
+        )
       );
       expect(saga.next().value).toEqual(
         takeEvery(
@@ -389,7 +424,7 @@ describe('Dependency sagas', () => {
         )
       );
       expect(saga.next().value).toEqual(
-        takeEvery(START_NEXT_ACTION_IN_QUEUE, handleNextActionInQueue)
+        takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue)
       );
       expect(saga.next().done).toBe(true);
     });

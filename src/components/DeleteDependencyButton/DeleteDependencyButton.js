@@ -12,6 +12,11 @@ import PixelShifter from '../PixelShifter';
 
 const { dialog } = remote;
 
+const DEPENDENCY_DELETE_COPY = {
+  idle: 'Delete',
+  'queued-delete': 'Queued for Delete…',
+};
+
 type Props = {
   projectId: string,
   dependencyName: string,
@@ -76,10 +81,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
             <Spinner size={18} color={COLORS.white} />
           </PixelShifter>
         ) : (
-          {
-            idle: 'Delete',
-            'queued-delete': 'Queued for Delete..',
-          }[dependencyStatus]
+          DEPENDENCY_DELETE_COPY[dependencyStatus]
         )}
       </Button>
     );
