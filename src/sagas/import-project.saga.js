@@ -98,20 +98,24 @@ export function* importProject({ path }: Action): Saga<void> {
     // TODO: Try importing the existing project's favicon as icon instead?
     const color = yield call(getColorForProject, json.name);
 
-    // If guppy key already exists in package.json (if importing a project that was
-    // on Guppy previously), then we don't want to overwrite guppy.name because
-    // it's the proper spaced version of the project name (json.name is dashed)
+    // If guppy key already exists in package.json, then we don't want
+    // to overwrite it
     const hasGuppyKey = json.hasOwnProperty('guppy');
+
+    const guppyFields = hasGuppyKey
+      ? json.guppy
+      : {
+          id: json.name,
+          name: json.name,
+          type,
+          color,
+          icon: null,
+          createdAt: Date.now(),
+        };
+
     const packageJsonWithGuppy = {
       ...json,
-      guppy: {
-        id: json.name,
-        name: hasGuppyKey ? json.guppy.name : json.name,
-        type,
-        color,
-        icon: hasGuppyKey ? json.guppy.icon : null,
-        createdAt: Date.now(),
-      },
+      guppy: guppyFields,
     };
 
     const writedPackageJson = yield call(
