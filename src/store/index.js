@@ -35,13 +35,17 @@ export default function configureStore() {
 
   const wrappedReducer = storage.reducer(rootReducer);
 
-  const store = createStore(
-    wrappedReducer,
-    compose(
-      applyMiddleware(thunk, storageMiddleware, sagaMiddleware),
-      DevTools.instrument()
-    )
-  );
+  const middlewares = [thunk, storageMiddleware, sagaMiddleware];
+
+  const enhancers =
+    process.env.NODE_ENV === 'production'
+      ? applyMiddleware(...middlewares)
+      : compose(
+          applyMiddleware(...middlewares),
+          DevTools.instrument()
+        );
+
+  const store = createStore(wrappedReducer, enhancers);
 
   sagaMiddleware.run(rootSaga);
 
