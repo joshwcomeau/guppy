@@ -2,9 +2,14 @@
 import uuid from 'uuid/v1';
 
 import { loadAllProjectDependencies } from '../services/read-from-disk.service';
-import { getInternalProjectById } from '../reducers/projects.reducer';
 
-import type { Project, ProjectsMap, Task, Dependency } from '../types';
+import type {
+  Project,
+  ProjectsMap,
+  Task,
+  Dependency,
+  QueuedDependency,
+} from '../types';
 
 //
 //
@@ -31,15 +36,18 @@ export const RECEIVE_DATA_FROM_TASK_EXECUTION =
 export const LAUNCH_DEV_SERVER = 'LAUNCH_DEV_SERVER';
 export const CLEAR_CONSOLE = 'CLEAR_CONSOLE';
 export const LOAD_DEPENDENCY_INFO_FROM_DISK = 'LOAD_DEPENDENCY_INFO_FROM_DISK';
-export const ADD_DEPENDENCY_START = 'ADD_DEPENDENCY_START';
-export const ADD_DEPENDENCY_ERROR = 'ADD_DEPENDENCY_ERROR';
-export const ADD_DEPENDENCY_FINISH = 'ADD_DEPENDENCY_FINISH';
-export const UPDATE_DEPENDENCY_START = 'UPDATE_DEPENDENCY_START';
-export const UPDATE_DEPENDENCY_ERROR = 'UPDATE_DEPENDENCY_ERROR';
-export const UPDATE_DEPENDENCY_FINISH = 'UPDATE_DEPENDENCY_FINISH';
-export const DELETE_DEPENDENCY_START = 'DELETE_DEPENDENCY_START';
-export const DELETE_DEPENDENCY_ERROR = 'DELETE_DEPENDENCY_ERROR';
-export const DELETE_DEPENDENCY_FINISH = 'DELETE_DEPENDENCY_FINISH';
+export const ADD_DEPENDENCY = 'ADD_DEPENDENCY';
+export const UPDATE_DEPENDENCY = 'UPDATE_DEPENDENCY';
+export const DELETE_DEPENDENCY = 'DELETE_DEPENDENCY';
+export const INSTALL_DEPENDENCIES_START = 'INSTALL_DEPENDENCIES_START';
+export const INSTALL_DEPENDENCIES_ERROR = 'INSTALL_DEPENDENCIES_ERROR';
+export const INSTALL_DEPENDENCIES_FINISH = 'INSTALL_DEPENDENCIES_FINISH';
+export const UNINSTALL_DEPENDENCIES_START = 'UNINSTALL_DEPENDENCIES_START';
+export const UNINSTALL_DEPENDENCIES_ERROR = 'UNINSTALL_DEPENDENCIES_ERROR';
+export const UNINSTALL_DEPENDENCIES_FINISH = 'UNINSTALL_DEPENDENCIES_FINISH';
+export const QUEUE_DEPENDENCY_INSTALL = 'QUEUE_DEPENDENCY_INSTALL';
+export const QUEUE_DEPENDENCY_UNINSTALL = 'QUEUE_DEPENDENCY_UNINSTALL';
+export const START_NEXT_ACTION_IN_QUEUE = 'START_NEXT_ACTION_IN_QUEUE';
 export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
   'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
 export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
@@ -87,20 +95,13 @@ export const loadDependencyInfoFromDisk = (
   projectPath: string
 ) => {
   return (dispatch: any, getState: Function) => {
-    // The `project` this action receives is the "fit-for-consumption" one.
-    // We need the internal version, `ProjectInternal`, so that we can see the
-    // raw dependency information.
-    const internalProject = getInternalProjectById(getState(), projectId);
-
-    loadAllProjectDependencies(internalProject, projectPath).then(
-      dependencies => {
-        dispatch({
-          type: LOAD_DEPENDENCY_INFO_FROM_DISK,
-          projectId,
-          dependencies,
-        });
-      }
-    );
+    loadAllProjectDependencies(projectPath).then(dependencies => {
+      dispatch({
+        type: LOAD_DEPENDENCY_INFO_FROM_DISK,
+        projectId,
+        dependencies,
+      });
+    });
   };
 };
 
@@ -182,91 +183,118 @@ export const clearConsole = (task: Task) => ({
   task,
 });
 
-export const deleteDependencyStart = (
-  projectId: string,
-  dependencyName: string
-) => ({
-  type: DELETE_DEPENDENCY_START,
+export const addDependency = (projectId: string, dependencyName: string) => ({
+  type: ADD_DEPENDENCY,
   projectId,
   dependencyName,
 });
 
-export const deleteDependencyError = (
-  projectId: string,
-  dependencyName: string
-) => ({
-  type: DELETE_DEPENDENCY_ERROR,
-  projectId,
-  dependencyName,
-});
-
-export const deleteDependencyFinish = (
-  projectId: string,
-  dependencyName: string
-) => ({
-  type: DELETE_DEPENDENCY_FINISH,
-  projectId,
-  dependencyName,
-});
-
-export const updateDependencyStart = (
+export const updateDependency = (
   projectId: string,
   dependencyName: string,
   latestVersion: string
 ) => ({
-  type: UPDATE_DEPENDENCY_START,
+  type: UPDATE_DEPENDENCY,
   projectId,
   dependencyName,
   latestVersion,
 });
 
-export const updateDependencyError = (
+export const deleteDependency = (
   projectId: string,
   dependencyName: string
 ) => ({
-  type: UPDATE_DEPENDENCY_ERROR,
+  type: DELETE_DEPENDENCY,
   projectId,
   dependencyName,
 });
 
-export const updateDependencyFinish = (
+export const installDependenciesStart = (
   projectId: string,
-  dependencyName: string,
-  latestVersion: string
+  dependencies: Array<QueuedDependency>
 ) => ({
-  type: UPDATE_DEPENDENCY_FINISH,
+  type: INSTALL_DEPENDENCIES_START,
   projectId,
-  dependencyName,
-  latestVersion,
+  dependencies,
 });
 
-export const addDependencyStart = (
+export const installDependencyStart = (
   projectId: string,
-  dependencyName: string,
-  version: string
+  name: string,
+  version: string,
+  updating?: boolean
+) => installDependenciesStart(projectId, [{ name, version, updating }]);
+
+export const installDependenciesError = (
+  projectId: string,
+  dependencies: Array<QueuedDependency>
 ) => ({
-  type: ADD_DEPENDENCY_START,
+  type: INSTALL_DEPENDENCIES_ERROR,
   projectId,
-  dependencyName,
+  dependencies,
+});
+
+export const installDependenciesFinish = (
+  projectId: string,
+  dependencies: Array<Dependency>
+) => ({
+  type: INSTALL_DEPENDENCIES_FINISH,
+  projectId,
+  dependencies,
+});
+
+export const uninstallDependenciesStart = (
+  projectId: string,
+  dependencies: Array<QueuedDependency>
+) => ({
+  type: UNINSTALL_DEPENDENCIES_START,
+  projectId,
+  dependencies,
+});
+
+export const uninstallDependencyStart = (projectId: string, name: string) =>
+  uninstallDependenciesStart(projectId, [{ name }]);
+
+export const uninstallDependenciesError = (
+  projectId: string,
+  dependencies: Array<QueuedDependency>
+) => ({
+  type: UNINSTALL_DEPENDENCIES_ERROR,
+  projectId,
+  dependencies,
+});
+
+export const uninstallDependenciesFinish = (
+  projectId: string,
+  dependencies: Array<QueuedDependency>
+) => ({
+  type: UNINSTALL_DEPENDENCIES_FINISH,
+  projectId,
+  dependencies,
+});
+
+export const queueDependencyInstall = (
+  projectId: string,
+  name: string,
+  version: string,
+  updating?: boolean
+) => ({
+  type: QUEUE_DEPENDENCY_INSTALL,
+  projectId,
+  name,
   version,
+  updating,
 });
 
-export const addDependencyError = (
-  projectId: string,
-  dependencyName: string
-) => ({
-  type: ADD_DEPENDENCY_ERROR,
+export const queueDependencyUninstall = (projectId: string, name: string) => ({
+  type: QUEUE_DEPENDENCY_UNINSTALL,
   projectId,
-  dependencyName,
+  name,
 });
 
-export const addDependencyFinish = (
-  projectId: string,
-  dependency: Dependency
-) => ({
-  type: ADD_DEPENDENCY_FINISH,
+export const startNextActionInQueue = (projectId: string) => ({
+  type: START_NEXT_ACTION_IN_QUEUE,
   projectId,
-  dependency,
 });
 
 export const showImportExistingProjectPrompt = () => ({

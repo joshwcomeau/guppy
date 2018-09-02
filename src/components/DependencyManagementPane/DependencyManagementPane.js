@@ -63,9 +63,10 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     }
 
     // If the last dependency was deleted, we need to shift focus to the new last dependency
-    // in the list.
+    // in the list. It's possible that a group of dependencies was deleted from the end of
+    // the list as a batch, so check >= and not just ===.
     if (
-      this.state.selectedDependencyIndex ===
+      this.state.selectedDependencyIndex >=
       nextProps.project.dependencies.length
     ) {
       this.setState({
@@ -101,6 +102,44 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     this.setState({ addingNewDependency: false });
   };
 
+  renderListAddon = (dependency, isSelected) => {
+    if (
+      dependency.status === 'installing' ||
+      dependency.status.match(/^queued-/)
+    ) {
+      return (
+        <Spinner size={20} color={isSelected ? COLORS.white : undefined} />
+      );
+    }
+
+    return (
+      <DependencyVersion isSelected={isSelected}>
+        {dependency.version}
+      </DependencyVersion>
+    );
+  };
+
+  renderMainContents = (selectedDependency, projectId) => {
+    if (
+      selectedDependency.status === 'installing' ||
+      selectedDependency.status === 'queued-install'
+    ) {
+      return (
+        <DependencyInstalling
+          name={selectedDependency.name}
+          queued={selectedDependency.status === 'queued-install'}
+        />
+      );
+    }
+
+    return (
+      <DependencyDetails
+        projectId={projectId}
+        dependency={selectedDependency}
+      />
+    );
+  };
+
   render() {
     const { id, dependencies } = this.props.project;
     const { selectedDependencyIndex, addingNewDependency } = this.state;
@@ -122,21 +161,9 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                   onClick={() => this.selectDependency(dependency.name)}
                 >
                   <DependencyName>{dependency.name}</DependencyName>
-                  {dependency.status === 'installing' ? (
-                    <Spinner
-                      size={20}
-                      color={
-                        selectedDependencyIndex === index
-                          ? COLORS.white
-                          : undefined
-                      }
-                    />
-                  ) : (
-                    <DependencyVersion
-                      isSelected={selectedDependencyIndex === index}
-                    >
-                      {dependency.version}
-                    </DependencyVersion>
+                  {this.renderListAddon(
+                    dependency,
+                    selectedDependencyIndex === index
                   )}
                 </DependencyButton>
               ))}
@@ -170,14 +197,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             </MountAfter>
           </DependencyList>
           <MainContent>
-            {selectedDependency.status === 'installing' ? (
-              <DependencyInstalling name={selectedDependency.name} />
-            ) : (
-              <DependencyDetails
-                projectId={id}
-                dependency={selectedDependency}
-              />
-            )}
+            {this.renderMainContents(selectedDependency, id)}
           </MainContent>
         </Wrapper>
 

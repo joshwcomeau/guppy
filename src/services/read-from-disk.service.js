@@ -5,7 +5,7 @@ import * as path from 'path';
 
 import { pick } from '../utils';
 
-import type { DependencyLocation, ProjectInternal } from '../types';
+import type { QueuedDependency, DependencyLocation } from '../types';
 
 /**
  * Load a project's package.json
@@ -164,6 +164,36 @@ export function loadProjectDependency(
 }
 
 /**
+ * Wrapper around `loadProjectDependency` that fetches all dependencies from
+ * an array.
+ */
+export function loadProjectDependencies(
+  projectPath: string,
+  dependencies: Array<QueuedDependency>
+) {
+  return new Promise((resolve, reject) => {
+    asyncMap(
+      dependencies,
+      function({ name, location }, callback) {
+        loadProjectDependency(projectPath, name, location)
+          .then(dependency => callback(null, dependency))
+          .catch(callback);
+      },
+      (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+
+        // Filter out any unloaded dependencies
+        const filteredResults = results.filter(result => result);
+
+        resolve(filteredResults);
+      }
+    );
+  });
+}
+
+/**
  * Wrapper around `loadProjectDependency` that fetches all dependencies for
  * a specific project.
  *
@@ -171,10 +201,7 @@ export function loadProjectDependency(
  * dependencies... might need to set up a streaming service that can communicate
  * loading status if it takes more than a few hundred ms.
  */
-export function loadAllProjectDependencies(
-  project: ProjectInternal,
-  projectPath: string
-) {
+export function loadAllProjectDependencies(projectPath: string) {
   // Get a fresh copy of the dependencies from the project's package.json
   return loadPackageJson(projectPath).then(
     packageJson =>
@@ -183,39 +210,17 @@ export function loadAllProjectDependencies(
         // We can reasonably assume all projects have dependencies
         // but some may not have devDependencies
         const deps = Object.keys(packageJson.dependencies);
-        const devDeps = Object.keys(packageJson.devDependencies || []);
-        const dependencyNames = [...deps, ...devDeps];
+        const devDeps = Object.keys(packageJson.devDependencies || {});
+        const dependencies = [...deps, ...devDeps].map(name => ({
+          name,
+          location: devDeps.includes(name) ? 'devDependencies' : 'dependencies',
+        }));
 
-        // Each project in a Guppy directory should have a package.json.
-        // We'll read all the project info we need from this file.
-        asyncMap(
-          dependencyNames,
-          function(dependencyName, callback) {
-            // If the name of the package is present in the devDeps array
-            // then its location is devDependencies
-            const dependencyLocation = devDeps.includes(dependencyName)
-              ? 'devDependencies'
-              : 'dependencies';
-
-            loadProjectDependency(
-              projectPath,
-              dependencyName,
-              dependencyLocation
-            )
-              .then(dependency => callback(null, dependency))
-              .catch(callback);
-          },
-          (err, results) => {
-            if (err) {
-              return reject(err);
-            }
-
-            // Filter out any unloaded dependencies
-            const filteredResults = results.filter(result => result);
-
+        loadProjectDependencies(projectPath, dependencies).then(
+          dependenciesFromPackageJson => {
             // The results will be an array of package.jsons.
             // I want a database-style map.
-            const dependencies = filteredResults.reduce(
+            const dependenciesByName = dependenciesFromPackageJson.reduce(
               (dependenciesMap, dependency) => ({
                 ...dependenciesMap,
                 [dependency.name]: dependency,
@@ -223,7 +228,7 @@ export function loadAllProjectDependencies(
               {}
             );
 
-            resolve(dependencies);
+            resolve(dependenciesByName);
           }
         );
       })

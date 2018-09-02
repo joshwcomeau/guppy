@@ -16,8 +16,21 @@ export type Log = {
 export type TaskType = 'short-term' | 'sustained';
 
 export type TaskStatus = 'idle' | 'pending' | 'success' | 'failed';
-export type DependencyStatus = 'idle' | 'installing' | 'updating' | 'deleting';
+export type DependencyStatus =
+  | 'idle'
+  | 'queued-install'
+  | 'queued-update'
+  | 'queued-delete'
+  | 'installing'
+  | 'updating'
+  | 'deleting';
 export type DependencyLocation = 'dependencies' | 'devDependencies';
+export type QueueAction = 'install' | 'uninstall';
+export type QueuedDependency = {
+  name: string,
+  version?: string,
+  updating?: boolean,
+};
 
 export type Task = {
   id: string,
