@@ -104,12 +104,6 @@ class ProjectPage extends Component<Props> {
   }
 }
 
-const FlexRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 const ProjectActionBar = styled.div``;
 
 const ActionButton = styled(Button)`
