@@ -7,12 +7,12 @@ const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
 const chalkRaw = require('chalk');
-const Store = require('electron-store');
+const ElectronStore = require('electron-store');
 
 const killProcessId = require('./services/kill-process-id.service');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
-const store = new Store();
+const electronStore = new ElectronStore();
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
@@ -30,6 +30,8 @@ let mainWindow;
 // process IDs up here in the main process, so that we can terminate them all
 // before the app quits.
 let processIds = [];
+
+const MOVE_TO_APP_FOLDER_KEY = 'leave-application-in-original-location';
 
 function createWindow() {
   // Verifies if Guppy is already in the Applications folder
@@ -156,18 +158,18 @@ const canApplicationBeMoved = () => {
     process.platform === 'darwin' &&
     typeof app.isInApplicationsFolder === 'function';
 
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = process.env.NODE_ENV !== 'development';
 
   if (
-    !hasApplicationsFolder ||
-    !isProduction ||
-    app.isInApplicationsFolder() ||
-    store.has('leave-application-in-original-location')
+    hasApplicationsFolder &&
+    isProduction &&
+    !app.isInApplicationsFolder() &&
+    !electronStore.has(MOVE_TO_APP_FOLDER_KEY)
   ) {
-    return false;
+    return true;
   }
 
-  return true;
+  return false;
 };
 
 const manageApplicationLocation = () => {
@@ -175,7 +177,7 @@ const manageApplicationLocation = () => {
     dialog.showMessageBox(
       {
         type: 'question',
-        buttons: ['Yes, move', 'Cancel'],
+        buttons: ['Yes, move to Applications', 'No thanks'],
         message: 'Move to Applications folder?',
         detail:
           "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
@@ -203,7 +205,7 @@ const manageApplicationLocation = () => {
 
         // User doesn't want to see the message again
         if (checkboxChecked === true) {
-          store.set('leave-application-in-original-location', true);
+          electronStore.set(MOVE_TO_APP_FOLDER_KEY, true);
         }
       }
     );
