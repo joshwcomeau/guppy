@@ -21,15 +21,16 @@ import {
   queueDependencyInstall,
   queueDependencyUninstall,
   installDependencyStart,
-  installDependenciesStart,
   installDependenciesError,
   installDependenciesFinish,
   uninstallDependencyStart,
-  uninstallDependenciesStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
-  startNextActionInQueue,
 } from '../actions';
+import {
+  handleStartNextActionInQueue,
+  handleQueueActionCompleted,
+} from './queue.saga';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
@@ -117,34 +118,6 @@ export function* handleUninstallDependenciesStart({
     );
     yield put(uninstallDependenciesError(projectId, dependencies));
   }
-}
-
-export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
-  const nextAction = yield select(getNextActionForProjectId, projectId);
-
-  // if there is another item in the queue, start it
-  if (nextAction) {
-    yield put(startNextActionInQueue(projectId));
-  }
-}
-
-export function* handleStartNextActionInQueue({
-  projectId,
-}: Action): Saga<void> {
-  const nextAction = yield select(getNextActionForProjectId, projectId);
-
-  // if the queue is empty, log an error
-  if (!nextAction) {
-    return console.error(
-      `attempted to start next action in empty queue for project ${projectId}`
-    );
-  }
-
-  const actionCreator =
-    nextAction.action === 'install'
-      ? installDependenciesStart
-      : uninstallDependenciesStart;
-  yield put(actionCreator(projectId, nextAction.dependencies));
 }
 
 // Installs/uninstalls fail silently - the only notice of a failed action

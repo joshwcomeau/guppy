@@ -25,7 +25,7 @@ export type DependencyStatus =
   | 'updating'
   | 'deleting';
 export type DependencyLocation = 'dependencies' | 'devDependencies';
-export type QueueAction = 'install' | 'uninstall';
+export type QueueAction = 'install' | 'uninstall' | 'modify';
 export type QueuedDependency = {
   name: string,
   version?: string,

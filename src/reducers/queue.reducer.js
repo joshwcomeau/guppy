@@ -3,6 +3,7 @@ import produce from 'immer';
 import {
   QUEUE_DEPENDENCY_INSTALL,
   QUEUE_DEPENDENCY_UNINSTALL,
+  QUEUE_MODIFY_PROJECT,
   INSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_START,
   INSTALL_DEPENDENCIES_ERROR,
@@ -25,6 +26,10 @@ type State = {
 };
 
 const initialState = {};
+
+// const addToQueue = (queueType: string, draftState: any) => {
+
+// }
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
@@ -90,6 +95,37 @@ export default (state: State = initialState, action: Action) => {
         });
 
         // update the project's uninstall queue
+        draftState[projectId] = projectQueue;
+      });
+    }
+
+    case QUEUE_MODIFY_PROJECT: {
+      const { projectId, name } = action;
+
+      return produce(state, draftState => {
+        // get existing project queue, or create it if this
+        // is the first entry
+        const projectQueue = draftState[projectId] || [];
+
+        // get existing uninstall queue for this project, or
+        // create it if it doesn't exist
+        let installQueue = projectQueue.find(
+          q => q.action === 'modify' && !q.active
+        );
+        if (!installQueue) {
+          installQueue = {
+            action: 'modify',
+            active: false,
+            dependencies: [], // Todo: It would be better to have this named settings: {} or should we change this to payload?
+          };
+          projectQueue.push(installQueue);
+        }
+
+        // add settings to the modify queue
+        // Todo: Is it required to add the mdofication here?
+        installQueue.dependencies.push({ name });
+
+        // update the project's modify queue
         draftState[projectId] = projectQueue;
       });
     }

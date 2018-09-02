@@ -7,13 +7,6 @@ import styled, { keyframes } from 'styled-components';
 import { COLORS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getAppLoaded } from '../../reducers/app-loaded.reducer';
-// import {
-//   // refreshProjects,
-//   // selectProject,
-//   // hideModal,
-//   getProjectsArray,
-//   getOnboardingStatus,
-// } from '../../actions';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';

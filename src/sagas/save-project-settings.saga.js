@@ -21,28 +21,67 @@ import {
 } from '../actions';
 
 const { dialog } = remote;
+const { showErrorBox } = dialog;
 
 function* renameFolder(projectPath, newPath): Saga<void> {
   // console.log('rename', projectPath, newPath);
   yield call([fs, fs.renameSync], projectPath, newPath);
 }
 
-export function* finishSettings(): Saga<void> {
+export function* handleFinishSettings(): Saga<void> {
   // State updated in projects reducer - we just have to hide the modal here
   yield put(hideModal());
 }
 
-export function* saveSettings(action: any): Saga<void> {
+export function* handleProjectSaveError(err: Error): Saga<void> {
+  // console.log(err.message);
+  switch (err.message) {
+    case 'renaming-failed': {
+      // Could be 'EPERM: operation not permitted, rename' error.
+      yield call(
+        showErrorBox,
+        'Renaming not permitted',
+        "Egad! Couldn't rename project folder. Please check that you're not blocking this action & that you're having the permission to rename the project folder."
+      );
+      break;
+    }
+    case 'loading-packageJson-failed': {
+      // EPERM: operation not permitted, open
+      yield call(
+        showErrorBox,
+        'Reading not permitted',
+        "Egad! Couldn't read package.json. Please check that you're having the permission to read the directory."
+      );
+      break;
+    }
+
+    default: {
+      yield call([console, console.error], err);
+      yield call(
+        showErrorBox,
+        'Unknown error',
+        'An unknown error has occurred. Sorry about that! Details have been printed to the console.'
+      );
+    }
+  }
+}
+
+export function* handleSaveSettings(action: any): Saga<void> {
   const { project, name, icon } = action;
   const { path: projectPath } = project;
   const id = slug(name).toLowerCase();
   const workspace = path.resolve(projectPath, '../'); // we could use getDefaultParentPath from path.reducers as well - what's better?
   let newPath = projectPath;
-  console.log('save settings', id, workspace, newPath, icon, project);
+
   try {
-    // Let's load the basic project info for the path specified, if possible.
-    const json = yield call(loadPackageJson, projectPath);
-    console.log('json', json); //, json.guppy.isImported, json.guppy);
+    let json;
+    try {
+      // Let's load the basic project info for the path specified, if possible.
+      json = yield call(loadPackageJson, projectPath);
+    } catch (err) {
+      throw new Error('loading-packageJson-failed');
+    }
+
     // check if imported project & name changed
     const nameChanged = id !== project.id;
     const confirmRequired = workspace !== defaultParentPath && nameChanged;
@@ -60,15 +99,17 @@ export function* saveSettings(action: any): Saga<void> {
       });
       confirmed = response === 0;
     }
-    // TODO: check if imported
-    // TODO: show prompt if imported project name change - also change folder ?
-    console.log('confirmed', confirmed);
+
     if (confirmed && nameChanged) {
       newPath = path.join(workspace, id);
-      console.log('renaming', renameFolder, projectPath, newPath);
-      yield call(renameFolder, projectPath, newPath);
+      try {
+        yield call(renameFolder, projectPath, newPath);
+      } catch (err) {
+        throw new Error('renaming-failed');
+      }
     }
 
+    // Apply changes to packageJSON
     const newProject = yield call(writePackageJson, newPath, {
       ...json,
       name: id,
@@ -80,16 +121,15 @@ export function* saveSettings(action: any): Saga<void> {
       },
     });
 
-    // apply changes to packageJSON
+    // Update state & close modal
     yield put(saveProjectSettingsFinish(newProject, project.id, newPath));
   } catch (err) {
-    console.log(err); // TODO add handling
-    // yield call(handleSaveError, err);
-    // yield put(saveProjectSaveError());
+    yield call(handleProjectSaveError, err);
+    // yield put(saveProjectError());
   }
 }
 
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(SAVE_PROJECT_SETTINGS_START, saveSettings);
-  yield takeEvery(SAVE_PROJECT_SETTINGS_FINISH, finishSettings);
+  yield takeEvery(SAVE_PROJECT_SETTINGS_START, handleSaveSettings);
+  yield takeEvery(SAVE_PROJECT_SETTINGS_FINISH, handleFinishSettings);
 }

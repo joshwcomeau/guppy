@@ -48,6 +48,7 @@ export const UNINSTALL_DEPENDENCIES_ERROR = 'UNINSTALL_DEPENDENCIES_ERROR';
 export const UNINSTALL_DEPENDENCIES_FINISH = 'UNINSTALL_DEPENDENCIES_FINISH';
 export const QUEUE_DEPENDENCY_INSTALL = 'QUEUE_DEPENDENCY_INSTALL';
 export const QUEUE_DEPENDENCY_UNINSTALL = 'QUEUE_DEPENDENCY_UNINSTALL';
+export const QUEUE_MODIFY_PROJECT = 'QUEUE_MODIFY_PROJECT';
 export const START_NEXT_ACTION_IN_QUEUE = 'START_NEXT_ACTION_IN_QUEUE';
 export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
   'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
@@ -269,6 +270,12 @@ export const uninstallDependenciesError = (
   type: UNINSTALL_DEPENDENCIES_ERROR,
   projectId,
   dependencies,
+});
+
+export const modifyProjectStart = (projectId: string, settings) => ({
+  type: QUEUE_MODIFY_PROJECT,
+  projectId,
+  settings,
 });
 
 export const uninstallDependenciesFinish = (
