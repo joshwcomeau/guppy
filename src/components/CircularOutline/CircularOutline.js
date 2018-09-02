@@ -26,9 +26,6 @@
  *                      can be animated
  *
  * There's surely a lot of room for improvement with this flow.
- *
- * Also, this component is oblivious to any parent resize-changes, so don't use
- * it in a component that has the propensity to change sizes.
  */
 import React, { Component } from 'react';
 import styled from 'styled-components';
@@ -144,18 +141,14 @@ class RoundedOutline extends Component<Props, State> {
                   innerRef={node => (this.shapeNode = node)}
                   x={0}
                   y={0}
-                  width={width}
-                  height={height}
+                  width="100%"
+                  height="100%"
                   rx={height / 2}
-                  ry={width / 2}
+                  ry={height / 2}
                   fill="none"
                   stroke={`url(#${svgId})`}
                   strokeWidth={strokeWidth}
                   strokeLinecap="round"
-                  style={{
-                    strokeDasharray: `${pathLength}, ${pathLength + 1}`,
-                    strokeDashoffset: interpolatedDashOffset,
-                  }}
                 />
               )}
           </Svg>
