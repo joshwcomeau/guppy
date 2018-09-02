@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
@@ -57,7 +57,7 @@ const INTRO_SEQUENCE_STEPS = [
 // TODO: this component re-renders whenever _anything_ with a project changes
 // (like adding a log to a task). It might be prudent to add a selector that
 // only provides the fields necessary for the sidebar.
-class Sidebar extends PureComponent<Props, State> {
+class Sidebar extends Component<Props, State> {
   static defaultProps = {
     projects: [],
   };
@@ -68,6 +68,7 @@ class Sidebar extends PureComponent<Props, State> {
   };
 
   componentWillReceiveProps(nextProps: Props) {
+    console.log('receive props', nextProps, this.state);
     if (!this.props.isVisible && nextProps.isVisible) {
       this.setState({ introSequenceStep: 'sidebar-slide-in' });
 
@@ -84,6 +85,13 @@ class Sidebar extends PureComponent<Props, State> {
           this.setState({ introSequenceStep: 'add-projects-fade-in' });
         }, 600);
       }, 125);
+    }
+
+    // Reset all!
+    // Required to hide the IntroductionBlurb after `Reset state`.
+    // console.log('check', this.props.isVisible, nextProps.onboardingStatus);
+    if (this.props.isVisible && nextProps.onboardingStatus === 'brand-new') {
+      this.setState({ introSequenceStep: null });
     }
   }
 
