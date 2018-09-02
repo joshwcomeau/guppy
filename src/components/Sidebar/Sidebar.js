@@ -68,7 +68,6 @@ class Sidebar extends Component<Props, State> {
   };
 
   componentWillReceiveProps(nextProps: Props) {
-    console.log('receive props', nextProps, this.state);
     if (!this.props.isVisible && nextProps.isVisible) {
       this.setState({ introSequenceStep: 'sidebar-slide-in' });
 
@@ -89,7 +88,6 @@ class Sidebar extends Component<Props, State> {
 
     // Reset all!
     // Required to hide the IntroductionBlurb after `Reset state`.
-    // console.log('check', this.props.isVisible, nextProps.onboardingStatus);
     if (this.props.isVisible && nextProps.onboardingStatus === 'brand-new') {
       this.setState({ introSequenceStep: null });
     }

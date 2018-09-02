@@ -24,10 +24,6 @@ export type State =
 const initialState = 'brand-new';
 
 export default (state: State = initialState, action: Action) => {
-  // if (state === 'done') { // Reset all not working with this --> does this break something?
-  //   return state;
-  // }
-
   switch (action.type) {
     case CREATE_NEW_PROJECT_START:
     case IMPORT_EXISTING_PROJECT_START: {
