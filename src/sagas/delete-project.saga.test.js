@@ -49,7 +49,7 @@ describe('delete-project saga', () => {
           message: `Are you sure you want to delete ${project.name}?`,
           detail: `Deleting from Guppy will remove ${
             project.name
-          } from the app, but doesn't remove it from your computer. IMPORTANT! Deleting from disk will send the project to trash!`,
+          } from the app, but doesn't remove it from your computer.\n\nIMPORTANT! Deleting from disk will send the project to trash!`,
         })
       );
 
@@ -97,7 +97,7 @@ describe('delete-project saga', () => {
           message: `Are you sure you want to delete ${project.name}?`,
           detail: `Deleting from Guppy will remove ${
             project.name
-          } from the app, but doesn't remove it from your computer. IMPORTANT! Deleting from disk will send the project to trash!`,
+          } from the app, but doesn't remove it from your computer.\n\nIMPORTANT! Deleting from disk will send the project to trash!`,
         })
       );
 
