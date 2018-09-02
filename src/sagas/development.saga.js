@@ -1,12 +1,13 @@
 import { remote } from 'electron';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { SHOW_RESET_STATE_PROMPT, resetAllState } from '../actions';
-
 import ElectronStore from 'electron-store';
+
+import { SHOW_RESET_STATE_PROMPT, resetAllState } from '../actions';
 
 const { dialog } = remote;
 
-export function* showResetDialog(): Saga<void> {
+export function* handleShowResetDialog(): Saga<void> {
+  const electronStore = new ElectronStore();
   const response = yield call([dialog, dialog.showMessageBox], {
     type: 'warning',
     buttons: ['Reset', 'Cancel'],
@@ -19,11 +20,11 @@ export function* showResetDialog(): Saga<void> {
 
   const confirmed = response === 0;
   if (confirmed) {
-    window.electronStore.clear();
+    yield call([electronStore, electronStore.clear]);
     yield put(resetAllState());
   }
 }
 
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(SHOW_RESET_STATE_PROMPT, showResetDialog);
+  yield takeEvery(SHOW_RESET_STATE_PROMPT, handleShowResetDialog);
 }

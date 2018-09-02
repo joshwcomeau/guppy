@@ -394,7 +394,7 @@ Object {
   });
 
   test('reset to initialState on RESET_ALL_STATE action', () => {
-    const initialState = {
+    const prevState = {
       foo: {
         redux: {
           name: 'redux',
@@ -409,7 +409,7 @@ Object {
       },
     };
     const action = { type: RESET_ALL_STATE };
-    const actualState = reducer(initialState, action);
+    const actualState = reducer(prevState, action);
 
     expect(actualState).toEqual(dependenciesInitialState);
   });

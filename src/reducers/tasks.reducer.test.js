@@ -542,13 +542,13 @@ describe('Tasks reducer - helpers', () => {
   });
 
   test('reset to initialState on RESET_ALL_STATE action', () => {
-    const initialState = {
+    const prevState = {
       'foo-start': {},
     };
     const action = {
       type: RESET_ALL_STATE,
     };
-    const actualState = reducer(initialState, action);
+    const actualState = reducer(prevState, action);
 
     expect(actualState).toEqual(tasksInitialState);
   });

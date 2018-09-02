@@ -230,7 +230,7 @@ describe('Projects Reducer', () => {
   });
 
   test('reset to initialState on RESET_ALL_STATE action', () => {
-    const initialState = {
+    const prevState = {
       byId: {
         foo: {
           name: 'foo',
@@ -243,7 +243,7 @@ describe('Projects Reducer', () => {
       selectedId: 'foo',
     };
     const action = { type: RESET_ALL_STATE };
-    const actualState = reducer(initialState, action);
+    const actualState = reducer(prevState, action);
 
     expect(actualState).toEqual(projectsInitialState);
   });
