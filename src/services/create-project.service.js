@@ -105,7 +105,7 @@ export default (
         // Gatsby specific fix - the command 'npx gatsby new ...' always sets the
         // name key in package.json to `gatsby-starter-default`. Overwrite it so
         // project is named correctly.
-        if (args[0] === 'gatsby') {
+        if (projectType === 'gatsby') {
           packageJson.name = id;
         }
 
