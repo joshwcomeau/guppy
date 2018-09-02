@@ -8,17 +8,23 @@ import { shell, remote } from 'electron';
 
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
-import { isMac } from '../../services/platform.service';
+import {
+  isMac,
+  getCopyForOpeningFolder,
+} from '../../services/platform.service';
+import {
+  openProjectInFolder,
+  openProjectInEditor,
+} from '../../services/shell.service';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 
-import type { Task } from '../../types';
+import type { Project, Task } from '../../types';
 
 const { app, process, Menu } = remote;
 
 type Props = {
-  selectedProject: ?string,
-  selectedProjectId: ?string,
+  selectedProject: ?Project,
   devServerTask: ?Task,
   createNewProjectStart: () => any,
   showImportExistingProjectPrompt: () => any,
@@ -35,7 +41,11 @@ class ApplicationMenu extends Component<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (this.props.selectedProjectId !== nextProps.selectedProjectId) {
+    if (
+      this.props.selectedProject &&
+      nextProps.selectedProject &&
+      this.props.selectedProject.id !== nextProps.selectedProject.id
+    ) {
       this.buildMenu(nextProps);
     }
   }
@@ -43,7 +53,6 @@ class ApplicationMenu extends Component<Props> {
   buildMenu = (props: Props) => {
     const {
       selectedProject,
-      selectedProjectId,
       devServerTask,
       createNewProjectStart,
       showImportExistingProjectPrompt,
@@ -156,12 +165,26 @@ class ApplicationMenu extends Component<Props> {
     // During onboarding, there is no selected project (because none exists
     // yet). Therefore, we only want to show the 'Project' menu when a project
     // is selected.
-    if (selectedProjectId) {
+    if (selectedProject) {
       // The `Project` menu should be inserted right after `Edit`, which will
       // have a different index depending on the platform.
       const editMenuIndex = template.findIndex(menu => menu.id === 'edit');
 
-      let submenu = [];
+      const openFolderCopy = getCopyForOpeningFolder();
+
+      let submenu = [
+        {
+          label: openFolderCopy,
+          click: () => openProjectInFolder(selectedProject),
+          accelerator: 'CmdOrCtrl+shift+F',
+        },
+        {
+          label: isMac ? 'Open in Code Editor' : 'Open in code editor',
+          click: () => openProjectInEditor(selectedProject),
+          accelerator: 'CmdOrCtrl+shift+E',
+        },
+        { type: 'separator' },
+      ];
 
       // If this project has no devServerTask, there are no logs to clear.
       if (devServerTask) {
@@ -205,7 +228,6 @@ class ApplicationMenu extends Component<Props> {
 const mapStateToProps = state => {
   const selectedProject = getSelectedProject(state);
 
-  const selectedProjectId = selectedProject ? selectedProject.id : null;
   const devServerTask = selectedProject
     ? getDevServerTaskForProjectId(
         state,
@@ -214,7 +236,7 @@ const mapStateToProps = state => {
       )
     : null;
 
-  return { selectedProject, selectedProjectId, devServerTask };
+  return { selectedProject, devServerTask };
 };
 
 const mapDispatchToProps = {
