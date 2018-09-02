@@ -4,6 +4,7 @@ import {
   REFRESH_PROJECTS_FINISH,
   SELECT_PROJECT,
   ADD_PROJECT,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import reducer, {
@@ -228,6 +229,25 @@ describe('Projects Reducer', () => {
         selectedId: action.projectId,
       });
     });
+  });
+
+  test('reset to initialState on RESET_ALL_STATE action', () => {
+    const prevState = {
+      byId: {
+        foo: {
+          name: 'foo',
+          guppy: { id: 'foo' },
+          scripts: {
+            start: 'command it',
+          },
+        },
+      },
+      selectedId: 'foo',
+    };
+    const action = { type: RESET_ALL_STATE };
+    const actualState = reducer(prevState, action);
+
+    expect(actualState).toEqual(projectsInitialState);
   });
 });
 

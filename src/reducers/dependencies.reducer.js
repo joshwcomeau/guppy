@@ -11,6 +11,7 @@ import {
   UNINSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_ERROR,
   UNINSTALL_DEPENDENCIES_FINISH,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -22,7 +23,7 @@ type State = {
   },
 };
 
-const initialState = {};
+export const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
@@ -137,6 +138,9 @@ export default (state: State = initialState, action: Action) => {
         });
       });
     }
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;

@@ -24,6 +24,7 @@ type Props = {
   showImportExistingProjectPrompt: () => any,
   clearConsole: (task: Task) => any,
   showDeleteProjectPrompt: (project: any) => any,
+  showResetStatePrompt: () => any,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -48,6 +49,7 @@ class ApplicationMenu extends Component<Props> {
       showImportExistingProjectPrompt,
       clearConsole,
       showDeleteProjectPrompt,
+      showResetStatePrompt,
     } = props;
 
     const template = [
@@ -80,10 +82,7 @@ class ApplicationMenu extends Component<Props> {
           { role: 'copy' },
           { role: 'paste' },
           { role: 'delete' },
-          {
-            role: 'selectall',
-            label: isMac ? 'Select All' : 'Select all',
-          },
+          { role: 'selectall', label: isMac ? 'Select All' : 'Select all' },
         ],
       },
       {
@@ -95,21 +94,28 @@ class ApplicationMenu extends Component<Props> {
             role: 'forcereload',
             label: isMac ? 'Force Reload' : 'Force reload',
           },
-          {
-            role: 'toggledevtools',
-            label: isMac ? 'Toggle Developer Tools' : 'Toggle developer tools',
-          },
           { type: 'separator' },
-          {
-            role: 'resetzoom',
-            label: isMac ? 'Actual Size' : 'Actual size',
-          },
+          { role: 'resetzoom', label: isMac ? 'Actual Size' : 'Actual size' },
           { role: 'zoomin', label: isMac ? 'Zoom In' : 'Zoom in' },
           { role: 'zoomout', label: isMac ? 'Zoom Out' : 'Zoom out' },
           { type: 'separator' },
           {
             role: 'togglefullscreen',
             label: isMac ? 'Toggle Full Screen' : 'Toggle full screen',
+          },
+        ],
+      },
+      {
+        id: 'development',
+        label: isMac ? 'Development' : '&Development',
+        submenu: [
+          {
+            role: 'toggledevtools',
+            label: isMac ? 'Toggle Developer Tools' : 'Toggle developer tools',
+          },
+          {
+            label: isMac ? 'Reset State...' : 'Reset state...',
+            click: showResetStatePrompt,
           },
         ],
       },
@@ -216,6 +222,7 @@ const mapDispatchToProps = {
   showImportExistingProjectPrompt: actions.showImportExistingProjectPrompt,
   clearConsole: actions.clearConsole,
   showDeleteProjectPrompt: actions.showDeleteProjectPrompt,
+  showResetStatePrompt: actions.showResetStatePrompt,
 };
 
 export default connect(

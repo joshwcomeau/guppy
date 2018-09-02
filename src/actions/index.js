@@ -55,6 +55,8 @@ export const IMPORT_EXISTING_PROJECT_ERROR = 'IMPORT_EXISTING_PROJECT_ERROR';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 export const SHOW_DELETE_PROJECT_PROMPT = 'SHOW_DELETE_PROJECT_PROMPT';
 export const FINISH_DELETING_PROJECT = 'FINISH_DELETING_PROJECT';
+export const SHOW_RESET_STATE_PROMPT = 'SHOW_RESET_STATE_PROMPT';
+export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 
 //
 //
@@ -328,3 +330,9 @@ export const finishDeletingProject = (projectId: string) => ({
   type: FINISH_DELETING_PROJECT,
   projectId,
 });
+
+export const showResetStatePrompt = () => ({
+  type: SHOW_RESET_STATE_PROMPT,
+});
+
+export const resetAllState = () => ({ type: RESET_ALL_STATE });

@@ -17,6 +17,7 @@ import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
   FINISH_DELETING_PROJECT,
+  RESET_ALL_STATE,
 } from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
 
@@ -47,6 +48,9 @@ export default (state: State = initialState, action: Action) => {
         delete draftState[projectId];
       });
     }
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;

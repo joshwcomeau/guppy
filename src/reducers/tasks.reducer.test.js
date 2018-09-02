@@ -3,9 +3,13 @@ import {
   ADD_PROJECT,
   RUN_TASK,
   COMPLETE_TASK,
+  RESET_ALL_STATE,
 } from '../actions';
 
-import reducer, { getTaskDescription } from './tasks.reducer';
+import reducer, {
+  getTaskDescription,
+  initialState as tasksInitialState,
+} from './tasks.reducer';
 
 describe('Tasks reducer', () => {
   describe(REFRESH_PROJECTS_FINISH, () => {
@@ -535,5 +539,17 @@ describe('Tasks reducer - helpers', () => {
     test('unrecognized', () => {
       expect(getTaskDescription('gfsagsdgsdfgsd')).toBe('');
     });
+  });
+
+  test('reset to initialState on RESET_ALL_STATE action', () => {
+    const prevState = {
+      'foo-start': {},
+    };
+    const action = {
+      type: RESET_ALL_STATE,
+    };
+    const actualState = reducer(prevState, action);
+
+    expect(actualState).toEqual(tasksInitialState);
   });
 });
