@@ -5,12 +5,12 @@ import produce from 'immer';
 import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
-  FINISH_DELETING_PROJECT_FROM_DISK,
-  ADD_DEPENDENCY_FINISH,
-  // REFRESH_PROJECTS,
-  SAVE_PROJECT_SETTINGS_FINISH,
+  FINISH_DELETING_PROJECT,
+  INSTALL_DEPENDENCIES_FINISH,
   REFRESH_PROJECTS_FINISH,
+  SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
+  RESET_ALL_STATE,
 } from '../actions';
 import { getTasksForProjectId } from './tasks.reducer';
 import { getDependenciesForProjectId } from './dependencies.reducer';
@@ -49,36 +49,44 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
       };
     }
 
-    case ADD_DEPENDENCY_FINISH: {
-      const { projectId, dependency } = action;
+    case INSTALL_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
 
       return produce(state, draftState => {
-        draftState[projectId].dependencies[dependency.name] =
-          dependency.version;
+        dependencies.forEach(dependency => {
+          draftState[projectId].dependencies[dependency.name] =
+            dependency.version;
+        });
       });
     }
 
-    case SAVE_PROJECT_SETTINGS_FINISH:
-      let newState = {
-        ...state,
-        [action.project.guppy.id]: {
-          ...action.project,
-        },
-      };
-      if (action.oldProjectId !== action.project.guppy.id) {
-        // remove old project id --> renamed to new id
-        delete newState[action.oldProjectId];
-      }
-      console.log('apply changes', newState);
-      return newState;
-
-    case FINISH_DELETING_PROJECT_FROM_DISK: {
+    case FINISH_DELETING_PROJECT: {
       const { projectId } = action;
 
       return produce(state, draftState => {
         delete draftState[projectId];
       });
     }
+
+    case SAVE_PROJECT_SETTINGS_FINISH:
+      const { project, oldProjectId } = action;
+      const {
+        guppy: { id },
+      } = project;
+
+      return produce(state, draftState => {
+        draftState[id] = {
+          ...project,
+        };
+
+        if (oldProjectId !== id) {
+          // remove old project id --> renamed to new id
+          delete draftState[oldProjectId];
+        }
+      });
+
+    case RESET_ALL_STATE:
+      return initialState.byId;
 
     default:
       return state;
@@ -123,6 +131,9 @@ const selectedIdReducer = (
     case SELECT_PROJECT: {
       return action.projectId;
     }
+
+    case RESET_ALL_STATE:
+      return initialState.selectedId;
 
     default:
       return state;

@@ -28,13 +28,6 @@ import type { Project } from '../../types';
 type Props = {
   isAppLoaded: boolean,
   selectedProject: ?Project,
-  projects: Array<Project>,
-  refreshProjects: Action,
-  // selectProject: Action,
-  history: any, // Provided by `withRouter`
-  // hideModal: () => void,
-  isVisible: boolean,
-  // ModalContent: Object,
 };
 
 class App extends Component<Props> {

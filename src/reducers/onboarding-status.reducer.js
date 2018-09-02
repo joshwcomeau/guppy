@@ -9,6 +9,7 @@ import {
   IMPORT_EXISTING_PROJECT_FINISH,
   SELECT_PROJECT,
   REFRESH_PROJECTS_FINISH,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -23,10 +24,6 @@ export type State =
 const initialState = 'brand-new';
 
 export default (state: State = initialState, action: Action) => {
-  if (state === 'done') {
-    return state;
-  }
-
   switch (action.type) {
     case CREATE_NEW_PROJECT_START:
     case IMPORT_EXISTING_PROJECT_START: {
@@ -65,6 +62,9 @@ export default (state: State = initialState, action: Action) => {
 
       return projectKeys.length > 0 ? 'done' : state;
     }
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;

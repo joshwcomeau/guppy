@@ -6,6 +6,7 @@ import deleteProjectSaga from './delete-project.saga';
 import dependencySaga from './dependency.saga';
 import importProjectSaga from './import-project.saga';
 import taskSaga from './task.saga';
+import developmentSaga from './development.saga';
 
 export default function*() {
   yield all([
@@ -15,5 +16,6 @@ export default function*() {
     importProjectSaga(),
     taskSaga(),
     saveProjectSettingsSaga(),
+    developmentSaga(),
   ]);
 }

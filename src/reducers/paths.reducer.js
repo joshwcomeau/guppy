@@ -11,15 +11,18 @@
  */
 import * as path from 'path';
 import * as os from 'os';
+import produce from 'immer';
+
 import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
+  FINISH_DELETING_PROJECT,
   SAVE_PROJECT_SETTINGS_FINISH,
+  RESET_ALL_STATE,
 } from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
 
 import type { Action } from 'redux';
-import produce from 'immer';
 
 type State = {
   [projectId: string]: string,
@@ -49,6 +52,17 @@ export default (state: State = initialState, action: Action) => {
         }
       });
     }
+    case FINISH_DELETING_PROJECT: {
+      const { projectId } = action;
+
+      return produce(state, draftState => {
+        delete draftState[projectId];
+      });
+    }
+
+    case RESET_ALL_STATE:
+      return initialState;
+
     default:
       return state;
   }

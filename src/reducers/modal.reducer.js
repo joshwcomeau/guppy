@@ -11,6 +11,7 @@ import {
   IMPORT_EXISTING_PROJECT_START,
   SHOW_MODAL,
   HIDE_MODAL,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -33,6 +34,9 @@ export default (state: State = initialState, action: Action) => {
     case IMPORT_EXISTING_PROJECT_START:
     case HIDE_MODAL:
       return null;
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;

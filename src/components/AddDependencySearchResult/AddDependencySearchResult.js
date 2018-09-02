@@ -13,7 +13,6 @@ import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
 } from '../../reducers/projects.reducer';
-import { getPackageJsonLockedForProjectId } from '../../reducers/package-json-locked.reducer';
 import { COLORS } from '../../constants';
 
 import Spacer from '../Spacer';
@@ -26,11 +25,20 @@ import CustomHighlight from '../CustomHighlight';
 
 import type { DependencyStatus } from '../../types';
 
+const DEPENDENCY_ACTIONS_COPY = {
+  idle: 'Installed',
+  installing: 'Installing…',
+  updating: 'Updating…',
+  deleting: 'Deleting…',
+  'queued-install': 'Queued for Install',
+  'queued-update': 'Queued for Update',
+  'queued-delete': 'Queued for Delete',
+};
+
 type Props = {
   projectId: string,
   currentStatus: ?DependencyStatus,
-  isPackageJsonLocked: boolean,
-  addDependencyStart: (
+  addDependency: (
     projectId: string,
     dependencyName: string,
     version: string
@@ -77,23 +85,10 @@ const getColorForDownloadNumber = (num: number) => {
 
 class AddDependencySearchResult extends PureComponent<Props> {
   renderActionArea() {
-    const {
-      hit,
-      projectId,
-      currentStatus,
-      isPackageJsonLocked,
-      addDependencyStart,
-    } = this.props;
+    const { hit, projectId, currentStatus, addDependency } = this.props;
+    const isAlreadyInstalled = currentStatus === 'idle';
 
-    if (currentStatus === 'installing') {
-      return (
-        <NoActionAvailable>
-          <Spinner size={24} />
-          <Spacer size={6} />
-          Installing...
-        </NoActionAvailable>
-      );
-    } else if (typeof currentStatus === 'string') {
+    if (isAlreadyInstalled) {
       return (
         <NoActionAvailable>
           <IconBase
@@ -105,20 +100,29 @@ class AddDependencySearchResult extends PureComponent<Props> {
           Installed
         </NoActionAvailable>
       );
-    } else {
+    }
+
+    if (currentStatus) {
       return (
-        <Button
-          size="small"
-          color1={COLORS.green[700]}
-          color2={COLORS.lightGreen[500]}
-          textColor={isPackageJsonLocked ? COLORS.gray[400] : COLORS.green[700]}
-          disabled={isPackageJsonLocked}
-          onClick={() => addDependencyStart(projectId, hit.name, hit.version)}
-        >
-          Add To Project
-        </Button>
+        <NoActionAvailable>
+          <Spinner size={24} />
+          <Spacer size={6} />
+          {DEPENDENCY_ACTIONS_COPY[currentStatus]}
+        </NoActionAvailable>
       );
     }
+
+    return (
+      <Button
+        size="small"
+        color1={COLORS.green[700]}
+        color2={COLORS.lightGreen[500]}
+        textColor={COLORS.green[700]}
+        onClick={() => addDependency(projectId, hit.name, hit.version)}
+      >
+        Add To Project
+      </Button>
+    );
   }
 
   render() {
@@ -273,14 +277,10 @@ const mapStateToProps = (state, ownProps) => {
   return {
     currentStatus,
     projectId: selectedProjectId,
-    isPackageJsonLocked: getPackageJsonLockedForProjectId(
-      state,
-      selectedProjectId
-    ),
   };
 };
 
-const mapDispatchToProps = { addDependencyStart: actions.addDependencyStart };
+const mapDispatchToProps = { addDependency: actions.addDependency };
 
 export default connect(
   mapStateToProps,

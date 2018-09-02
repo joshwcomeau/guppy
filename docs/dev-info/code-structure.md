@@ -14,8 +14,8 @@ In addition, we use the following libraries and tools:
 
 - [React](https://reactjs.org/)
 - [Redux](https://redux.js.org/) (with [Redux Saga](https://github.com/redux-saga/redux-saga) for side-effects and orchestration)
-- [styled-components](styled-components.com)
-- [Prettier](https://github.com/prettier/prettier)
+- [styled-components](https://styled-components.com)
+- [Prettier](https://prettier.io/)
 - [ESLint](https://eslint.org/)
 - [Flow](https://flow.org/)
 - [Storybook](https://github.com/storybooks/storybook)

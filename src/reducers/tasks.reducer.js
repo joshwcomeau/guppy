@@ -28,6 +28,7 @@ import {
   IMPORT_EXISTING_PROJECT_FINISH,
   SAVE_PROJECT_SETTINGS_FINISH,
   CLEAR_CONSOLE,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -37,7 +38,7 @@ type State = {
   [uniqueTaskId: string]: Task,
 };
 
-const initialState = {};
+export const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
@@ -201,6 +202,9 @@ export default (state: State = initialState, action: Action) => {
         draftState[task.id].status = nextStatus;
       });
     }
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;

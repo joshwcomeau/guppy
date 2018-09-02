@@ -20,7 +20,7 @@ import type { Project } from '../../types';
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
-  showModal: () => void,
+  showModal: (modal: string) => void,
 };
 
 class ProjectPage extends Component<Props> {

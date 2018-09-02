@@ -85,6 +85,12 @@ class Sidebar extends PureComponent<Props, State> {
         }, 600);
       }, 125);
     }
+
+    // Reset all!
+    // Required to hide the IntroductionBlurb after `Reset state`.
+    if (this.props.isVisible && nextProps.onboardingStatus === 'brand-new') {
+      this.setState({ introSequenceStep: null });
+    }
   }
 
   render() {

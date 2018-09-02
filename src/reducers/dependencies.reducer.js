@@ -2,15 +2,16 @@
 import produce from 'immer';
 import {
   LOAD_DEPENDENCY_INFO_FROM_DISK,
-  DELETE_DEPENDENCY_START,
-  DELETE_DEPENDENCY_ERROR,
-  DELETE_DEPENDENCY_FINISH,
-  UPDATE_DEPENDENCY_START,
-  UPDATE_DEPENDENCY_ERROR,
-  UPDATE_DEPENDENCY_FINISH,
-  ADD_DEPENDENCY_START,
-  ADD_DEPENDENCY_ERROR,
-  ADD_DEPENDENCY_FINISH,
+  ADD_DEPENDENCY,
+  UPDATE_DEPENDENCY,
+  DELETE_DEPENDENCY,
+  INSTALL_DEPENDENCIES_START,
+  INSTALL_DEPENDENCIES_ERROR,
+  INSTALL_DEPENDENCIES_FINISH,
+  UNINSTALL_DEPENDENCIES_START,
+  UNINSTALL_DEPENDENCIES_ERROR,
+  UNINSTALL_DEPENDENCIES_FINISH,
+  RESET_ALL_STATE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -22,7 +23,7 @@ type State = {
   },
 };
 
-const initialState = {};
+export const initialState = {};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
@@ -35,13 +36,13 @@ export default (state: State = initialState, action: Action) => {
       };
     }
 
-    case ADD_DEPENDENCY_START: {
+    case ADD_DEPENDENCY: {
       const { projectId, dependencyName } = action;
 
       return produce(state, draftState => {
         draftState[projectId][dependencyName] = {
           name: dependencyName,
-          status: 'installing',
+          status: 'queued-install',
           // All of the other fields are unknown at this point.
           // To make life simpler, we'll set them to empty strings,
           // rather than deal with nullable fields everywhere else.
@@ -55,71 +56,91 @@ export default (state: State = initialState, action: Action) => {
       });
     }
 
-    case ADD_DEPENDENCY_ERROR: {
+    case UPDATE_DEPENDENCY: {
       const { projectId, dependencyName } = action;
 
       return produce(state, draftState => {
-        // If the dependency couldn't be installed, we should remove it from
-        // state.
-        delete draftState[projectId][dependencyName];
+        draftState[projectId][dependencyName].status = 'queued-update';
       });
     }
 
-    case ADD_DEPENDENCY_FINISH: {
-      const { projectId, dependency } = action;
-
-      return produce(state, draftState => {
-        draftState[projectId][dependency.name] = dependency;
-      });
-    }
-
-    case UPDATE_DEPENDENCY_START: {
+    case DELETE_DEPENDENCY: {
       const { projectId, dependencyName } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].status = 'updating';
+        draftState[projectId][dependencyName].status = 'queued-delete';
       });
     }
 
-    case UPDATE_DEPENDENCY_ERROR: {
-      const { projectId, dependencyName } = action;
+    case INSTALL_DEPENDENCIES_START: {
+      const { projectId, dependencies } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].status = 'idle';
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.name].status = dependency.updating
+            ? 'updating'
+            : 'installing';
+        });
       });
     }
 
-    case UPDATE_DEPENDENCY_FINISH: {
-      const { projectId, dependencyName, latestVersion } = action;
+    case INSTALL_DEPENDENCIES_ERROR: {
+      const { projectId, dependencies } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].version = latestVersion;
+        dependencies.forEach(dependency => {
+          if (dependency.updating) {
+            draftState[projectId][dependency.name].status = 'idle';
+          } else {
+            delete draftState[projectId][dependency.name];
+          }
+        });
       });
     }
 
-    case DELETE_DEPENDENCY_START: {
-      const { projectId, dependencyName } = action;
+    case INSTALL_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].status = 'deleting';
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.name] = dependency;
+          draftState[projectId][dependency.name].status = 'idle';
+        });
       });
     }
 
-    case DELETE_DEPENDENCY_ERROR: {
-      const { projectId, dependencyName } = action;
+    case UNINSTALL_DEPENDENCIES_START: {
+      const { projectId, dependencies } = action;
 
       return produce(state, draftState => {
-        draftState[projectId][dependencyName].status = 'idle';
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.name].status = 'deleting';
+        });
       });
     }
 
-    case DELETE_DEPENDENCY_FINISH: {
-      const { projectId, dependencyName } = action;
+    case UNINSTALL_DEPENDENCIES_ERROR: {
+      const { projectId, dependencies } = action;
 
       return produce(state, draftState => {
-        delete draftState[projectId][dependencyName];
+        dependencies.forEach(dependency => {
+          draftState[projectId][dependency.name].status = 'idle';
+        });
       });
     }
+
+    case UNINSTALL_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
+
+      return produce(state, draftState => {
+        dependencies.forEach(dependency => {
+          delete draftState[projectId][dependency.name];
+        });
+      });
+    }
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;
