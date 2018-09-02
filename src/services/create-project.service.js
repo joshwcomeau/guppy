@@ -102,6 +102,13 @@ export default (
           createdAt: Date.now(),
         };
 
+        // Gatsby specific fix - the command 'npx gatsby new ...' always sets the
+        // name key in package.json to `gatsby-starter-default`. Overwrite it so
+        // project is named correctly.
+        if (projectType === 'gatsby') {
+          packageJson.name = id;
+        }
+
         const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
 
         fs.writeFile(
