@@ -19,7 +19,7 @@ const sagaMiddleware = createSagaMiddleware();
 export default function configureStore() {
   // Store all Redux changes in an electron-store, handled by redux-storage.
   let engine = createEngine(
-    process.env.NODE_ENV === 'development' ? 'redux-data-dev' : 'redux-data'
+    process.env.NODE_ENV === 'development' ? 'redux-state-dev' : 'redux-state'
   );
 
   // Handle migrating state as the redux reducers change
