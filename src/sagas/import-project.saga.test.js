@@ -21,6 +21,12 @@ import {
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import { getColorForProject } from '../services/create-project.service';
 
+// Mock window.store.getState()
+const store = {
+  getState: jest.fn(() => ('onboardingStatus': 'done')),
+};
+window.store = store;
+
 describe('import-project saga', () => {
   const { showOpenDialog, showErrorBox } = electron.remote.dialog;
 
@@ -169,6 +175,10 @@ describe('import-project saga', () => {
           createdAt: 1532809641976,
         },
       };
+
+      const getState = window.store.getState();
+      const onboardingCompleted = getState.onboardingStatus === 'done';
+
       const spyOnDate = jest.spyOn(Date, 'now');
       spyOnDate.mockReturnValue(1532809641976);
 
@@ -186,7 +196,13 @@ describe('import-project saga', () => {
         call(writePackageJson, 'path/to/project', jsonWithGuppy)
       );
       expect(saga.next(jsonWithGuppy).value).toEqual(
-        put(importExistingProjectFinish('path/to/project', jsonWithGuppy))
+        put(
+          importExistingProjectFinish(
+            'path/to/project',
+            jsonWithGuppy,
+            onboardingCompleted
+          )
+        )
       );
       expect(saga.next().done).toBe(true);
       spyOnDate.mockRestore();

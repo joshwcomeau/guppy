@@ -1,6 +1,7 @@
 // @flow
 import electron from 'electron';
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
+
 import {
   importExistingProjectStart,
   importExistingProjectFinish,
@@ -71,6 +72,11 @@ export function* handleImportError(err: Error): Saga<void> {
 }
 
 export function* importProject({ path }: Action): Saga<void> {
+  const store = window.store.getState();
+
+  // Get onboardingStatus to check if sidebar instructions should display
+  const onboardingCompleted = store.onboardingStatus === 'done';
+
   try {
     // Let's load the basic project info for the path specified, if possible.
     const json = yield call(loadPackageJson, path);
@@ -124,7 +130,9 @@ export function* importProject({ path }: Action): Saga<void> {
       packageJsonWithGuppy
     );
 
-    yield put(importExistingProjectFinish(path, writedPackageJson));
+    yield put(
+      importExistingProjectFinish(path, writedPackageJson, onboardingCompleted)
+    );
   } catch (err) {
     yield call(handleImportError, err);
     yield put(importExistingProjectError());

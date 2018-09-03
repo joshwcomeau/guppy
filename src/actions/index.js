@@ -62,9 +62,10 @@ export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 //
 // Action Creators
 //
-export const addProject = (project: Project) => ({
+export const addProject = (project: Project, onboardingCompleted: boolean) => ({
   type: ADD_PROJECT,
   project,
+  onboardingCompleted,
 });
 
 export const refreshProjectsStart = () => ({
@@ -314,11 +315,13 @@ export const importExistingProjectError = () => ({
 
 export const importExistingProjectFinish = (
   projectPath: string,
-  project: Project
+  project: Project,
+  onboardingCompleted: boolean
 ) => ({
   type: IMPORT_EXISTING_PROJECT_FINISH,
   projectPath,
   project,
+  onboardingCompleted,
 });
 
 export const showDeleteProjectPrompt = (project: Project) => ({
