@@ -9,7 +9,6 @@ type Props = {
   angle: number,
   background: string,
   groundColor?: string,
-  shine?: boolean,
   atmosphere?: number,
   glow?: (size: number) => React$Node,
   clouds?: (size: number) => React$Node,
@@ -27,8 +26,6 @@ class Planet extends Component<Props> {
 
   render() {
     const {
-      x,
-      y,
       size,
       angle,
       background,
@@ -41,7 +38,7 @@ class Planet extends Component<Props> {
     } = this.props;
 
     return (
-      <Wrapper x={x} y={y} size={size} angle={angle}>
+      <Wrapper size={size} angle={angle}>
         {atmosphere && (
           <Atmosphere
             strength={atmosphere}
@@ -67,11 +64,9 @@ class Planet extends Component<Props> {
 
 const Wrapper = styled.div`
   position: absolute;
-  left: ${props => props.x}px;
-  top: ${props => props.y}px;
   width: ${props => props.size + 'px'};
   height: ${props => props.size + 'px'};
-  transform: translate(-50%, -50%) rotateX(${props => props.angle}deg);
+  transform: rotateX(${props => props.angle}deg);
   transform-style: preserve-3d;
 `;
 

@@ -8,7 +8,7 @@ type Props = {
   planetSize: number,
 };
 
-class PlanetLandMass extends Component<Props> {
+class EarthContinents extends Component<Props> {
   node: ?HTMLElement;
 
   render() {
@@ -147,4 +147,4 @@ const Landmass = styled.svg`
   width: ${props => props.width}px;
 `;
 
-export default PlanetLandMass;
+export default EarthContinents;
