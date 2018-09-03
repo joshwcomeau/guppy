@@ -11,7 +11,7 @@ import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
-import Button from '../Button';
+import { FillButton } from '../Button';
 import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
@@ -77,27 +77,25 @@ class ProjectPage extends Component<Props> {
           </PixelShifter>
 
           <ProjectActionBar>
-            <Button
-              type="fill"
-              color1={COLORS.gray[200]}
-              color2={COLORS.gray[200]}
+            <FillButton
+              colors={COLORS.gray[200]}
+              hoverColors={COLORS.gray[300]}
               textColor={COLORS.gray[900]}
               size="small"
               onClick={this.openFolder}
             >
               {getCopyForOpeningFolder()}
-            </Button>
+            </FillButton>
             <Spacer size={15} />
-            <Button
-              type="fill"
-              color1={COLORS.gray[200]}
-              color2={COLORS.gray[200]}
+            <FillButton
+              colors={COLORS.gray[200]}
+              hoverColors={COLORS.gray[300]}
               textColor={COLORS.gray[900]}
               size="small"
               onClick={this.openIDE}
             >
               Open in Editor
-            </Button>
+            </FillButton>
           </ProjectActionBar>
 
           <Spacer size={30} />

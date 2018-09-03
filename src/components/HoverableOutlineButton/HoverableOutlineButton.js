@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import Button from '../Button';
+import { StrokeButton } from '../Button';
 
 type Props = {
   color1: string,
@@ -33,16 +33,16 @@ class HoverableOutlineButton extends Component<Props, State> {
     const { isHovered } = this.state;
 
     return (
-      <Button
+      <StrokeButton
         color1={color1}
         color2={color2}
-        showOutline={isHovered}
+        showStroke={isHovered}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         {...delegated}
       >
         {children}
-      </Button>
+      </StrokeButton>
     );
   }
 }

@@ -1,16 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Button from '../Button';
+import { StrokeButton } from '../Button';
 
 const ButtonWithIcon = ({ icon, children, ...delegated }) => (
   // TODO: Support other sizes
-  <Button noPadding {...delegated}>
+  <StrokeButton noPadding {...delegated}>
     <InnerWrapper>
       <IconWrapper>{icon}</IconWrapper>
       {children}
     </InnerWrapper>
-  </Button>
+  </StrokeButton>
 );
 
 const InnerWrapper = styled.div`
