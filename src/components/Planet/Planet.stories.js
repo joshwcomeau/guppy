@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Planet from './Planet';
 import Earth from '../Earth';
 
-storiesOf('Planet / Earth', module)
+storiesOf('Planet', module)
   .add('Basic', () => (
     <Space>
       <Planet
