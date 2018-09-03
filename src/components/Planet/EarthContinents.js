@@ -28,6 +28,7 @@ class EarthContinents extends Component<Props> {
         >
           {STARTING_POINTS.map((value, index) => (
             <Landmass
+              key={index}
               width={planetSize * 2}
               viewBox="0 0 5063 3071"
               fill="#36e747"
@@ -42,9 +43,9 @@ class EarthContinents extends Component<Props> {
                   y2="1954.77"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#8EF528" />
-                  <stop offset="0.464088" stop-color="#8EF528" />
-                  <stop offset="1" stop-color="#00F17D" />
+                  <stop stopColor="#8EF528" />
+                  <stop offset="0.464088" stopColor="#8EF528" />
+                  <stop offset="1" stopColor="#00F17D" />
                 </linearGradient>
                 <linearGradient
                   id="continent2"
@@ -54,8 +55,8 @@ class EarthContinents extends Component<Props> {
                   y2="3069"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#8EF528" />
-                  <stop offset="1" stop-color="#00F17D" />
+                  <stop stopColor="#8EF528" />
+                  <stop offset="1" stopColor="#00F17D" />
                 </linearGradient>
                 <linearGradient
                   id="continent3"
@@ -65,9 +66,9 @@ class EarthContinents extends Component<Props> {
                   y2="1179"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop offset="0.160221" stop-color="white" />
-                  <stop offset="0.585635" stop-color="#8EF528" />
-                  <stop offset="1" stop-color="#00F17D" />
+                  <stop offset="0.160221" stopColor="white" />
+                  <stop offset="0.585635" stopColor="#8EF528" />
+                  <stop offset="1" stopColor="#00F17D" />
                 </linearGradient>
                 <linearGradient
                   id="continent4"
@@ -77,8 +78,8 @@ class EarthContinents extends Component<Props> {
                   y2="2849"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#8EF528" />
-                  <stop offset="1" stop-color="#00F17D" />
+                  <stop stopColor="#8EF528" />
+                  <stop offset="1" stopColor="#00F17D" />
                 </linearGradient>
                 <linearGradient
                   id="continent5"
@@ -88,9 +89,9 @@ class EarthContinents extends Component<Props> {
                   y2="1868.95"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop offset="0.0718232" stop-color="white" />
-                  <stop offset="0.403315" stop-color="#8EF528" />
-                  <stop offset="1" stop-color="#00F17D" />
+                  <stop offset="0.0718232" stopColor="white" />
+                  <stop offset="0.403315" stopColor="#8EF528" />
+                  <stop offset="1" stopColor="#00F17D" />
                 </linearGradient>
                 <linearGradient
                   id="continent6"
@@ -100,8 +101,8 @@ class EarthContinents extends Component<Props> {
                   y2="2793.8"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#8EF528" />
-                  <stop offset="1" stop-color="#00F17D" />
+                  <stop stopColor="#8EF528" />
+                  <stop offset="1" stopColor="#00F17D" />
                 </linearGradient>
               </defs>
               <path
