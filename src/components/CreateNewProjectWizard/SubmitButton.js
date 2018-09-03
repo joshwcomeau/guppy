@@ -7,7 +7,7 @@ import { chevronRight } from 'react-icons-kit/feather/chevronRight';
 
 import { COLORS } from '../../constants';
 
-import Button from '../Button';
+import { FillButton } from '../Button';
 import Spinner from '../Spinner';
 
 type Props = {
@@ -30,13 +30,14 @@ const SubmitButton = ({
       : 'Next';
 
   return (
-    <Button
+    <FillButton
       disabled={isDisabled || hasBeenSubmitted}
-      type="fill"
       size="large"
-      color1={readyToBeSubmitted ? COLORS.green[700] : COLORS.blue[700]}
-      color2={readyToBeSubmitted ? COLORS.lightGreen[500] : COLORS.blue[500]}
-      style={{ color: COLORS.pink[500], width: 200 }}
+      colors={[
+        readyToBeSubmitted ? COLORS.green[700] : COLORS.blue[700],
+        readyToBeSubmitted ? COLORS.lightGreen[500] : COLORS.blue[500],
+      ]}
+      style={{ width: 200 }}
       onClick={onSubmit}
     >
       <ChildWrapper>{buttonText}</ChildWrapper>
@@ -51,7 +52,7 @@ const SubmitButton = ({
           />
         )}
       </SubmitButtonIconWrapper>
-    </Button>
+    </FillButton>
   );
 };
 

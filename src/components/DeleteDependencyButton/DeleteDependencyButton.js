@@ -6,7 +6,7 @@ import { remote } from 'electron';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 
-import Button from '../Button';
+import { FillButton } from '../Button';
 import Spinner from '../Spinner';
 import PixelShifter from '../PixelShifter';
 
@@ -66,11 +66,9 @@ class DeleteDependencyButton extends PureComponent<Props> {
     const { dependencyStatus } = this.props;
 
     return (
-      <Button
+      <FillButton
         size="small"
-        type="fill"
-        color1={COLORS.pink[300]}
-        color2={COLORS.red[500]}
+        colors={[COLORS.pink[300], COLORS.red[500]]}
         onClick={this.handleClick}
       >
         {dependencyStatus === 'deleting' ? (
@@ -83,7 +81,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
         ) : (
           DEPENDENCY_DELETE_COPY[dependencyStatus]
         )}
-      </Button>
+      </FillButton>
     );
   }
 }

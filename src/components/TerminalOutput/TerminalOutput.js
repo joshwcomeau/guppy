@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 
-import Button from '../Button';
+import { FillButton } from '../Button';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 
@@ -77,16 +77,13 @@ class TerminalOutput extends PureComponent<Props> {
               offset.
             `}
           >
-            <Button
+            <FillButton
               size="xsmall"
-              type="fill"
-              color1={COLORS.red[700]}
-              color2={COLORS.red[500]}
-              textColor={COLORS.white}
+              colors={[COLORS.red[700], COLORS.red[500]]}
               onClick={this.handleClear}
             >
               Clear
-            </Button>
+            </FillButton>
           </PixelShifter>
         </Header>
         <Wrapper

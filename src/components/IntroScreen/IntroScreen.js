@@ -6,7 +6,7 @@ import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
-import Button from '../Button';
+import { StrokeButton } from '../Button';
 import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
@@ -30,9 +30,9 @@ class IntroScreen extends Component<Props> {
           </Header>
 
           <Actions>
-            <Button size="large" onClick={() => createNewProjectStart()}>
+            <StrokeButton size="large" onClick={() => createNewProjectStart()}>
               Create a new web application
-            </Button>
+            </StrokeButton>
             <Spacer size={40} />
             <div>
               Or,{' '}
