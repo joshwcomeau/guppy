@@ -7,12 +7,11 @@ const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
 const chalkRaw = require('chalk');
-const ElectronStore = require('electron-store');
 
 const killProcessId = require('./services/kill-process-id.service');
+const electronStore = require('./services/electron-store.service');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
-const electronStore = new ElectronStore();
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks

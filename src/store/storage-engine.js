@@ -9,26 +9,24 @@
  *   modifications to the store are required.
  */
 
-import ElectronStore from 'electron-store';
+import electronStore from '../services/electron-store.service';
 
 function rejectWithMessage(error) {
   return Promise.reject(error.message);
 }
 
 export default function createEngine(key: string) {
-  const store = new ElectronStore();
-
-  window.electronStore = store;
+  window.electronStore = electronStore;
 
   return {
     load: () =>
       new Promise(resolve => {
-        resolve(store.get(key) || {});
+        resolve(electronStore.get(key) || {});
       }).catch(rejectWithMessage),
 
     save: (state: any) =>
       new Promise(resolve => {
-        store.set(key, state);
+        electronStore.set(key, state);
       }).catch(rejectWithMessage),
   };
 }

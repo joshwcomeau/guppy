@@ -6,15 +6,12 @@ import {
   RESET_ALL_STATE,
 } from '../actions';
 
-import reducer, {
-  getTaskDescription,
-  initialState as tasksInitialState,
-} from './tasks.reducer';
+import reducer, { getTaskDescription, initialState } from './tasks.reducer';
 
 describe('Tasks reducer', () => {
   describe(REFRESH_PROJECTS_FINISH, () => {
-    test('captures task data from new projects', () => {
-      const initialState = reducer(undefined, {});
+    it('captures task data from new projects', () => {
+      const prevState = reducer(undefined, {});
 
       const action = {
         type: REFRESH_PROJECTS_FINISH,
@@ -44,7 +41,7 @@ describe('Tasks reducer', () => {
         },
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           id: 'foo-start',
@@ -95,11 +92,11 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test("doesn't overwrite existing task data, other than command", () => {
+    it("doesn't overwrite existing task data, other than command", () => {
       const timestamp = new Date();
       const logs = [{ text: 'Thing happened', id: '1' }];
 
-      const initialState = {
+      const prevState = {
         'foo-start': {
           id: 'foo-start',
           projectId: 'foo',
@@ -137,7 +134,7 @@ describe('Tasks reducer', () => {
         },
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           id: 'foo-start',
@@ -171,7 +168,7 @@ describe('Tasks reducer', () => {
     it('generates initial task data for a new project', () => {
       const timestamp = new Date();
 
-      const initialState = {
+      const prevState = {
         'foo-start': {
           id: 'foo-start',
           projectId: 'foo',
@@ -196,7 +193,7 @@ describe('Tasks reducer', () => {
         },
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           id: 'foo-start',
@@ -227,7 +224,7 @@ describe('Tasks reducer', () => {
   });
 
   describe(RUN_TASK, () => {
-    test('marks a task as running', () => {
+    it('marks a task as running', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -240,7 +237,7 @@ describe('Tasks reducer', () => {
         type: 'sustained',
       };
 
-      const initialState = {
+      const prevState = {
         'foo-start': mainTask,
         'foo-build': {
           id: 'foo-build',
@@ -265,7 +262,7 @@ describe('Tasks reducer', () => {
         timestamp,
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           id: 'foo-start',
@@ -296,7 +293,7 @@ describe('Tasks reducer', () => {
   });
 
   describe(COMPLETE_TASK, () => {
-    test('marks a sustained task as idle, when it was successful', () => {
+    it('marks a sustained task as idle, when it was successful', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -321,7 +318,7 @@ describe('Tasks reducer', () => {
         type: 'short-term',
       };
 
-      const initialState = {
+      const prevState = {
         'foo-start': mainTask,
         'foo-build': otherTask,
       };
@@ -335,7 +332,7 @@ describe('Tasks reducer', () => {
         wasSuccessful: true,
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           ...mainTask,
@@ -348,7 +345,7 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test('marks a sustained task as idle, when it fails', () => {
+    it('marks a sustained task as idle, when it fails', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -373,7 +370,7 @@ describe('Tasks reducer', () => {
         type: 'short-term',
       };
 
-      const initialState = {
+      const prevState = {
         'foo-start': mainTask,
         'foo-build': otherTask,
       };
@@ -387,7 +384,7 @@ describe('Tasks reducer', () => {
         wasSuccessful: false,
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           ...mainTask,
@@ -400,7 +397,7 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test('marks a short-term task as success, when it was successful', () => {
+    it('marks a short-term task as success, when it was successful', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -425,7 +422,7 @@ describe('Tasks reducer', () => {
         type: 'short-term',
       };
 
-      const initialState = {
+      const prevState = {
         'foo-start': mainTask,
         'foo-build': otherTask,
       };
@@ -439,7 +436,7 @@ describe('Tasks reducer', () => {
         wasSuccessful: true,
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           ...mainTask,
@@ -452,7 +449,7 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
 
-    test('marks a short-term task as failed, when it fails', () => {
+    it('marks a short-term task as failed, when it fails', () => {
       const mainTask = {
         id: 'foo-start',
         projectId: 'foo',
@@ -477,7 +474,7 @@ describe('Tasks reducer', () => {
         type: 'short-term',
       };
 
-      const initialState = {
+      const prevState = {
         'foo-start': mainTask,
         'foo-build': otherTask,
       };
@@ -491,7 +488,7 @@ describe('Tasks reducer', () => {
         wasSuccessful: false,
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
       const expectedState = {
         'foo-start': {
           ...mainTask,
@@ -504,52 +501,54 @@ describe('Tasks reducer', () => {
       expect(actualState).toEqual(expectedState);
     });
   });
-});
 
-describe('Tasks reducer - helpers', () => {
-  describe('getTaskDescription', () => {
-    test('start', () => {
-      expect(getTaskDescription('start')).toBe(
-        'Run a local development server'
-      );
-    });
+  describe(RESET_ALL_STATE, () => {
+    it('resets to initialState', () => {
+      const prevState = {
+        'foo-start': {},
+      };
+      const action = {
+        type: RESET_ALL_STATE,
+      };
+      const actualState = reducer(prevState, action);
 
-    test('build', () => {
-      expect(getTaskDescription('build')).toBe(
-        'Bundle your project for production'
-      );
-    });
-
-    test('test', () => {
-      expect(getTaskDescription('test')).toBe('Run the automated tests');
-    });
-
-    test('eject', () => {
-      expect(getTaskDescription('eject')).toBe(
-        'Permanently reveal the create-react-app configuration files'
-      );
-    });
-
-    test('format', () => {
-      expect(getTaskDescription('format')).toBe(
-        'Runs a formatter that tweaks your code to align with industry best-practices'
-      );
-    });
-
-    test('unrecognized', () => {
-      expect(getTaskDescription('gfsagsdgsdfgsd')).toBe('');
+      expect(actualState).toEqual(initialState);
     });
   });
 
-  test('reset to initialState on RESET_ALL_STATE action', () => {
-    const prevState = {
-      'foo-start': {},
-    };
-    const action = {
-      type: RESET_ALL_STATE,
-    };
-    const actualState = reducer(prevState, action);
+  describe('Selectors', () => {
+    describe('getTaskDescription', () => {
+      it('start', () => {
+        expect(getTaskDescription('start')).toBe(
+          'Run a local development server'
+        );
+      });
 
-    expect(actualState).toEqual(tasksInitialState);
+      it('build', () => {
+        expect(getTaskDescription('build')).toBe(
+          'Bundle your project for production'
+        );
+      });
+
+      it('test', () => {
+        expect(getTaskDescription('test')).toBe('Run the automated tests');
+      });
+
+      it('eject', () => {
+        expect(getTaskDescription('eject')).toBe(
+          'Permanently reveal the create-react-app configuration files'
+        );
+      });
+
+      it('format', () => {
+        expect(getTaskDescription('format')).toBe(
+          'Runs a formatter that tweaks your code to align with industry best-practices'
+        );
+      });
+
+      it('unrecognized', () => {
+        expect(getTaskDescription('gfsagsdgsdfgsd')).toBe('');
+      });
+    });
   });
 });
