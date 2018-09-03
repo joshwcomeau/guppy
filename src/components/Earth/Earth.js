@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 
 import {
   Planet,
@@ -13,7 +13,7 @@ type Props = {
   size: number,
 };
 
-class Earth extends Component<Props> {
+class Earth extends PureComponent<Props> {
   render() {
     return (
       <Planet

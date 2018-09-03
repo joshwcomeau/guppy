@@ -7,11 +7,24 @@ import { COLORS } from '../../constants';
 type Props = {
   x: number,
   y: number,
-  size: number,
+  size?: number,
+  id: string,
+  handleMouseDown?: (id: string) => void,
 };
 
-const File = ({ x, y, size }: Props) => (
-  <Wrapper x={x} y={y} size={size} viewBox="0 0 20 28">
+// Possible optimization: Separate x/y stuff from the SVG renderer, since it
+// seems like it takes a while to diff this tree?
+
+const File = ({ x, y, size = 50, id, handleMouseDown }: Props) => (
+  <Wrapper
+    x={x}
+    y={y}
+    size={size}
+    viewBox="0 0 20 28"
+    onMouseDown={() =>
+      typeof handleMouseDown === 'function' && handleMouseDown(id)
+    }
+  >
     <defs>
       <filter id="file-corner" x="-100%" y="0" width="200%" height="200%">
         <feOffset result="offOut" in="SourceGraphic" dx="-1" dy="1" />
@@ -45,13 +58,19 @@ const File = ({ x, y, size }: Props) => (
   </Wrapper>
 );
 
-const Wrapper = styled.svg`
+const Wrapper = styled.svg.attrs({
+  style: props => ({
+    top: props.y + 'px',
+    left: props.x + 'px',
+  }),
+})`
   position: absolute;
   z-index: 2;
   top: ${props => props.y}px;
   left: ${props => props.x}px;
   height: ${props => props.size}px;
   overflow: visible;
+  transform: translate(-50%, -50%);
 `;
 
 const FoldedCorner = styled.polygon`

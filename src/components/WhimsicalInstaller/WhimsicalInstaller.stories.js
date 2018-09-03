@@ -16,7 +16,7 @@ storiesOf('WhimsicalInstaller', module)
     <Fragment>
       <Showcase label="File">
         <Wrapper width={100} height={100}>
-          <File x={10} y={10} />
+          <File id="file" x={50} y={50} />
         </Wrapper>
       </Showcase>
       <Showcase label="Folder">
