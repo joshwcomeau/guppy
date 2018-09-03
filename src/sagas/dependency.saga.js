@@ -20,11 +20,9 @@ import {
   START_NEXT_ACTION_IN_QUEUE,
   queueDependencyInstall,
   queueDependencyUninstall,
-  installDependencyStart,
   installDependenciesStart,
   installDependenciesError,
   installDependenciesFinish,
-  uninstallDependencyStart,
   uninstallDependenciesStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
@@ -45,7 +43,7 @@ export function* handleAddDependency({
 
   // if there are no other ongoing operations, begin install
   if (!queuedAction) {
-    yield put(installDependencyStart(projectId, dependencyName, version));
+    yield put(startNextActionInQueue(projectId));
   }
 }
 
@@ -61,9 +59,7 @@ export function* handleUpdateDependency({
   );
 
   if (!queuedAction) {
-    yield put(
-      installDependencyStart(projectId, dependencyName, latestVersion, true)
-    );
+    yield put(startNextActionInQueue(projectId));
   }
 }
 
@@ -76,7 +72,7 @@ export function* handleDeleteDependency({
   yield put(queueDependencyUninstall(projectId, dependencyName));
 
   if (!queuedAction) {
-    yield put(uninstallDependencyStart(projectId, dependencyName));
+    yield put(startNextActionInQueue(projectId));
   }
 }
 
