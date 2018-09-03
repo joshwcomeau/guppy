@@ -17,7 +17,6 @@ import {
   UNINSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_ERROR,
   UNINSTALL_DEPENDENCIES_FINISH,
-  START_NEXT_ACTION_IN_QUEUE,
   queueDependencyInstall,
   queueDependencyUninstall,
   installDependencyStart,
@@ -27,10 +26,7 @@ import {
   uninstallDependenciesError,
   uninstallDependenciesFinish,
 } from '../actions';
-import {
-  handleStartNextActionInQueue,
-  handleQueueActionCompleted,
-} from './queue.saga';
+import { handleQueueActionCompleted } from './queue.saga';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
@@ -143,5 +139,4 @@ export default function* rootSaga(): Saga<void> {
     ],
     handleQueueActionCompleted
   );
-  yield takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue);
 }

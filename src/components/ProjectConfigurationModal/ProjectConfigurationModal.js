@@ -7,7 +7,7 @@ import IconBase from 'react-icons-kit';
 import { edit2 } from 'react-icons-kit/feather/edit2';
 import importAll from 'import-all.macro';
 
-import { hideModal, saveProjectSettingsStart } from '../../actions';
+import * as actions from '../../actions';
 
 import { COLORS, BREAKPOINTS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
@@ -32,7 +32,7 @@ type Props = {
   project: Project,
   isVisible: boolean,
   hideModal: () => void,
-  saveProjectSettingsStart: (string, string, Project) => void,
+  saveProjectSettings: (string, string, Project) => void,
   // From Redux:
   // task: Task,
   // runTask: (task: Task, timestamp: Date) => any,
@@ -66,10 +66,10 @@ class ProjectConfigurationModal extends Component<Props, State> {
 
   saveSettings = e => {
     e.preventDefault();
-    const { saveProjectSettingsStart: save, project } = this.props;
+    const { saveProjectSettings, project } = this.props;
     const { newName, projectIcon } = this.state;
 
-    save(newName, projectIcon, project);
+    saveProjectSettings(newName, projectIcon, project);
   };
 
   changeProjectname = e => {
@@ -205,11 +205,13 @@ const mapStateToProps = (state, ownProps) => {
   return {
     project,
     isVisible: state.modal === 'project-configuration',
-    saveProjectSettingsStart,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { hideModal, saveProjectSettingsStart }
+  {
+    hideModal: actions.hideModal,
+    saveProjectSettings: actions.saveProjectSettings,
+  }
 )(ProjectConfigurationModal);

@@ -10,6 +10,9 @@ import {
   INSTALL_DEPENDENCIES_FINISH,
   UNINSTALL_DEPENDENCIES_ERROR,
   UNINSTALL_DEPENDENCIES_FINISH,
+  MODIFY_PROJECT_START,
+  MODIFY_PROJECT_ERROR,
+  MODIFY_PROJECT_FINISH,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -18,7 +21,8 @@ import type { QueuedDependency, QueueAction } from '../types';
 type QueueEntry = {
   action: QueueAction,
   active: boolean,
-  dependencies: Array<QueuedDependency>,
+  dependencies?: Array<QueuedDependency>,
+  settings?: any,
 };
 
 type State = {
@@ -100,30 +104,33 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case QUEUE_MODIFY_PROJECT: {
-      const { projectId, name } = action;
+      const { projectId, settings } = action;
 
       return produce(state, draftState => {
         // get existing project queue, or create it if this
         // is the first entry
         const projectQueue = draftState[projectId] || [];
 
-        // get existing uninstall queue for this project, or
+        // get existing modification queue for this project, or
         // create it if it doesn't exist
-        let installQueue = projectQueue.find(
+        let modificationQueue = projectQueue.find(
           q => q.action === 'modify' && !q.active
         );
-        if (!installQueue) {
-          installQueue = {
+        if (!modificationQueue) {
+          modificationQueue = {
             action: 'modify',
             active: false,
-            dependencies: [], // Todo: It would be better to have this named settings: {} or should we change this to payload?
+            settings: {},
           };
-          projectQueue.push(installQueue);
+          projectQueue.push(modificationQueue);
         }
 
-        // add settings to the modify queue
-        // Todo: Is it required to add the mdofication here?
-        installQueue.dependencies.push({ name });
+        // maintain existing settings and override duplicate
+        // keys with the newer values
+        modificationQueue.settings = {
+          ...modificationQueue.settings,
+          ...settings,
+        };
 
         // update the project's modify queue
         draftState[projectId] = projectQueue;
@@ -131,7 +138,8 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case INSTALL_DEPENDENCIES_START:
-    case UNINSTALL_DEPENDENCIES_START: {
+    case UNINSTALL_DEPENDENCIES_START:
+    case MODIFY_PROJECT_START: {
       const { projectId } = action;
 
       return produce(state, draftState => {
@@ -143,7 +151,9 @@ export default (state: State = initialState, action: Action) => {
     case INSTALL_DEPENDENCIES_ERROR:
     case INSTALL_DEPENDENCIES_FINISH:
     case UNINSTALL_DEPENDENCIES_ERROR:
-    case UNINSTALL_DEPENDENCIES_FINISH: {
+    case UNINSTALL_DEPENDENCIES_FINISH:
+    case MODIFY_PROJECT_ERROR:
+    case MODIFY_PROJECT_FINISH: {
       const { projectId } = action;
 
       return produce(state, draftState => {

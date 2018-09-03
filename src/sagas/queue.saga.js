@@ -1,4 +1,4 @@
-import { select, put } from 'redux-saga/effects';
+import { select, put, takeEvery } from 'redux-saga/effects';
 // import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 
@@ -7,6 +7,7 @@ import {
   uninstallDependenciesStart,
   startNextActionInQueue,
   modifyProjectStart,
+  START_NEXT_ACTION_IN_QUEUE,
 } from '../actions';
 
 import type { Action } from 'redux';
@@ -41,4 +42,8 @@ export function* handleStartNextActionInQueue({
       yield put(modifyProjectStart(projectId, nextAction.settings));
       break;
   }
+}
+
+export default function* rootSaga(): Saga<void> {
+  yield takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue);
 }
