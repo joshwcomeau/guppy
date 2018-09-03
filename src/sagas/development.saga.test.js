@@ -22,9 +22,6 @@ describe('development saga', () => {
       saga.next();
 
       // Confirm & check that electronStore.clear is called
-      // The saga test just checks that the method is called, not that anything
-      // is erased.
-      // Because we've stubbed ElectronStore
       expect(saga.next(0).value).toEqual(
         call([electronStore, electronStore.clear])
       );
