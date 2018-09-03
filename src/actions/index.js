@@ -224,13 +224,6 @@ export const installDependenciesStart = (
   dependencies,
 });
 
-export const installDependencyStart = (
-  projectId: string,
-  name: string,
-  version: string,
-  updating?: boolean
-) => installDependenciesStart(projectId, [{ name, version, updating }]);
-
 export const installDependenciesError = (
   projectId: string,
   dependencies: Array<QueuedDependency>
@@ -257,9 +250,6 @@ export const uninstallDependenciesStart = (
   projectId,
   dependencies,
 });
-
-export const uninstallDependencyStart = (projectId: string, name: string) =>
-  uninstallDependenciesStart(projectId, [{ name }]);
 
 export const uninstallDependenciesError = (
   projectId: string,
