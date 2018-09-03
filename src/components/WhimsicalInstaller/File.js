@@ -7,10 +7,11 @@ import { COLORS } from '../../constants';
 type Props = {
   x: number,
   y: number,
+  size: number,
 };
 
-const File = ({ x, y }: Props) => (
-  <Wrapper x={x} y={y} viewBox="0 0 20 27">
+const File = ({ x, y, size }: Props) => (
+  <Wrapper x={x} y={y} size={size} viewBox="0 0 20 28">
     <defs>
       <filter id="file-corner" x="-100%" y="0" width="200%" height="200%">
         <feOffset result="offOut" in="SourceGraphic" dx="-1" dy="1" />
@@ -29,8 +30,8 @@ const File = ({ x, y }: Props) => (
         M0,0
         L15,0
         L20,5
-        L20,27
-        L0,27
+        L20,28
+        L0,28
       `}
       stroke="none"
       fill={COLORS.white}
@@ -46,10 +47,10 @@ const File = ({ x, y }: Props) => (
 
 const Wrapper = styled.svg`
   position: absolute;
+  z-index: 2;
   top: ${props => props.y}px;
   left: ${props => props.x}px;
-  width: 20px;
-  height: 27px;
+  height: ${props => props.size}px;
   overflow: visible;
 `;
 
