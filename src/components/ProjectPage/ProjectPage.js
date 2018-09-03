@@ -75,15 +75,31 @@ class ProjectPage extends Component<Props> {
               {project.name}
             </Heading>
           </PixelShifter>
-          <Spacer size={15} />
+
           <ProjectActionBar>
-            <ActionButton size="small" onClick={this.openFolder}>
+            <Button
+              type="fill"
+              color1={COLORS.gray[200]}
+              color2={COLORS.gray[200]}
+              textColor={COLORS.gray[900]}
+              size="small"
+              onClick={this.openFolder}
+            >
               {getCopyForOpeningFolder()}
-            </ActionButton>
-            <ActionButton size="small" onClick={this.openIDE}>
-              Open editor
-            </ActionButton>
+            </Button>
+            <Spacer size={15} />
+            <Button
+              type="fill"
+              color1={COLORS.gray[200]}
+              color2={COLORS.gray[200]}
+              textColor={COLORS.gray[900]}
+              size="small"
+              onClick={this.openIDE}
+            >
+              Open in Editor
+            </Button>
           </ProjectActionBar>
+
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />
 
@@ -104,14 +120,8 @@ class ProjectPage extends Component<Props> {
   }
 }
 
-const ProjectActionBar = styled.div``;
-
-const ActionButton = styled(Button)`
-  margin-right: 0.3em;
-  background-color: ${COLORS.gray[200]};
-  &:hover {
-    background-color: ${COLORS.gray[300]};
-  }
+const ProjectActionBar = styled.div`
+  display: flex;
 `;
 
 const fadeIn = keyframes`
