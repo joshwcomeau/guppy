@@ -1,7 +1,6 @@
 // @flow
 import React, { Fragment } from 'react';
 import { storiesOf } from '@storybook/react';
-import { withInfo } from '@storybook/addon-info';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
