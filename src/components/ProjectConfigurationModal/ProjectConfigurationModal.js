@@ -11,6 +11,7 @@ import * as actions from '../../actions';
 
 import { COLORS, BREAKPOINTS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { isQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -94,7 +95,7 @@ class ProjectConfigurationModal extends Component<Props, State> {
   };
 
   render() {
-    const { project, hideModal: hide, isVisible } = this.props; // todo: how to properly handle 'hideModal' is already declared in the upper scope  no-shadow  --- renaming feels hacky but works
+    const { project, hideModal: hide, isVisible, queueEmpty } = this.props; // todo: how to properly handle 'hideModal' is already declared in the upper scope  no-shadow  --- renaming feels hacky but works
     const { activeField } = this.state;
 
     // const { name } = project;
@@ -150,9 +151,11 @@ class ProjectConfigurationModal extends Component<Props, State> {
               <Button
                 icon={<IconBase icon={edit2} />}
                 onClick={this.saveSettings}
+                disabled={!queueEmpty}
               >
                 Save
               </Button>
+              {!queueEmpty && 'Waiting for pending tasks to finish.'}
             </FadeIn>
           </MainContent>
         </Fragment>
@@ -205,6 +208,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     project,
     isVisible: state.modal === 'project-configuration',
+    queueEmpty: isQueueEmpty(state),
   };
 };
 
@@ -212,6 +216,6 @@ export default connect(
   mapStateToProps,
   {
     hideModal: actions.hideModal,
-    saveProjectSettings: actions.saveProjectSettings,
+    saveProjectSettings: actions.saveProjectSettingsStart,
   }
 )(ProjectConfigurationModal);

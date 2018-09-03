@@ -1,5 +1,5 @@
 // @flow
-import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 import slug from 'slug';
 import {
@@ -7,18 +7,14 @@ import {
   writePackageJson,
 } from '../services/read-from-disk.service';
 import { defaultParentPath } from '../reducers/paths.reducer';
-import { getNextActionForProjectId } from '../reducers/queue.reducer';
 
 import * as fs from 'fs';
 import * as path from 'path';
 import { remote } from 'electron';
 
 import {
-  saveProjectSettingsStart,
   saveProjectSettingsFinish,
   hideModal,
-  queueSaveProjectSettings,
-  SAVE_PROJECT_SETTINGS,
   SAVE_PROJECT_SETTINGS_START,
   SAVE_PROJECT_SETTINGS_FINISH,
 } from '../actions';
@@ -26,7 +22,7 @@ import {
 const { dialog } = remote;
 const { showErrorBox } = dialog;
 
-function* renameFolder(projectPath, newPath): Saga<void> {
+export function* renameFolder(projectPath, newPath): Saga<void> {
   // console.log('rename', projectPath, newPath);
   yield call([fs, fs.renameSync], projectPath, newPath);
 }
@@ -70,7 +66,7 @@ export function* handleProjectSaveError(err: Error): Saga<void> {
 }
 
 // action triggered if queue is empty
-export function* handleStartSaveSettings(action: any): Saga<void> {
+export function* handleSaveSettings(action: any): Saga<void> {
   const { project, name, icon } = action;
   const { path: projectPath } = project;
   const id = slug(name).toLowerCase();
@@ -133,24 +129,7 @@ export function* handleStartSaveSettings(action: any): Saga<void> {
   }
 }
 
-// action trigger by button
-export function* handleSaveSettings({
-  project,
-  name,
-  icon,
-}: Action): Saga<void> {
-  const queuedAction = yield select(getNextActionForProjectId, project.id);
-
-  yield put(queueSaveProjectSettings(project.id, { name, icon }));
-
-  // if there are no other ongoing operations, begin install
-  if (!queuedAction) {
-    yield put(saveProjectSettingsStart(project.id, { name, icon }));
-  }
-}
-
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(SAVE_PROJECT_SETTINGS, handleSaveSettings);
-  yield takeEvery(SAVE_PROJECT_SETTINGS_START, handleStartSaveSettings);
+  yield takeEvery(SAVE_PROJECT_SETTINGS_START, handleSaveSettings);
   yield takeEvery(SAVE_PROJECT_SETTINGS_FINISH, handleFinishSettings);
 }

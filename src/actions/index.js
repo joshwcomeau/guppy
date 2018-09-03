@@ -46,12 +46,8 @@ export const INSTALL_DEPENDENCIES_FINISH = 'INSTALL_DEPENDENCIES_FINISH';
 export const UNINSTALL_DEPENDENCIES_START = 'UNINSTALL_DEPENDENCIES_START';
 export const UNINSTALL_DEPENDENCIES_ERROR = 'UNINSTALL_DEPENDENCIES_ERROR';
 export const UNINSTALL_DEPENDENCIES_FINISH = 'UNINSTALL_DEPENDENCIES_FINISH';
-export const MODIFY_PROJECT_START = 'MODIFY_PROJECT_START';
-export const MODIFY_PROJECT_ERROR = 'MODIFY_PROJECT_ERROR';
-export const MODIFY_PROJECT_FINISH = 'MODIFY_PROJECT_FINISH';
 export const QUEUE_DEPENDENCY_INSTALL = 'QUEUE_DEPENDENCY_INSTALL';
 export const QUEUE_DEPENDENCY_UNINSTALL = 'QUEUE_DEPENDENCY_UNINSTALL';
-export const QUEUE_MODIFY_PROJECT = 'QUEUE_MODIFY_PROJECT';
 
 export const START_NEXT_ACTION_IN_QUEUE = 'START_NEXT_ACTION_IN_QUEUE';
 export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
@@ -65,7 +61,6 @@ export const SHOW_RESET_STATE_PROMPT = 'SHOW_RESET_STATE_PROMPT';
 export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 
 // project config related actions
-export const SAVE_PROJECT_SETTINGS = 'SAVE_PROJECT_SETTINGS';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
@@ -277,12 +272,6 @@ export const uninstallDependenciesError = (
   dependencies,
 });
 
-export const modifyProjectStart = (projectId: string, settings: any) => ({
-  type: QUEUE_MODIFY_PROJECT,
-  projectId,
-  settings,
-});
-
 export const uninstallDependenciesFinish = (
   projectId: string,
   dependencies: Array<QueuedDependency>
@@ -309,15 +298,6 @@ export const queueDependencyUninstall = (projectId: string, name: string) => ({
   type: QUEUE_DEPENDENCY_UNINSTALL,
   projectId,
   name,
-});
-
-export const queueSaveProjectSettings = (
-  projectId: string,
-  settings: any
-) => ({
-  type: QUEUE_MODIFY_PROJECT,
-  projectId,
-  settings
 });
 
 export const startNextActionInQueue = (projectId: string) => ({
@@ -362,17 +342,6 @@ export const hideModal = () => ({
 });
 
 // project settings related actions
-export const saveProjectSettings = (
-  name: string,
-  icon: string,
-  project: Project
-) => ({
-  type: SAVE_PROJECT_SETTINGS,
-  name,
-  icon,
-  project,
-});
-
 export const saveProjectSettingsStart = (
   name: string,
   icon: string,

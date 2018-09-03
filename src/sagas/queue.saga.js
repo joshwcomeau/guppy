@@ -1,12 +1,10 @@
 import { select, put, takeEvery } from 'redux-saga/effects';
-// import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 
 import {
   installDependenciesStart,
   uninstallDependenciesStart,
   startNextActionInQueue,
-  modifyProjectStart,
   START_NEXT_ACTION_IN_QUEUE,
 } from '../actions';
 
@@ -37,9 +35,6 @@ export function* handleStartNextActionInQueue({
       break;
     case 'uninstall':
       yield put(uninstallDependenciesStart(projectId, nextAction.dependencies));
-      break;
-    case 'modify':
-      yield put(modifyProjectStart(projectId, nextAction.settings));
       break;
   }
 }
