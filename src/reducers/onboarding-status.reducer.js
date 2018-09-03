@@ -73,6 +73,9 @@ export default (state: State = initialState, action: Action) => {
 
 type GlobalState = { onboardingStatus: State };
 
+export const getOnboardingCompleted = (state: GlobalState) =>
+  getOnboardingStatus(state) === 'done';
+
 export const getOnboardingStatus = (state: GlobalState) =>
   state.onboardingStatus;
 

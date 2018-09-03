@@ -18,6 +18,7 @@ import {
   loadPackageJson,
   writePackageJson,
 } from '../services/read-from-disk.service';
+import { getOnboardingCompleted } from '../reducers/onboarding-status.reducer';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import { getColorForProject } from '../services/create-project.service';
 
@@ -169,6 +170,7 @@ describe('import-project saga', () => {
           createdAt: 1532809641976,
         },
       };
+
       const spyOnDate = jest.spyOn(Date, 'now');
       spyOnDate.mockReturnValue(1532809641976);
 
@@ -186,7 +188,10 @@ describe('import-project saga', () => {
         call(writePackageJson, 'path/to/project', jsonWithGuppy)
       );
       expect(saga.next(jsonWithGuppy).value).toEqual(
-        put(importExistingProjectFinish('path/to/project', jsonWithGuppy))
+        select(getOnboardingCompleted)
+      );
+      expect(saga.next(true).value).toEqual(
+        put(importExistingProjectFinish('path/to/project', jsonWithGuppy, true))
       );
       expect(saga.next().done).toBe(true);
       spyOnDate.mockRestore();

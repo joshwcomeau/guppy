@@ -17,16 +17,19 @@ import reducer, {
 describe('Projects Reducer', () => {
   [ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH].forEach(ACTION => {
     describe(ACTION, () => {
-      it('adds the project to the state', () => {
+      const testProject = {
+        name: 'testing',
+        guppy: { id: 'best-id' },
+        scripts: {
+          start: 'react-scripts start',
+        },
+      };
+
+      it("adds the project to the state when still onboarding and doesn't select it", () => {
         const action = {
           type: ACTION, // ADD_PROJECT or IMPORT_EXISTING_PROJECT_FINISH
-          project: {
-            name: 'testing',
-            guppy: { id: 'best-id' },
-            scripts: {
-              start: 'react-scripts start',
-            },
-          },
+          project: testProject,
+          isOnboardingCompleted: false,
         };
         const actualState = reducer(initialState, action);
 
@@ -41,6 +44,28 @@ describe('Projects Reducer', () => {
             },
           },
           selectedId: null,
+        });
+      });
+
+      it('adds the project to the state when onboarding is finished and selects it', () => {
+        const action = {
+          type: ACTION, // ADD_PROJECT or IMPORT_EXISTING_PROJECT_FINISH
+          project: testProject,
+          isOnboardingCompleted: true,
+        };
+        const actualState = reducer(initialState, action);
+
+        const { name, guppy, scripts } = action.project;
+
+        expect(actualState).toEqual({
+          byId: {
+            [guppy.id]: {
+              name,
+              guppy,
+              scripts,
+            },
+          },
+          selectedId: guppy.id,
         });
       });
 
@@ -67,6 +92,7 @@ describe('Projects Reducer', () => {
               start: 'react-scripts start',
             },
           },
+          isOnboardingCompleted: true,
         };
         const actualState = reducer(prevState, action);
 

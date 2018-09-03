@@ -90,7 +90,7 @@ const selectedIdReducer = (
       // _always_ be selected. This is a fundamental truth about how Guppy
       // works. In the future, though, we may want to have non-project screens,
       // and so this will have to be rethought.
-      return state ? action.project.guppy.id : null;
+      return action.isOnboardingCompleted ? action.project.guppy.id : null;
     }
 
     case REFRESH_PROJECTS_FINISH: {

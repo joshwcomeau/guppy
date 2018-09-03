@@ -1,6 +1,7 @@
 // @flow
 import electron from 'electron';
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
+
 import {
   importExistingProjectStart,
   importExistingProjectFinish,
@@ -14,6 +15,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
+import { getOnboardingCompleted } from '../reducers/onboarding-status.reducer';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
@@ -124,7 +126,15 @@ export function* importProject({ path }: Action): Saga<void> {
       packageJsonWithGuppy
     );
 
-    yield put(importExistingProjectFinish(path, writedPackageJson));
+    const isOnboardingCompleted = yield select(getOnboardingCompleted);
+
+    yield put(
+      importExistingProjectFinish(
+        path,
+        writedPackageJson,
+        isOnboardingCompleted
+      )
+    );
   } catch (err) {
     yield call(handleImportError, err);
     yield put(importExistingProjectError());

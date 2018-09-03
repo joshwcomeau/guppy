@@ -6,6 +6,7 @@ import slug from 'slug';
 
 import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
+import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 
 import TwoPaneModal from '../TwoPaneModal';
 
@@ -23,7 +24,8 @@ const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 type Props = {
   projects: { [projectId: string]: ProjectInternal },
   isVisible: boolean,
-  addProject: (project: Project) => void,
+  isOnboardingCompleted: boolean,
+  addProject: (project: Project, isOnboardingCompleted: boolean) => void,
   createNewProjectCancel: () => void,
   createNewProjectFinish: () => void,
 };
@@ -103,10 +105,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: Project) => {
+    const { isOnboardingCompleted } = this.props;
+
     this.props.createNewProjectFinish();
 
     this.timeoutId = window.setTimeout(() => {
-      this.props.addProject(project);
+      this.props.addProject(project, isOnboardingCompleted);
 
       this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);
@@ -184,6 +188,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 const mapStateToProps = state => ({
   projects: getById(state),
   isVisible: state.modal === 'new-project-wizard',
+  isOnboardingCompleted: getOnboardingCompleted(state),
 });
 
 const mapDispatchToProps = {
