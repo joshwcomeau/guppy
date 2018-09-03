@@ -15,6 +15,7 @@ import {
 } from '../services/read-from-disk.service';
 import { getColorForProject } from '../services/create-project.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
+import { getOnboardingCompleted } from '../reducers/onboarding-status.reducer';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
@@ -72,11 +73,6 @@ export function* handleImportError(err: Error): Saga<void> {
 }
 
 export function* importProject({ path }: Action): Saga<void> {
-  const store = window.store.getState();
-
-  // Get onboardingStatus to check if sidebar instructions should display
-  const onboardingCompleted = store.onboardingStatus === 'done';
-
   try {
     // Let's load the basic project info for the path specified, if possible.
     const json = yield call(loadPackageJson, path);
@@ -130,8 +126,14 @@ export function* importProject({ path }: Action): Saga<void> {
       packageJsonWithGuppy
     );
 
+    const isOnboardingCompleted = yield select(getOnboardingCompleted);
+
     yield put(
-      importExistingProjectFinish(path, writedPackageJson, onboardingCompleted)
+      importExistingProjectFinish(
+        path,
+        writedPackageJson,
+        isOnboardingCompleted
+      )
     );
   } catch (err) {
     yield call(handleImportError, err);

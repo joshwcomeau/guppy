@@ -6,7 +6,7 @@ import slug from 'slug';
 
 import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
-import { getOnboardingStatus } from '../../reducers/onboarding-status.reducer';
+import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 
 import TwoPaneModal from '../TwoPaneModal';
 
@@ -24,8 +24,8 @@ const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 type Props = {
   projects: { [projectId: string]: ProjectInternal },
   isVisible: boolean,
-  onboardingStatus: string,
-  addProject: (project: Project, onboardingCompleted: boolean) => void,
+  isOnboardingCompleted: boolean,
+  addProject: (project: Project, isOnboardingCompleted: boolean) => void,
   createNewProjectCancel: () => void,
   createNewProjectFinish: () => void,
 };
@@ -105,15 +105,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: Project) => {
-    const { onboardingStatus } = this.props;
-
-    // Get onboardingStatus to check if sidebar instructions should display
-    const onboardingCompleted = onboardingStatus === 'done';
+    const { isOnboardingCompleted } = this.props;
 
     this.props.createNewProjectFinish();
 
     this.timeoutId = window.setTimeout(() => {
-      this.props.addProject(project, onboardingCompleted);
+      this.props.addProject(project, isOnboardingCompleted);
 
       this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);
@@ -191,7 +188,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 const mapStateToProps = state => ({
   projects: getById(state),
   isVisible: state.modal === 'new-project-wizard',
-  onboardingStatus: getOnboardingStatus(state),
+  isOnboardingCompleted: getOnboardingCompleted(state),
 });
 
 const mapDispatchToProps = {

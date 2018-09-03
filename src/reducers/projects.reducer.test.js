@@ -27,7 +27,7 @@ describe('Projects Reducer', () => {
               start: 'react-scripts start',
             },
           },
-          onboardingCompleted: true,
+          isOnboardingCompleted: true,
         };
         const actualState = reducer(initialState, action);
 

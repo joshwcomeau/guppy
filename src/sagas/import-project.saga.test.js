@@ -18,14 +18,9 @@ import {
   loadPackageJson,
   writePackageJson,
 } from '../services/read-from-disk.service';
+import { getOnboardingCompleted } from '../reducers/onboarding-status.reducer';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import { getColorForProject } from '../services/create-project.service';
-
-// Mock window.store.getState()
-const store = {
-  getState: jest.fn(() => ('onboardingStatus': 'done')),
-};
-window.store = store;
 
 describe('import-project saga', () => {
   const { showOpenDialog, showErrorBox } = electron.remote.dialog;
@@ -176,9 +171,6 @@ describe('import-project saga', () => {
         },
       };
 
-      const getState = window.store.getState();
-      const onboardingCompleted = getState.onboardingStatus === 'done';
-
       const spyOnDate = jest.spyOn(Date, 'now');
       spyOnDate.mockReturnValue(1532809641976);
 
@@ -196,13 +188,10 @@ describe('import-project saga', () => {
         call(writePackageJson, 'path/to/project', jsonWithGuppy)
       );
       expect(saga.next(jsonWithGuppy).value).toEqual(
-        put(
-          importExistingProjectFinish(
-            'path/to/project',
-            jsonWithGuppy,
-            onboardingCompleted
-          )
-        )
+        select(getOnboardingCompleted)
+      );
+      expect(saga.next(true).value).toEqual(
+        put(importExistingProjectFinish('path/to/project', jsonWithGuppy, true))
       );
       expect(saga.next().done).toBe(true);
       spyOnDate.mockRestore();
