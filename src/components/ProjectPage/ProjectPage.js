@@ -11,9 +11,15 @@ import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
+import Button from '../Button';
 import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
+import {
+  openProjectInEditor,
+  openProjectInFolder,
+} from '../../services/shell.service';
+import { getCopyForOpeningFolder } from '../../services/platform.service';
 
 import type { Project } from '../../types';
 
@@ -23,6 +29,17 @@ type Props = {
 };
 
 class ProjectPage extends Component<Props> {
+  openIDE = () => {
+    const { project } = this.props;
+    openProjectInEditor(project);
+  };
+
+  openFolder = () => {
+    const { project } = this.props;
+    // Show a folder in the file manager
+    openProjectInFolder(project);
+  };
+
   componentDidMount() {
     const { project, loadDependencyInfoFromDisk } = this.props;
 
@@ -59,6 +76,30 @@ class ProjectPage extends Component<Props> {
             </Heading>
           </PixelShifter>
 
+          <ProjectActionBar>
+            <Button
+              type="fill"
+              color1={COLORS.gray[200]}
+              color2={COLORS.gray[200]}
+              textColor={COLORS.gray[900]}
+              size="small"
+              onClick={this.openFolder}
+            >
+              {getCopyForOpeningFolder()}
+            </Button>
+            <Spacer size={15} />
+            <Button
+              type="fill"
+              color1={COLORS.gray[200]}
+              color2={COLORS.gray[200]}
+              textColor={COLORS.gray[900]}
+              size="small"
+              onClick={this.openIDE}
+            >
+              Open in Editor
+            </Button>
+          </ProjectActionBar>
+
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />
 
@@ -78,6 +119,10 @@ class ProjectPage extends Component<Props> {
     );
   }
 }
+
+const ProjectActionBar = styled.div`
+  display: flex;
+`;
 
 const fadeIn = keyframes`
   from { opacity: 0.5 }
