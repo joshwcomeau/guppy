@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 
 type Props = {
   size?: number,
@@ -39,8 +39,8 @@ export const FolderTop = ({ size }: Props) => (
         y2="261"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#FBE57F" />
-        <stop offset="1" stop-color="#F8DC78" />
+        <stop stopColor="#FBE57F" />
+        <stop offset="1" stopColor="#F8DC78" />
       </linearGradient>
     </defs>
 
@@ -48,7 +48,7 @@ export const FolderTop = ({ size }: Props) => (
   </svg>
 );
 
-class Folder extends Component<Props> {
+class Folder extends PureComponent<Props> {
   render() {
     const { size } = this.props;
 
