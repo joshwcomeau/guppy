@@ -8,7 +8,7 @@ import {
 } from '../actions';
 
 import reducer, {
-  initialState as projectsInitialState,
+  initialState,
   getById,
   getSelectedProjectId,
   getInternalProjectById,
@@ -28,7 +28,7 @@ describe('Projects Reducer', () => {
             },
           },
         };
-        const actualState = reducer(projectsInitialState, action);
+        const actualState = reducer(initialState, action);
 
         const { name, guppy, scripts } = action.project;
 
@@ -45,7 +45,7 @@ describe('Projects Reducer', () => {
       });
 
       it("selects it, when it isn't the first one", () => {
-        const initialState = {
+        const prevState = {
           byId: {
             preexisting: {
               name: 'I pre-exist!',
@@ -68,7 +68,7 @@ describe('Projects Reducer', () => {
             },
           },
         };
-        const actualState = reducer(initialState, action);
+        const actualState = reducer(prevState, action);
 
         const { name, guppy, scripts } = action.project;
 
@@ -112,7 +112,7 @@ describe('Projects Reducer', () => {
         ],
       };
 
-      const initialState = {
+      const prevState = {
         byId: {
           foo: {
             dependencies: {},
@@ -128,12 +128,12 @@ describe('Projects Reducer', () => {
         },
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
 
       expect(actualState).toEqual({
         byId: {
           foo: {
-            ...initialState.byId.foo,
+            ...prevState.byId.foo,
             dependencies: {
               [action.dependencies[0].name]: action.dependencies[0].version,
             },
@@ -146,8 +146,8 @@ describe('Projects Reducer', () => {
 
   describe(REFRESH_PROJECTS_FINISH, () => {
     it('returns a null selectedId if selected project does not exist in the list of projects', () => {
-      const initialState = {
-        ...projectsInitialState,
+      const prevState = {
+        ...initialState,
         selectedId: 'hello',
       };
 
@@ -156,17 +156,17 @@ describe('Projects Reducer', () => {
         projects: {},
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
 
       expect(actualState).toEqual({
-        ...projectsInitialState,
+        ...initialState,
         selectedId: null,
       });
     });
 
     it('returns a null selectedId if initial selectedId is null', () => {
-      const initialState = {
-        ...projectsInitialState,
+      const prevState = {
+        ...initialState,
         selectedId: null,
       };
 
@@ -175,16 +175,16 @@ describe('Projects Reducer', () => {
         projects: {},
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
 
       expect(actualState).toEqual({
-        ...initialState,
+        ...prevState,
         selectedId: null,
       });
     });
 
     it('returns selectedId if selectedId is found in projects', () => {
-      const initialState = {
+      const prevState = {
         byId: {
           foo: {
             name: 'foo',
@@ -199,24 +199,20 @@ describe('Projects Reducer', () => {
 
       const action = {
         type: REFRESH_PROJECTS_FINISH,
-        projects: initialState.byId,
+        projects: prevState.byId,
       };
 
-      const actualState = reducer(initialState, action);
+      const actualState = reducer(prevState, action);
 
       expect(actualState).toEqual({
-        ...initialState,
-        selectedId: initialState.selectedId,
+        ...prevState,
+        selectedId: prevState.selectedId,
       });
     });
   });
 
   describe(SELECT_PROJECT, () => {
     it('selects the projectId as the selectedId', () => {
-      const initialState = {
-        ...projectsInitialState,
-      };
-
       const action = {
         type: SELECT_PROJECT,
         projectId: 'foobar',
@@ -231,46 +227,48 @@ describe('Projects Reducer', () => {
     });
   });
 
-  test('reset to initialState on RESET_ALL_STATE action', () => {
-    const prevState = {
-      byId: {
-        foo: {
-          name: 'foo',
-          guppy: { id: 'foo' },
-          scripts: {
-            start: 'command it',
+  describe(RESET_ALL_STATE, () => {
+    it('resets to initialState', () => {
+      const prevState = {
+        byId: {
+          foo: {
+            name: 'foo',
+            guppy: { id: 'foo' },
+            scripts: {
+              start: 'command it',
+            },
           },
         },
-      },
-      selectedId: 'foo',
-    };
-    const action = { type: RESET_ALL_STATE };
-    const actualState = reducer(prevState, action);
+        selectedId: 'foo',
+      };
+      const action = { type: RESET_ALL_STATE };
+      const actualState = reducer(prevState, action);
 
-    expect(actualState).toEqual(projectsInitialState);
-  });
-});
-
-describe('Project Reducer // Helpers', () => {
-  describe('getById', () => {
-    it('gets projects by id', () => {
-      const state = { projects: { byId: 'great object' } };
-      expect(getById(state)).toBe('great object');
+      expect(actualState).toEqual(initialState);
     });
   });
 
-  describe('getSelectedProjectId', () => {
-    it('gets projects selected id', () => {
-      const state = { projects: { selectedId: 'great object' } };
-      expect(getSelectedProjectId(state)).toBe('great object');
+  describe('helpers', () => {
+    describe('getById', () => {
+      it('gets projects by id', () => {
+        const state = { projects: { byId: 'great object' } };
+        expect(getById(state)).toBe('great object');
+      });
     });
-  });
 
-  describe('getInternalProjectById', () => {
-    it('gets project by id', () => {
-      const id = 'test-id';
-      const state = { projects: { byId: { [id]: 'testing' } } };
-      expect(getInternalProjectById(state, id)).toBe('testing');
+    describe('getSelectedProjectId', () => {
+      it('gets projects selected id', () => {
+        const state = { projects: { selectedId: 'great object' } };
+        expect(getSelectedProjectId(state)).toBe('great object');
+      });
+    });
+
+    describe('getInternalProjectById', () => {
+      it('gets project by id', () => {
+        const id = 'test-id';
+        const state = { projects: { byId: { [id]: 'testing' } } };
+        expect(getInternalProjectById(state, id)).toBe('testing');
+      });
     });
   });
 });
