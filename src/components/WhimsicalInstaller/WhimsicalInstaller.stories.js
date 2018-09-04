@@ -11,23 +11,19 @@ import Folder from './Folder';
 import WhimsicalInstaller from './WhimsicalInstaller';
 
 storiesOf('WhimsicalInstaller', module)
-  .add('components', () => (
-    <Fragment>
-      <Showcase label="File">
-        <Wrapper width={100} height={100}>
-          <File id="file" x={50} y={50} />
-        </Wrapper>
-      </Showcase>
-      <Showcase label="Folder">
-        <Wrapper width={100} height={100}>
-          <Folder size={60} />
-        </Wrapper>
-      </Showcase>
-    </Fragment>
-  ))
-  .add('All together', () => (
+  .add('default (600px)', () => (
     <Wrapper width={600} height={200}>
       <WhimsicalInstaller width={600} />
+    </Wrapper>
+  ))
+  .add('Tiny (200px)', () => (
+    <Wrapper width={200} height={66.6}>
+      <WhimsicalInstaller width={200} />
+    </Wrapper>
+  ))
+  .add('Large (1000px)', () => (
+    <Wrapper width={1000} height={333.3}>
+      <WhimsicalInstaller width={1000} />
     </Wrapper>
   ));
 
