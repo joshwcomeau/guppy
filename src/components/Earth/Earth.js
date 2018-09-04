@@ -22,7 +22,9 @@ class Earth extends PureComponent<Props> {
         background="linear-gradient(0deg, #0048ff, #178aff, #01cafe)"
         land={size => <EarthContinents planetSize={size} />}
         glow={size => <PlanetGlow planetSize={size} />}
-        moons={size => <PlanetMoon offset={20} planetSize={size} />}
+        moons={size => (
+          <PlanetMoon offset={size / 5} planetSize={size} size={size / 10} />
+        )}
         clouds={size => (
           <Fragment>
             <PlanetCloud
