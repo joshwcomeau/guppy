@@ -22,7 +22,10 @@ import {
 const { dialog } = remote;
 const { showErrorBox } = dialog;
 
-export function* renameFolder(projectPath, newPath): Saga<void> {
+export function* renameFolder(
+  projectPath: string,
+  newPath: string
+): Saga<void> {
   // console.log('rename', projectPath, newPath);
   yield call([fs, fs.renameSync], projectPath, newPath);
 }

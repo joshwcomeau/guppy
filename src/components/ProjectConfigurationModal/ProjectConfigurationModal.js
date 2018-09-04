@@ -32,6 +32,7 @@ const iconSrcs: string[] = Object.values(icons).map(src => String(src));
 type Props = {
   project: Project,
   isVisible: boolean,
+  queueEmpty: boolean,
   hideModal: () => void,
   saveProjectSettings: (string, string, Project) => void,
   // From Redux:
@@ -95,7 +96,7 @@ class ProjectConfigurationModal extends Component<Props, State> {
   };
 
   render() {
-    const { project, hideModal: hide, isVisible, queueEmpty } = this.props; // todo: how to properly handle 'hideModal' is already declared in the upper scope  no-shadow  --- renaming feels hacky but works
+    const { project, hideModal, isVisible, queueEmpty } = this.props;
     const { activeField } = this.state;
 
     // const { name } = project;
@@ -104,7 +105,7 @@ class ProjectConfigurationModal extends Component<Props, State> {
 
     // NOTE: No isVisible check as this is used as the ModalContent component --> maybe rename the component so this is clear
     return (
-      <Modal isVisible={isVisible} onDismiss={hide}>
+      <Modal isVisible={isVisible} onDismiss={hideModal}>
         <Fragment>
           <ModalHeader title="Project settings">
             <Description>Change the settings of project {name}</Description>
