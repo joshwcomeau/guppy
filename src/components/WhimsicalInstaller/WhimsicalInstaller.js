@@ -15,12 +15,14 @@ import Earth from '../Earth';
 import type { BezierPath } from './WhimsicalInstaller.helpers';
 
 const FILE_SPEED = 4; // TODO: file-specific, slightly randomized?
+const FOLDER_OPEN_RADIUS = 75;
+const FOLDER_CLOSE_RADIUS = FOLDER_OPEN_RADIUS / 2;
 
 type FileData = {
   id: string,
   x: number,
   y: number,
-  status: 'autonomous' | 'eaten' | 'caught' | 'released',
+  status: 'autonomous' | 'being-inhaled' | 'swallowed' | 'caught' | 'released',
   flightPath: BezierPath,
 };
 
@@ -139,47 +141,45 @@ class WhimsicalInstaller extends Component<Props, State> {
     this.updateFile(file.id, { x, y });
   };
 
-  continueEatingDoomedFiles = () => {
+  inhaleFiles = () => {
     const { width } = this.props;
     const { files } = this.state;
 
     const height = this.getHeight();
     const fileIds = Object.keys(files);
 
-    const folderPosition = { x: width * (5 / 6), y: height * 0.5 };
+    const folderPoint = { x: width * (5 / 6), y: height * 0.5 };
 
     // If any of the files have made it to the very center of the folder,
     // we can remove them from the universe
-    const swallowedFileIds = fileIds.filter(
-      id => files[id].x === folderPosition.x && files[id].y === folderPosition.y
-    );
-
-    if (swallowedFileIds.length) {
-      const nextFiles = fileIds.reduce((acc, id) => {
-        if (swallowedFileIds.includes(id)) {
-          return acc;
-        }
-
-        return {
-          ...acc,
-          [id]: files[id],
-        };
-      }, {});
-
-      this.setState({ files: nextFiles });
-    }
-
-    const fileIdsBeingEaten = fileIds.filter(
-      id => files[id].status === 'eaten' && !swallowedFileIds.includes(id)
-    );
-
-    fileIdsBeingEaten.forEach(id => {
+    const swallowedFileIds = fileIds.filter(id => {
       const file = files[id];
 
-      const deltaX = folderPosition.x - file.x;
-      const deltaY = folderPosition.y - file.y;
+      const distanceToFolder = calculateDistanceBetweenPoints(
+        file,
+        folderPoint
+      );
 
-      const distanceToFolder = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+      return distanceToFolder <= FILE_SPEED;
+    });
+
+    if (swallowedFileIds.length) {
+      swallowedFileIds.forEach(id =>
+        this.updateFile(id, {
+          status: 'swallowed',
+        })
+      );
+    }
+
+    const fileIdsBeingInhaled = fileIds.filter(
+      id => files[id].status === 'being-inhaled'
+    );
+
+    fileIdsBeingInhaled.forEach(id => {
+      const file = files[id];
+
+      const deltaX = folderPoint.x - file.x;
+      const deltaY = folderPoint.y - file.y;
 
       // We want to move FILE_SPEEDpx closer to the folder.
       // This is a math problem, because I don't know which ratio to mix
@@ -193,9 +193,25 @@ class WhimsicalInstaller extends Component<Props, State> {
         y: file.y + amountToMoveY,
       });
     });
+
+    // If any files are close enough to the center, close the folder-mouth.
+    const areAnyFilesNearCenterOfFolder = fileIdsBeingInhaled.some(fileId => {
+      const file = files[fileId];
+
+      const distanceToFolder = calculateDistanceBetweenPoints(
+        file,
+        folderPoint
+      );
+
+      return distanceToFolder < FOLDER_CLOSE_RADIUS;
+    });
+
+    if (areAnyFilesNearCenterOfFolder) {
+      this.setState({ isFolderOpen: false });
+    }
   };
 
-  searchForNewSnacksNearFolder = () => {
+  startInhalingNearbyFiles = () => {
     const { width } = this.props;
     const { files } = this.state;
 
@@ -208,23 +224,25 @@ class WhimsicalInstaller extends Component<Props, State> {
     // Folders have a 50px radius around them that sucks files in.
     // NOTE: This isn't dependent on `width` to make the calculations easier.
     // Might change later.
-    const FOLDER_EAT_RADIUS = 75;
-    const folderPosition = { x: width * (5 / 6), y: height * 0.5 };
+    const folderPoint = { x: width * (5 / 6), y: height * 0.5 };
 
-    const nonEatenFileIds = fileIds.filter(id => files[id].status !== 'eaten');
+    const nonEatenFileIds = fileIds.filter(
+      id =>
+        files[id].status !== 'being-inhaled' && files[id].status !== 'swallowed'
+    );
 
     const nonEatenFileIdsWithinPerimeter = nonEatenFileIds.filter(id => {
       const filePosition = files[id];
       const distanceBetweenPoints = calculateDistanceBetweenPoints(
         filePosition,
-        folderPosition
+        folderPoint
       );
 
-      return distanceBetweenPoints < FOLDER_EAT_RADIUS;
+      return distanceBetweenPoints < FOLDER_OPEN_RADIUS;
     });
 
     nonEatenFileIdsWithinPerimeter.forEach(fileId => {
-      this.updateFile(fileId, { status: 'eaten' });
+      this.updateFile(fileId, { status: 'being-inhaled' });
 
       if (!this.state.isFolderOpen) {
         this.setState({ isFolderOpen: true });
@@ -252,9 +270,9 @@ class WhimsicalInstaller extends Component<Props, State> {
 
     // If any files are currently making their way towards the folder's maw,
     // continue moving them
-    this.continueEatingDoomedFiles();
+    this.inhaleFiles();
 
-    this.searchForNewSnacksNearFolder();
+    this.startInhalingNearbyFiles();
 
     this.tickId = window.requestAnimationFrame(this.tick);
   };
