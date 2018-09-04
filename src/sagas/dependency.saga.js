@@ -19,12 +19,11 @@ import {
   UNINSTALL_DEPENDENCIES_FINISH,
   queueDependencyInstall,
   queueDependencyUninstall,
-  installDependencyStart,
   installDependenciesError,
   installDependenciesFinish,
-  uninstallDependencyStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
+  startNextActionInQueue,
 } from '../actions';
 import { handleQueueActionCompleted } from './queue.saga';
 
@@ -42,7 +41,7 @@ export function* handleAddDependency({
 
   // if there are no other ongoing operations, begin install
   if (!queuedAction) {
-    yield put(installDependencyStart(projectId, dependencyName, version));
+    yield put(startNextActionInQueue(projectId));
   }
 }
 
@@ -58,9 +57,7 @@ export function* handleUpdateDependency({
   );
 
   if (!queuedAction) {
-    yield put(
-      installDependencyStart(projectId, dependencyName, latestVersion, true)
-    );
+    yield put(startNextActionInQueue(projectId));
   }
 }
 
@@ -73,7 +70,7 @@ export function* handleDeleteDependency({
   yield put(queueDependencyUninstall(projectId, dependencyName));
 
   if (!queuedAction) {
-    yield put(uninstallDependencyStart(projectId, dependencyName));
+    yield put(startNextActionInQueue(projectId));
   }
 }
 

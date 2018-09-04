@@ -30,11 +30,9 @@ import {
   START_NEXT_ACTION_IN_QUEUE,
   queueDependencyInstall,
   queueDependencyUninstall,
-  installDependencyStart,
   installDependenciesStart,
   installDependenciesError,
   installDependenciesFinish,
-  uninstallDependencyStart,
   uninstallDependenciesStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
@@ -72,11 +70,7 @@ describe('Dependency sagas', () => {
           queueDependencyInstall(projectId, dependency.name, dependency.version)
         )
       );
-      expect(saga.next().value).toEqual(
-        put(
-          installDependencyStart(projectId, dependency.name, dependency.version)
-        )
-      );
+      expect(saga.next().value).toEqual(put(startNextActionInQueue(projectId)));
       expect(saga.next().done).toBe(true);
     });
 
@@ -132,16 +126,7 @@ describe('Dependency sagas', () => {
           )
         )
       );
-      expect(saga.next().value).toEqual(
-        put(
-          installDependencyStart(
-            projectId,
-            dependency.name,
-            dependency.version,
-            dependency.updating
-          )
-        )
-      );
+      expect(saga.next().value).toEqual(put(startNextActionInQueue(projectId)));
       expect(saga.next().done).toBe(true);
     });
 
@@ -193,9 +178,7 @@ describe('Dependency sagas', () => {
       expect(saga.next(queuedAction).value).toEqual(
         put(queueDependencyUninstall(projectId, dependency.name))
       );
-      expect(saga.next().value).toEqual(
-        put(uninstallDependencyStart(projectId, dependency.name))
-      );
+      expect(saga.next().value).toEqual(put(startNextActionInQueue(projectId)));
       expect(saga.next().done).toBe(true);
     });
 

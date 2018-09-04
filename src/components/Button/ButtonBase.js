@@ -4,36 +4,24 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-import CircularOutline from '../CircularOutline';
-
 type Size = 'xsmall' | 'small' | 'medium' | 'large';
-type Type = 'fill' | 'stroke';
 
 type Props = {
-  type: Type,
   size: Size,
-  color1: string,
-  color2: string,
+  background?: string,
+  hoverBackground?: string,
   textColor?: string,
-  showOutline: boolean,
   noPadding?: boolean,
-  style: { [key: string]: any },
+  activeSplat?: boolean,
   disabled?: boolean,
   children: React$Node,
 };
 
-type State = {
-  isHovered: boolean,
-};
-
-class Button extends Component<Props, State> {
+class ButtonBase extends Component<Props> {
   static defaultProps = {
-    type: 'stroke',
     size: 'medium',
-    color1: COLORS.purple[500],
-    color2: COLORS.violet[500],
-    showOutline: true,
-    style: {},
+    background: COLORS.gray[200],
+    textColor: COLORS.gray[900],
   };
 
   getButtonElem = (size: Size) => {
@@ -52,104 +40,92 @@ class Button extends Component<Props, State> {
 
   render() {
     const {
-      type,
       size,
       children,
-      color1,
-      color2,
+      background,
+      hoverBackground,
       textColor,
-      showOutline,
-      style,
       disabled,
       ...delegated
     } = this.props;
 
     const Elem = this.getButtonElem(size);
 
-    let mutatedStyle = { ...style };
-    if (type === 'fill') {
-      mutatedStyle.color = '#FFF';
-      mutatedStyle.backgroundImage = `
-        linear-gradient(
-          45deg,
-          ${color1},
-          ${color2}
-        )
-      `;
-    }
-
-    if (textColor) {
-      mutatedStyle.color = textColor;
-    }
-
     return (
-      <Elem disabled={disabled} type={type} style={mutatedStyle} {...delegated}>
-        <CircularOutline
-          color1={disabled ? COLORS.gray[400] : color1}
-          color2={disabled ? COLORS.gray[300] : color2}
-          isShown={showOutline}
-          animateChanges={type === 'stroke'}
-        />
-
-        <span style={{ display: 'block' }}>{children}</span>
+      <Elem
+        background={background}
+        hoverBackground={hoverBackground}
+        textColor={textColor}
+        disabled={disabled}
+        {...delegated}
+      >
+        {children}
       </Elem>
     );
   }
 }
 
-const ButtonBase = styled.button`
+const ButtonBaseStyles = styled.button`
   position: relative;
   border: 0;
-  background: transparent;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  background: ${props => props.background};
+  color: ${props => props.textColor};
   cursor: pointer;
   outline: none;
-  color: ${COLORS.gray[900]};
   white-space: nowrap;
 
+  &:hover {
+    background: ${props => props.hoverBackground};
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+  }
+
+  /*
+    HACK: We want to double the border-thickness of StrokeButton when active.
+    This feels hacky, but it would also be hacky to manage this state in React.
+  */
   &:not(:disabled):active rect {
     stroke-width: 4;
   }
 
-  &:disabled {
-    background-image: ${props =>
-      props.type === 'fill' &&
-      `linear-gradient(
-      45deg,
-      ${COLORS.gray[400]},
-      ${COLORS.gray[300]}
-    ) !important`};
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ${props => props.activeSplat && 'scale(1.1)'};
   }
 `;
 
-const XSmallButton = styled(ButtonBase)`
+const XSmallButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0px 12px')};
   height: ${props => (props.noPadding ? 'auto' : '22px')};
   border-radius: 15px;
   font-size: 12px;
 `;
 
-const SmallButton = styled(ButtonBase)`
+const SmallButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0px 14px')};
   height: ${props => (props.noPadding ? 'auto' : '30px')};
   border-radius: 17px;
   font-size: 14px;
 `;
 
-const MediumButton = styled(ButtonBase)`
+const MediumButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0px 20px')};
   height: ${props => (props.noPadding ? 'auto' : '38px')};
   border-radius: 19px;
   font-size: 16px;
 `;
 
-const LargeButton = styled(ButtonBase)`
+const LargeButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0 32px')};
   height: ${props => (props.noPadding ? 'auto' : '48px')};
   border-radius: 24px;
   font-size: 24px;
 `;
 
-export default Button;
+export default ButtonBase;

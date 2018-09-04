@@ -40,13 +40,9 @@ class ApplicationMenu extends Component<Props> {
     this.buildMenu(this.props);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (
-      this.props.selectedProject &&
-      nextProps.selectedProject &&
-      this.props.selectedProject.id !== nextProps.selectedProject.id
-    ) {
-      this.buildMenu(nextProps);
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedProject !== prevProps.selectedProject) {
+      this.buildMenu(this.props);
     }
   }
 

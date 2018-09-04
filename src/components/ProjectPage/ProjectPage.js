@@ -11,10 +11,17 @@ import MainContentWrapper from '../MainContentWrapper';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
+import { FillButton } from '../Button';
 import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
 import SettingsButton from '../SettingsButton';
+import {
+  openProjectInEditor,
+  openProjectInFolder,
+} from '../../services/shell.service';
+import { getCopyForOpeningFolder } from '../../services/platform.service';
+
 import type { Project } from '../../types';
 
 type Props = {
@@ -24,6 +31,17 @@ type Props = {
 };
 
 class ProjectPage extends Component<Props> {
+  openIDE = () => {
+    const { project } = this.props;
+    openProjectInEditor(project);
+  };
+
+  openFolder = () => {
+    const { project } = this.props;
+    // Show a folder in the file manager
+    openProjectInFolder(project);
+  };
+
   componentDidMount() {
     const { project, loadDependencyInfoFromDisk } = this.props;
 
@@ -62,6 +80,28 @@ class ProjectPage extends Component<Props> {
             </PixelShifter>
             <SettingsButton />
           </FlexRow>
+          <ProjectActionBar>
+            <FillButton
+              colors={COLORS.gray[200]}
+              hoverColors={COLORS.gray[300]}
+              textColor={COLORS.gray[900]}
+              size="small"
+              onClick={this.openFolder}
+            >
+              {getCopyForOpeningFolder()}
+            </FillButton>
+            <Spacer size={15} />
+            <FillButton
+              colors={COLORS.gray[200]}
+              hoverColors={COLORS.gray[300]}
+              textColor={COLORS.gray[900]}
+              size="small"
+              onClick={this.openIDE}
+            >
+              Open in Editor
+            </FillButton>
+          </ProjectActionBar>
+
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />
 
@@ -86,6 +126,10 @@ const FlexRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+const ProjectActionBar = styled.div`
+  display: flex;
 `;
 
 const fadeIn = keyframes`

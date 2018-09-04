@@ -8,7 +8,7 @@ import { check } from 'react-icons-kit/feather/check';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 
-import Button from '../Button';
+import { FillButton } from '../Button';
 import Label from '../Label';
 import Spinner from '../Spinner';
 import Spacer from '../Spacer';
@@ -57,18 +57,16 @@ class DependencyUpdateRow extends Component<Props> {
         Up-to-date
       </UpToDate>
     ) : (
-      <Button
+      <FillButton
         size="small"
-        type="fill"
-        color1={COLORS.green[700]}
-        color2={COLORS.lightGreen[500]}
+        colors={[COLORS.green[700], COLORS.lightGreen[500]]}
         style={{ width: 80 }}
         onClick={() =>
           updateDependency(projectId, dependency.name, latestVersion)
         }
       >
         {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}
-      </Button>
+      </FillButton>
     );
   }
 

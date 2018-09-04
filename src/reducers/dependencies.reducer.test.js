@@ -1,6 +1,6 @@
 import reducer, {
   getDependenciesForProjectId,
-  initialState as dependenciesInitialState,
+  initialState,
 } from './dependencies.reducer';
 import {
   LOAD_DEPENDENCY_INFO_FROM_DISK,
@@ -551,7 +551,7 @@ Object {
 `);
   });
 
-  test('reset to initialState on RESET_ALL_STATE action', () => {
+  it(`should handle ${RESET_ALL_STATE}`, () => {
     const prevState = {
       foo: {
         redux: {
@@ -567,9 +567,8 @@ Object {
       },
     };
     const action = { type: RESET_ALL_STATE };
-    const actualState = reducer(prevState, action);
 
-    expect(actualState).toEqual(dependenciesInitialState);
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`Object {}`);
   });
 });
 

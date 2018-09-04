@@ -20,7 +20,7 @@ import Spinner from '../Spinner';
 import ExternalLink from '../ExternalLink';
 import License from '../License';
 import Middot from '../Middot';
-import Button from '../Button';
+import { StrokeButton } from '../Button';
 import CustomHighlight from '../CustomHighlight';
 
 import type { DependencyStatus } from '../../types';
@@ -113,7 +113,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
     }
 
     return (
-      <Button
+      <StrokeButton
         size="small"
         color1={COLORS.green[700]}
         color2={COLORS.lightGreen[500]}
@@ -121,7 +121,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
         onClick={() => addDependency(projectId, hit.name, hit.version)}
       >
         Add To Project
-      </Button>
+      </StrokeButton>
     );
   }
 

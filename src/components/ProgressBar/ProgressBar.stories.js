@@ -6,7 +6,7 @@ import { withInfo } from '@storybook/addon-info';
 import { COLORS } from '../../constants';
 
 import Showcase from '../../../.storybook/components/Showcase';
-import Button from '../Button';
+import { StrokeButton } from '../Button';
 import ProgressBar from './ProgressBar';
 
 type Props = { children: (data: any) => React$Node };
@@ -36,9 +36,9 @@ class ProgressManager extends Component<Props, State> {
           updateProgress: this.updateProgress,
         })}
         <br />
-        <Button size="small" onClick={this.updateProgress}>
+        <StrokeButton size="small" onClick={this.updateProgress}>
           Generate new value
-        </Button>
+        </StrokeButton>
       </Fragment>
     );
   }

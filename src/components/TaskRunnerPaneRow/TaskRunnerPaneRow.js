@@ -11,7 +11,7 @@ import { capitalize } from '../../utils';
 
 import Card from '../Card';
 import Spinner from '../Spinner';
-import Button from '../Button';
+import { StrokeButton } from '../Button';
 import EjectButton from '../EjectButton';
 import Toggle from '../Toggle';
 
@@ -52,9 +52,9 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
         </StatusColumn>
 
         <LinkColumn>
-          <Button size="small" onClick={() => onViewDetails(id)}>
+          <StrokeButton size="small" onClick={() => onViewDetails(id)}>
             View Details
-          </Button>
+          </StrokeButton>
         </LinkColumn>
 
         <ActionsColumn>

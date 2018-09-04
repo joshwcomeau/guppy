@@ -68,9 +68,13 @@ export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
 //
 // Action Creators
 //
-export const addProject = (project: Project) => ({
+export const addProject = (
+  project: Project,
+  isOnboardingCompleted: boolean
+) => ({
   type: ADD_PROJECT,
   project,
+  isOnboardingCompleted,
 });
 
 export const refreshProjectsStart = () => ({
@@ -226,13 +230,6 @@ export const installDependenciesStart = (
   dependencies,
 });
 
-export const installDependencyStart = (
-  projectId: string,
-  name: string,
-  version: string,
-  updating?: boolean
-) => installDependenciesStart(projectId, [{ name, version, updating }]);
-
 export const installDependenciesError = (
   projectId: string,
   dependencies: Array<QueuedDependency>
@@ -259,9 +256,6 @@ export const uninstallDependenciesStart = (
   projectId,
   dependencies,
 });
-
-export const uninstallDependencyStart = (projectId: string, name: string) =>
-  uninstallDependenciesStart(projectId, [{ name }]);
 
 export const uninstallDependenciesError = (
   projectId: string,
@@ -320,11 +314,13 @@ export const importExistingProjectError = () => ({
 
 export const importExistingProjectFinish = (
   projectPath: string,
-  project: Project
+  project: Project,
+  isOnboardingCompleted: boolean
 ) => ({
   type: IMPORT_EXISTING_PROJECT_FINISH,
   projectPath,
   project,
+  isOnboardingCompleted,
 });
 
 export const showDeleteProjectPrompt = (project: Project) => ({
