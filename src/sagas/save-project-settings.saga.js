@@ -73,21 +73,21 @@ export function* handleSaveSettings(action: any): Saga<void> {
   const { project, name, icon } = action;
   const { path: projectPath } = project;
   const id = slug(name).toLowerCase();
-  const workspace = path.resolve(projectPath, '../'); // we could use getDefaultParentPath from path.reducers as well - what's better?
+  const parentPath = path.resolve(projectPath, '../');
   let newPath = projectPath;
 
+  let json;
   try {
-    let json;
-    try {
-      // Let's load the basic project info for the path specified, if possible.
-      json = yield call(loadPackageJson, projectPath);
-    } catch (err) {
-      throw new Error('loading-packageJson-failed');
-    }
+    // Let's load the basic project info for the path specified, if possible.
+    json = yield call(loadPackageJson, projectPath);
+  } catch (err) {
+    yield call(handleProjectSaveError, new Error('loading-packageJson-failed'));
+  }
 
+  try {
     // check if imported project & name changed
     const nameChanged = id !== project.id;
-    const confirmRequired = workspace !== defaultParentPath && nameChanged;
+    const confirmRequired = parentPath !== defaultParentPath && nameChanged;
 
     // rename confirmed by default
     let confirmed = true;
@@ -104,7 +104,7 @@ export function* handleSaveSettings(action: any): Saga<void> {
     }
 
     if (confirmed && nameChanged) {
-      newPath = path.join(workspace, id);
+      newPath = path.join(parentPath, id);
       try {
         yield call(renameFolder, projectPath, newPath);
       } catch (err) {
@@ -117,7 +117,7 @@ export function* handleSaveSettings(action: any): Saga<void> {
       ...json,
       name: id,
       guppy: {
-        ...json.guppy,
+        ...(json && json.guppy),
         name,
         id,
         icon,

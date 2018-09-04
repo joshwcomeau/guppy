@@ -13,7 +13,7 @@ import type {
 
 //
 //
-
+// Action Types
 // TODO: Do this with Flow
 // https://flow.org/en/docs/react/redux/
 //

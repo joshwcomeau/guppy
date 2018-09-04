@@ -82,13 +82,9 @@ const MainContent = styled.div`
   flex: 1;
 `;
 
-const mapStateToProps = state => {
-  return {
-    // onboardingStatus: getOnboardingStatus(state),
-    // projects: getProjectsArray(state),
-    selectedProject: getSelectedProject(state),
-    isAppLoaded: getAppLoaded(state),
-  };
-};
+const mapStateToProps = state => ({
+  selectedProject: getSelectedProject(state),
+  isAppLoaded: getAppLoaded(state),
+});
 
 export default connect(mapStateToProps)(App);

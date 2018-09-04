@@ -7,7 +7,7 @@ import dependencySaga from './dependency.saga';
 import importProjectSaga from './import-project.saga';
 import taskSaga from './task.saga';
 import developmentSaga from './development.saga';
-import queueSage from './queue.saga';
+import queueSaga from './queue.saga';
 
 export default function*() {
   yield all([
@@ -18,6 +18,6 @@ export default function*() {
     taskSaga(),
     saveProjectSettingsSaga(),
     developmentSaga(),
-    queueSage(),
+    queueSaga(),
   ]);
 }

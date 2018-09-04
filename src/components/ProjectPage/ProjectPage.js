@@ -45,11 +45,6 @@ class ProjectPage extends Component<Props> {
     }
   }
 
-  openSettingsModal = () => {
-    console.log('open modal with redux');
-    this.props.showModal('project-configuration');
-  };
-
   render() {
     const { project } = this.props;
 
@@ -65,7 +60,7 @@ class ProjectPage extends Component<Props> {
                 {project.name}
               </Heading>
             </PixelShifter>
-            <SettingsButton action={this.openSettingsModal} />
+            <SettingsButton />
           </FlexRow>
           <Spacer size={30} />
           <DevelopmentServerPane leftSideWidth={300} />

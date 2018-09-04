@@ -1,8 +1,7 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-// import moment from 'moment';
 import IconBase from 'react-icons-kit';
 import { edit2 } from 'react-icons-kit/feather/edit2';
 import importAll from 'import-all.macro';
@@ -27,7 +26,7 @@ import type { Project } from '../../types';
 const icons: Array<mixed> = importAll.sync(
   '../../assets/images/icons/icon_*.*'
 );
-const iconSrcs: string[] = Object.values(icons).map(src => String(src));
+const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 
 type Props = {
   project: Project,
@@ -35,10 +34,6 @@ type Props = {
   queueEmpty: boolean,
   hideModal: () => void,
   saveProjectSettings: (string, string, Project) => void,
-  // From Redux:
-  // task: Task,
-  // runTask: (task: Task, timestamp: Date) => any,
-  // abortTask: (task: Task, timestamp: Date) => any,
 };
 
 type State = {
@@ -61,11 +56,6 @@ class ProjectConfigurationModal extends Component<Props, State> {
     });
   }
 
-  //iconSubset = sampleMany(iconSrcs, 10);
-  //   .unshift(
-  //     importAll.sync(this.props.project.icon)
-  // );
-
   saveSettings = e => {
     e.preventDefault();
     const { saveProjectSettings, project } = this.props;
@@ -75,7 +65,6 @@ class ProjectConfigurationModal extends Component<Props, State> {
   };
 
   changeProjectname = e => {
-    // console.log('e', e.target.value);
     this.setState({
       newName: e.target.value,
     });
@@ -83,14 +72,12 @@ class ProjectConfigurationModal extends Component<Props, State> {
 
   updateProjectIcon = (src: string) => {
     this.setState(prevState => ({
-      ...prevState,
       projectIcon: src,
     }));
   };
 
   setActive = (name: string) => {
     this.setState(state => ({
-      ...state,
       activeField: name,
     }));
   };
@@ -98,68 +85,63 @@ class ProjectConfigurationModal extends Component<Props, State> {
   render() {
     const { project, hideModal, isVisible, queueEmpty } = this.props;
     const { activeField } = this.state;
-
-    // const { name } = project;
     const { projectIcon } = this.state;
     const { name } = project || { name: '' };
 
-    // NOTE: No isVisible check as this is used as the ModalContent component --> maybe rename the component so this is clear
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
-        <Fragment>
-          <ModalHeader title="Project settings">
-            <Description>Change the settings of project {name}</Description>
-          </ModalHeader>
+        <ModalHeader title="Project settings">
+          <Description>Change the settings of project {name}</Description>
+        </ModalHeader>
 
-          <MainContent>
-            <form onSubmit={this.saveSettings}>
-              <FormField label="Project name" focusOnClick={false}>
-                <TextInput
-                  onFocus={() => this.setActive('projectName')}
-                  value={this.state.newName}
-                  onChange={this.changeProjectname}
-                  isFocused={activeField === 'projectName'}
-                  autoFocus
-                />
-              </FormField>
-            </form>
-            <Spacer size={25} />
-            <FadeIn>
-              <FormField
-                label="Project Icon"
-                focusOnClick={false}
-                isFocused={activeField === 'projectIcon'}
-              >
-                <ProjectIconWrapper>
-                  {iconSrcs.map((src: string) => (
-                    <SelectableImageWrapper key={src}>
-                      <SelectableImage
-                        src={src}
-                        size={60}
-                        onClick={() => this.updateProjectIcon(String(src))}
-                        status={
-                          projectIcon === null
-                            ? 'default'
-                            : projectIcon === src
-                              ? 'highlighted'
-                              : 'faded'
-                        }
-                      />
-                    </SelectableImageWrapper>
-                  ))}
-                </ProjectIconWrapper>
-              </FormField>
-              <Button
-                icon={<IconBase icon={edit2} />}
-                onClick={this.saveSettings}
-                disabled={!queueEmpty}
-              >
-                Save
-              </Button>
-              {!queueEmpty && 'Waiting for pending tasks to finish.'}
-            </FadeIn>
-          </MainContent>
-        </Fragment>
+        <MainContent>
+          <form onSubmit={this.saveSettings}>
+            <FormField label="Project name" focusOnClick={false}>
+              <TextInput
+                onFocus={() => this.setActive('projectName')}
+                value={this.state.newName}
+                onChange={this.changeProjectname}
+                isFocused={activeField === 'projectName'}
+                autoFocus
+              />
+            </FormField>
+          </form>
+          <Spacer size={25} />
+          <FadeIn>
+            <FormField
+              label="Project Icon"
+              focusOnClick={false}
+              isFocused={activeField === 'projectIcon'}
+            >
+              <ProjectIconWrapper>
+                {iconSrcs.map((src: string) => (
+                  <SelectableImageWrapper key={src}>
+                    <SelectableImage
+                      src={src}
+                      size={60}
+                      onClick={() => this.updateProjectIcon(String(src))}
+                      status={
+                        projectIcon === null
+                          ? 'default'
+                          : projectIcon === src
+                            ? 'highlighted'
+                            : 'faded'
+                      }
+                    />
+                  </SelectableImageWrapper>
+                ))}
+              </ProjectIconWrapper>
+            </FormField>
+            <Button
+              icon={<IconBase icon={edit2} />}
+              onClick={this.saveSettings}
+              disabled={!queueEmpty}
+            >
+              Save
+            </Button>
+            {!queueEmpty && 'Waiting for pending tasks to finish.'}
+          </FadeIn>
+        </MainContent>
       </Modal>
     );
   }
@@ -178,6 +160,9 @@ const SelectableImageWrapper = styled.div`
   margin: 0px 10px 10px 0px;
 
   @media ${BREAKPOINTS.sm} {
+    /* Reduce amount of displayed icons on smaller screens.
+       Todo: Check if this is really a good idea, as the currently selected icon could be hidden.
+    */
     &:nth-of-type(n + 9) {
       display: none;
     }
@@ -188,28 +173,13 @@ const Description = styled.div`
   color: ${COLORS.gray[600]};
 `;
 
-// const Status = styled.div`
-//   display: flex;
-//   align-items: center;
-//   font-size: 20px;
-// `;
-
-// const StatusLabel = styled.div`
-//   margin-left: 10px;
-// `;
-
-// const LastRunText = styled.span`
-//   margin-left: 10px;
-//   color: ${COLORS.gray[400]};
-// `;
-
 const mapStateToProps = (state, ownProps) => {
   const project = getSelectedProject(state);
-  // console.log('map config modal', project, state);
+  const projectId = project && project.id;
   return {
     project,
-    isVisible: state.modal === 'project-configuration',
-    queueEmpty: isQueueEmpty(state),
+    isVisible: state.modal === 'project', // todo: refactor this so we're having each modal-string in a constant 'project' | 'app' | 'new-project-wizard'
+    queueEmpty: isQueueEmpty(state, projectId || ''),
   };
 };
 

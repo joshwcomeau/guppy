@@ -227,7 +227,7 @@ export const getTimeOfDay = () => {
   }
 };
 
-export const hasPropChanged: boolean = (oldProps, newProps, key) => {
+export const hasPropChanged = (oldProps, newProps, key) => {
   return oldProps[key] !== newProps[key];
 };
 
