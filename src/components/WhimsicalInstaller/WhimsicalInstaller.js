@@ -14,6 +14,8 @@ import Earth from '../Earth';
 
 import type { BezierPath } from './WhimsicalInstaller.helpers';
 
+const FILE_SPEED = 4; // TODO: file-specific, slightly randomized?
+
 type FileData = {
   id: string,
   x: number,
@@ -27,6 +29,7 @@ type Props = {
 };
 
 type State = {
+  isFolderOpen: boolean,
   files: {
     [id: string]: FileData,
   },
@@ -39,6 +42,7 @@ class WhimsicalInstaller extends Component<Props, State> {
   wrapperBoundingBox: ClientRect;
 
   state = {
+    isFolderOpen: false,
     files: {
       '1': {
         id: '1',
@@ -122,8 +126,7 @@ class WhimsicalInstaller extends Component<Props, State> {
     const transposedX = file.x - width * (1 / 6);
     const transposedMax = width * (4 / 6);
 
-    const SPEED = 4; // TODO: file-specific, slightly randomized?
-    const nextX = transposedX + SPEED;
+    const nextX = transposedX + FILE_SPEED;
 
     // This number between 0-1 tells us how far through our journey we are
     const ratioCompleted = nextX / transposedMax;
@@ -136,23 +139,68 @@ class WhimsicalInstaller extends Component<Props, State> {
     this.updateFile(file.id, { x, y });
   };
 
-  tick = () => {
+  continueEatingDoomedFiles = () => {
     const { width } = this.props;
     const { files } = this.state;
 
     const height = this.getHeight();
     const fileIds = Object.keys(files);
 
-    // We may have a file autonomously flying towards the folder. If so, we
-    // need to move it!
-    const autonomousFileId = fileIds.find(
-      fileId => files[fileId].status === 'autonomous'
+    const folderPosition = { x: width * (5 / 6), y: height * 0.5 };
+
+    // If any of the files have made it to the very center of the folder,
+    // we can remove them from the universe
+    const swallowedFileIds = fileIds.filter(
+      id => files[id].x === folderPosition.x && files[id].y === folderPosition.y
     );
 
-    if (autonomousFileId) {
-      const autonomousFile = files[autonomousFileId];
-      this.autonomouslyIncrementFile(autonomousFile);
+    if (swallowedFileIds.length) {
+      const nextFiles = fileIds.reduce((acc, id) => {
+        if (swallowedFileIds.includes(id)) {
+          return acc;
+        }
+
+        return {
+          ...acc,
+          [id]: files[id],
+        };
+      }, {});
+
+      this.setState({ files: nextFiles });
     }
+
+    const fileIdsBeingEaten = fileIds.filter(
+      id => files[id].status === 'eaten' && !swallowedFileIds.includes(id)
+    );
+
+    fileIdsBeingEaten.forEach(id => {
+      const file = files[id];
+
+      const deltaX = folderPosition.x - file.x;
+      const deltaY = folderPosition.y - file.y;
+
+      const distanceToFolder = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+
+      // We want to move FILE_SPEEDpx closer to the folder.
+      // This is a math problem, because I don't know which ratio to mix
+      // X and Y to have the hypothenuse get FILE_SPEEDpx shorter :/
+      const slope = deltaY / deltaX;
+      const amountToMoveY = slope * FILE_SPEED;
+      const amountToMoveX = (1 - slope) * FILE_SPEED;
+
+      this.updateFile(id, {
+        x: file.x + amountToMoveX,
+        y: file.y + amountToMoveY,
+      });
+    });
+  };
+
+  searchForNewSnacksNearFolder = () => {
+    const { width } = this.props;
+    const { files } = this.state;
+
+    const height = this.getHeight();
+    const fileIds = Object.keys(files);
 
     // Check if there are any files within range of our folder maw.
     // If so, open the maw and update their status!
@@ -177,14 +225,43 @@ class WhimsicalInstaller extends Component<Props, State> {
 
     nonEatenFileIdsWithinPerimeter.forEach(fileId => {
       this.updateFile(fileId, { status: 'eaten' });
+
+      if (!this.state.isFolderOpen) {
+        this.setState({ isFolderOpen: true });
+      }
     });
+  };
+
+  tick = () => {
+    const { width } = this.props;
+    const { files } = this.state;
+
+    const height = this.getHeight();
+    const fileIds = Object.keys(files);
+
+    // We may have a file autonomously flying towards the folder. If so, we
+    // need to move it!
+    const autonomousFileId = fileIds.find(
+      fileId => files[fileId].status === 'autonomous'
+    );
+
+    if (autonomousFileId) {
+      const autonomousFile = files[autonomousFileId];
+      this.autonomouslyIncrementFile(autonomousFile);
+    }
+
+    // If any files are currently making their way towards the folder's maw,
+    // continue moving them
+    this.continueEatingDoomedFiles();
+
+    this.searchForNewSnacksNearFolder();
 
     this.tickId = window.requestAnimationFrame(this.tick);
   };
 
   render() {
     const { width } = this.props;
-    const { files } = this.state;
+    const { files, isFolderOpen } = this.state;
 
     // Our height will be 1/3rd of our width.
     // This is so we end up with 3 squares:
@@ -198,7 +275,7 @@ class WhimsicalInstaller extends Component<Props, State> {
     const filesArray = Object.keys(files).map(fileId => files[fileId]);
 
     return (
-      <Wrapper innerRef={node => (this.wrapperNode = node)}>
+      <Wrapper width={width} innerRef={node => (this.wrapperNode = node)}>
         <PlanetContainer size={height}>
           <Earth size={height / 2} />
         </PlanetContainer>
@@ -215,7 +292,7 @@ class WhimsicalInstaller extends Component<Props, State> {
         ))}
 
         <FolderContainer size={height}>
-          <Folder size={height / 3} />
+          <Folder isOpen={isFolderOpen} size={height / 3} />
         </FolderContainer>
       </Wrapper>
     );
@@ -225,6 +302,7 @@ class WhimsicalInstaller extends Component<Props, State> {
 const Wrapper = styled.div`
   position: relative;
   display: flex;
+  width: ${props => props.width}px;
   justify-content: space-between;
 `;
 
