@@ -13,19 +13,30 @@ import File from './File';
 import Folder from './Folder';
 import Earth from '../Earth';
 
-import type { BezierPath } from './WhimsicalInstaller.helpers';
+import type { Point, BezierPath } from './WhimsicalInstaller.helpers';
 
-const FILE_SPEED = 4; // TODO: file-specific, slightly randomized?
+const FILE_SPEED = 4;
+// At what distance (from the center) will the folder open/close when a file
+// approaches?
 const FOLDER_OPEN_RADIUS = 75;
 const FOLDER_CLOSE_RADIUS = 10;
+// At what distance will the folder "inhale" nearby files?
 const FOLDER_GRAVITY_RADIUS = 50;
+
+type FileStatus =
+  | 'autonomous' // Flying autonomously towards the file
+  | 'being-inhaled' // Very close to the folder, being sucked in
+  | 'swallowed' // At the very center of the folder, no longer active
+  | 'caught' // The user is grabbing the file
+  | 'released'; // The user has released a previously-grabbed file
 
 type FileData = {
   id: string,
   x: number,
   y: number,
-  status: 'autonomous' | 'being-inhaled' | 'swallowed' | 'caught' | 'released',
+  status: FileStatus,
   flightPath: BezierPath,
+  angle?: number,
 };
 
 type Props = {
@@ -40,11 +51,11 @@ type State = {
 };
 
 class WhimsicalInstaller extends PureComponent<Props, State> {
-  grabbedFileId: ?string;
   tickId: ?number;
   generationLoopId: ?number;
   wrapperNode: HTMLElement;
   wrapperBoundingBox: ClientRect;
+  lastKnownCursorPosition: Point;
 
   state = {
     isFolderOpen: false,
@@ -65,7 +76,16 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     window.cancelAnimationFrame(this.tickId);
   }
 
-  getHeight = () => this.props.width * (1 / 3);
+  getHeight = () =>
+    // Our height will be 1/3rd of our width.
+    // This is so we end up with 3 squares:
+    //  _____________________
+    // |      |      |      |
+    // |      |      |      |
+    // |______|______|______|
+    //
+    this.props.width * (1 / 3);
+
   getPlanetPoint = () => ({
     x: this.props.width * (1 / 6),
     y: this.getHeight() * 0.5,
@@ -75,7 +95,42 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     y: this.getHeight() * 0.5,
   });
 
+  updateFile = (fileId: string, properties: any) => {
+    /**
+     * Convenience helper to update a single file
+     */
+    this.setState(state => ({
+      files: {
+        ...state.files,
+        [fileId]: {
+          ...state.files[fileId],
+          ...properties,
+        },
+      },
+    }));
+  };
+
+  areFilesWithinRangeOfFolder = (fileIds: Array<string>, range: number) => {
+    /**
+     * Helper method which returns a boolean based on whether any of the
+     * supplied file IDs are within `range` pixels of the center of the folder.
+     */
+    const { files } = this.state;
+
+    const folderPoint = this.getFolderPoint();
+
+    return fileIds.some(id => {
+      const distance = calculateDistanceBetweenPoints(files[id], folderPoint);
+
+      return distance < range;
+    });
+  };
+
   fileGenerationLoop = () => {
+    /**
+     * Every few seconds, a new file is generated, and long-swallowed files
+     * are quietly cleaned.
+     */
     const { files } = this.state;
 
     const fileIds = Object.keys(files);
@@ -93,7 +148,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
 
         let persistedFiles = { ...state.files };
 
-        if (swallowedFileIds.length > 1) {
+        if (swallowedFileIds.length > 2) {
           delete persistedFiles[swallowedFileIds[0]];
         }
 
@@ -117,6 +172,9 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   };
 
   createFile = () => {
+    /**
+     * Create a single new file, from the planet's center
+     */
     const { width } = this.props;
     const height = this.getHeight();
 
@@ -134,8 +192,9 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   };
 
   handleClickFile = (id: string) => {
-    // We want to allow files to be clicked and dragged _unless_ they're in
-    // the process of being eaten.
+    /**
+     * Mark a file as "caught", unless the folder is in the middle of eating it
+     */
     const { status } = this.state.files[id];
 
     if (status === 'being-inhaled') {
@@ -149,6 +208,9 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   };
 
   dragFile = ({ clientX, clientY }: any) => {
+    /**
+     * Drag a "caught" file around the screen
+     */
     const { files } = this.state;
 
     const relativeX = clientX - this.wrapperBoundingBox.left;
@@ -158,7 +220,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       id => files[id].status === 'caught'
     );
 
-    // This should be impossible
     if (!grabbedFileId) {
       return;
     }
@@ -166,7 +227,13 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     this.updateFile(grabbedFileId, { x: relativeX, y: relativeY });
   };
 
-  releaseFile = () => {
+  releaseFile = ({ clientX, clientY }: any) => {
+    /**
+     * Release a "caught" file.
+     * NOTE: Currently, released files just sit there. In a future version,
+     * they'll have their own trajectory/velocity based on how the mouse was
+     * moving when it was released.
+     */
     const { files } = this.state;
 
     document.removeEventListener('mousemove', this.dragFile);
@@ -176,7 +243,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       id => files[id].status === 'caught'
     );
 
-    // This should be impossible
     if (!grabbedFileId) {
       return;
     }
@@ -184,31 +250,26 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     this.updateFile(grabbedFileId, { status: 'released' });
   };
 
-  updateFile = (fileId: string, properties: any) => {
-    this.setState(state => ({
-      files: {
-        ...state.files,
-        [fileId]: {
-          ...state.files[fileId],
-          ...properties,
-        },
-      },
-    }));
-  };
-
   autonomouslyIncrementFile = (file: FileData) => {
+    /**
+     * Move autonomous files towards the folder, along their arcing path.
+     */
     const { width } = this.props;
 
     // We aren't actually storing the percentage through its journey.
     // Instead, we know its current X value, and the amount we want to
     // increment per tick.
 
-    // Our flight path goes from 1/6th-width to 5/6th-width, since that's where
-    // the planet and folder are located, respectively.
-    // We need to know the progress through this journey, so we need to
-    // transpose the points a bit.
-    const transposedX = file.x - width * (1 / 6);
-    const transposedMax = width * (4 / 6);
+    const planetPoint = this.getPlanetPoint();
+    const folderPoint = this.getFolderPoint();
+
+    // Get the number of pixels between the planet and folder
+    const distanceBetweenEntities = folderPoint.x - planetPoint.x;
+
+    // Our start position is the planet's center, and the total available
+    // space is the distance between planet and folder.
+    const transposedX = file.x - planetPoint.x;
+    const transposedMax = width * (distanceBetweenEntities / width);
 
     const nextX = transposedX + FILE_SPEED;
 
@@ -223,100 +284,12 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     this.updateFile(file.id, { x, y });
   };
 
-  areAnyFilesWithinRange = (fileIds: Array<string>, range: number) => {
-    const { files } = this.state;
-
-    const folderPoint = this.getFolderPoint();
-
-    return fileIds.some(id => {
-      const distance = calculateDistanceBetweenPoints(files[id], folderPoint);
-
-      return distance < range;
-    });
-  };
-
-  inhaleFiles = () => {
-    const { width } = this.props;
-    const { files, isFolderOpen } = this.state;
-
-    const height = this.getHeight();
-    const activeFileIds = Object.keys(files).filter(
-      id => files[id].status !== 'swallowed'
-    );
-
-    const folderPoint = { x: width * (5 / 6), y: height * 0.5 };
-
-    // If any of the files have made it to the very center of the folder,
-    // we can remove them from the universe
-    const swallowedFileIds = activeFileIds.filter(id => {
-      const file = files[id];
-
-      const distanceToFolder = calculateDistanceBetweenPoints(
-        file,
-        folderPoint
-      );
-
-      return distanceToFolder <= FILE_SPEED;
-    });
-
-    if (swallowedFileIds.length) {
-      swallowedFileIds.forEach(id =>
-        this.updateFile(id, {
-          status: 'swallowed',
-        })
-      );
-    }
-
-    const fileIdsBeingInhaled = activeFileIds.filter(
-      id => files[id].status === 'being-inhaled'
-    );
-
-    fileIdsBeingInhaled.forEach(id => {
-      const file = files[id];
-
-      const deltaX = folderPoint.x - file.x;
-      const deltaY = folderPoint.y - file.y;
-
-      // We want to move FILE_SPEEDpx closer to the folder.
-      const slope = deltaY / deltaX;
-      const quadrant = getQuadrantForDeltas(deltaX, deltaY);
-
-      const onTop = quadrant === 1 || quadrant === 2;
-      const onLeftSide = quadrant === 1 || quadrant === 3;
-
-      const xMultiplier = onLeftSide ? 1 : -1;
-      const yMultiplier = onTop ? 1 : -1;
-
-      const amountToMoveX = (1 - slope) * FILE_SPEED * xMultiplier;
-      const amountToMoveY = slope * FILE_SPEED * yMultiplier;
-
-      this.updateFile(id, {
-        x: file.x + amountToMoveX,
-        y: file.y + amountToMoveY,
-      });
-    });
-
-    const freeFlyingFileIds = activeFileIds.filter(
-      id =>
-        files[id].status !== 'being-inhaled' && files[id].status !== 'swallowed'
-    );
-
-    // When files get near the folder, the folder "mouth" opens up.
-    // As they get even closer, the mouth closes again.
-    if (
-      !isFolderOpen &&
-      this.areAnyFilesWithinRange(freeFlyingFileIds, FOLDER_OPEN_RADIUS)
-    ) {
-      this.setState({ isFolderOpen: true });
-    } else if (
-      isFolderOpen &&
-      this.areAnyFilesWithinRange(fileIdsBeingInhaled, FOLDER_CLOSE_RADIUS)
-    ) {
-      this.setState({ isFolderOpen: false });
-    }
-  };
-
   startInhalingNearbyFiles = () => {
+    /**
+     * Look for files that have just entered the Folder's gravity radius.
+     * The file could be autonomous, or held by the user, or released in its
+     * direction.
+     */
     const { width } = this.props;
     const { files } = this.state;
 
@@ -351,7 +324,111 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     });
   };
 
+  moveFilesCloserToTheirDoom = (activeFileIds: Array<string>) => {
+    /**
+     * Inch all files in the process of being inhaled closer to the center.
+     */
+    const { files } = this.state;
+
+    const folderPoint = this.getFolderPoint();
+
+    const fileIdsBeingInhaled = activeFileIds.filter(
+      id => files[id].status === 'being-inhaled'
+    );
+
+    fileIdsBeingInhaled.forEach(id => {
+      const file = files[id];
+
+      const deltaX = folderPoint.x - file.x;
+      const deltaY = folderPoint.y - file.y;
+
+      // We want to move FILE_SPEEDpx closer to the folder.
+      const slope = Math.abs(deltaY / deltaX);
+      const quadrant = getQuadrantForDeltas(deltaX, deltaY);
+
+      const onTop = quadrant === 1 || quadrant === 2;
+      const onLeftSide = quadrant === 1 || quadrant === 3;
+
+      const xMultiplier = onLeftSide ? 1 : -1;
+      const yMultiplier = onTop ? 1 : -1;
+
+      const amountToMoveX = (1 - slope) * FILE_SPEED * xMultiplier;
+      const amountToMoveY = slope * FILE_SPEED * yMultiplier;
+
+      this.updateFile(id, {
+        x: file.x + amountToMoveX,
+        y: file.y + amountToMoveY,
+      });
+    });
+  };
+
+  swallowFilesAtCenter = (activeFileIds: Array<string>) => {
+    /**
+     * Update the status for files that have made it to the center of the
+     * folder, after being inhaled.
+     */
+    const { files } = this.state;
+
+    const folderPoint = this.getFolderPoint();
+
+    // If any of the files have made it to the very center of the folder,
+    // we can remove them from the universe
+    const swallowedFileIds = activeFileIds.filter(id => {
+      const file = files[id];
+
+      const distanceToFolder = calculateDistanceBetweenPoints(
+        file,
+        folderPoint
+      );
+
+      return distanceToFolder <= FILE_SPEED;
+    });
+
+    if (swallowedFileIds.length) {
+      swallowedFileIds.forEach(id =>
+        this.updateFile(id, {
+          status: 'swallowed',
+        })
+      );
+    }
+  };
+
+  handleFolderOpeningAndClosing = (activeFileIds: Array<string>) => {
+    /**
+     * As files approach the folder, it should open and close at specific
+     * distances. This method handles that calculation.
+     */
+    const { files, isFolderOpen } = this.state;
+
+    const freeFlyingFileIds = activeFileIds.filter(
+      id => files[id].status !== 'being-inhaled'
+    );
+
+    const fileIdsBeingInhaled = activeFileIds.filter(
+      id => files[id].status === 'being-inhaled'
+    );
+
+    // When files get near the folder, the folder "mouth" opens up.
+    // As they get even closer, the mouth closes again.
+    if (
+      !isFolderOpen &&
+      this.areFilesWithinRangeOfFolder(freeFlyingFileIds, FOLDER_OPEN_RADIUS)
+    ) {
+      this.setState({ isFolderOpen: true });
+    } else if (
+      isFolderOpen &&
+      this.areFilesWithinRangeOfFolder(fileIdsBeingInhaled, FOLDER_CLOSE_RADIUS)
+    ) {
+      this.setState({ isFolderOpen: false });
+    }
+  };
+
   tick = () => {
+    /**
+     * OUR MAIN GAME LOOP.
+     * Controls updating the files at every tick (aside from those being dragged
+     * about by the user)
+     */
     const { files } = this.state;
 
     const fileIds = Object.keys(files);
@@ -371,12 +448,15 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       this.autonomouslyIncrementFile(autonomousFile);
     }
 
-    // Mark any files just entering the gravity radius as 'being-inhaled'
-    this.startInhalingNearbyFiles();
+    // Several methods below need a list of not-swallowed files.
+    const activeFileIds = Object.keys(files).filter(
+      id => files[id].status !== 'swallowed'
+    );
 
-    // If any files are currently making their way towards the folder's maw,
-    // continue moving them
-    this.inhaleFiles();
+    this.startInhalingNearbyFiles();
+    this.moveFilesCloserToTheirDoom(activeFileIds);
+    this.swallowFilesAtCenter(activeFileIds);
+    this.handleFolderOpeningAndClosing(activeFileIds);
 
     this.tickId = window.requestAnimationFrame(this.tick);
   };
@@ -385,13 +465,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const { width } = this.props;
     const { files, isFolderOpen } = this.state;
 
-    // Our height will be 1/3rd of our width.
-    // This is so we end up with 3 squares:
-    //  _____________________
-    // |      |      |      |
-    // |      |      |      |
-    // |______|______|______|
-    //
     const height = this.getHeight();
 
     const filesArray = Object.keys(files).map(fileId => files[fileId]);
