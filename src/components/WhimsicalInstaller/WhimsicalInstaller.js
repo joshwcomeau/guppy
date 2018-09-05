@@ -16,7 +16,8 @@ import type { BezierPath } from './WhimsicalInstaller.helpers';
 
 const FILE_SPEED = 4; // TODO: file-specific, slightly randomized?
 const FOLDER_OPEN_RADIUS = 75;
-const FOLDER_CLOSE_RADIUS = FOLDER_OPEN_RADIUS / 2;
+const FOLDER_CLOSE_RADIUS = 10;
+const FOLDER_GRAVITY_RADIUS = 50;
 
 type FileData = {
   id: string,
@@ -68,38 +69,60 @@ class WhimsicalInstaller extends Component<Props, State> {
   }
 
   getHeight = () => this.props.width * (1 / 3);
+  getFolderPoint = () => ({
+    x: this.props.width * (5 / 6),
+    y: this.getHeight() * 0.5,
+  });
 
   handleClickFile = (id: string) => {
     // We want to allow files to be clicked and dragged _unless_ they're in
     // the process of being eaten.
     const { status } = this.state.files[id];
-    if (status === 'eaten') {
+
+    if (status === 'being-inhaled') {
       return;
     }
 
     document.addEventListener('mousemove', this.dragFile);
     document.addEventListener('mouseup', this.releaseFile);
 
-    this.grabbedFileId = id;
+    this.updateFile(id, { status: 'caught' });
   };
 
   dragFile = ({ clientX, clientY }: any) => {
+    const { files } = this.state;
+
     const relativeX = clientX - this.wrapperBoundingBox.left;
     const relativeY = clientY - this.wrapperBoundingBox.top;
 
-    // should be impossible.
-    if (!this.grabbedFileId) {
-      throw new Error('Dragging file without a specified file ID');
+    const grabbedFileId = Object.keys(files).find(
+      id => files[id].status === 'caught'
+    );
+
+    // This should be impossible
+    if (!grabbedFileId) {
+      return;
     }
 
-    this.updateFile(this.grabbedFileId, { x: relativeX, y: relativeY });
+    this.updateFile(grabbedFileId, { x: relativeX, y: relativeY });
   };
 
   releaseFile = () => {
+    const { files } = this.state;
+
     document.removeEventListener('mousemove', this.dragFile);
     document.removeEventListener('mouseup', this.releaseFile);
 
-    this.grabbedFileId = null;
+    const grabbedFileId = Object.keys(files).find(
+      id => files[id].status === 'caught'
+    );
+
+    // This should be impossible
+    if (!grabbedFileId) {
+      return;
+    }
+
+    this.updateFile(grabbedFileId, { status: 'released' });
   };
 
   updateFile = (fileId: string, properties: any) => {
@@ -141,9 +164,21 @@ class WhimsicalInstaller extends Component<Props, State> {
     this.updateFile(file.id, { x, y });
   };
 
+  areAnyFilesWithinRange = (fileIds: Array<string>, range: number) => {
+    const { files } = this.state;
+
+    const folderPoint = this.getFolderPoint();
+
+    return fileIds.some(id => {
+      const distance = calculateDistanceBetweenPoints(files[id], folderPoint);
+
+      return distance < range;
+    });
+  };
+
   inhaleFiles = () => {
     const { width } = this.props;
-    const { files } = this.state;
+    const { files, isFolderOpen } = this.state;
 
     const height = this.getHeight();
     const fileIds = Object.keys(files);
@@ -194,19 +229,22 @@ class WhimsicalInstaller extends Component<Props, State> {
       });
     });
 
-    // If any files are close enough to the center, close the folder-mouth.
-    const areAnyFilesNearCenterOfFolder = fileIdsBeingInhaled.some(fileId => {
-      const file = files[fileId];
+    const freeFlyingFileIds = fileIds.filter(
+      id =>
+        files[id].status !== 'being-inhaled' && files[id].status !== 'swallowed'
+    );
 
-      const distanceToFolder = calculateDistanceBetweenPoints(
-        file,
-        folderPoint
-      );
-
-      return distanceToFolder < FOLDER_CLOSE_RADIUS;
-    });
-
-    if (areAnyFilesNearCenterOfFolder) {
+    // When files get near the folder, the folder "mouth" opens up.
+    // As they get even closer, the mouth closes again.
+    if (
+      !isFolderOpen &&
+      this.areAnyFilesWithinRange(freeFlyingFileIds, FOLDER_OPEN_RADIUS)
+    ) {
+      this.setState({ isFolderOpen: true });
+    } else if (
+      isFolderOpen &&
+      this.areAnyFilesWithinRange(fileIdsBeingInhaled, FOLDER_CLOSE_RADIUS)
+    ) {
       this.setState({ isFolderOpen: false });
     }
   };
@@ -226,35 +264,29 @@ class WhimsicalInstaller extends Component<Props, State> {
     // Might change later.
     const folderPoint = { x: width * (5 / 6), y: height * 0.5 };
 
-    const nonEatenFileIds = fileIds.filter(
-      id =>
-        files[id].status !== 'being-inhaled' && files[id].status !== 'swallowed'
-    );
+    const nonEatenFileIdsWithinPerimeter = fileIds.filter(id => {
+      const file = files[id];
 
-    const nonEatenFileIdsWithinPerimeter = nonEatenFileIds.filter(id => {
-      const filePosition = files[id];
+      if (file.status === 'being-inhaled' || file.status === 'swallowed') {
+        return false;
+      }
+
       const distanceBetweenPoints = calculateDistanceBetweenPoints(
-        filePosition,
+        file,
         folderPoint
       );
 
-      return distanceBetweenPoints < FOLDER_OPEN_RADIUS;
+      return distanceBetweenPoints < FOLDER_GRAVITY_RADIUS;
     });
 
     nonEatenFileIdsWithinPerimeter.forEach(fileId => {
       this.updateFile(fileId, { status: 'being-inhaled' });
-
-      if (!this.state.isFolderOpen) {
-        this.setState({ isFolderOpen: true });
-      }
     });
   };
 
   tick = () => {
-    const { width } = this.props;
     const { files } = this.state;
 
-    const height = this.getHeight();
     const fileIds = Object.keys(files);
 
     // We may have a file autonomously flying towards the folder. If so, we
