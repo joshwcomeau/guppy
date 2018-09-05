@@ -1,4 +1,6 @@
 // @flow
+import { random } from '../../utils';
+
 export type Point = { x: number, y: number };
 export type BezierPath = {
   startPoint: Point,
@@ -22,8 +24,13 @@ export const generateFlightPath = (
   const startPoint = { x: width * (1 / 6), y: height * 0.5 };
   const endPoint = { x: width * (5 / 6), y: height * 0.5 };
 
-  // TODO: Introduce some variableness into the arc position
-  const controlPoint = { x: width * 0.5, y: height * -0.25 };
+  const minControlY = height * -0.3;
+  const maxControlY = height * 0.2;
+
+  const controlPoint = {
+    x: width * 0.5,
+    y: random(minControlY, maxControlY),
+  };
 
   return { startPoint, endPoint, controlPoint };
 };
@@ -63,4 +70,28 @@ export const calculateDistanceBetweenPoints = (p1: Point, p2: Point) => {
   //         < Δx >
 
   return Math.sqrt(deltaX ** 2 + deltaY ** 2);
+};
+
+export const getQuadrantForDeltas = (deltaX: number, deltaY: number) => {
+  // Figures out which quadrant this set of deltas is:
+  //   ________________
+  //  |   1   |   2   |
+  //  |       |       |
+  //  |---------------|
+  //  |   3   |   4   |
+  //  |_______|_______|
+
+  if (deltaX >= 0 && deltaY >= 0) {
+    return 1;
+  } else if (deltaX < 0 && deltaY >= 0) {
+    return 2;
+  } else if (deltaX >= 0 && deltaY < 0) {
+    return 3;
+  } else if (deltaX < 0 && deltaY < 0) {
+    return 4;
+  } else {
+    throw new Error(
+      'No such quadrant exists. Please run this function in a quadratic universe.'
+    );
+  }
 };
