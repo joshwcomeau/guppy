@@ -85,9 +85,13 @@ describe('save-project-settings saga', () => {
         call(writePackageJson, 'path/to/new-project', jsonWithGuppy)
       );
 
-      expect(saga.next().value).toEqual(
+      expect(saga.next(jsonWithGuppy).value).toEqual(
         put(
-          saveProjectSettingsFinish(undefined, 'project', 'path/to/new-project') // why is project undefined?
+          saveProjectSettingsFinish(
+            jsonWithGuppy,
+            'project',
+            'path/to/new-project'
+          )
         )
       );
     });

@@ -26,7 +26,6 @@ export function* renameFolder(
   projectPath: string,
   newPath: string
 ): Saga<void> {
-  // console.log('rename', projectPath, newPath);
   yield call([fs, fs.renameSync], projectPath, newPath);
 }
 
@@ -36,7 +35,6 @@ export function* handleFinishSettings(): Saga<void> {
 }
 
 export function* handleProjectSaveError(err: Error): Saga<void> {
-  // console.log(err.message);
   switch (err.message) {
     case 'renaming-failed': {
       // Could be 'EPERM: operation not permitted, rename' error.
@@ -68,7 +66,6 @@ export function* handleProjectSaveError(err: Error): Saga<void> {
   }
 }
 
-// action triggered if queue is empty
 export function* handleSaveSettings(action: any): Saga<void> {
   const { project, name, icon } = action;
   const { path: projectPath } = project;
@@ -85,11 +82,11 @@ export function* handleSaveSettings(action: any): Saga<void> {
   }
 
   try {
-    // check if imported project & name changed
+    // Check if imported project & name changed
     const nameChanged = id !== project.id;
     const confirmRequired = parentPath !== defaultParentPath && nameChanged;
 
-    // rename confirmed by default
+    // Rename confirmed by default
     let confirmed = true;
     if (confirmRequired) {
       const response = yield call([dialog, dialog.showMessageBox], {
@@ -128,7 +125,6 @@ export function* handleSaveSettings(action: any): Saga<void> {
     yield put(saveProjectSettingsFinish(newProject, project.id, newPath));
   } catch (err) {
     yield call(handleProjectSaveError, err);
-    // yield put(saveProjectError());
   }
 }
 

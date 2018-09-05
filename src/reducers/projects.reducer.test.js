@@ -287,11 +287,11 @@ describe('Projects Reducer', () => {
             },
           },
         },
-        selectedId: 'foo',
+        selectedId: null,
       };
 
       const newProject = {
-        name: 'new-foo',
+        name: 'new foo',
         guppy: { id: 'new-foo' },
         scripts: {
           start: 'command it',
@@ -306,9 +306,9 @@ describe('Projects Reducer', () => {
 
       expect(actualState).toEqual({
         byId: {
-          [newProject.name]: newProject,
+          [newProject.guppy.id]: newProject,
         },
-        selectedId: newProject.name,
+        selectedId: newProject.guppy.id,
       });
     });
   });

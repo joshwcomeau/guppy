@@ -68,22 +68,21 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
       });
     }
 
-    case SAVE_PROJECT_SETTINGS_FINISH:
+    case SAVE_PROJECT_SETTINGS_FINISH: {
       const { project, oldProjectId } = action;
       const {
         guppy: { id },
       } = project;
 
       return produce(state, draftState => {
-        draftState[id] = {
-          ...project,
-        };
+        draftState[id] = project;
 
         if (oldProjectId !== id) {
           // remove old project id --> renamed to new id
           delete draftState[oldProjectId];
         }
       });
+    }
 
     case RESET_ALL_STATE:
       return initialState.byId;
@@ -99,8 +98,7 @@ const selectedIdReducer = (
 ) => {
   switch (action.type) {
     case ADD_PROJECT:
-    case IMPORT_EXISTING_PROJECT_FINISH:
-    case SAVE_PROJECT_SETTINGS_FINISH: {
+    case IMPORT_EXISTING_PROJECT_FINISH: {
       // When a new project is created/imported, we generally want to select
       // it! The only exception is during onboarding. We want the user to
       // manually click the icon, to teach them what these icons are.
@@ -116,7 +114,6 @@ const selectedIdReducer = (
       // It's possible that the selected project no longer exists (say if the
       // user deletes that folder and then refreshes Guppy).
       // In that case, un-select it.
-      // console.log('test', state);
       const selectedProjectId = state;
 
       if (!selectedProjectId) {
@@ -126,6 +123,10 @@ const selectedIdReducer = (
       const selectedProjectExists = !!action.projects[selectedProjectId];
 
       return selectedProjectExists ? state : null;
+    }
+
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      return action.project.guppy.id;
     }
 
     case SELECT_PROJECT: {
@@ -185,7 +186,6 @@ export const getInternalProjectById = (state: GlobalState, id: string) =>
   getById(state)[id];
 
 export const getProjectsArray = (state: GlobalState) => {
-  // console.log('get projects', state.projects);
   // $FlowFixMe
   return Object.values(state.projects.byId)
     .map(project =>
