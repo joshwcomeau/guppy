@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import uuid from 'uuid/v1';
 
@@ -38,41 +38,99 @@ type State = {
   },
 };
 
-class WhimsicalInstaller extends Component<Props, State> {
+class WhimsicalInstaller extends PureComponent<Props, State> {
   grabbedFileId: ?string;
   tickId: ?number;
+  generationLoopId: ?number;
   wrapperNode: HTMLElement;
   wrapperBoundingBox: ClientRect;
 
   state = {
     isFolderOpen: false,
-    files: {
-      '1': {
-        id: '1',
-        x: 100,
-        y: 100,
-        status: 'autonomous',
-        flightPath: generateFlightPath(this.props.width, this.props.width / 3),
-      },
-    },
+    files: {},
   };
 
   componentDidMount() {
     this.wrapperBoundingBox = this.wrapperNode.getBoundingClientRect();
 
-    this.tick();
+    this.generationLoopId = window.setTimeout(this.fileGenerationLoop, 1000);
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousemove', this.dragFile);
     document.removeEventListener('mouseup', this.releaseFile);
+
+    window.clearTimeout(this.generationLoopId);
+    window.cancelAnimationFrame(this.tickId);
   }
 
   getHeight = () => this.props.width * (1 / 3);
+  getPlanetPoint = () => ({
+    x: this.props.width * (1 / 6),
+    y: this.getHeight() * 0.5,
+  });
   getFolderPoint = () => ({
     x: this.props.width * (5 / 6),
     y: this.getHeight() * 0.5,
   });
+
+  fileGenerationLoop = () => {
+    const { files } = this.state;
+
+    const fileIds = Object.keys(files);
+
+    // Is this our very first file?
+    const isFirstFile = fileIds.length === 0;
+
+    const newFile = this.createFile();
+
+    this.setState(
+      state => {
+        const swallowedFileIds = fileIds.filter(
+          id => files[id].status === 'swallowed'
+        );
+
+        let persistedFiles = { ...state.files };
+
+        if (swallowedFileIds.length > 1) {
+          delete persistedFiles[swallowedFileIds[0]];
+        }
+
+        return {
+          files: {
+            ...persistedFiles,
+            [newFile.id]: newFile,
+          },
+        };
+      },
+      () => {
+        if (isFirstFile) {
+          this.tick();
+        }
+      }
+    );
+
+    const DELAY = Math.random() * 2000 + 2000; // 2-4sec delay
+
+    window.setTimeout(this.fileGenerationLoop, DELAY);
+  };
+
+  createFile = () => {
+    const { width } = this.props;
+    const height = this.getHeight();
+
+    const fileId = uuid();
+
+    const startingPoint = this.getPlanetPoint();
+
+    return {
+      id: fileId,
+      x: startingPoint.x,
+      y: startingPoint.y,
+      status: 'autonomous',
+      flightPath: generateFlightPath(width, height),
+    };
+  };
 
   handleClickFile = (id: string) => {
     // We want to allow files to be clicked and dragged _unless_ they're in
@@ -181,13 +239,15 @@ class WhimsicalInstaller extends Component<Props, State> {
     const { files, isFolderOpen } = this.state;
 
     const height = this.getHeight();
-    const fileIds = Object.keys(files);
+    const activeFileIds = Object.keys(files).filter(
+      id => files[id].status !== 'swallowed'
+    );
 
     const folderPoint = { x: width * (5 / 6), y: height * 0.5 };
 
     // If any of the files have made it to the very center of the folder,
     // we can remove them from the universe
-    const swallowedFileIds = fileIds.filter(id => {
+    const swallowedFileIds = activeFileIds.filter(id => {
       const file = files[id];
 
       const distanceToFolder = calculateDistanceBetweenPoints(
@@ -206,7 +266,7 @@ class WhimsicalInstaller extends Component<Props, State> {
       );
     }
 
-    const fileIdsBeingInhaled = fileIds.filter(
+    const fileIdsBeingInhaled = activeFileIds.filter(
       id => files[id].status === 'being-inhaled'
     );
 
@@ -229,7 +289,7 @@ class WhimsicalInstaller extends Component<Props, State> {
       });
     });
 
-    const freeFlyingFileIds = fileIds.filter(
+    const freeFlyingFileIds = activeFileIds.filter(
       id =>
         files[id].status !== 'being-inhaled' && files[id].status !== 'swallowed'
     );
@@ -288,6 +348,10 @@ class WhimsicalInstaller extends Component<Props, State> {
     const { files } = this.state;
 
     const fileIds = Object.keys(files);
+
+    if (fileIds.length === 0) {
+      return;
+    }
 
     // We may have a file autonomously flying towards the folder. If so, we
     // need to move it!
