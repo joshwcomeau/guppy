@@ -17,6 +17,7 @@ class File extends PureComponent<Props> {
 
   componentDidUpdate(prevProps: Props) {
     this.lastCoordinates.push({ x: prevProps.x, y: prevProps.y });
+
     if (this.lastCoordinates.length > 8) {
       this.lastCoordinates.shift();
     }
@@ -25,7 +26,6 @@ class File extends PureComponent<Props> {
   getFileRotation = () => {
     // Get the orientation for the file.
     // This is done by comparing the current coordinates to the previous ones.
-
     if (this.lastCoordinates.length === 0) {
       return 0;
     }
@@ -38,9 +38,11 @@ class File extends PureComponent<Props> {
     const deltaY = y - previousCoordinate.y;
 
     // angle in degrees
-    let degrees = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
+    const angleInRads = Math.atan2(deltaY, deltaX);
+    const angleInDegrees = (angleInRads * 180) / Math.PI;
 
-    return degrees + 90;
+    // We want our file to be sticking up, not sideways, so we add 90 degrees.
+    return angleInDegrees + 90;
   };
 
   render() {

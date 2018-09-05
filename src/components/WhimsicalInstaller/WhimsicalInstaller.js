@@ -250,6 +250,36 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     this.updateFile(grabbedFileId, { status: 'released' });
   };
 
+  handleFolderOpeningAndClosing = (activeFileIds: Array<string>) => {
+    /**
+     * As files approach the folder, it should open and close at specific
+     * distances. This method handles that calculation.
+     */
+    const { files, isFolderOpen } = this.state;
+
+    const freeFlyingFileIds = activeFileIds.filter(
+      id => files[id].status !== 'being-inhaled'
+    );
+
+    const fileIdsBeingInhaled = activeFileIds.filter(
+      id => files[id].status === 'being-inhaled'
+    );
+
+    // When files get near the folder, the folder "mouth" opens up.
+    // As they get even closer, the mouth closes again.
+    if (
+      !isFolderOpen &&
+      this.areFilesWithinRangeOfFolder(freeFlyingFileIds, FOLDER_OPEN_RADIUS)
+    ) {
+      this.setState({ isFolderOpen: true });
+    } else if (
+      isFolderOpen &&
+      this.areFilesWithinRangeOfFolder(fileIdsBeingInhaled, FOLDER_CLOSE_RADIUS)
+    ) {
+      this.setState({ isFolderOpen: false });
+    }
+  };
+
   autonomouslyIncrementFile = (file: FileData) => {
     /**
      * Move autonomous files towards the folder, along their arcing path.
@@ -393,36 +423,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     }
   };
 
-  handleFolderOpeningAndClosing = (activeFileIds: Array<string>) => {
-    /**
-     * As files approach the folder, it should open and close at specific
-     * distances. This method handles that calculation.
-     */
-    const { files, isFolderOpen } = this.state;
-
-    const freeFlyingFileIds = activeFileIds.filter(
-      id => files[id].status !== 'being-inhaled'
-    );
-
-    const fileIdsBeingInhaled = activeFileIds.filter(
-      id => files[id].status === 'being-inhaled'
-    );
-
-    // When files get near the folder, the folder "mouth" opens up.
-    // As they get even closer, the mouth closes again.
-    if (
-      !isFolderOpen &&
-      this.areFilesWithinRangeOfFolder(freeFlyingFileIds, FOLDER_OPEN_RADIUS)
-    ) {
-      this.setState({ isFolderOpen: true });
-    } else if (
-      isFolderOpen &&
-      this.areFilesWithinRangeOfFolder(fileIdsBeingInhaled, FOLDER_CLOSE_RADIUS)
-    ) {
-      this.setState({ isFolderOpen: false });
-    }
-  };
-
   tick = () => {
     /**
      * OUR MAIN GAME LOOP.
@@ -453,10 +453,11 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       id => files[id].status !== 'swallowed'
     );
 
+    this.handleFolderOpeningAndClosing(activeFileIds);
+
     this.startInhalingNearbyFiles();
     this.moveFilesCloserToTheirDoom(activeFileIds);
     this.swallowFilesAtCenter(activeFileIds);
-    this.handleFolderOpeningAndClosing(activeFileIds);
 
     this.tickId = window.requestAnimationFrame(this.tick);
   };
