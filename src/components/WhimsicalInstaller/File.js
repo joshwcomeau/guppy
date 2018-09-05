@@ -110,7 +110,12 @@ const Wrapper = styled.div.attrs({
   z-index: 2;
   height: ${props => props.size}px;
   overflow: visible;
-  transform: translate(-50%, -50%);
+  will-change: transform;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 export default File;
