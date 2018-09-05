@@ -7,6 +7,7 @@ import {
   generateFlightPath,
   getPositionOnQuadraticBezierPath,
   calculateDistanceBetweenPoints,
+  getQuadrantForDeltas,
 } from './WhimsicalInstaller.helpers';
 import File from './File';
 import Folder from './Folder';
@@ -277,11 +278,17 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       const deltaY = folderPoint.y - file.y;
 
       // We want to move FILE_SPEEDpx closer to the folder.
-      // This is a math problem, because I don't know which ratio to mix
-      // X and Y to have the hypothenuse get FILE_SPEEDpx shorter :/
       const slope = deltaY / deltaX;
-      const amountToMoveY = slope * FILE_SPEED;
-      const amountToMoveX = (1 - slope) * FILE_SPEED;
+      const quadrant = getQuadrantForDeltas(deltaX, deltaY);
+
+      const onTop = quadrant === 1 || quadrant === 2;
+      const onLeftSide = quadrant === 1 || quadrant === 3;
+
+      const xMultiplier = onLeftSide ? 1 : -1;
+      const yMultiplier = onTop ? 1 : -1;
+
+      const amountToMoveX = (1 - slope) * FILE_SPEED * xMultiplier;
+      const amountToMoveY = slope * FILE_SPEED * yMultiplier;
 
       this.updateFile(id, {
         x: file.x + amountToMoveX,
@@ -364,11 +371,12 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       this.autonomouslyIncrementFile(autonomousFile);
     }
 
+    // Mark any files just entering the gravity radius as 'being-inhaled'
+    this.startInhalingNearbyFiles();
+
     // If any files are currently making their way towards the folder's maw,
     // continue moving them
     this.inhaleFiles();
-
-    this.startInhalingNearbyFiles();
 
     this.tickId = window.requestAnimationFrame(this.tick);
   };
