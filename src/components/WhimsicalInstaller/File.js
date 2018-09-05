@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
@@ -12,7 +12,7 @@ type Props = {
   handleMouseDown?: (id: string) => void,
 };
 
-class File extends Component<Props> {
+class File extends PureComponent<Props> {
   lastCoordinates: Array<{ x: number, y: number }> = [];
 
   componentDidUpdate(prevProps: Props) {
@@ -58,47 +58,43 @@ class File extends Component<Props> {
           typeof handleMouseDown === 'function' && handleMouseDown(id)
         }
       >
-        <FileSVG />
-      </Wrapper>
-    );
-  }
-}
-
-class FileSVG extends PureComponent<{}> {
-  render() {
-    return (
-      <svg viewBox="0 0 20 28" height="100%">
-        <defs>
-          <filter id="file-corner" x="-100%" y="0" width="200%" height="200%">
-            <feOffset result="offOut" in="SourceGraphic" dx="-1" dy="1" />
-            <feColorMatrix
-              result="matrixOut"
-              in="offOut"
-              type="matrix"
-              values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"
-            />
-            <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="1" />
-            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-          </filter>
-        </defs>
-        <path
-          d={`
+        <svg viewBox="0 0 20 28" height="100%">
+          <defs>
+            <filter id="file-corner" x="-100%" y="0" width="200%" height="200%">
+              <feOffset result="offOut" in="SourceGraphic" dx="-1" dy="1" />
+              <feColorMatrix
+                result="matrixOut"
+                in="offOut"
+                type="matrix"
+                values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"
+              />
+              <feGaussianBlur
+                result="blurOut"
+                in="matrixOut"
+                stdDeviation="1"
+              />
+              <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+            </filter>
+          </defs>
+          <path
+            d={`
             M0,0
             L15,0
             L20,5
             L20,28
             L0,28
           `}
-          stroke="none"
-          fill={COLORS.white}
-        />
-        <polygon
-          points="15,0 15,5 20,5"
-          stroke="none"
-          fill={COLORS.white}
-          filter="url(#file-corner)"
-        />
-      </svg>
+            stroke="none"
+            fill={COLORS.white}
+          />
+          <polygon
+            points="15,0 15,5 20,5"
+            stroke="none"
+            fill={COLORS.white}
+            filter="url(#file-corner)"
+          />
+        </svg>
+      </Wrapper>
     );
   }
 }
