@@ -4,10 +4,13 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
+import type { FileStatus } from './WhimsicalInstaller.helpers';
+
 type Props = {
   x: number,
   y: number,
   size?: number,
+  status: FileStatus,
   id: string,
   handleMouseDown?: (id: string) => void,
 };
@@ -46,7 +49,7 @@ class File extends PureComponent<Props> {
   };
 
   render() {
-    const { x, y, id, size, handleMouseDown } = this.props;
+    const { x, y, id, size, status, handleMouseDown } = this.props;
 
     const rotation = this.getFileRotation();
 
@@ -55,6 +58,7 @@ class File extends PureComponent<Props> {
         x={x}
         y={y}
         size={size}
+        status={status}
         rotation={rotation}
         onMouseDown={() =>
           typeof handleMouseDown === 'function' && handleMouseDown(id)
@@ -101,6 +105,9 @@ class File extends PureComponent<Props> {
   }
 }
 
+const isGrabbable = (status: FileStatus) =>
+  status !== 'being-inhaled' && status !== 'swallowed';
+
 const Wrapper = styled.div.attrs({
   style: props => ({
     top: props.y + 'px',
@@ -113,10 +120,10 @@ const Wrapper = styled.div.attrs({
   height: ${props => props.size}px;
   overflow: visible;
   will-change: transform;
-  cursor: grab;
+  cursor: ${props => (isGrabbable(props.status) ? 'grab' : 'default')};
 
   &:active {
-    cursor: grabbing;
+    cursor: ${props => (isGrabbable(props.status) ? 'grabbing' : 'default')};
   }
 `;
 
