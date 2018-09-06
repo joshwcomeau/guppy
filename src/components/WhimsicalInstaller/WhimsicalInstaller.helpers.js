@@ -9,7 +9,7 @@ type BezierPath = {
   controlPoint: Point,
 };
 
-type FileStatus =
+export type FileStatus =
   | 'autonomous' // Flying autonomously towards the file
   | 'being-inhaled' // Very close to the folder, being sucked in
   | 'swallowed' // At the very center of the folder, no longer active
@@ -120,8 +120,18 @@ export const getQuadrantForDeltas = (deltaX: number, deltaY: number) => {
 export const isPointOutsideWindow = (
   point: Point,
   padding: number,
-  windowWidth = window.innerWidth,
-  windowHeight = window.innerHeight
+  windowWidth: number = window.innerWidth,
+  windowHeight: number = window.innerHeight
 ) => {
-  return false;
+  const topLimit = -padding;
+  const leftLimit = -padding;
+  const rightLimit = windowWidth + padding;
+  const bottomLimit = windowHeight + padding;
+
+  return (
+    point.y < topLimit ||
+    point.x < leftLimit ||
+    point.x > rightLimit ||
+    point.y > bottomLimit
+  );
 };

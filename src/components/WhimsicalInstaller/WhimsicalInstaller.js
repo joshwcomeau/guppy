@@ -3,6 +3,8 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import uuid from 'uuid/v1';
 
+import { delay } from '../../utils';
+
 import {
   generateFlightPath,
   getPositionOnQuadraticBezierPath,
@@ -40,7 +42,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   generationLoopId: ?number;
   wrapperNode: HTMLElement;
   wrapperBoundingBox: ClientRect;
-  lastCursorCoordinates: Array<Point> = [];
+  lastCoordinate: Point;
 
   state = {
     isFolderOpen: false,
@@ -50,7 +52,10 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   componentDidMount() {
     this.wrapperBoundingBox = this.wrapperNode.getBoundingClientRect();
 
-    this.generationLoopId = window.setTimeout(this.fileGenerationLoop, 1000);
+    delay(1000).then(() => {
+      this.fileGenerationLoop();
+      this.tick();
+    });
   }
 
   componentWillUnmount() {
@@ -94,22 +99,20 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
 
     const startingPoint = this.getPlanetPoint();
 
-    return new Promise(resolve => {
-      this.setState(state => {
-        return {
-          files: {
-            ...state.files,
-            [fileId]: {
-              id: fileId,
-              x: startingPoint.x,
-              y: startingPoint.y,
-              status: 'autonomous',
-              size: height / 4,
-              flightPath: generateFlightPath(width, height),
-            },
+    this.setState(state => {
+      return {
+        files: {
+          ...state.files,
+          [fileId]: {
+            id: fileId,
+            x: startingPoint.x,
+            y: startingPoint.y,
+            status: 'autonomous',
+            size: height / 4,
+            flightPath: generateFlightPath(width, height),
           },
-        };
-      }, resolve);
+        },
+      };
     });
   };
 
@@ -129,17 +132,13 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   };
 
   deleteFiles = (fileIds: Array<string>) => {
-    return new Promise(resolve => {
-      this.setState(state => {
-        const stateCopy = { ...state };
+    const filesCopy = { ...this.state.files };
 
-        fileIds.forEach(fileId => {
-          delete stateCopy[fileId];
-        });
-
-        return stateCopy;
-      }, resolve);
+    fileIds.forEach(fileId => {
+      delete filesCopy[fileId];
     });
+
+    this.setState({ files: filesCopy });
   };
 
   fileGenerationLoop = () => {
@@ -151,19 +150,12 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
 
     const fileIds = Object.keys(files);
 
-    const isFirstFile = fileIds.length === 0;
-
-    this.createFile().then(() => {
-      // If this is the first file
-      if (isFirstFile) {
-        this.tick();
-      }
-    });
+    this.createFile();
 
     // Keep only the 2 most recent swallowed files
     const filesToDelete = fileIds
       .filter(id => files[id].status === 'swallowed')
-      .slice(-2);
+      .slice(0, -2);
 
     if (filesToDelete.length > 0) {
       this.deleteFiles(filesToDelete);
@@ -225,11 +217,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
 
     const { x: previousX, y: previousY } = files[grabbedFileId];
 
-    this.lastCursorCoordinates.push({ x: previousX, y: previousY });
-
-    if (this.lastCursorCoordinates.length > 4) {
-      this.lastCursorCoordinates.shift();
-    }
+    this.lastCoordinate = { x: previousX, y: previousY };
 
     this.updateFile(grabbedFileId, { x: relativeX, y: relativeY });
   };
@@ -257,14 +245,16 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       return;
     }
 
-    // We need to figure out the angle and velocity for the file, based on the
-    // last few cursor positions.
-    const numOfCoordinates = this.lastCursorCoordinates.length;
-    const previousCoordinate = this.lastCursorCoordinates[0];
+    let horizontalSpeed = relativeX - this.lastCoordinate.x;
+    let verticalSpeed = relativeY - this.lastCoordinate.y;
 
-    const horizontalSpeed =
-      (relativeX - previousCoordinate.x) / numOfCoordinates;
-    const verticalSpeed = (relativeY - previousCoordinate.y) / numOfCoordinates;
+    if (!horizontalSpeed && !verticalSpeed) {
+      // If the user lets the file go without moving the cursor at all, give
+      // it a random direction so that it drifts a bit. Otherwise, it feels
+      // very articifial if it just remains perfectly still.
+      horizontalSpeed = Math.random() - 0.5;
+      verticalSpeed = Math.random() - 0.5;
+    }
 
     this.updateFile(grabbedFileId, {
       status: 'released',
@@ -486,10 +476,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
 
     const fileIds = Object.keys(files);
 
-    if (fileIds.length === 0) {
-      return;
-    }
-
     // We may have a file autonomously flying towards the folder. If so, we
     // need to move it!
     const autonomousFileId = fileIds.find(
@@ -499,15 +485,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     if (autonomousFileId) {
       const autonomousFile = files[autonomousFileId];
       this.autonomouslyIncrementFile(autonomousFile);
-    }
-
-    // We may have released files flying in a straight line, from when they
-    // were thrown.
-    const releasedFileIds = fileIds.filter(
-      fileId => files[fileId].status === 'released'
-    );
-    if (releasedFileIds.length > 0) {
-      this.moveReleasedFiles(releasedFileIds);
     }
 
     // Several methods below need a list of not-swallowed files.
@@ -520,6 +497,15 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     this.startInhalingNearbyFiles();
     this.moveFilesCloserToTheirDoom(activeFileIds);
     this.swallowFilesAtCenter(activeFileIds);
+
+    // We may have released files flying in a straight line, from when they
+    // were thrown.
+    const releasedFileIds = fileIds.filter(
+      fileId => files[fileId].status === 'released'
+    );
+    if (releasedFileIds.length > 0) {
+      this.moveReleasedFiles(releasedFileIds);
+    }
 
     this.tickId = window.requestAnimationFrame(this.tick);
   };
