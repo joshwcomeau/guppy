@@ -13,7 +13,11 @@ import File from './File';
 import Folder from './Folder';
 import Earth from '../Earth';
 
-import type { Point, BezierPath } from './WhimsicalInstaller.helpers';
+import type {
+  Point,
+  BezierPath,
+  FileStatus,
+} from './WhimsicalInstaller.helpers';
 
 const FILE_SPEED = 4;
 // At what distance (from the center) will the folder open/close when a file
@@ -22,13 +26,6 @@ const FOLDER_OPEN_RADIUS = 75;
 const FOLDER_CLOSE_RADIUS = 10;
 // At what distance will the folder "inhale" nearby files?
 const FOLDER_GRAVITY_RADIUS = 50;
-
-type FileStatus =
-  | 'autonomous' // Flying autonomously towards the file
-  | 'being-inhaled' // Very close to the folder, being sucked in
-  | 'swallowed' // At the very center of the folder, no longer active
-  | 'caught' // The user is grabbing the file
-  | 'released'; // The user has released a previously-grabbed file
 
 type FileData = {
   id: string,
@@ -92,7 +89,10 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   });
   getFolderPoint = () => ({
     x: this.props.width * (5 / 6),
-    y: this.getHeight() * 0.5,
+    // The folderPoint is used purely for where files should wind up.
+    // We want them to be slightly above the actual center, so that they
+    // stick out of the top, and not out of the bottom.
+    y: this.getHeight() * 0.5 - 4,
   });
 
   updateFile = (fileId: string, properties: any) => {
@@ -483,12 +483,13 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
             x={file.x}
             y={file.y}
             id={file.id}
+            status={file.status}
             handleMouseDown={this.handleClickFile}
           />
         ))}
 
         <FolderContainer size={height}>
-          <Folder isOpen={isFolderOpen} size={height / 3} />
+          <Folder isOpen={isFolderOpen} size={height * 0.365} />
         </FolderContainer>
       </Wrapper>
     );
