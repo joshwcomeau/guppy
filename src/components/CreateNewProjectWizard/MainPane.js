@@ -88,7 +88,7 @@ class MainPane extends PureComponent<Props> {
                   >
                     <ProjectTypeTogglesWrapper>
                       <ButtonWithIcon
-                        showOutline={projectType === 'create-react-app'}
+                        showStroke={projectType === 'create-react-app'}
                         icon={<ReactIcon src={reactIconSrc} />}
                         onClick={() =>
                           this.updateProjectType('create-react-app')
@@ -98,7 +98,7 @@ class MainPane extends PureComponent<Props> {
                       </ButtonWithIcon>
                       <Spacer inline size={10} />
                       <ButtonWithIcon
-                        showOutline={projectType === 'gatsby'}
+                        showStroke={projectType === 'gatsby'}
                         icon={<GatsbyIcon src={gatsbyIconSrc} />}
                         onClick={() => this.updateProjectType('gatsby')}
                       >
