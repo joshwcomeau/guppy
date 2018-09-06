@@ -6,6 +6,7 @@ import slug from 'slug';
 
 import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
+import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 
 import TwoPaneModal from '../TwoPaneModal';
@@ -23,6 +24,7 @@ const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
 type Props = {
   projects: { [projectId: string]: ProjectInternal },
+  projectHomePath: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
   addProject: (project: Project, isOnboardingCompleted: boolean) => void,
@@ -121,7 +123,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   render() {
-    const { isVisible, createNewProjectCancel } = this.props;
+    const { isVisible, createNewProjectCancel, projectHomePath } = this.props;
     const {
       projectName,
       projectType,
@@ -174,6 +176,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                   // like it.
                   // $FlowFixMe
                   project={project}
+                  projectHomePath={projectHomePath}
                   handleCompleteBuild={this.finishBuilding}
                 />
               )
@@ -187,6 +190,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
 const mapStateToProps = state => ({
   projects: getById(state),
+  projectHomePath: getProjectHomePath(state.paths),
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
 });
