@@ -22,7 +22,7 @@
     "dist:win": "cross-env GENERATE_SOURCEMAP=false npm run build && npm run package:win",
     "test": "node scripts/test.js --env=node",
     "coverage": "yarn test --coverage",
-    "report-coverage": "yarn coverage && cat ./coverage/lcov.info && codecov",
+    "report-coverage": "yarn coverage && codecov",
     "flow": "flow",
     "lint": "eslint .",
     "prettier": "prettier --write",
