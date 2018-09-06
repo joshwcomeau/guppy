@@ -60,7 +60,7 @@ export default (
 
   onStatusUpdate('Created parent directory');
 
-  const id = slug(projectName).toLowerCase();
+  const id = getProjectId(projectName);
 
   // For Windows Support
   // To support cross platform with slashes and escapes
@@ -123,6 +123,14 @@ export default (
     );
   });
 };
+
+//
+//
+// Helpers
+//
+
+export const getProjectId = (projectName: string) =>
+  slug(projectName).toLowerCase();
 
 // Exported so that getColorForProject can be tested
 export const possibleProjectColors = [

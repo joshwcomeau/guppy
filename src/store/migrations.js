@@ -61,15 +61,18 @@ export function migrateToSupportProjectHomePath(state: any) {
     return state;
   }
 
-  state.paths = {
-    homePath:
-      process.env.NODE_ENV === 'development'
-        ? path.join(homedir, 'guppy-projects-dev')
-        : path.join(homedir, 'guppy-projects'),
-    byId: state.paths || {},
+  const nextState = {
+    ...state,
+    paths: {
+      homePath:
+        process.env.NODE_ENV === 'development'
+          ? path.join(homedir, 'guppy-projects-dev')
+          : path.join(homedir, 'guppy-projects'),
+      byId: state.paths || {},
+    },
   };
 
-  return state;
+  return nextState;
 }
 
 export default function handleMigrations(engine: any) {

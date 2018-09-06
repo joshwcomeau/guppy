@@ -2,19 +2,19 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
-import slug from 'slug';
 
 import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
+import { getProjectId } from '../../services/create-project.service';
 
 import TwoPaneModal from '../TwoPaneModal';
+import Debounced from '../Debounced';
 
 import MainPane from './MainPane';
 import SummaryPane from './SummaryPane';
 import BuildPane from './BuildPane';
-import Debounced from '../Debounced';
 
 import type { Field, Status, Step } from './types';
 
@@ -74,7 +74,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
   verifyProjectNameUniqueness = (name: string) => {
     // Check to see if this name is already taken
-    const id = slug(name).toLowerCase();
+    const id = getProjectId(name);
     const isAlreadyTaken = !!this.props.projects[id];
 
     if (isAlreadyTaken) {
