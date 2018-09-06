@@ -16,6 +16,7 @@ import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 
 import ProjectName from './ProjectName';
+import ProjectPath from './ProjectPath';
 import SubmitButton from './SubmitButton';
 
 import type { Field, Status } from './types';
@@ -77,6 +78,7 @@ class MainPane extends PureComponent<Props> {
                 handleSubmit={handleSubmit}
                 isProjectNameTaken={isProjectNameTaken}
               />
+              <ProjectPath />
 
               {currentStepIndex > 0 && (
                 <FadeIn>

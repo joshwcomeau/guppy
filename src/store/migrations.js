@@ -14,12 +14,16 @@
  * For more information, see:
  * https://github.com/mathieudutour/redux-storage-decorator-migrate
  */
-
+import * as path from 'path';
+import * as os from 'os';
+import { windowsHomeDir, isWin } from '../services/platform.service';
 import migrate from 'redux-storage-decorator-migrate';
 
 // Update this constant whenever the Redux reducers change in a
 // not-backwards-incompatible way:
-const STATE_VERSION = 1;
+const STATE_VERSION = 2;
+
+const homedir = isWin ? windowsHomeDir : os.homedir();
 
 export function migrateToReduxStorage(state: any) {
   // 1. UPDATE TO REDUX STORAGE.
@@ -41,10 +45,38 @@ export function migrateToReduxStorage(state: any) {
   return parsedState;
 }
 
+export function migrateToSupportProjectHomePath(state: any) {
+  // 2. UPDATE TO SUPPORT PROJECT_HOME_PATH FEATURE
+  //
+  // - add homePath, byId field to paths state
+  // - migrate values of old paths state to byId field
+  if (!state) {
+    return state;
+  }
+  const {
+    paths: { byId: pathsById, homePath },
+  } = state;
+
+  if (pathsById && homePath) {
+    return state;
+  }
+
+  state.paths = {
+    homePath:
+      process.env.NODE_ENV === 'development'
+        ? path.join(homedir, 'guppy-projects-dev')
+        : path.join(homedir, 'guppy-projects'),
+    byId: state.paths || {},
+  };
+
+  return state;
+}
+
 export default function handleMigrations(engine: any) {
   engine = migrate(engine, STATE_VERSION);
 
   engine.addMigration(1, migrateToReduxStorage);
+  engine.addMigration(2, migrateToSupportProjectHomePath);
 
   return engine;
 }

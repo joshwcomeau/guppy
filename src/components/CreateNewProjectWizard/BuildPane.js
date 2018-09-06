@@ -37,6 +37,7 @@ const BUILD_STEP_KEYS: Array<BuildStep> = Object.keys(BUILD_STEPS);
 
 type Props = {
   project: SubmittedProject,
+  projectHomePath: string,
   handleCompleteBuild: (project: Project) => void,
 };
 
@@ -55,6 +56,7 @@ class BuildPane extends PureComponent<Props, State> {
   componentDidMount() {
     createProject(
       this.props.project,
+      this.props.projectHomePath,
       this.handleStatusUpdate,
       this.handleError,
       this.handleComplete

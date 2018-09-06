@@ -24,6 +24,7 @@ export const CREATE_NEW_PROJECT_START = 'CREATE_NEW_PROJECT_START';
 export const CREATE_NEW_PROJECT_CANCEL = 'CREATE_NEW_PROJECT_CANCEL';
 export const CREATE_NEW_PROJECT_FINISH = 'CREATE_NEW_PROJECT_FINISH';
 export const ADD_PROJECT = 'ADD_PROJECT';
+export const CHANGE_PROJECT_HOME_PATH = 'CHANGE_PROJECT_HOME_PATH';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
@@ -121,6 +122,11 @@ export const createNewProjectCancel = () => ({
 
 export const createNewProjectFinish = () => ({
   type: CREATE_NEW_PROJECT_FINISH,
+});
+
+export const changeProjectHomePath = (homePath: string) => ({
+  type: CHANGE_PROJECT_HOME_PATH,
+  homePath,
 });
 
 export const dismissSidebarIntro = () => ({
