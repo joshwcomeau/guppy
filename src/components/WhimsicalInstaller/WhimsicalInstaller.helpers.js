@@ -2,18 +2,32 @@
 import { random } from '../../utils';
 
 export type Point = { x: number, y: number };
-export type BezierPath = {
+
+type BezierPath = {
   startPoint: Point,
   endPoint: Point,
   controlPoint: Point,
 };
 
-export type FileStatus =
+type FileStatus =
   | 'autonomous' // Flying autonomously towards the file
   | 'being-inhaled' // Very close to the folder, being sucked in
   | 'swallowed' // At the very center of the folder, no longer active
   | 'caught' // The user is grabbing the file
   | 'released'; // The user has released a previously-grabbed file
+
+export type FileData = {
+  id: string,
+  x: number,
+  y: number,
+  size: number,
+  status: FileStatus,
+  flightPath: BezierPath,
+  speed?: {
+    horizontalSpeed: number,
+    verticalSpeed: number,
+  },
+};
 
 export const generateFlightPath = (
   width: number,
@@ -101,4 +115,13 @@ export const getQuadrantForDeltas = (deltaX: number, deltaY: number) => {
       'No such quadrant exists. Please run this function in a quadratic universe.'
     );
   }
+};
+
+export const isPointOutsideWindow = (
+  point: Point,
+  padding: number,
+  windowWidth = window.innerWidth,
+  windowHeight = window.innerHeight
+) => {
+  return false;
 };
