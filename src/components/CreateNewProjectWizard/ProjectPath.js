@@ -59,8 +59,6 @@ class ProjectPath extends PureComponent<Props> {
       displayedProjectPath = `${displayedProjectPath.slice(0, CLAMP_AT - 1)}…`;
     }
 
-    console.log({ displayedProjectPath });
-
     return (
       <MainText>
         Project will be created in{' '}
