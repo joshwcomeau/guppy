@@ -79,9 +79,6 @@ describe('Redux migrations', () => {
         type: 'AHH MADE UP ACTION',
       });
 
-      // Run it through all migrations
-      // NOTE: Please add any new migrations here, in addition to creating
-      // their own tests.
       expect(() => migrateToReduxStorage(state)).not.toThrow();
     });
   });
@@ -138,9 +135,6 @@ describe('Redux migrations', () => {
         type: 'AHH MADE UP ACTION',
       });
 
-      // Run it through all migrations
-      // NOTE: Please add any new migrations here, in addition to creating
-      // their own tests.
       expect(() => migrateToReduxStorage(state)).not.toThrow();
       state = migrateToReduxStorage(state);
 
