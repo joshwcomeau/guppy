@@ -11,9 +11,9 @@ import Folder from './Folder';
 import WhimsicalInstaller from './WhimsicalInstaller';
 
 storiesOf('WhimsicalInstaller', module)
-  .add('default (600px)', () => (
-    <Wrapper width={600} height={300}>
-      <WhimsicalInstaller width={600} />
+  .add('default (400px)', () => (
+    <Wrapper width={400} height={200}>
+      <WhimsicalInstaller width={400} />
     </Wrapper>
   ))
   .add('Tiny (200px)', () => (
@@ -21,14 +21,16 @@ storiesOf('WhimsicalInstaller', module)
       <WhimsicalInstaller width={200} />
     </Wrapper>
   ))
-  .add('Large (1000px)', () => (
-    <Wrapper width={1000} height={500}>
-      <WhimsicalInstaller width={1000} />
+  .add('Large (600px)', () => (
+    <Wrapper width={600} height={300}>
+      <WhimsicalInstaller width={600} />
     </Wrapper>
   ));
 
 const Wrapper = styled.div`
   position: relative;
+  top: 100px;
+  left: 100px;
   width: ${props => props.width}px;
   height: ${props => props.height}px;
   background: ${COLORS.blue[700]};

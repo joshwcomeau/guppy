@@ -208,9 +208,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const relativeX = clientX - this.wrapperBoundingBox.left;
     const relativeY = clientY - this.wrapperBoundingBox.top;
 
-    console.log(clientX, relativeX);
-    console.log(clientY, relativeY);
-
     const grabbedFileId = Object.keys(files).find(
       id => files[id].status === 'caught'
     );
@@ -345,13 +342,20 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       const nextX = file.x + file.speed.horizontalSpeed;
       const nextY = file.y + file.speed.verticalSpeed;
 
+      // Our x/y coordinates are within the context of the containing element,
+      // not the window. We need to "undo" the fact that we made them relative
+      // coordinates
+      const absoluteX = nextX + this.wrapperBoundingBox.left;
+      const absoluteY = nextY + this.wrapperBoundingBox.top;
+
       // Once the file leaves the window, we want to dispose of it.
       const isFileOutsideWindow = isPointOutsideWindow(
-        { x: nextX, y: nextY },
+        { x: absoluteX, y: absoluteY },
         file.size
       );
 
       if (isFileOutsideWindow) {
+        console.log('Deleting', file.id);
         this.deleteFiles([file.id]);
         return;
       }

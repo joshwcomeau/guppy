@@ -9,6 +9,7 @@ import createProject from '../../services/create-project.service';
 
 import ProgressBar from '../ProgressBar';
 import Spacer from '../Spacer';
+import FadeIn from '../FadeIn';
 import WhimsicalInstaller from '../WhimsicalInstaller/WhimsicalInstaller';
 import BuildStepProgress from './BuildStepProgress';
 
@@ -41,13 +42,15 @@ type Props = {
 type State = {
   currentBuildStep: BuildStep,
   progress: number,
+  showWhimsyInstaller: boolean,
 };
 
 class BuildPane extends PureComponent<Props, State> {
+  timeoutId: ?number;
   state = {
     currentBuildStep: BUILD_STEPS[0],
-    completed: false,
     progress: 0,
+    showWhimsyInstaller: false,
   };
 
   componentDidMount() {
@@ -57,7 +60,17 @@ class BuildPane extends PureComponent<Props, State> {
       this.handleError,
       this.handleComplete
     );
+
+    this.timeoutId = window.setTimeout(this.toggleWhimsyInstaller, 1000);
   }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.timeoutId);
+  }
+
+  toggleWhimsyInstaller = () => {
+    this.setState({ showWhimsyInstaller: !this.state.showWhimsyInstaller });
+  };
 
   handleStatusUpdate = (output: any) => {
     // HACK: So, I need some way of translating the raw output from CRA
@@ -119,7 +132,6 @@ class BuildPane extends PureComponent<Props, State> {
   };
 
   handleComplete = (project: Project) => {
-    return;
     this.setState({ progress: 1 });
 
     window.setTimeout(() => {
@@ -128,7 +140,7 @@ class BuildPane extends PureComponent<Props, State> {
   };
 
   render() {
-    const { currentBuildStep, progress } = this.state;
+    const { currentBuildStep, progress, showWhimsyInstaller } = this.state;
 
     return (
       <Wrapper>
@@ -148,9 +160,20 @@ class BuildPane extends PureComponent<Props, State> {
           />
         </ProgressBarWrapper>
 
-        <Title>Building Project...</Title>
+        {/*
+          TODO: Add an AvailableSpace helper so that the width of
+          WhimsicalInstaller and the height of Spacer can be determined
+          dynamically.
+        */}
+        {showWhimsyInstaller ? (
+          <FadeIn duration={850}>
+            <WhimsicalInstaller width={416} />
+          </FadeIn>
+        ) : (
+          <Spacer size={208} />
+        )}
 
-        <WhimsicalInstaller width={420} />
+        <Title>Building Project...</Title>
 
         <BuildSteps>
           {BUILD_STEP_KEYS.map(stepKey => {
@@ -215,8 +238,8 @@ const BuildSteps = styled.div`
 `;
 
 const Title = styled.h1`
-  padding: 40px;
-  padding-bottom: 0;
+  padding: 0 40px;
+  margin-top: -30px;
   font-size: 36px;
   text-align: center;
 `;
