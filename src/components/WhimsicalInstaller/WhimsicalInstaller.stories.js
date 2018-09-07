@@ -1,13 +1,10 @@
 // @flow
-import React, { Fragment } from 'react';
+import React from 'react';
 import { storiesOf } from '@storybook/react';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-import Showcase from '../../../.storybook/components/Showcase';
-import File from './File';
-import Folder from './Folder';
 import WhimsicalInstaller from './WhimsicalInstaller';
 
 storiesOf('WhimsicalInstaller', module)

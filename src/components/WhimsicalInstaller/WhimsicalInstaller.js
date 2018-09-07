@@ -382,10 +382,8 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
      * The file could be autonomous, or held by the user, or released in its
      * direction.
      */
-    const { width } = this.props;
     const { files } = this.state;
 
-    const height = this.getHeight();
     const fileIds = Object.keys(files);
 
     // Check if there are any files within range of our folder maw.

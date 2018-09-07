@@ -11,8 +11,15 @@ describe('WhimsicalInstaller helpers', () => {
     it('creates a valid path', () => {
       const width = 600;
       const height = 200;
+      const startPoint = { x: 100, y: 100 };
+      const endPoint = { x: 500, y: 100 };
 
-      const actualOutput = generateFlightPath(width, height);
+      const actualOutput = generateFlightPath(
+        width,
+        height,
+        startPoint,
+        endPoint
+      );
 
       // We expect a path to be created with predictable start/end points,
       // but the control point has an element of randomness on its `y` coord.
