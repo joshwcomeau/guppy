@@ -1,6 +1,7 @@
 // @flow
 import electron from 'electron';
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
+import uuid from 'uuid/v1';
 
 import {
   importExistingProjectStart,
@@ -76,7 +77,10 @@ export function* importProject({ path }: Action): Saga<void> {
   try {
     // Let's load the basic project info for the path specified, if possible.
     const json = yield call(loadPackageJson, path);
-    const projectId = json.name;
+    // If guppy key already exists in package.json, then we don't want
+    // to overwrite it
+    const hasGuppyKey = json.hasOwnProperty('guppy');
+    const projectId = hasGuppyKey ? json.guppy.id : uuid();
 
     // Check to see if we already have a project with this ID.
     // In the future, maybe I can attach a suffix like `-copy`, but for
@@ -100,14 +104,10 @@ export function* importProject({ path }: Action): Saga<void> {
     // TODO: Try importing the existing project's favicon as icon instead?
     const color = yield call(getColorForProject, json.name);
 
-    // If guppy key already exists in package.json, then we don't want
-    // to overwrite it
-    const hasGuppyKey = json.hasOwnProperty('guppy');
-
     const guppyFields = hasGuppyKey
       ? json.guppy
       : {
-          id: json.name,
+          id: projectId,
           name: json.name,
           type,
           color,

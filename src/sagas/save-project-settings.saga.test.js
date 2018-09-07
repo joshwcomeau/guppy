@@ -3,15 +3,12 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 
 import rootSaga, {
   handleSaveSettings,
-  handleFinishSettings,
   renameFolder,
 } from './save-project-settings.saga';
 
 import {
   SAVE_PROJECT_SETTINGS_START,
-  SAVE_PROJECT_SETTINGS_FINISH,
   saveProjectSettingsFinish,
-  hideModal,
 } from '../actions';
 import {
   loadPackageJson,
@@ -31,16 +28,16 @@ describe('save-project-settings saga', () => {
       expect(saga.next().value).toEqual(
         takeEvery(SAVE_PROJECT_SETTINGS_START, handleSaveSettings)
       );
-      expect(saga.next().value).toEqual(
-        takeEvery(SAVE_PROJECT_SETTINGS_FINISH, handleFinishSettings)
-      );
     });
   });
 
   describe('saveProjectSettings', () => {
     it('should save settings', () => {
       const { dialog } = electron.remote;
-      const json = { name: 'project', guppy: { id: 'project', icon: null } };
+      const json = {
+        name: 'project',
+        guppy: { id: 'mocked-uuid-v1', icon: null },
+      };
 
       const action = {
         name: 'new-project',
@@ -74,11 +71,7 @@ describe('save-project-settings saga', () => {
       // Write package.json
       const jsonWithGuppy = {
         name: 'new-project',
-        guppy: {
-          name: 'new-project',
-          id: 'new-project',
-          icon: 'icon',
-        },
+        guppy: { name: 'new-project', id: 'mocked-uuid-v1', icon: 'icon' },
       };
 
       expect(saga.next().value).toEqual(
@@ -86,20 +79,8 @@ describe('save-project-settings saga', () => {
       );
 
       expect(saga.next(jsonWithGuppy).value).toEqual(
-        put(
-          saveProjectSettingsFinish(
-            jsonWithGuppy,
-            'project',
-            'path/to/new-project'
-          )
-        )
+        put(saveProjectSettingsFinish(jsonWithGuppy, 'path/to/new-project'))
       );
-    });
-
-    it('should hide modal on finish', () => {
-      const saga = handleFinishSettings();
-
-      expect(saga.next().value).toEqual(put(hideModal()));
     });
   });
 });

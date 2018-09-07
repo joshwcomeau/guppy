@@ -14,9 +14,7 @@ import { remote } from 'electron';
 
 import {
   saveProjectSettingsFinish,
-  hideModal,
   SAVE_PROJECT_SETTINGS_START,
-  SAVE_PROJECT_SETTINGS_FINISH,
 } from '../actions';
 
 const { dialog } = remote;
@@ -27,11 +25,6 @@ export function* renameFolder(
   newPath: string
 ): Saga<void> {
   yield call([fs, fs.renameSync], projectPath, newPath);
-}
-
-export function* handleFinishSettings(): Saga<void> {
-  // State updated in projects reducer - we just have to hide the modal here
-  yield put(hideModal());
 }
 
 export function* handleProjectSaveError(err: Error): Saga<void> {
@@ -69,7 +62,7 @@ export function* handleProjectSaveError(err: Error): Saga<void> {
 export function* handleSaveSettings(action: any): Saga<void> {
   const { project, name, icon } = action;
   const { path: projectPath } = project;
-  const id = slug(name).toLowerCase();
+  const newNameSlug = slug(name).toLowerCase();
   const parentPath = path.resolve(projectPath, '../');
   let newPath = projectPath;
 
@@ -83,7 +76,7 @@ export function* handleSaveSettings(action: any): Saga<void> {
 
   try {
     // Check if imported project & name changed
-    const nameChanged = id !== project.id;
+    const nameChanged = newNameSlug !== project.id;
     const confirmRequired = parentPath !== defaultParentPath && nameChanged;
 
     // Rename confirmed by default
@@ -101,7 +94,7 @@ export function* handleSaveSettings(action: any): Saga<void> {
     }
 
     if (confirmed && nameChanged) {
-      newPath = path.join(parentPath, id);
+      newPath = path.join(parentPath, newNameSlug);
       try {
         yield call(renameFolder, projectPath, newPath);
       } catch (err) {
@@ -112,17 +105,17 @@ export function* handleSaveSettings(action: any): Saga<void> {
     // Apply changes to packageJSON
     const newProject = yield call(writePackageJson, newPath, {
       ...json,
-      name: id,
+      name: newNameSlug,
       guppy: {
         ...(json && json.guppy),
+        // Don't override id here as it is a unique id that must not be changed.
         name,
-        id,
         icon,
       },
     });
 
     // Update state & close modal
-    yield put(saveProjectSettingsFinish(newProject, project.id, newPath));
+    yield put(saveProjectSettingsFinish(newProject, newPath));
   } catch (err) {
     yield call(handleProjectSaveError, err);
   }
@@ -130,5 +123,4 @@ export function* handleSaveSettings(action: any): Saga<void> {
 
 export default function* rootSaga(): Saga<void> {
   yield takeEvery(SAVE_PROJECT_SETTINGS_START, handleSaveSettings);
-  yield takeEvery(SAVE_PROJECT_SETTINGS_FINISH, handleFinishSettings);
 }
