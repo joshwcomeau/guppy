@@ -54,7 +54,6 @@ class SettingsButton extends Component<Props, State> {
   render() {
     const { hovered } = this.state;
     return (
-      // Omitting most of the structure that isn't relevant
       <Motion
         style={{
           rotations: spring(hovered ? 0.3 : 0),

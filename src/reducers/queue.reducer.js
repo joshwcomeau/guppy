@@ -26,10 +26,6 @@ type State = {
 
 const initialState = {};
 
-// const addToQueue = (queueType: string, draftState: any) => {
-
-// }
-
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case QUEUE_DEPENDENCY_INSTALL: {
