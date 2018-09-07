@@ -31,7 +31,9 @@ export type FileData = {
 
 export const generateFlightPath = (
   width: number,
-  height: number
+  height: number,
+  startPoint: Point,
+  endPoint: Point
 ): BezierPath => {
   // We can imagine this as an SVG created that spans the size of our area.
   //  ____________________________________
@@ -42,11 +44,8 @@ export const generateFlightPath = (
   //
   // We want to draw a quadratic bezier curve between the two, arcing up
   // slightly.
-  const startPoint = { x: width * (1 / 6), y: height * 0.5 };
-  const endPoint = { x: width * (5 / 6), y: height * 0.5 };
-
-  const minControlY = height * -0.3;
-  const maxControlY = height * 0.2;
+  const minControlY = height * -0.2;
+  const maxControlY = height * 0.35;
 
   const controlPoint = {
     x: width * 0.5,

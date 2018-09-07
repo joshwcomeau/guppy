@@ -67,21 +67,21 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   }
 
   getHeight = () =>
-    // Our height will be 1/3rd of our width.
-    // This is so we end up with 3 squares:
-    //  _____________________
-    // |      |      |      |
-    // |      |      |      |
-    // |______|______|______|
+    // Our height will be 1/2 of our width.
+    // This is so we end up with 2 squares:
+    //  ______________
+    // |      |      |
+    // |      |      |
+    // |______|______|
     //
-    this.props.width * (1 / 3);
+    this.props.width * (1 / 2);
 
   getPlanetPoint = () => ({
-    x: this.props.width * (1 / 6),
+    x: this.props.width * (1 / 4),
     y: this.getHeight() * 0.5,
   });
   getFolderPoint = () => ({
-    x: this.props.width * (5 / 6),
+    x: this.props.width * (3 / 4),
     // The folderPoint is used purely for where files should wind up.
     // We want them to be slightly above the actual center, so that they
     // stick out of the top, and not out of the bottom.
@@ -97,7 +97,8 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
 
     const fileId = uuid();
 
-    const startingPoint = this.getPlanetPoint();
+    const startPoint = this.getPlanetPoint();
+    const endPoint = this.getFolderPoint();
 
     this.setState(state => {
       return {
@@ -105,11 +106,11 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
           ...state.files,
           [fileId]: {
             id: fileId,
-            x: startingPoint.x,
-            y: startingPoint.y,
+            x: startPoint.x,
+            y: startPoint.y,
             status: 'autonomous',
-            size: height / 4,
-            flightPath: generateFlightPath(width, height),
+            size: height * 0.2,
+            flightPath: generateFlightPath(width, height, startPoint, endPoint),
           },
         },
       };
@@ -207,6 +208,9 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const relativeX = clientX - this.wrapperBoundingBox.left;
     const relativeY = clientY - this.wrapperBoundingBox.top;
 
+    console.log(clientX, relativeX);
+    console.log(clientY, relativeY);
+
     const grabbedFileId = Object.keys(files).find(
       id => files[id].status === 'caught'
     );
@@ -284,7 +288,9 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       this.areFilesWithinRangeOfFolder(freeFlyingFileIds, FOLDER_OPEN_RADIUS)
     ) {
       this.setState({ isFolderOpen: true });
-    } else if (
+    }
+
+    if (
       isFolderOpen &&
       this.areFilesWithinRangeOfFolder(fileIdsBeingInhaled, FOLDER_CLOSE_RADIUS)
     ) {
@@ -375,7 +381,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     // Folders have a 50px radius around them that sucks files in.
     // NOTE: This isn't dependent on `width` to make the calculations easier.
     // Might change later.
-    const folderPoint = { x: width * (5 / 6), y: height * 0.5 };
+    const folderPoint = this.getFolderPoint();
 
     const nonEatenFileIdsWithinPerimeter = fileIds.filter(id => {
       const file = files[id];
@@ -521,7 +527,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     return (
       <Wrapper width={width} innerRef={node => (this.wrapperNode = node)}>
         <PlanetContainer size={height}>
-          <Earth size={height / 2} />
+          <Earth size={height * 0.4} />
         </PlanetContainer>
 
         {filesArray.map(file => (
@@ -537,7 +543,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
         ))}
 
         <FolderContainer size={height}>
-          <Folder isOpen={isFolderOpen} size={height * 0.365} />
+          <Folder isOpen={isFolderOpen} size={height * 0.32} />
         </FolderContainer>
       </Wrapper>
     );
@@ -559,6 +565,7 @@ const PlanetContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 `;
 
 const FolderContainer = styled.div`

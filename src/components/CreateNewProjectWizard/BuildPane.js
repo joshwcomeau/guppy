@@ -9,15 +9,13 @@ import createProject from '../../services/create-project.service';
 
 import ProgressBar from '../ProgressBar';
 import Spacer from '../Spacer';
+import WhimsicalInstaller from '../WhimsicalInstaller/WhimsicalInstaller';
 import BuildStepProgress from './BuildStepProgress';
 
 import type { BuildStep } from './types';
 import type { SubmittedProject, Project } from '../../types';
 
 const BUILD_STEPS = {
-  creatingParentDirectory: {
-    copy: 'Creating parent directory',
-  },
   installingCliTool: {
     copy: 'Installing build tool',
   },
@@ -68,14 +66,9 @@ class BuildPane extends PureComponent<Props, State> {
     // but I don't have any better ideas.
     const message = output.toString();
 
-    if (message.match(/Created parent directory/i)) {
+    if (message.match(/Installing packages/i)) {
       this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[1],
-        progress: 0.1,
-      });
-    } else if (message.match(/Installing packages/i)) {
-      this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[3],
+        currentBuildStep: BUILD_STEP_KEYS[2],
         progress: 0.4,
       });
       // eslint-disable-next-line no-control-regex
@@ -105,7 +98,7 @@ class BuildPane extends PureComponent<Props, State> {
       }));
     } else if (message.match(/Dependencies installed/i)) {
       this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[4],
+        currentBuildStep: BUILD_STEP_KEYS[3],
         progress: 0.9,
       });
     }
@@ -119,13 +112,14 @@ class BuildPane extends PureComponent<Props, State> {
       // Everything appears to work though, so I'm just going to treat this
       // as a success.
       this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[2],
+        currentBuildStep: BUILD_STEP_KEYS[1],
         progress: 0.2,
       });
     }
   };
 
   handleComplete = (project: Project) => {
+    return;
     this.setState({ progress: 1 });
 
     window.setTimeout(() => {
@@ -153,7 +147,10 @@ class BuildPane extends PureComponent<Props, State> {
             damping={progress === 1 ? 22 : 32}
           />
         </ProgressBarWrapper>
+
         <Title>Building Project...</Title>
+
+        <WhimsicalInstaller width={420} />
 
         <BuildSteps>
           {BUILD_STEP_KEYS.map(stepKey => {
@@ -194,7 +191,6 @@ const Wrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   height: 100%;
-  padding: 40px;
   background-image: linear-gradient(
     45deg,
     ${COLORS.blue[900]},
@@ -219,6 +215,8 @@ const BuildSteps = styled.div`
 `;
 
 const Title = styled.h1`
+  padding: 40px;
+  padding-bottom: 0;
   font-size: 36px;
   text-align: center;
 `;
