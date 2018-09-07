@@ -13,6 +13,10 @@ jest.mock('../services/platform.service', () => ({
   windowsHomeDir: 'test',
 }));
 
+jest.mock('path', () => ({
+  join: () => 'test/guppy-projects',
+}));
+
 const ENGINE_KEY = 'test-key';
 
 describe('Redux migrations', () => {
