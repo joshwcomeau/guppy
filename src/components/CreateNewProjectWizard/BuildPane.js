@@ -61,6 +61,13 @@ class BuildPane extends PureComponent<Props, State> {
       this.handleComplete
     );
 
+    // We show the whimsy installer after a second because we need to wait until
+    // the TwoPaneModal animation completes, so that the installer's
+    // BoundingBox is accurately captured.
+    //
+    // TODO: Use ResizeObserver within WhimsyInstaller to recalculate
+    // automatically? Not sure if that will negatively impact the performance
+    // of the animation.
     this.timeoutId = window.setTimeout(this.toggleWhimsyInstaller, 1000);
   }
 
