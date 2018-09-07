@@ -29,4 +29,3 @@ package-lock.json
 
 # coverage
 coverage*
-.nyc_output
