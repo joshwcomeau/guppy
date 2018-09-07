@@ -1,22 +1,27 @@
 // @flow
+import path from 'path';
+import { remote } from 'electron';
 import React, { PureComponent } from 'react';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
+import styled from 'styled-components';
+
 import { changeProjectHomePath } from '../../actions';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
-import TextButton from '../TextButton';
-import { Tooltip } from 'react-tippy';
+import { getProjectId } from '../../services/create-project.service';
 import { COLORS } from '../../constants';
-const { dialog } = window.require('electron').remote;
+
+import TextButton from '../TextButton';
 
 type Props = {
-  defaultProjectHome: string,
+  projectHome: string,
+  projectName: string,
   changeProjectHomePath: (path: string) => void,
 };
 
 class ProjectPath extends PureComponent<Props> {
   updatePath = () => {
-    dialog.showOpenDialog(
+    remote.dialog.showOpenDialog(
       {
         message: 'Select the directory of Project',
         properties: ['openDirectory'],
@@ -29,23 +34,38 @@ class ProjectPath extends PureComponent<Props> {
         }
 
         // Only a single path should be selected
-        const [path] = paths;
-        this.props.changeProjectHomePath(path);
+        const [firstPath] = paths;
+        this.props.changeProjectHomePath(firstPath);
       }
     );
   };
 
   render() {
-    const { defaultProjectHome } = this.props;
+    const { projectHome, projectName } = this.props;
+
+    const projectId = getProjectId(projectName);
+
+    // Join the projectHome with the prospective project ID
+    // Hide the leading forward-slash, on Mac/Linux
+    const fullProjectPath = path
+      .join(projectHome, projectId)
+      .replace(/^\//, '');
+
+    // Using CSS text-overflow is proving challenging, so we'll just crop it
+    // with JS.
+    const CLAMP_AT = 29;
+    let displayedProjectPath = fullProjectPath;
+    if (displayedProjectPath.length > CLAMP_AT) {
+      displayedProjectPath = `${displayedProjectPath.slice(0, CLAMP_AT - 1)}…`;
+    }
+
     return (
       <MainText>
-        created in
-        <Tooltip title={defaultProjectHome} position="bottom">
-          <TextButton onClick={() => this.updatePath()}>
-            {defaultProjectHome.length > 30
-              ? `${defaultProjectHome.slice(0, 30)}...`
-              : defaultProjectHome}
-          </TextButton>
+        Project will be created in{' '}
+        <Tooltip title={fullProjectPath} position="bottom">
+          <DirectoryButton onClick={() => this.updatePath()}>
+            {displayedProjectPath}
+          </DirectoryButton>
         </Tooltip>
       </MainText>
     );
@@ -54,14 +74,21 @@ class ProjectPath extends PureComponent<Props> {
 
 const MainText = styled.div`
   text-align: left;
-  margin: -25px 0 30px 5px;
-  font-size: 18px;
-  color: ${COLORS.gray['500']};
+  margin: -20px 0 30px 5px;
+  font-size: 15px;
+  color: ${COLORS.gray[400]};
+`;
+
+const DirectoryButton = styled(TextButton)`
+  font-family: 'Fira Mono';
+  font-size: 12px;
+  color: ${COLORS.gray[600]};
+  text-decoration: none;
 `;
 
 const mapStateToProps = state => {
   return {
-    defaultProjectHome: getProjectHomePath(state.paths),
+    projectHome: getProjectHomePath(state.paths),
   };
 };
 

@@ -78,7 +78,7 @@ class MainPane extends PureComponent<Props> {
                 handleSubmit={handleSubmit}
                 isProjectNameTaken={isProjectNameTaken}
               />
-              <ProjectPath />
+              <ProjectPath projectName={projectName} />
 
               {currentStepIndex > 0 && (
                 <FadeIn>
