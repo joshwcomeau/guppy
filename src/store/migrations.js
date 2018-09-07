@@ -53,12 +53,15 @@ export function migrateToSupportProjectHomePath(state: any) {
   if (!state) {
     return state;
   }
-  const {
-    paths: { byId: pathsById, homePath },
-  } = state;
 
-  if (pathsById && homePath) {
-    return state;
+  if (state.paths) {
+    const {
+      paths: { byId: pathsById, homePath },
+    } = state;
+
+    if (pathsById && homePath) {
+      return state;
+    }
   }
 
   const nextState = {
