@@ -28,9 +28,6 @@ storiesOf('WhimsicalInstaller', module)
   ));
 
 const Wrapper = styled.div`
-  position: relative;
-  top: 100px;
-  left: 100px;
   width: ${props => props.width}px;
   height: ${props => props.height}px;
   background: ${COLORS.blue[700]};

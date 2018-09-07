@@ -22,7 +22,7 @@ const FILE_SPEED = 4;
 // At what distance (from the center) will the folder open/close when a file
 // approaches?
 const FOLDER_OPEN_RADIUS = 75;
-const FOLDER_CLOSE_RADIUS = 10;
+const FOLDER_CLOSE_RADIUS = 25;
 // At what distance will the folder "inhale" nearby files?
 const FOLDER_GRAVITY_RADIUS = 50;
 
@@ -279,7 +279,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     );
 
     // When files get near the folder, the folder "mouth" opens up.
-    // As they get even closer, the mouth closes again.
     if (
       !isFolderOpen &&
       this.areFilesWithinRangeOfFolder(freeFlyingFileIds, FOLDER_OPEN_RADIUS)
@@ -287,11 +286,22 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       this.setState({ isFolderOpen: true });
     }
 
-    if (
-      isFolderOpen &&
-      this.areFilesWithinRangeOfFolder(fileIdsBeingInhaled, FOLDER_CLOSE_RADIUS)
-    ) {
-      this.setState({ isFolderOpen: false });
+    // If files are within "swallow range", the folder closes.
+    // Alternatively, if they get too far away (if they escape), it should
+    // also close.
+    if (isFolderOpen) {
+      const isWithinSwallowRange = this.areFilesWithinRangeOfFolder(
+        fileIdsBeingInhaled,
+        FOLDER_CLOSE_RADIUS
+      );
+
+      const haveFilesEscaped =
+        !isWithinSwallowRange &&
+        !this.areFilesWithinRangeOfFolder(activeFileIds, FOLDER_OPEN_RADIUS);
+
+      if (isWithinSwallowRange || haveFilesEscaped) {
+        this.setState({ isFolderOpen: false });
+      }
     }
   };
 
@@ -355,7 +365,6 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       );
 
       if (isFileOutsideWindow) {
-        console.log('Deleting', file.id);
         this.deleteFiles([file.id]);
         return;
       }

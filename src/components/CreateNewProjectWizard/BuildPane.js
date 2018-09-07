@@ -165,13 +165,15 @@ class BuildPane extends PureComponent<Props, State> {
           WhimsicalInstaller and the height of Spacer can be determined
           dynamically.
         */}
-        {showWhimsyInstaller ? (
-          <FadeIn duration={850}>
-            <WhimsicalInstaller width={416} />
-          </FadeIn>
-        ) : (
-          <Spacer size={208} />
-        )}
+        <WhimsicalWrapper>
+          {showWhimsyInstaller ? (
+            <FadeIn duration={850}>
+              <WhimsicalInstaller width={416} />
+            </FadeIn>
+          ) : (
+            <Spacer size={208} />
+          )}
+        </WhimsicalWrapper>
 
         <Title>Building Project...</Title>
 
@@ -242,6 +244,12 @@ const Title = styled.h1`
   margin-top: -30px;
   font-size: 36px;
   text-align: center;
+`;
+
+const WhimsicalWrapper = styled.div`
+  position: relative;
+  /* Make sure it sits below the "Finished" overlay, when completed */
+  z-index: 1;
 `;
 
 const Finished = styled.div`
