@@ -3,6 +3,7 @@ import {
   migrateToReduxStorage,
   migrateToSupportProjectHomePath,
 } from './migrations';
+import rootReducer from '../reducers';
 
 jest.mock('os', () => ({
   homedir: () => 'test',
@@ -72,6 +73,17 @@ describe('Redux migrations', () => {
 
       expect(actualOutput).toEqual(expectedOutput);
     });
+
+    it('builds without crashing', () => {
+      let state = rootReducer(undefined, {
+        type: 'AHH MADE UP ACTION',
+      });
+
+      // Run it through all migrations
+      // NOTE: Please add any new migrations here, in addition to creating
+      // their own tests.
+      expect(() => migrateToReduxStorage(state)).not.toThrow();
+    });
   });
 
   describe('Version 1 -> Version 2', () => {
@@ -119,6 +131,20 @@ describe('Redux migrations', () => {
       const expectedOutput = persistedState;
       const actualOutput = migrateToSupportProjectHomePath(persistedState);
       expect(actualOutput).toEqual(expectedOutput);
+    });
+
+    it('builds without crashing', () => {
+      let state = rootReducer(undefined, {
+        type: 'AHH MADE UP ACTION',
+      });
+
+      // Run it through all migrations
+      // NOTE: Please add any new migrations here, in addition to creating
+      // their own tests.
+      expect(() => migrateToReduxStorage(state)).not.toThrow();
+      state = migrateToReduxStorage(state);
+
+      expect(() => migrateToSupportProjectHomePath(state)).not.toThrow();
     });
   });
 });
