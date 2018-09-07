@@ -6,7 +6,6 @@ import {
   loadPackageJson,
   writePackageJson,
 } from '../services/read-from-disk.service';
-import { defaultParentPath } from '../reducers/paths.reducer';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -84,7 +83,7 @@ export function* handleSaveSettings(action: any): Saga<void> {
   try {
     // Check if imported project & name changed
     const nameChanged = id !== project.id;
-    const confirmRequired = parentPath !== defaultParentPath && nameChanged;
+    const confirmRequired = nameChanged;
 
     // Rename confirmed by default
     let confirmed = true;
