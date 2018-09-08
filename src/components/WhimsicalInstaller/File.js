@@ -106,7 +106,7 @@ class File extends PureComponent<Props> {
 }
 
 const isGrabbable = (status: FileStatus) =>
-  status !== 'being-inhaled' && status !== 'swallowed';
+  status !== 'being-captured' && status !== 'captured';
 
 const WIDTH_RATIO = 20 / 28;
 

@@ -63,6 +63,14 @@ class BuildPane extends PureComponent<Props, State> {
     ) {
       this.buildProject();
 
+      // We want to wait a bit before starting the whimsy animation, because
+      // at this very moment, the pane is just beginning to unfold. We don't
+      // want to re-render mid-animation!
+      //
+      // Also, WhimsicalInstaller takes its bounding-box measurements when
+      // `runInstaller` becomes true, so we want it to be in its final position
+      // when this happens. Otherwise, clicking files in the air instantly
+      // "teleports" them a couple inches from the mouse :/
       this.timeoutId = window.setTimeout(() => {
         this.setState({ runInstaller: true });
       }, 1000);

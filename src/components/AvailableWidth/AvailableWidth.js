@@ -42,7 +42,6 @@ class AvailableWidth extends Component<Props, State> {
     // 2.4kb though, so I don't feel the need to import() it.
     // Also, this will also report on mount, which'll set the initial value.
     this.observer = new ResizeObserver(([entry]) => {
-      console.log('REsize!');
       const observedWidth = entry.contentRect.width;
 
       // This observer fires on mount, even though the size hasn't changed.
@@ -64,8 +63,6 @@ class AvailableWidth extends Component<Props, State> {
   render() {
     const { width } = this.state;
     const { children } = this.props;
-
-    console.log({ width });
 
     return (
       <div ref={elem => (this.containerElem = elem)}>
