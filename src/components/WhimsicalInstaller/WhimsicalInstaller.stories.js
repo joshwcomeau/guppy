@@ -10,17 +10,22 @@ import WhimsicalInstaller from './WhimsicalInstaller';
 storiesOf('WhimsicalInstaller', module)
   .add('default (400px)', () => (
     <Wrapper width={400} height={200}>
-      <WhimsicalInstaller width={400} />
+      <WhimsicalInstaller isRunning width={400} />
     </Wrapper>
   ))
   .add('Tiny (200px)', () => (
     <Wrapper width={200} height={100}>
-      <WhimsicalInstaller width={200} />
+      <WhimsicalInstaller isRunning width={200} />
     </Wrapper>
   ))
   .add('Large (600px)', () => (
     <Wrapper width={600} height={300}>
-      <WhimsicalInstaller width={600} />
+      <WhimsicalInstaller isRunning width={600} />
+    </Wrapper>
+  ))
+  .add('Not running', () => (
+    <Wrapper width={400} height={200}>
+      <WhimsicalInstaller width={400} />
     </Wrapper>
   ));
 

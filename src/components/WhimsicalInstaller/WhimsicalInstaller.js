@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import uuid from 'uuid/v1';
 
-import { delay } from '../../utils';
+import { random } from '../../utils';
 
 import {
   generateFlightPath,
@@ -16,9 +16,9 @@ import File from './File';
 import Folder from './Folder';
 import Earth from '../Earth';
 
-import type { Point, FileData } from './WhimsicalInstaller.helpers';
+import type { Point, FileData } from './WhimsicalInstaller.types';
 
-const FILE_SPEED = 4;
+// TODO: These constants should all become fractions of this.props.width
 // At what distance (from the center) will the folder open/close when a file
 // approaches?
 const FOLDER_OPEN_RADIUS = 75;
@@ -28,6 +28,7 @@ const FOLDER_GRAVITY_RADIUS = 50;
 
 type Props = {
   width: number,
+  isRunning?: boolean,
 };
 
 type State = {
@@ -50,12 +51,13 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   };
 
   componentDidMount() {
-    this.wrapperBoundingBox = this.wrapperNode.getBoundingClientRect();
+    this.toggleRunning();
+  }
 
-    delay(1000).then(() => {
-      this.fileGenerationLoop();
-      this.tick();
-    });
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.isRunning !== this.props.isRunning) {
+      this.toggleRunning();
+    }
   }
 
   componentWillUnmount() {
@@ -65,6 +67,18 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     window.clearTimeout(this.generationLoopId);
     window.cancelAnimationFrame(this.tickId);
   }
+
+  toggleRunning = () => {
+    if (this.props.isRunning) {
+      this.wrapperBoundingBox = this.wrapperNode.getBoundingClientRect();
+
+      this.fileGenerationLoop();
+      this.tick();
+    } else if (!this.props.isRunning) {
+      window.clearTimeout(this.generationLoopId);
+      window.cancelAnimationFrame(this.tickId);
+    }
+  };
 
   getHeight = () =>
     // Our height will be 1/2 of our width.
@@ -87,6 +101,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     // stick out of the top, and not out of the bottom.
     y: this.getHeight() * 0.5 - 4,
   });
+  getPixelsPerTick = () => this.props.width * 0.01;
 
   createFile = () => {
     /**
@@ -100,6 +115,13 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const startPoint = this.getPlanetPoint();
     const endPoint = this.getFolderPoint();
 
+    // The speed of a file depends on the size of the container.
+    // In general, we want to move approximately 1% of its width every tick.
+    // Each file has its own speed, to keep things dynamic.
+    const minSpeed = width * 0.005;
+    const maxSpeed = width * 0.015;
+    const speed = random(minSpeed, maxSpeed);
+
     this.setState(state => {
       return {
         files: {
@@ -110,6 +132,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
             y: startPoint.y,
             status: 'autonomous',
             size: height * 0.2,
+            speed,
             flightPath: generateFlightPath(width, height, startPoint, endPoint),
           },
         },
@@ -310,6 +333,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
      * Move autonomous files towards the folder, along their arcing path.
      */
     const { width } = this.props;
+    const pixelsPerTick = this.getPixelsPerTick();
 
     // We aren't actually storing the percentage through its journey.
     // Instead, we know its current X value, and the amount we want to
@@ -326,7 +350,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const transposedX = file.x - planetPoint.x;
     const transposedMax = width * (distanceBetweenEntities / width);
 
-    const nextX = transposedX + FILE_SPEED;
+    const nextX = transposedX + pixelsPerTick;
 
     // This number between 0-1 tells us how far through our journey we are
     const ratioCompleted = nextX / transposedMax;
@@ -421,6 +445,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const { files } = this.state;
 
     const folderPoint = this.getFolderPoint();
+    const pixelsPerTick = this.getPixelsPerTick();
 
     const fileIdsBeingInhaled = activeFileIds.filter(
       id => files[id].status === 'being-inhaled'
@@ -432,7 +457,29 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       const deltaX = folderPoint.x - file.x;
       const deltaY = folderPoint.y - file.y;
 
-      // We want to move FILE_SPEEDpx closer to the folder.
+      // We want to move closer to the folder, by the amount specified by the
+      // number of pixels per tick
+      // If we have 10 pixels per tick, it means we have 10 pixels to spread
+      // between horizontal and vertical directions.
+      //
+      // eg. In a straight line:
+      //
+      //   File ------------------------------ Folder
+      //        |----|
+      //         10px per tick
+      //
+      // At an angle
+      //
+      //   File   3px horizontal
+      //        \----
+      //         \  |
+      //          \ |  7px vertical
+      //           \|
+      //             Folder
+      //
+      // Important thing is that vertical + horizontal = pixels-per-tick.
+      // This way, all files appear to be moving the same speed, regardless
+      // of angle of approach.
       const slope = Math.abs(deltaY / deltaX);
       const quadrant = getQuadrantForDeltas(deltaX, deltaY);
 
@@ -442,8 +489,8 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       const xMultiplier = onLeftSide ? 1 : -1;
       const yMultiplier = onTop ? 1 : -1;
 
-      const amountToMoveX = (1 - slope) * FILE_SPEED * xMultiplier;
-      const amountToMoveY = slope * FILE_SPEED * yMultiplier;
+      const amountToMoveX = (1 - slope) * pixelsPerTick * xMultiplier;
+      const amountToMoveY = slope * pixelsPerTick * yMultiplier;
 
       this.updateFile(id, {
         x: file.x + amountToMoveX,
@@ -460,6 +507,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const { files } = this.state;
 
     const folderPoint = this.getFolderPoint();
+    const pixelsPerTick = this.getPixelsPerTick();
 
     // If any of the files have made it to the very center of the folder,
     // we can remove them from the universe
@@ -471,7 +519,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
         folderPoint
       );
 
-      return distanceToFolder <= FILE_SPEED;
+      return distanceToFolder <= pixelsPerTick;
     });
 
     if (swallowedFileIds.length) {

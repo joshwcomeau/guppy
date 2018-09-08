@@ -44,6 +44,7 @@
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",
+    "resize-observer-polyfill": "^1.5.0",
     "yarn": "1.9.2"
   },
   "devDependencies": {

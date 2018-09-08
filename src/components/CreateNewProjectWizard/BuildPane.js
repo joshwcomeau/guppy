@@ -9,12 +9,12 @@ import createProject from '../../services/create-project.service';
 
 import ProgressBar from '../ProgressBar';
 import Spacer from '../Spacer';
-import FadeIn from '../FadeIn';
-import WhimsicalInstaller from '../WhimsicalInstaller/WhimsicalInstaller';
+import WhimsicalInstaller from '../WhimsicalInstaller';
+import AvailableWidth from '../AvailableWidth';
 import BuildStepProgress from './BuildStepProgress';
 
-import type { BuildStep } from './types';
-import type { SubmittedProject, Project } from '../../types';
+import type { BuildStep, Status } from './types';
+import type { Project, ProjectType } from '../../types';
 
 const BUILD_STEPS = {
   installingCliTool: {
@@ -35,14 +35,17 @@ const BUILD_STEPS = {
 const BUILD_STEP_KEYS: Array<BuildStep> = Object.keys(BUILD_STEPS);
 
 type Props = {
-  project: SubmittedProject,
+  projectName: string,
+  projectType: ?ProjectType,
+  projectIcon: ?string,
+  status: Status,
   handleCompleteBuild: (project: Project) => void,
 };
 
 type State = {
   currentBuildStep: BuildStep,
   progress: number,
-  showWhimsyInstaller: boolean,
+  runInstaller: boolean,
 };
 
 class BuildPane extends PureComponent<Props, State> {
@@ -50,33 +53,42 @@ class BuildPane extends PureComponent<Props, State> {
   state = {
     currentBuildStep: BUILD_STEPS[0],
     progress: 0,
-    showWhimsyInstaller: false,
+    runInstaller: false,
   };
 
-  componentDidMount() {
+  componentDidUpdate(prevProps: Props) {
+    if (
+      prevProps.status === 'filling-in-form' &&
+      this.props.status === 'building-project'
+    ) {
+      this.buildProject();
+
+      this.timeoutId = window.setTimeout(() => {
+        this.setState({ runInstaller: true });
+      }, 1000);
+    }
+  }
+
+  buildProject = () => {
+    const { projectName, projectType, projectIcon } = this.props;
+
+    if (!projectName || !projectType || !projectIcon) {
+      console.error('Missing one of:', {
+        projectName,
+        projectType,
+        projectIcon,
+      });
+      throw new Error(
+        'Tried to build project with insufficient data. See console for more info'
+      );
+    }
+
     createProject(
-      this.props.project,
+      { projectName, projectType, projectIcon },
       this.handleStatusUpdate,
       this.handleError,
       this.handleComplete
     );
-
-    // We show the whimsy installer after a second because we need to wait until
-    // the TwoPaneModal animation completes, so that the installer's
-    // BoundingBox is accurately captured.
-    //
-    // TODO: Use ResizeObserver within WhimsyInstaller to recalculate
-    // automatically? Not sure if that will negatively impact the performance
-    // of the animation.
-    this.timeoutId = window.setTimeout(this.toggleWhimsyInstaller, 1000);
-  }
-
-  componentWillUnmount() {
-    window.clearTimeout(this.timeoutId);
-  }
-
-  toggleWhimsyInstaller = () => {
-    this.setState({ showWhimsyInstaller: !this.state.showWhimsyInstaller });
   };
 
   handleStatusUpdate = (output: any) => {
@@ -147,7 +159,7 @@ class BuildPane extends PureComponent<Props, State> {
   };
 
   render() {
-    const { currentBuildStep, progress, showWhimsyInstaller } = this.state;
+    const { currentBuildStep, progress, runInstaller } = this.state;
 
     return (
       <Wrapper>
@@ -167,19 +179,12 @@ class BuildPane extends PureComponent<Props, State> {
           />
         </ProgressBarWrapper>
 
-        {/*
-          TODO: Add an AvailableSpace helper so that the width of
-          WhimsicalInstaller and the height of Spacer can be determined
-          dynamically.
-        */}
         <WhimsicalWrapper>
-          {showWhimsyInstaller ? (
-            <FadeIn duration={850}>
-              <WhimsicalInstaller width={416} />
-            </FadeIn>
-          ) : (
-            <Spacer size={208} />
-          )}
+          <AvailableWidth>
+            {width => (
+              <WhimsicalInstaller isRunning={runInstaller} width={width} />
+            )}
+          </AvailableWidth>
         </WhimsicalWrapper>
 
         <Title>Building Project...</Title>
@@ -255,6 +260,7 @@ const Title = styled.h1`
 
 const WhimsicalWrapper = styled.div`
   position: relative;
+  width: 100%;
   /* Make sure it sits below the "Finished" overlay, when completed */
   z-index: 1;
 `;

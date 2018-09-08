@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-import type { FileStatus } from './WhimsicalInstaller.helpers';
+import type { FileStatus } from './WhimsicalInstaller.types';
 
 type Props = {
   x: number,
