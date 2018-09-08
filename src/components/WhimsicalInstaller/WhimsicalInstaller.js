@@ -164,7 +164,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
 
     // After a 2-4 second delay, generate another file!
     const DELAY = Math.random() * 2000 + 2000;
-    window.setTimeout(this.fileGenerationLoop, DELAY);
+    this.generationLoopId = window.setTimeout(this.fileGenerationLoop, DELAY);
   };
 
   areFilesWithinRangeOfFolder = (fileIds: Array<string>, range: number) => {
