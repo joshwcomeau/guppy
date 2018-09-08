@@ -18,7 +18,12 @@ jest.mock('path', () => ({
   join: () => 'test/guppy-projects',
 }));
 
-const FAKE_ACTION = 'AHH THIS IS NOT A REAL ACTION';
+const getInitialState = () =>
+  // Get the initial Redux state by running the reducer with `undefined` state,
+  // and a bogus action.
+  // (this causes each reducer slice to use the default state value, and to
+  // return it since the action won't match.)
+  rootReducer(undefined, { type: 'Ahh, this is not a real action' });
 
 describe('Redux migrations', () => {
   describe('Version 0 -> Version 1', () => {
@@ -77,7 +82,7 @@ describe('Redux migrations', () => {
     });
 
     it('builds without crashing', () => {
-      let state = rootReducer(undefined, { type: FAKE_ACTION });
+      let state = getInitialState();
 
       expect(() => migrateToReduxStorage(state)).not.toThrow();
     });
@@ -131,7 +136,7 @@ describe('Redux migrations', () => {
     });
 
     it('builds without crashing', () => {
-      let state = rootReducer(undefined, { type: FAKE_ACTION });
+      let state = getInitialState();
 
       expect(() => migrateToReduxStorage(state)).not.toThrow();
       state = migrateToReduxStorage(state);
