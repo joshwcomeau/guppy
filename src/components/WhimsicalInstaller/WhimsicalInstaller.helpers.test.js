@@ -26,8 +26,8 @@ describe('WhimsicalInstaller helpers', () => {
       expect(actualOutput.startPoint).toEqual({ x: 100, y: 100 });
       expect(actualOutput.endPoint).toEqual({ x: 500, y: 100 });
       expect(actualOutput.controlPoint.x).toEqual(300);
-      expect(actualOutput.controlPoint.y).toBeGreaterThanOrEqual(-60);
-      expect(actualOutput.controlPoint.y).toBeLessThanOrEqual(40);
+      expect(actualOutput.controlPoint.y).toBeGreaterThanOrEqual(height * -0.2);
+      expect(actualOutput.controlPoint.y).toBeLessThanOrEqual(height * 0.35);
     });
   });
 
