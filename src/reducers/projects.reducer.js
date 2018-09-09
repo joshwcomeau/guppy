@@ -69,18 +69,13 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
     }
 
     case SAVE_PROJECT_SETTINGS_FINISH: {
-      const { project, oldProjectId } = action;
+      const { project } = action;
       const {
         guppy: { id },
       } = project;
 
       return produce(state, draftState => {
         draftState[id] = project;
-
-        if (oldProjectId !== id) {
-          // remove old project id --> renamed to new id
-          delete draftState[oldProjectId];
-        }
       });
     }
 

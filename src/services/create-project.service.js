@@ -4,6 +4,7 @@ import random from 'random-seed';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as uuid from 'uuid/v1';
 
 import { COLORS } from '../constants';
 
@@ -89,7 +90,7 @@ export default (
         const packageJson = JSON.parse(data);
 
         packageJson.guppy = {
-          id,
+          id: uuid(),
           name: projectName,
           type: projectType,
           icon: projectIcon,

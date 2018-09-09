@@ -276,15 +276,13 @@ describe('Projects Reducer', () => {
   });
 
   describe(SAVE_PROJECT_SETTINGS_FINISH, () => {
-    it('should rename id', () => {
+    it('should update state', () => {
       const prevState = {
         byId: {
-          foo: {
+          'uuidv1-id': {
             name: 'foo',
-            guppy: { id: 'foo' },
-            scripts: {
-              start: 'command it',
-            },
+            guppy: { id: 'uuidv1-id', icon: null },
+            scripts: { start: 'command it' },
           },
         },
         selectedId: null,
@@ -292,23 +290,20 @@ describe('Projects Reducer', () => {
 
       const newProject = {
         name: 'new foo',
-        guppy: { id: 'new-foo' },
-        scripts: {
-          start: 'command it',
-        },
+        guppy: { id: 'uuidv1-id', icon: 'new-icon' },
+        scripts: { start: 'command it' },
       };
       const action = {
         type: SAVE_PROJECT_SETTINGS_FINISH,
         project: newProject,
-        oldProjectId: 'foo',
       };
       const actualState = reducer(prevState, action);
 
       expect(actualState).toEqual({
         byId: {
-          [newProject.guppy.id]: newProject,
+          'uuidv1-id': newProject,
         },
-        selectedId: newProject.guppy.id,
+        selectedId: 'uuidv1-id',
       });
     });
   });

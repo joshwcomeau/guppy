@@ -6,10 +6,6 @@ import rootSaga, {
   handleInstallDependenciesStart,
   handleUninstallDependenciesStart,
 } from './dependency.saga';
-import {
-  handleStartNextActionInQueue,
-  handleQueueActionCompleted,
-} from './queue.saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
@@ -22,18 +18,11 @@ import {
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
   INSTALL_DEPENDENCIES_START,
-  INSTALL_DEPENDENCIES_ERROR,
-  INSTALL_DEPENDENCIES_FINISH,
   UNINSTALL_DEPENDENCIES_START,
-  UNINSTALL_DEPENDENCIES_ERROR,
-  UNINSTALL_DEPENDENCIES_FINISH,
-  START_NEXT_ACTION_IN_QUEUE,
   queueDependencyInstall,
   queueDependencyUninstall,
-  installDependenciesStart,
   installDependenciesError,
   installDependenciesFinish,
-  uninstallDependenciesStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
@@ -298,83 +287,6 @@ describe('Dependency sagas', () => {
     });
   });
 
-  describe('handleQueueActionCompleted saga', () => {
-    it(`should dispatch ${START_NEXT_ACTION_IN_QUEUE} when next queue action exists`, () => {
-      const saga = handleQueueActionCompleted({ projectId });
-      const nextAction = {
-        action: 'install',
-        active: false,
-        dependencies: [{ name: 'redux' }],
-      };
-
-      expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
-      );
-      expect(saga.next(nextAction).value).toEqual(
-        put(startNextActionInQueue(projectId))
-      );
-      expect(saga.next().done).toBe(true);
-    });
-
-    it(`should dispatch ${START_NEXT_ACTION_IN_QUEUE} when queue is empty`, () => {
-      const saga = handleQueueActionCompleted({ projectId });
-
-      expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
-      );
-      expect(saga.next().done).toBe(true);
-    });
-  });
-
-  describe('handleNextActionInQueue saga', () => {
-    let saga;
-    beforeEach(() => {
-      saga = handleStartNextActionInQueue({ projectId });
-    });
-
-    it('should do nothing if the queue is empty', () => {
-      const consoleErrorOriginal = global.console.error;
-      global.console.error = jest.fn();
-
-      expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
-      );
-      saga.next();
-      // expect(console.error).toBeCalled(); // todo: adde check that no further action is done
-      expect(saga.next().done).toBe(true);
-
-      global.console.error = consoleErrorOriginal;
-    });
-
-    it(`should dispatch ${INSTALL_DEPENDENCIES_START} if an install action is queued`, () => {
-      const nextAction = {
-        action: 'install',
-        dependencies: [{ name: 'redux' }],
-      };
-
-      expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
-      );
-      expect(saga.next(nextAction).value).toEqual(
-        put(installDependenciesStart(projectId, nextAction.dependencies))
-      );
-    });
-
-    it(`should dispatch ${UNINSTALL_DEPENDENCIES_START} if an uninstall action is queued`, () => {
-      const nextAction = {
-        action: 'uninstall',
-        dependencies: [{ name: 'redux' }],
-      };
-
-      expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
-      );
-      expect(saga.next(nextAction).value).toEqual(
-        put(uninstallDependenciesStart(projectId, nextAction.dependencies))
-      );
-    });
-  });
-
   describe('root saga', () => {
     it('should start watching for actions', () => {
       const saga = rootSaga();
@@ -397,20 +309,6 @@ describe('Dependency sagas', () => {
           handleUninstallDependenciesStart
         )
       );
-      expect(saga.next().value).toEqual(
-        takeEvery(
-          [
-            INSTALL_DEPENDENCIES_ERROR,
-            INSTALL_DEPENDENCIES_FINISH,
-            UNINSTALL_DEPENDENCIES_ERROR,
-            UNINSTALL_DEPENDENCIES_FINISH,
-          ],
-          handleQueueActionCompleted
-        )
-      );
-      // expect(saga.next().value).toEqual( // Todo: Create queue.saga.test file
-      //   takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue)
-      // );
       expect(saga.next().done).toBe(true);
     });
   });

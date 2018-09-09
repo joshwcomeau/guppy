@@ -5,6 +5,10 @@ import {
   installDependenciesStart,
   uninstallDependenciesStart,
   startNextActionInQueue,
+  INSTALL_DEPENDENCIES_ERROR,
+  INSTALL_DEPENDENCIES_FINISH,
+  UNINSTALL_DEPENDENCIES_ERROR,
+  UNINSTALL_DEPENDENCIES_FINISH,
   START_NEXT_ACTION_IN_QUEUE,
 } from '../actions';
 
@@ -40,5 +44,14 @@ export function* handleStartNextActionInQueue({
 }
 
 export default function* rootSaga(): Saga<void> {
+  yield takeEvery(
+    [
+      INSTALL_DEPENDENCIES_ERROR,
+      INSTALL_DEPENDENCIES_FINISH,
+      UNINSTALL_DEPENDENCIES_ERROR,
+      UNINSTALL_DEPENDENCIES_FINISH,
+    ],
+    handleQueueActionCompleted
+  );
   yield takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue);
 }

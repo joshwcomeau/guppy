@@ -22,6 +22,8 @@ import { getOnboardingCompleted } from '../reducers/onboarding-status.reducer';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import { getColorForProject } from '../services/create-project.service';
 
+jest.mock('uuid/v1', () => () => 'mocked-uuid-v1');
+
 describe('import-project saga', () => {
   const { showOpenDialog, showErrorBox } = electron.remote.dialog;
 
@@ -131,7 +133,7 @@ describe('import-project saga', () => {
         call(loadPackageJson, 'path/to/project')
       );
       expect(saga.next(json).value).toEqual(
-        select(getInternalProjectById, 'example')
+        select(getInternalProjectById, 'mocked-uuid-v1')
       );
       expect(saga.next({ name: 'example' }).value).toEqual(
         call(handleImportError, expectedError)
@@ -147,7 +149,7 @@ describe('import-project saga', () => {
         call(loadPackageJson, 'path/to/project')
       );
       expect(saga.next(json).value).toEqual(
-        select(getInternalProjectById, 'example')
+        select(getInternalProjectById, 'mocked-uuid-v1')
       );
       expect(saga.next().value).toEqual(call(inferProjectType, json));
       expect(saga.next(null).value).toEqual(
@@ -162,7 +164,7 @@ describe('import-project saga', () => {
       const jsonWithGuppy = {
         ...json,
         guppy: {
-          id: 'example',
+          id: 'mocked-uuid-v1',
           name: 'example',
           type: 'create-react-app',
           color: '#cc004a',
@@ -178,7 +180,7 @@ describe('import-project saga', () => {
         call(loadPackageJson, 'path/to/project')
       );
       expect(saga.next(json).value).toEqual(
-        select(getInternalProjectById, 'example')
+        select(getInternalProjectById, 'mocked-uuid-v1')
       );
       expect(saga.next().value).toEqual(call(inferProjectType, json));
       expect(saga.next('create-react-app').value).toEqual(
