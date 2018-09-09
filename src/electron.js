@@ -80,7 +80,6 @@ function createWindow() {
       slashes: true,
     });
   mainWindow.loadURL(startUrl);
-  mainWindow.toggleDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
