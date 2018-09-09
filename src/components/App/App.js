@@ -14,6 +14,7 @@ import Titlebar from '../Titlebar';
 import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
+import ProjectConfigurationModal from '../ProjectConfigurationModal';
 
 import type { Project } from '../../types';
 
@@ -55,6 +56,7 @@ class App extends Component<Props> {
         )}
 
         <CreateNewProjectWizard />
+        <ProjectConfigurationModal />
       </Fragment>
     );
   }

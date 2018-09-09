@@ -8,6 +8,7 @@ import {
   FINISH_DELETING_PROJECT,
   INSTALL_DEPENDENCIES_FINISH,
   REFRESH_PROJECTS_FINISH,
+  SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
   RESET_ALL_STATE,
 } from '../actions';
@@ -67,6 +68,17 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
       });
     }
 
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      const { project } = action;
+      const {
+        guppy: { id },
+      } = project;
+
+      return produce(state, draftState => {
+        draftState[id] = project;
+      });
+    }
+
     case RESET_ALL_STATE:
       return initialState.byId;
 
@@ -106,6 +118,10 @@ const selectedIdReducer = (
       const selectedProjectExists = !!action.projects[selectedProjectId];
 
       return selectedProjectExists ? state : null;
+    }
+
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      return action.project.guppy.id;
     }
 
     case SELECT_PROJECT: {

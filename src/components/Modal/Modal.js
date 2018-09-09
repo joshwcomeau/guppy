@@ -81,7 +81,6 @@ class Modal extends PureComponent<Props, State> {
               transitionState === 'entering' || transitionState === 'exiting';
 
             const translateY = transitionState === 'entered' ? 0 : 50;
-
             return (
               <Motion
                 style={{

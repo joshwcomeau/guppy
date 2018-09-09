@@ -27,3 +27,6 @@ package-lock.json
 
 # storybook
 /storybook-static
+
+# coverage
+coverage*
