@@ -19,27 +19,47 @@ import {
   FINISH_DELETING_PROJECT,
   SAVE_PROJECT_SETTINGS_FINISH,
   RESET_ALL_STATE,
+  CHANGE_PROJECT_HOME_PATH,
 } from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
 
 import type { Action } from 'redux';
 
 type State = {
-  [projectId: string]: string,
+  homePath: string,
+  byId: {
+    [projectId: string]: string,
+  },
 };
 
-const initialState = {};
+const homedir = isWin ? windowsHomeDir : os.homedir();
+// Noticing some weird quirks when I try to use a dev project on the compiled
+// "production" app, so separating their home paths should help.
+
+const initialState = {
+  homePath:
+    process.env.NODE_ENV === 'development'
+      ? path.join(homedir, 'guppy-projects-dev')
+      : path.join(homedir, 'guppy-projects'),
+  byId: {},
+};
 
 export default (state: State = initialState, action: Action) => {
   switch (action.type) {
     case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
       const { projectPath, project } = action;
+      return produce(state, draftState => {
+        draftState.byId[project.guppy.id] =
+          projectPath || formatProjectPath(state.homePath, project.guppy.id);
+      });
+    }
 
-      return {
-        ...state,
-        [project.guppy.id]: projectPath || getDefaultPath(project.guppy.id),
-      };
+    case CHANGE_PROJECT_HOME_PATH: {
+      const { homePath } = action;
+      return produce(state, draftState => {
+        draftState.homePath = homePath;
+      });
     }
     case SAVE_PROJECT_SETTINGS_FINISH: {
       const { project, projectPath, oldProjectId } = action;
@@ -47,8 +67,8 @@ export default (state: State = initialState, action: Action) => {
       return produce(state, draftState => {
         // remove oldId if id changed & add new path
         if (oldProjectId !== project.guppy.id) {
-          delete draftState[oldProjectId];
-          draftState[project.guppy.id] = projectPath;
+          delete draftState.byId[oldProjectId];
+          draftState.byId[project.guppy.id] = projectPath;
         }
       });
     }
@@ -72,21 +92,14 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-const homedir = isWin ? windowsHomeDir : os.homedir();
-// Noticing some weird quirks when I try to use a dev project on the compiled
-// "production" app, so separating their home paths should help.
-export const defaultParentPath =
-  process.env.NODE_ENV === 'development'
-    ? path.join(homedir, '/guppy-projects-dev')
-    : path.join(homedir, '/guppy-projects');
-
-export const getDefaultPath = (projectId: string) =>
-  path.join(defaultParentPath, projectId);
-
+const formatProjectPath = (homePath, projectId) =>
+  path.join(homePath, projectId);
 //
 //
 //
 // Selectors
-export const getPathsArray = (state: any) => Object.values(state.paths);
+export const getProjectHomePath = (state: State = initialState) =>
+  state.homePath;
+export const getPathsArray = (state: any) => Object.values(state.paths.byId);
 export const getPathForProjectId = (state: any, projectId: string) =>
-  state.paths[projectId] || getDefaultPath(projectId);
+  state.paths.byId[projectId];

@@ -84,7 +84,9 @@ export const loadGuppyProjects = (projectPaths: Array<string>) =>
         // because it was deleted.
         // TODO: Maybe a warning prompt should be raised if this is the case,
         // so that users don't wonder where the project went?
-        const validProjects = results.filter(project => !!project);
+        const validProjects = results.filter(
+          project => !!project && project.guppy
+        );
 
         // The results will be an array of package.jsons.
         // I want a database-style map.

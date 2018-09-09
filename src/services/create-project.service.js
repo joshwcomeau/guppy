@@ -6,7 +6,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { COLORS } from '../constants';
-import { defaultParentPath } from '../reducers/paths.reducer';
 
 import { formatCommandForPlatform } from './platform.service';
 
@@ -43,6 +42,7 @@ type ProjectInfo = {
  */
 export default (
   { projectName, projectType, projectIcon }: ProjectInfo,
+  projectHomePath: string,
   onStatusUpdate: (update: string) => void,
   onError: (err: string) => void,
   onComplete: (packageJson: any) => void
@@ -52,21 +52,19 @@ export default (
     return;
   }
 
-  const parentPath = defaultParentPath;
-
   // Create the projects directory, if this is the first time creating a
   // project.
-  if (!fs.existsSync(parentPath)) {
-    fs.mkdirSync(parentPath);
+  if (!fs.existsSync(projectHomePath)) {
+    fs.mkdirSync(projectHomePath);
   }
 
   onStatusUpdate('Created parent directory');
 
-  const id = slug(projectName).toLowerCase();
+  const id = getProjectId(projectName);
 
   // For Windows Support
   // To support cross platform with slashes and escapes
-  const projectPath = path.join(parentPath, id);
+  const projectPath = path.join(projectHomePath, id);
 
   const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
 
@@ -125,6 +123,14 @@ export default (
     );
   });
 };
+
+//
+//
+// Helpers
+//
+
+export const getProjectId = (projectName: string) =>
+  slug(projectName).toLowerCase();
 
 // Exported so that getColorForProject can be tested
 export const possibleProjectColors = [

@@ -16,6 +16,7 @@ import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 
 import ProjectName from './ProjectName';
+import ProjectPath from './ProjectPath';
 import SubmitButton from './SubmitButton';
 
 import type { Field, Status } from './types';
@@ -77,6 +78,7 @@ class MainPane extends PureComponent<Props> {
                 handleSubmit={handleSubmit}
                 isProjectNameTaken={isProjectNameTaken}
               />
+              <ProjectPath projectName={projectName} />
 
               {currentStepIndex > 0 && (
                 <FadeIn>
@@ -86,7 +88,7 @@ class MainPane extends PureComponent<Props> {
                   >
                     <ProjectTypeTogglesWrapper>
                       <ButtonWithIcon
-                        showOutline={projectType === 'create-react-app'}
+                        showStroke={projectType === 'create-react-app'}
                         icon={<ReactIcon src={reactIconSrc} />}
                         onClick={() =>
                           this.updateProjectType('create-react-app')
@@ -96,7 +98,7 @@ class MainPane extends PureComponent<Props> {
                       </ButtonWithIcon>
                       <Spacer inline size={10} />
                       <ButtonWithIcon
-                        showOutline={projectType === 'gatsby'}
+                        showStroke={projectType === 'gatsby'}
                         icon={<GatsbyIcon src={gatsbyIconSrc} />}
                         onClick={() => this.updateProjectType('gatsby')}
                       >

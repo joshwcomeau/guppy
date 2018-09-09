@@ -147,7 +147,7 @@ For larger changes, it's worth trying to build the packaged version, to make sur
 
 ### Debugging
 
-To help you debug, you can open the chromium developer tools inside the running Electron instance from the `View` menu. You can also open the redux developer tools with <kbd>ctrl</kbd>+<kbd>h</kbd> and close them with <kbd>ctrl</kbd>+<kbd>q</kbd>.
+To help you debug, you can open the chromium developer tools inside the running Electron instance from the `View` menu. You can also toggle the redux developer tools with <kbd>ctrl</kbd>+<kbd>h</kbd> and change their position with <kbd>ctrl</kbd>+<kbd>q</kbd>.
 
 ### Docs
 
