@@ -30,7 +30,7 @@ import { ipcRenderer } from 'electron';
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
-jest.mock('uuid/v1', () => () => 'mocked-uuid-v1');
+jest.mock('uuid/v1');
 
 // we don't actually need to run these commands through
 // the terminal, so an object with similar shape to that

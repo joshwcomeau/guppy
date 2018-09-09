@@ -24,6 +24,7 @@ export const CREATE_NEW_PROJECT_START = 'CREATE_NEW_PROJECT_START';
 export const CREATE_NEW_PROJECT_CANCEL = 'CREATE_NEW_PROJECT_CANCEL';
 export const CREATE_NEW_PROJECT_FINISH = 'CREATE_NEW_PROJECT_FINISH';
 export const ADD_PROJECT = 'ADD_PROJECT';
+export const SHOW_MODAL = 'SHOW_MODAL';
 export const CHANGE_PROJECT_HOME_PATH = 'CHANGE_PROJECT_HOME_PATH';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
@@ -48,6 +49,7 @@ export const UNINSTALL_DEPENDENCIES_ERROR = 'UNINSTALL_DEPENDENCIES_ERROR';
 export const UNINSTALL_DEPENDENCIES_FINISH = 'UNINSTALL_DEPENDENCIES_FINISH';
 export const QUEUE_DEPENDENCY_INSTALL = 'QUEUE_DEPENDENCY_INSTALL';
 export const QUEUE_DEPENDENCY_UNINSTALL = 'QUEUE_DEPENDENCY_UNINSTALL';
+
 export const START_NEXT_ACTION_IN_QUEUE = 'START_NEXT_ACTION_IN_QUEUE';
 export const SHOW_IMPORT_EXISTING_PROJECT_PROMPT =
   'SHOW_IMPORT_EXISTING_PROJECT_PROMPT';
@@ -59,6 +61,10 @@ export const FINISH_DELETING_PROJECT = 'FINISH_DELETING_PROJECT';
 export const SHOW_RESET_STATE_PROMPT = 'SHOW_RESET_STATE_PROMPT';
 export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 
+// project config related actions
+export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
+export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
+export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
 //
 //
 // Action Creators
@@ -326,6 +332,36 @@ export const importExistingProjectFinish = (
 export const showDeleteProjectPrompt = (project: Project) => ({
   type: SHOW_DELETE_PROJECT_PROMPT,
   project,
+});
+
+export const showModal = (modal: string) => ({
+  type: SHOW_MODAL,
+  modal: modal,
+});
+
+export const hideModal = () => ({
+  type: HIDE_MODAL,
+});
+
+// project settings related actions
+export const saveProjectSettingsStart = (
+  name: string,
+  icon: string,
+  project: Project
+) => ({
+  type: SAVE_PROJECT_SETTINGS_START,
+  name,
+  icon,
+  project,
+});
+
+export const saveProjectSettingsFinish = (
+  project: Project,
+  projectPath: string
+) => ({
+  type: SAVE_PROJECT_SETTINGS_FINISH,
+  project,
+  projectPath,
 });
 
 export const finishDeletingProject = (projectId: string) => ({

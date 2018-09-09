@@ -12,18 +12,11 @@ import {
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
   INSTALL_DEPENDENCIES_START,
-  INSTALL_DEPENDENCIES_ERROR,
-  INSTALL_DEPENDENCIES_FINISH,
   UNINSTALL_DEPENDENCIES_START,
-  UNINSTALL_DEPENDENCIES_ERROR,
-  UNINSTALL_DEPENDENCIES_FINISH,
-  START_NEXT_ACTION_IN_QUEUE,
   queueDependencyInstall,
   queueDependencyUninstall,
-  installDependenciesStart,
   installDependenciesError,
   installDependenciesFinish,
-  uninstallDependenciesStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
@@ -115,34 +108,6 @@ export function* handleUninstallDependenciesStart({
   }
 }
 
-export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
-  const nextAction = yield select(getNextActionForProjectId, projectId);
-
-  // if there is another item in the queue, start it
-  if (nextAction) {
-    yield put(startNextActionInQueue(projectId));
-  }
-}
-
-export function* handleStartNextActionInQueue({
-  projectId,
-}: Action): Saga<void> {
-  const nextAction = yield select(getNextActionForProjectId, projectId);
-
-  // if the queue is empty, log an error
-  if (!nextAction) {
-    return console.error(
-      `attempted to start next action in empty queue for project ${projectId}`
-    );
-  }
-
-  const actionCreator =
-    nextAction.action === 'install'
-      ? installDependenciesStart
-      : uninstallDependenciesStart;
-  yield put(actionCreator(projectId, nextAction.dependencies));
-}
-
 // Installs/uninstalls fail silently - the only notice of a failed action
 // visible to the user is either the dependency disappearing entirely or
 // having its status set back to `idle`.
@@ -157,14 +122,4 @@ export default function* rootSaga(): Saga<void> {
     UNINSTALL_DEPENDENCIES_START,
     handleUninstallDependenciesStart
   );
-  yield takeEvery(
-    [
-      INSTALL_DEPENDENCIES_ERROR,
-      INSTALL_DEPENDENCIES_FINISH,
-      UNINSTALL_DEPENDENCIES_ERROR,
-      UNINSTALL_DEPENDENCIES_FINISH,
-    ],
-    handleQueueActionCompleted
-  );
-  yield takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue);
 }

@@ -15,6 +15,7 @@ import { FillButton } from '../Button';
 import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
+import SettingsButton from '../SettingsButton';
 import {
   openProjectInEditor,
   openProjectInFolder,
@@ -26,6 +27,7 @@ import type { Project } from '../../types';
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
+  showModal: (modal: string) => void,
 };
 
 class ProjectPage extends Component<Props> {
@@ -67,15 +69,17 @@ class ProjectPage extends Component<Props> {
     return (
       <FadeIn>
         <MainContentWrapper>
-          <PixelShifter
-            x={-2}
-            reason="Align left edge of title with the modules on page"
-          >
-            <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
-              {project.name}
-            </Heading>
-          </PixelShifter>
-
+          <FlexRow>
+            <PixelShifter
+              x={-2}
+              reason="Align left edge of title with the modules on page"
+            >
+              <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
+                {project.name}
+              </Heading>
+            </PixelShifter>
+            <SettingsButton />
+          </FlexRow>
           <ProjectActionBar>
             <FillButton
               colors={COLORS.gray[200]}
@@ -118,6 +122,12 @@ class ProjectPage extends Component<Props> {
   }
 }
 
+const FlexRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const ProjectActionBar = styled.div`
   display: flex;
 `;
@@ -137,5 +147,8 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDisk }
+  {
+    loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDisk,
+    showModal: actions.showModal,
+  }
 )(ProjectPage);

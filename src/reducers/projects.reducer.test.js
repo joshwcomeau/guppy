@@ -2,6 +2,7 @@ import {
   IMPORT_EXISTING_PROJECT_FINISH,
   INSTALL_DEPENDENCIES_FINISH,
   REFRESH_PROJECTS_FINISH,
+  SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
   ADD_PROJECT,
   RESET_ALL_STATE,
@@ -274,27 +275,60 @@ describe('Projects Reducer', () => {
     });
   });
 
-  describe('helpers', () => {
-    describe('getById', () => {
-      it('gets projects by id', () => {
-        const state = { projects: { byId: 'great object' } };
-        expect(getById(state)).toBe('great object');
+  describe(SAVE_PROJECT_SETTINGS_FINISH, () => {
+    it('should update state', () => {
+      const prevState = {
+        byId: {
+          'uuidv1-id': {
+            name: 'foo',
+            guppy: { id: 'uuidv1-id', icon: null },
+            scripts: { start: 'command it' },
+          },
+        },
+        selectedId: null,
+      };
+
+      const newProject = {
+        name: 'new foo',
+        guppy: { id: 'uuidv1-id', icon: 'new-icon' },
+        scripts: { start: 'command it' },
+      };
+      const action = {
+        type: SAVE_PROJECT_SETTINGS_FINISH,
+        project: newProject,
+      };
+      const actualState = reducer(prevState, action);
+
+      expect(actualState).toEqual({
+        byId: {
+          'uuidv1-id': newProject,
+        },
+        selectedId: 'uuidv1-id',
       });
     });
+  });
+});
 
-    describe('getSelectedProjectId', () => {
-      it('gets projects selected id', () => {
-        const state = { projects: { selectedId: 'great object' } };
-        expect(getSelectedProjectId(state)).toBe('great object');
-      });
+describe('helpers', () => {
+  describe('getById', () => {
+    it('gets projects by id', () => {
+      const state = { projects: { byId: 'great object' } };
+      expect(getById(state)).toBe('great object');
     });
+  });
 
-    describe('getInternalProjectById', () => {
-      it('gets project by id', () => {
-        const id = 'test-id';
-        const state = { projects: { byId: { [id]: 'testing' } } };
-        expect(getInternalProjectById(state, id)).toBe('testing');
-      });
+  describe('getSelectedProjectId', () => {
+    it('gets projects selected id', () => {
+      const state = { projects: { selectedId: 'great object' } };
+      expect(getSelectedProjectId(state)).toBe('great object');
+    });
+  });
+
+  describe('getInternalProjectById', () => {
+    it('gets project by id', () => {
+      const id = 'test-id';
+      const state = { projects: { byId: { [id]: 'testing' } } };
+      expect(getInternalProjectById(state, id)).toBe('testing');
     });
   });
 });

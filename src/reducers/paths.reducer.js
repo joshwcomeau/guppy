@@ -17,6 +17,7 @@ import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
   FINISH_DELETING_PROJECT,
+  SAVE_PROJECT_SETTINGS_FINISH,
   RESET_ALL_STATE,
   CHANGE_PROJECT_HOME_PATH,
 } from '../actions';
@@ -60,7 +61,17 @@ export default (state: State = initialState, action: Action) => {
         draftState.homePath = homePath;
       });
     }
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      const { project, projectPath, oldProjectId } = action;
 
+      return produce(state, draftState => {
+        // remove oldId if id changed & add new path
+        if (oldProjectId !== project.guppy.id) {
+          delete draftState.byId[oldProjectId];
+          draftState.byId[project.guppy.id] = projectPath;
+        }
+      });
+    }
     case FINISH_DELETING_PROJECT: {
       const { projectId } = action;
 
