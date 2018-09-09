@@ -62,6 +62,7 @@ export const SHOW_RESET_STATE_PROMPT = 'SHOW_RESET_STATE_PROMPT';
 export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 
 // project config related actions
+export const SHOW_PROJECT_SETTINGS = 'SHOW_PROJECT_SETTINGS';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
@@ -334,9 +335,8 @@ export const showDeleteProjectPrompt = (project: Project) => ({
   project,
 });
 
-export const showModal = (modal: string) => ({
-  type: SHOW_MODAL,
-  modal: modal,
+export const showProjectSettings = () => ({
+  type: SHOW_PROJECT_SETTINGS,
 });
 
 export const hideModal = () => ({

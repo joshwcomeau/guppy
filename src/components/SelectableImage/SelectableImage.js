@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 
 import SelectableItem from '../SelectableItem';
@@ -8,7 +8,7 @@ type Props = {
   src: string,
 };
 
-class SelectableImage extends Component<Props> {
+class SelectableImage extends PureComponent<Props> {
   render() {
     const { src, ...delegated } = this.props;
 

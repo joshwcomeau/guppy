@@ -7,7 +7,7 @@ import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
-import { getProjectId } from '../../services/create-project.service';
+import { getProjectNameSlug } from '../../services/create-project.service';
 
 import TwoPaneModal from '../TwoPaneModal';
 import Debounced from '../Debounced';
@@ -73,9 +73,13 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   verifyProjectNameUniqueness = (name: string) => {
+    const { projects } = this.props;
+
     // Check to see if this name is already taken
-    const id = getProjectId(name);
-    const isAlreadyTaken = !!this.props.projects[id];
+    const slug = getProjectNameSlug(name);
+    const isAlreadyTaken = !!Object.keys(this.props.projects).some(
+      id => projects[id].name === slug
+    );
 
     if (isAlreadyTaken) {
       this.setState({ isProjectNameTaken: true });

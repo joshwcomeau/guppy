@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import { changeProjectHomePath } from '../../actions';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
-import { getProjectId } from '../../services/create-project.service';
+import { getProjectNameSlug } from '../../services/create-project.service';
 import { COLORS } from '../../constants';
 
 import TextButton from '../TextButton';
@@ -43,12 +43,12 @@ class ProjectPath extends PureComponent<Props> {
   render() {
     const { projectHome, projectName } = this.props;
 
-    const projectId = getProjectId(projectName);
+    const projectNameSlug = getProjectNameSlug(projectName);
 
     // Join the projectHome with the prospective project ID
     // Hide the leading forward-slash, on Mac/Linux
     const fullProjectPath = path
-      .join(projectHome, projectId)
+      .join(projectHome, projectNameSlug)
       .replace(/^\//, '');
 
     // Using CSS text-overflow is proving challenging, so we'll just crop it

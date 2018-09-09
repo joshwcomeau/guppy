@@ -73,11 +73,7 @@ export type Dependency = {
  * more fields, but these are the only ones I care about).
  */
 export type ProjectInternal = {
-  // NOTE: this `name` is the same as `guppy.id`. It's the actual name of the
-  // project, in package.json.
-  // The reason for this confusing discrepancy is that NPM package names are
-  // lowercase-and-dash only, whereas I want Guppy projects to be able to use
-  // any UTF-8 characters.
+  // This is the project's lowercase, slugified name. Eg. "hello-world"
   name: string,
   dependencies: {
     [key: string]: string,
@@ -86,7 +82,9 @@ export type ProjectInternal = {
     [key: string]: string,
   },
   guppy: {
+    // A unique UUID for this project.
     id: string,
+    // This is the project's full UTF-8 name. Eg. "Hello world!"
     name: string,
     type: ProjectType,
     color: string,

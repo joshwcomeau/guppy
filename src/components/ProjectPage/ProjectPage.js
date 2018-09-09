@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
@@ -27,10 +27,9 @@ import type { Project } from '../../types';
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
-  showModal: (modal: string) => void,
 };
 
-class ProjectPage extends Component<Props> {
+class ProjectPage extends PureComponent<Props> {
   openIDE = () => {
     const { project } = this.props;
     openProjectInEditor(project);
@@ -149,6 +148,5 @@ export default connect(
   mapStateToProps,
   {
     loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDisk,
-    showModal: actions.showModal,
   }
 )(ProjectPage);
