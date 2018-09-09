@@ -48,7 +48,7 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 // To have this structure working with relative paths, we have to use custom options.
 const extractTextPluginOptions = shouldUseRelativeAssetPaths
   ? // Making sure that the publicPath goes back to to build folder.
-    { publicPath: Array(cssFilename.split('/').length).join('../') }
+  { publicPath: Array(cssFilename.split('/').length).join('../') }
   : {};
 
 // Options for PostCSS as we reference these options twice
@@ -118,16 +118,20 @@ module.exports = {
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
-  // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  // In production, we only want to load the polyfills, the app code, and the 
+  // electron builder entry script.
+  entry: {
+    main: [require.resolve('./polyfills'), paths.appIndexJs],
+    electron: paths.electronJs
+  },
   output: {
     // The build folder.
     path: paths.appBuild,
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/js/[name].[chunkhash:8].js',
-    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+    filename: '[name].js',
+    chunkFilename: '[name].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
@@ -370,6 +374,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
+      excludeChunks: ['electron'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -477,11 +482,14 @@ module.exports = {
   // such as fs, path, electron are ignored by webpack
   target: 'electron-renderer',
   externals: [
-    function(context, request, callback) {
+    function (context, request, callback) {
       if (externals.indexOf(request) !== -1) {
         return callback(null, 'commonjs ' + request);
       }
       callback();
     },
   ],
+  node: {
+    __dirname: false
+  }
 };
