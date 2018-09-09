@@ -53,18 +53,30 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
     });
   }
 
-  saveSettings = e => {
-    e.preventDefault();
+  saveSettings = (ev: SyntheticEvent<*>) => {
+    ev.preventDefault();
+
     const { saveProjectSettings, project } = this.props;
     const { newName, projectIcon } = this.state;
 
     saveProjectSettings(newName, projectIcon, project);
   };
 
-  changeProjectname = e => {
+  changeProjectName = (ev: SyntheticKeyboardEvent<*>) => {
     this.setState({
-      newName: e.target.value,
+      newName: ev.currentTarget.value,
     });
+  };
+
+  handleKeyPress = (ev: SyntheticKeyboardEvent<*>) => {
+    // When pressing the "enter" key, we want to submit the form.
+    // This doesn't happen automatically because we're using buttons for the
+    // project icons, and so it delegates the keypress to the first icon,
+    // instead of to the submit button at the end.
+    if (ev.key === 'Enter') {
+      this.saveSettings(ev);
+      return;
+    }
   };
 
   updateProjectIcon = (ev, src: string) => {
@@ -95,8 +107,9 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
             <FormField label="Project name" focusOnClick={false}>
               <TextInput
                 onFocus={() => this.setActive('projectName')}
+                onChange={this.changeProjectName}
+                onKeyPress={this.handleKeyPress}
                 value={this.state.newName}
-                onChange={this.changeProjectname}
                 isFocused={activeField === 'projectName'}
                 autoFocus
               />

@@ -64,11 +64,11 @@ class SettingsButton extends Component<Props, State> {
       <Spring
         native
         config={{
-          tension: 230,
-          friction: 10,
+          tension: 70,
+          friction: 8,
         }}
         to={{
-          rotations: hovered ? 0.3 : 0,
+          rotations: hovered ? 0.2 : 0,
           scale: hovered ? 1.15 : 1,
         }}
       >
