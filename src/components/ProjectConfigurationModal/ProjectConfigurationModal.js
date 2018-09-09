@@ -133,12 +133,12 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
               <FillButton
                 size="large"
                 colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-                disabled={!dependenciesChangingForProject}
+                disabled={dependenciesChangingForProject}
               >
                 Save Project
               </FillButton>
 
-              {!dependenciesChangingForProject && (
+              {dependenciesChangingForProject && (
                 <DisabledText>
                   Waiting for pending tasks to finish…
                 </DisabledText>
@@ -181,7 +181,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     project,
     isVisible: state.modal === 'project-settings',
-    dependenciesChangingForProject: isQueueEmpty(state, projectId || ''),
+    dependenciesChangingForProject: !isQueueEmpty(state, projectId || ''),
   };
 };
 
