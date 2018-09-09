@@ -39,7 +39,7 @@ export const PACKAGE_MANAGER_CMD = path.join(
   remote.app.getAppPath(),
   'node_modules/yarn/bin',
   formatCommandForPlatform(PACKAGE_MANAGER)
-);
+).replace('app.asar', 'app.asar.unpacked');
 
 // Forward the host env, and append the
 // project's .bin directory to PATH to allow

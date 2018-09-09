@@ -9,6 +9,9 @@
     "appId": "com.electron.guppy",
     "files": [
       "build/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/yarn/"
     ]
   },
   "repository": {
