@@ -159,10 +159,7 @@ export function* taskRun({ task }: Action): Saga<void> {
     ['run', name, ...additionalArgs],
     {
       cwd: projectPath,
-      env: {
-        ...getBaseProjectEnvironment(projectPath),
-        FORCE_COLOR: true,
-      },
+      env: getBaseProjectEnvironment(projectPath),
     }
   );
 
@@ -328,15 +325,12 @@ export const getDevServerCommand = (
         args: ['run', task.name],
         env: {
           PORT: port,
-          FORCE_COLOR: true,
         },
       };
     case 'gatsby':
       return {
         args: ['run', task.name, '-p', port],
-        env: {
-          FORCE_COLOR: true,
-        },
+        env: {},
       };
     default:
       throw new Error('Unrecognized project type: ' + projectType);
