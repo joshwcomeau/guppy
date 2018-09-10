@@ -10,14 +10,15 @@ const chalkRaw = require('chalk');
 
 const killProcessId = require('./services/kill-process-id.service');
 const electronStore = require('./services/electron-store.service');
-const icon256 = require('./assets/icons/png/256x256.png');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
+let icon256Path = '../build/256x256.png';
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
 // everything.
 if (process.env.NODE_ENV !== 'development') {
+  icon256Path = '../public/256x256.png';
   fixPath();
 }
 
@@ -44,7 +45,7 @@ function createWindow() {
     height: 768,
     minWidth: 777,
     titleBarStyle: 'hidden',
-    icon: path.join(__dirname, icon256)
+    icon: path.join(__dirname, icon256Path),
   });
 
   // set up some chrome extensions
@@ -81,9 +82,10 @@ function createWindow() {
       slashes: true,
     });
   mainWindow.loadURL(startUrl);
+  mainWindow.toggleDevTools();
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -97,7 +99,7 @@ function createWindow() {
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
@@ -113,7 +115,7 @@ app.on('before-quit', ev => {
   }
 });
 
-app.on('activate', function () {
+app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
@@ -185,7 +187,7 @@ const manageApplicationLocation = () => {
         message: 'Move to Applications folder?',
         detail:
           "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
-        icon: path.join(__dirname, icon256),
+        icon: path.join(__dirname, icon256Path),
         cancelId: 1,
         defaultId: 0,
         checkboxLabel: 'Do not show this message again',

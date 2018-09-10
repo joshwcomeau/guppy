@@ -3,13 +3,14 @@
   "productName": "Guppy",
   "version": "0.2.0",
   "private": true,
-  "main": "build/electron.js",
+  "main": "src/electron.js",
   "homepage": "./",
   "build": {
     "appId": "com.electron.guppy",
     "files": [
       "build/**/*"
     ],
+    "asar": false,
     "asarUnpack": [
       "node_modules/yarn/"
     ]
@@ -23,8 +24,8 @@
     "start": "cross-env NODE_ENV=development npm run start:react",
     "start:react": "cross-env BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
-    "dist": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder",
-    "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl",
+    "dist": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -c.extraMetadata.main=build/electron.js",
+    "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl -c.extraMetadata.main=build/electron.js",
     "test": "node scripts/test.js --env=node",
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
