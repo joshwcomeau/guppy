@@ -26,7 +26,7 @@ const icons: Array<mixed> = importAll.sync(
 const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 
 type Props = {
-  project: Project,
+  project: Project | null,
   isVisible: boolean,
   dependenciesChangingForProject: boolean,
   hideModal: () => void,
@@ -47,6 +47,9 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (!nextProps.project) {
+      return;
+    }
     this.setState({
       newName: nextProps.project.name,
       projectIcon: nextProps.project.icon,
@@ -57,6 +60,9 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
     ev.preventDefault();
 
     const { saveProjectSettings, project } = this.props;
+    if (!project) {
+      return;
+    }
     const { newName, projectIcon } = this.state;
 
     saveProjectSettings(newName, projectIcon, project);
