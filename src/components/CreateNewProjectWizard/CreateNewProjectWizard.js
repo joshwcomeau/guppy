@@ -18,7 +18,7 @@ import BuildPane from './BuildPane';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, Project, ProjectInternal } from '../../types';
+import type { ProjectType, ProjectInternal } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
@@ -27,7 +27,10 @@ type Props = {
   projectHomePath: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
-  addProject: (project: Project, isOnboardingCompleted: boolean) => void,
+  addProject: (
+    project: ProjectInternal,
+    isOnboardingCompleted: boolean
+  ) => void,
   createNewProjectCancel: () => void,
   createNewProjectFinish: () => void,
 };
@@ -110,7 +113,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     });
   };
 
-  finishBuilding = (project: Project) => {
+  finishBuilding = (project: ProjectInternal) => {
     const { isOnboardingCompleted } = this.props;
 
     this.props.createNewProjectFinish();
