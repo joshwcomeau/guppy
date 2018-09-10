@@ -79,7 +79,7 @@ export default (state: State = initialState, action: Action) => {
 
     case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { project, oldProjectId } = action;
+      const { project } = action;
 
       const projectId = project.guppy.id;
 
@@ -100,7 +100,7 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case SAVE_PROJECT_SETTINGS_FINISH: {
-      const { project, oldProjectId } = action;
+      const { project } = action;
 
       const projectId = project.guppy.id;
 
@@ -116,12 +116,6 @@ export default (state: State = initialState, action: Action) => {
             name,
             command
           );
-
-          if (projectId !== oldProjectId) {
-            // remove old taskId because we changed the id
-            const oldUniqueTaskId = buildUniqueTaskId(oldProjectId, name);
-            delete draftState[oldUniqueTaskId];
-          }
         });
       });
     }

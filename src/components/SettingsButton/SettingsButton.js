@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated, interpolate } from 'react-spring';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { settings } from 'react-icons-kit/feather/settings';
@@ -12,7 +12,10 @@ type Props = {
   size: number,
   color: ?string,
   hoverColor: ?string,
-  settingsFor: 'project' | 'app',
+  // Currently, only a 'project-configuration' modal exists, but we may
+  // support an 'app' modal in the future
+  settingsFor: 'project',
+  showProjectSettings: () => void,
 };
 
 type State = {
@@ -24,9 +27,9 @@ type State = {
 
 class SettingsButton extends Component<Props, State> {
   static defaultProps = {
-    size: 30,
-    color: COLORS.gray[600],
-    hoverColor: COLORS.purple[700], // purple or violet 500/700
+    size: 36,
+    color: COLORS.gray[400],
+    hoverColor: COLORS.purple[500],
     settingsFor: 'project',
   };
 
@@ -46,37 +49,57 @@ class SettingsButton extends Component<Props, State> {
     this.setState({ hovered: false });
   };
 
-  handleShowModal = () => {
-    const { settingsFor, showModal } = this.props;
-    showModal(settingsFor);
+  handleClick = () => {
+    const { showProjectSettings } = this.props;
+
+    // NOTE: If we support app settings, use the `settingsFor` prop here to
+    // select which modal to open.
+    showProjectSettings();
   };
 
   render() {
     const { hovered } = this.state;
+
     return (
-      <Motion
-        style={{
-          rotations: spring(hovered ? 0.3 : 0),
-          scale: spring(hovered ? 1.3 : 1),
+      <Spring
+        native
+        config={{
+          tension: 70,
+          friction: 8,
+        }}
+        to={{
+          rotations: hovered ? 0.2 : 0,
+          scale: hovered ? 1.15 : 1,
         }}
       >
-        {({ rotations, scale, color }) => (
-          <Wrapper onClick={this.handleShowModal}>
-            <IconBase
-              size={this.props.size}
-              icon={settings}
+        {({ rotations, scale }) => (
+          <Wrapper onClick={this.handleClick}>
+            <animated.div
               style={{
-                transform: `rotate(${rotations *
-                  360}deg) scale(${scale}, ${scale})`,
+                width: this.props.size,
+                height: this.props.size,
+                transform: interpolate(
+                  [rotations, scale],
+                  // eslint-disable-next-line no-shadow
+                  (rotations, scale) => `
+                    rotate(${rotations * 360}deg)
+                    scale(${scale}, ${scale})
+                  `
+                ),
                 color: hovered ? this.props.hoverColor : this.props.color,
               }}
-              onMouseEnter={this.handleMouseEnter}
-              onMouseLeave={this.handleMouseLeave}
-              onClick={this.props.action}
-            />
+            >
+              <IconBase
+                size={this.props.size}
+                icon={settings}
+                onMouseEnter={this.handleMouseEnter}
+                onMouseLeave={this.handleMouseLeave}
+                onClick={this.props.action}
+              />
+            </animated.div>
           </Wrapper>
         )}
-      </Motion>
+      </Spring>
     );
   }
 }
@@ -87,7 +110,5 @@ const Wrapper = styled.div`
 
 export default connect(
   null,
-  {
-    showModal: actions.showModal,
-  }
+  { showProjectSettings: actions.showProjectSettings }
 )(SettingsButton);

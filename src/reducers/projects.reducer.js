@@ -155,7 +155,10 @@ type GlobalState = { projects: State };
 //
 //  - Combine it with the tasks in `tasks.reducer`, since this is much more
 //    useful than project.scripts
-//  - Solve the ugliness with `project.guppy.X`
+//  - Combine it with the dependencies in `dependencies.reducer`
+//  - Fetch the project's on-disk path from `paths.reducer`
+//  - Serve a minimal subset of the `project` fields, avoiding the weirdness
+//    with multiple names, and all the raw unnecessary package.json data.
 const prepareProjectForConsumption = (
   state: GlobalState,
   project: ProjectInternal

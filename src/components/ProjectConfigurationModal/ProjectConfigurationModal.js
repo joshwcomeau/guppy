@@ -1,24 +1,21 @@
 // @flow
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import IconBase from 'react-icons-kit';
-import { edit2 } from 'react-icons-kit/feather/edit2';
 import importAll from 'import-all.macro';
 
 import * as actions from '../../actions';
 
-import { COLORS, BREAKPOINTS } from '../../constants';
+import { COLORS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { isQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
 import Spacer from '../Spacer';
-import Button from '../ButtonWithIcon';
+import { FillButton } from '../Button';
 import FormField from '../FormField';
 import SelectableImage from '../SelectableImage';
-import FadeIn from '../FadeIn';
 import TextInput from '../TextInput';
 
 import type { Project } from '../../types';
@@ -31,7 +28,7 @@ const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 type Props = {
   project: Project,
   isVisible: boolean,
-  queueEmpty: boolean,
+  dependenciesChangingForProject: boolean,
   hideModal: () => void,
   saveProjectSettings: (string, string, Project) => void,
 };
@@ -42,7 +39,7 @@ type State = {
   activeField: string,
 };
 
-class ProjectConfigurationModal extends Component<Props, State> {
+class ProjectConfigurationModal extends PureComponent<Props, State> {
   state = {
     newName: '',
     projectIcon: '',
@@ -56,21 +53,35 @@ class ProjectConfigurationModal extends Component<Props, State> {
     });
   }
 
-  saveSettings = e => {
-    e.preventDefault();
+  saveSettings = (ev: SyntheticEvent<*>) => {
+    ev.preventDefault();
+
     const { saveProjectSettings, project } = this.props;
     const { newName, projectIcon } = this.state;
 
     saveProjectSettings(newName, projectIcon, project);
   };
 
-  changeProjectname = e => {
+  changeProjectName = (ev: SyntheticKeyboardEvent<*>) => {
     this.setState({
-      newName: e.target.value,
+      newName: ev.currentTarget.value,
     });
   };
 
-  updateProjectIcon = (src: string) => {
+  handleKeyPress = (ev: SyntheticKeyboardEvent<*>) => {
+    // When pressing the "enter" key, we want to submit the form.
+    // This doesn't happen automatically because we're using buttons for the
+    // project icons, and so it delegates the keypress to the first icon,
+    // instead of to the submit button at the end.
+    if (ev.key === 'Enter') {
+      this.saveSettings(ev);
+      return;
+    }
+  };
+
+  updateProjectIcon = (ev, src: string) => {
+    ev.preventDefault();
+
     this.setState(prevState => ({
       projectIcon: src,
     }));
@@ -83,31 +94,29 @@ class ProjectConfigurationModal extends Component<Props, State> {
   };
 
   render() {
-    const { project, hideModal, isVisible, queueEmpty } = this.props;
+    const { hideModal, isVisible, dependenciesChangingForProject } = this.props;
     const { activeField } = this.state;
     const { projectIcon } = this.state;
-    const { name } = project || { name: '' };
 
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
-        <ModalHeader title="Project settings">
-          <Description>Change the settings of project {name}</Description>
-        </ModalHeader>
+        <ModalHeader title="Project settings" />
 
         <MainContent>
           <form onSubmit={this.saveSettings}>
             <FormField label="Project name" focusOnClick={false}>
               <TextInput
                 onFocus={() => this.setActive('projectName')}
+                onChange={this.changeProjectName}
+                onKeyPress={this.handleKeyPress}
                 value={this.state.newName}
-                onChange={this.changeProjectname}
                 isFocused={activeField === 'projectName'}
                 autoFocus
               />
             </FormField>
-          </form>
-          <Spacer size={25} />
-          <FadeIn>
+
+            <Spacer size={10} />
+
             <FormField
               label="Project Icon"
               focusOnClick={false}
@@ -119,7 +128,7 @@ class ProjectConfigurationModal extends Component<Props, State> {
                     <SelectableImage
                       src={src}
                       size={60}
-                      onClick={() => this.updateProjectIcon(String(src))}
+                      onClick={ev => this.updateProjectIcon(ev, src)}
                       status={
                         projectIcon === null
                           ? 'default'
@@ -132,15 +141,23 @@ class ProjectConfigurationModal extends Component<Props, State> {
                 ))}
               </ProjectIconWrapper>
             </FormField>
-            <Button
-              icon={<IconBase icon={edit2} />}
-              onClick={this.saveSettings}
-              disabled={!queueEmpty}
-            >
-              Save
-            </Button>
-            {!queueEmpty && 'Waiting for pending tasks to finish.'}
-          </FadeIn>
+
+            <Actions>
+              <FillButton
+                size="large"
+                colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+                disabled={dependenciesChangingForProject}
+              >
+                Save Project
+              </FillButton>
+
+              {dependenciesChangingForProject && (
+                <DisabledText>
+                  Waiting for pending tasks to finish…
+                </DisabledText>
+              )}
+            </Actions>
+          </form>
         </MainContent>
       </Modal>
     );
@@ -158,28 +175,26 @@ const ProjectIconWrapper = styled.div`
 const SelectableImageWrapper = styled.div`
   display: inline-block;
   margin: 0px 10px 10px 0px;
-
-  @media ${BREAKPOINTS.sm} {
-    /* Reduce amount of displayed icons on smaller screens.
-       Todo: Check if this is really a good idea, as the currently selected icon could be hidden.
-    */
-    &:nth-of-type(n + 9) {
-      display: none;
-    }
-  }
 `;
-const Description = styled.div`
-  font-size: 24px;
-  color: ${COLORS.gray[600]};
+
+const Actions = styled.div`
+  text-align: center;
+  padding-bottom: 16px;
+`;
+
+const DisabledText = styled.div`
+  padding-top: 16px;
+  color: ${COLORS.gray[500]};
 `;
 
 const mapStateToProps = (state, ownProps) => {
   const project = getSelectedProject(state);
   const projectId = project && project.id;
+
   return {
     project,
-    isVisible: state.modal === 'project', // todo: refactor this so we're having each modal-string in a constant 'project' | 'app' | 'new-project-wizard'
-    queueEmpty: isQueueEmpty(state, projectId || ''),
+    isVisible: state.modal === 'project-settings',
+    dependenciesChangingForProject: !isQueueEmpty(state, projectId || ''),
   };
 };
 

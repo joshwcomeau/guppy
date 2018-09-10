@@ -27,6 +27,8 @@ export function* renameFolder(
 }
 
 export function* handleProjectSaveError(err: Error): Saga<void> {
+  console.error('Project save error', err);
+
   switch (err.message) {
     case 'renaming-failed': {
       // Could be 'EPERM: operation not permitted, rename' error.
@@ -71,6 +73,7 @@ export function* handleSaveSettings(action: any): Saga<void> {
     json = yield call(loadPackageJson, projectPath);
   } catch (err) {
     yield call(handleProjectSaveError, new Error('loading-packageJson-failed'));
+    return;
   }
 
   try {

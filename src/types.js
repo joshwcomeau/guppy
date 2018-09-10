@@ -73,11 +73,7 @@ export type Dependency = {
  * more fields, but these are the only ones I care about).
  */
 export type ProjectInternal = {
-  // NOTE: this `name` is the same as `guppy.id`. It's the actual name of the
-  // project, in package.json.
-  // The reason for this confusing discrepancy is that NPM package names are
-  // lowercase-and-dash only, whereas I want Guppy projects to be able to use
-  // any UTF-8 characters.
+  // This is the project's lowercase, slugified name. Eg. "hello-world"
   name: string,
   dependencies: {
     [key: string]: string,
@@ -86,7 +82,11 @@ export type ProjectInternal = {
     [key: string]: string,
   },
   guppy: {
+    // A unique UUID for this project.
+    // On legacy projects (created in 0.2 and earlier), this `id` will be
+    // equal to the project's `name` (the top-level slug one in package.json)
     id: string,
+    // This is the project's full UTF-8 name. Eg. "Hello world!"
     name: string,
     type: ProjectType,
     color: string,
@@ -95,8 +95,21 @@ export type ProjectInternal = {
   },
 };
 
+/**
+ * While the `ProjectInternal` type above is just a representation of the
+ * project's package.json, we also have a `Project` type. This type is meant
+ * to be used within the React app, and wraps up a number of reducers:
+ *
+ * - tasks from tasks.reducer
+ * - dependencies from dependencies.reducer
+ * - project path on disk from path.reducer
+ *
+ * It also provides a limited subset of the `ProjectInternal` type, to abstract
+ * away some of the peculiarities (such as the difference between project.name
+ * and project.guppy.name).
+ */
 export type Project = {
-  // `id` here is equal to `name` in `ProjectInternal`
+  // `id` here is equal to `guppy.id` in `ProjectInternal`
   id: string,
   // `name` is the friendly name, with full UTF-8 character access.
   name: string,
