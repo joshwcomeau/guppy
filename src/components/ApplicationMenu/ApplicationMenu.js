@@ -191,7 +191,7 @@ class ApplicationMenu extends Component<Props> {
         {
           label: isMac ? 'Open Settings' : 'Open settings',
           click: () => showProjectSettings(),
-          accelerator: 'CmdOrCtrl+shift+S',
+          accelerator: 'CmdOrCtrl+,',
         },
         { type: 'separator' },
       ];
@@ -248,6 +248,22 @@ class ApplicationMenu extends Component<Props> {
   }
 }
 
+// helpers
+export const createProjectSelectionSubmenu = (
+  projects: Array<Project>,
+  selectedProjectId: string,
+  selectProject: (id: string) => any
+): any => {
+  const isSelected = testId => testId === selectedProjectId;
+
+  return projects.map(({ name, id }) => ({
+    label: name,
+    type: isSelected(id) ? 'checkbox' : 'normal',
+    checked: isSelected(id),
+    click: () => selectProject(id),
+  }));
+};
+
 const mapStateToProps = state => {
   const selectedProject = getSelectedProject(state);
 
@@ -277,19 +293,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ApplicationMenu);
-
-// helpers
-export const createProjectSelectionSubmenu = (
-  projects: Array<Project>,
-  selectedProjectId: string,
-  selectProject: (id: string) => any
-): any => {
-  const isSelected = testId => testId === selectedProjectId;
-
-  return projects.map(({ name, id }) => ({
-    label: name,
-    type: isSelected(id) ? 'checkbox' : 'normal',
-    checked: isSelected(id),
-    click: () => selectProject(id),
-  }));
-};
