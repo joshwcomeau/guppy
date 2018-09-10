@@ -24,7 +24,7 @@
     "start:react": "cross-env BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
     "dist": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder",
-    "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mw",
+    "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl",
     "test": "node scripts/test.js --env=node",
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
