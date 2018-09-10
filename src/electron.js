@@ -44,7 +44,7 @@ function createWindow() {
     height: 768,
     minWidth: 777,
     titleBarStyle: 'hidden',
-    icon: icon256,
+    icon: path.join(__dirname, icon256)
   });
 
   // set up some chrome extensions
@@ -185,7 +185,7 @@ const manageApplicationLocation = () => {
         message: 'Move to Applications folder?',
         detail:
           "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
-        icon: icon256,
+        icon: path.join(__dirname, icon256),
         cancelId: 1,
         defaultId: 0,
         checkboxLabel: 'Do not show this message again',
