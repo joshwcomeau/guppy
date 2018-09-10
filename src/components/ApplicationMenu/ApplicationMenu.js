@@ -191,7 +191,7 @@ class ApplicationMenu extends Component<Props> {
         {
           label: isMac ? 'Open Settings' : 'Open settings',
           click: () => showProjectSettings(),
-          accelerator: 'CmdOrCtrl+,',
+          accelerator: 'CmdOrCtrl+shift+,',
         },
         { type: 'separator' },
       ];
