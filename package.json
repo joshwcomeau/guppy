@@ -32,6 +32,7 @@
     "lint": "eslint .",
     "prettier": "prettier --write",
     "detect-port": "cross-env ./node_modules/detect-port-alt/bin/detect-port 3000",
+    "precommit": "yarn run flow && lint-staged",
     "build-storybook": "build-storybook -c .storybook -o storybook-static",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
