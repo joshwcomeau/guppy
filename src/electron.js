@@ -10,6 +10,7 @@ const chalkRaw = require('chalk');
 
 const killProcessId = require('./services/kill-process-id.service');
 const electronStore = require('./services/electron-store.service');
+const icon256 = require('./assets/icons/png/256x256.png');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
@@ -43,7 +44,7 @@ function createWindow() {
     height: 768,
     minWidth: 777,
     titleBarStyle: 'hidden',
-    icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
+    icon: icon256,
   });
 
   // set up some chrome extensions
@@ -184,7 +185,7 @@ const manageApplicationLocation = () => {
         message: 'Move to Applications folder?',
         detail:
           "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
-        icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
+        icon: icon256,
         cancelId: 1,
         defaultId: 0,
         checkboxLabel: 'Do not show this message again',
