@@ -78,6 +78,66 @@ export function migrateToSupportProjectHomePath(state: any) {
   return nextState;
 }
 
+export function migrateToSupportNestedTaskReducer(state: any) {
+  /**
+   * 3. SUPPORT NESTED TASK REDUCER STRUCTURE
+   *
+   * Before, the tasks reducer had a flat structure where each entity had a
+   * unique ID:
+   *
+   *  {
+   *    'foo-start': {...},
+   *    'foo-build': {...},
+   *    'bar-start': {...}
+   *  }
+   *
+   * Now, the tasks reducer is nested, same as our dependencies reducer:
+   *
+   *  {
+   *    foo: {
+   *      start: {...},
+   *      build: {...}
+   *    },
+   *    bar: {
+   *      start: {...}
+   *    }
+   *  }
+   *
+   * As a result, there is no longer an `id` field on tasks; tasks are
+   * referenced by a pair of fields now, instead of a single one.
+   */
+  if (!state || !state.tasks) {
+    return state;
+  }
+
+  const nextTasks = Object.keys(state.tasks).reduce((acc, taskId) => {
+    const task = state.tasks[taskId];
+
+    const { projectId, name } = task;
+
+    // create a clone, so we can delete a no-longer-necessary field
+    const taskCopy = { ...task };
+    delete taskCopy.id;
+
+    // If this is the first task we've seen for this project, create the
+    // object that will hold the tasks.
+    if (!acc[projectId]) {
+      acc[projectId] = {};
+    }
+
+    acc[projectId][name] = taskCopy;
+
+    return acc;
+  }, {});
+
+  const nextState = {
+    ...state,
+    tasks: nextTasks,
+  };
+
+  return nextState;
+}
+
 export default function handleMigrations(engine: any) {
   engine = migrate(engine, STATE_VERSION);
 
