@@ -96,6 +96,7 @@
     "jest": "23.3",
     "lint-staged": "7.2.0",
     "loader-utils": "1.1.0",
+    "mixpanel-browser": "2.22.4",
     "moment": "2.22.2",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
