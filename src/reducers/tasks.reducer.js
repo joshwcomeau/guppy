@@ -52,6 +52,10 @@ export default (state: State = initialState, action: Action) => {
           Object.keys(project.scripts).forEach(name => {
             const command = project.scripts[name];
 
+            if (!draftState[projectId]) {
+              draftState[projectId] = {};
+            }
+
             // If this task already exists, we need to be careful.
             //
             // This action is called when we want to read from the disk, and
@@ -86,6 +90,10 @@ export default (state: State = initialState, action: Action) => {
         Object.keys(project.scripts).forEach(name => {
           const command = project.scripts[name];
 
+          if (!draftState[projectId]) {
+            draftState[projectId] = {};
+          }
+
           draftState[projectId][name] = buildNewTask(projectId, name, command);
         });
       });
@@ -100,14 +108,7 @@ export default (state: State = initialState, action: Action) => {
         Object.keys(project.scripts).forEach(name => {
           const command = project.scripts[name];
 
-          const uniqueTaskId = buildUniqueTaskId(projectId, name);
-
-          draftState[uniqueTaskId] = buildNewTask(
-            uniqueTaskId,
-            projectId,
-            name,
-            command
-          );
+          draftState[projectId][name] = buildNewTask(projectId, name, command);
         });
       });
     }
@@ -131,7 +132,7 @@ export default (state: State = initialState, action: Action) => {
       const { task } = action;
 
       return produce(state, draftState => {
-        draftState[task.id].logs = [];
+        draftState[task.projectId][task.name].logs = [];
       });
     }
 
@@ -285,15 +286,26 @@ const buildNewTask = (
 // Selectors
 type GlobalState = { tasks: State };
 
-export const getTaskById = (state: GlobalState, projectId: string, name: string) =>
-  state.tasks[projectId][name];
+export const getTaskByProjectIdAndName = (
+  state: GlobalState,
+  projectId: string,
+  name: string
+) => (state.tasks[projectId] ? state.tasks[projectId][name] : undefined);
 
 export const getTasksForProjectId = (
   state: any,
   projectId: string
-): Array<Task> =>
-  Object.keys(state.tasks[projectId])
-    .map(name => state.tasks[projectId][taskId])
+): Array<Task> => {
+  const tasks = state.tasks[projectId];
+
+  if (!tasks) {
+    return [];
+  }
+
+  return Object.keys(state.tasks[projectId]).map(
+    name => state.tasks[projectId][name]
+  );
+};
 
 export const getTasksInTaskListForProjectId = (
   state: GlobalState,

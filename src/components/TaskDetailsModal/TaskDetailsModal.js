@@ -7,7 +7,7 @@ import moment from 'moment';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
-import { getTaskById } from '../../reducers/tasks.reducer';
+import { getTaskByProjectIdAndName } from '../../reducers/tasks.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -20,7 +20,8 @@ import WindowDimensions from '../WindowDimensions';
 import type { Task } from '../../types';
 
 type Props = {
-  taskId: ?string,
+  projectId: string,
+  taskName: ?string,
   isVisible: boolean,
   onDismiss: () => void,
   // From Redux:
@@ -226,7 +227,7 @@ const HorizontalRule = styled.div`
 `;
 
 const mapStateToProps = (state, ownProps) => ({
-  task: getTaskById(state, ownProps.taskId),
+  task: getTaskByProjectIdAndName(state, ownProps.projectId, ownProps.taskName),
 });
 
 export default connect(

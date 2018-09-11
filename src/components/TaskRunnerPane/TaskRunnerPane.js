@@ -20,12 +20,12 @@ type Props = {
 };
 
 type State = {
-  selectedTaskId: ?string,
+  selectedTaskName: ?string,
 };
 
 class TaskRunnerPane extends Component<Props, State> {
   state = {
-    selectedTaskId: null,
+    selectedTaskName: null,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -33,19 +33,19 @@ class TaskRunnerPane extends Component<Props, State> {
     // For example, This can happen when ejecting the project, since the
     // create-react-app "eject" task removes itself upon completion.
     const selectedTaskExists = nextProps.tasks.some(
-      task => task.id === this.state.selectedTaskId
+      task => task.name === this.state.selectedTaskName
     );
 
     if (!selectedTaskExists) {
-      this.setState({ selectedTaskId: null });
+      this.setState({ selectedTaskName: null });
     }
   }
 
-  handleToggleTask = taskId => {
+  handleToggleTask = taskName => {
     const { tasks, runTask, abortTask } = this.props;
 
     // eslint-disable-next-line no-shadow
-    const task = tasks.find(task => task.id === taskId);
+    const task = tasks.find(task => task.name === taskName);
 
     // Should be impossible, this is for Flow.
     if (!task) {
@@ -59,17 +59,17 @@ class TaskRunnerPane extends Component<Props, State> {
     isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
   };
 
-  handleViewDetails = taskId => {
-    this.setState({ selectedTaskId: taskId });
+  handleViewDetails = taskName => {
+    this.setState({ selectedTaskName: taskName });
   };
 
   handleDismissTaskDetails = () => {
-    this.setState({ selectedTaskId: null });
+    this.setState({ selectedTaskName: null });
   };
 
   render() {
     const { tasks } = this.props;
-    const { selectedTaskId } = this.state;
+    const { selectedTaskName } = this.state;
 
     if (tasks.length === 0) {
       // If the user deletes all `scripts` from their package.json, we don't
@@ -78,6 +78,8 @@ class TaskRunnerPane extends Component<Props, State> {
       return null;
     }
 
+    const { projectId } = tasks[0];
+
     return (
       <Module
         title="Tasks"
@@ -85,8 +87,7 @@ class TaskRunnerPane extends Component<Props, State> {
       >
         {tasks.map(task => (
           <TaskRunnerPaneRow
-            key={task.id}
-            id={task.id}
+            key={task.name}
             name={task.name}
             description={task.description}
             status={task.status}
@@ -97,8 +98,9 @@ class TaskRunnerPane extends Component<Props, State> {
         ))}
 
         <TaskDetailsModal
-          taskId={selectedTaskId}
-          isVisible={!!selectedTaskId}
+          projectId={projectId}
+          taskName={selectedTaskName}
+          isVisible={!!selectedTaskName}
           onDismiss={this.handleDismissTaskDetails}
         />
       </Module>
