@@ -197,7 +197,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
 const mapStateToProps = state => ({
   projects: getById(state),
-  projectHomePath: getProjectHomePath(state.paths),
+  projectHomePath: getProjectHomePath(state),
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
 });

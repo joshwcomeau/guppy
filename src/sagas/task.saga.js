@@ -33,8 +33,10 @@ import type { Task, ProjectType } from '../types';
 const chalk = new chalkRaw.constructor({ level: 3 });
 
 export function* launchDevServer({ task }: Action): Saga<void> {
-  const project = yield select(getProjectById, task.projectId);
-  const projectPath = yield select(getPathForProjectId, task.projectId);
+  const project = yield select(getProjectById, { projectId: task.projectId });
+  const projectPath = yield select(getPathForProjectId, {
+    projectId: task.projectId,
+  });
 
   try {
     const port = yield call(findAvailablePort);

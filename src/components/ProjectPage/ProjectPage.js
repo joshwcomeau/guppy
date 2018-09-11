@@ -65,6 +65,8 @@ class ProjectPage extends PureComponent<Props> {
   render() {
     const { project } = this.props;
 
+    console.log('RENDER', project);
+
     return (
       <FadeIn>
         <MainContentWrapper>

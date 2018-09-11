@@ -88,7 +88,7 @@ const DirectoryButton = styled(TextButton)`
 
 const mapStateToProps = state => {
   return {
-    projectHome: getProjectHomePath(state.paths),
+    projectHome: getProjectHomePath(state),
   };
 };
 
