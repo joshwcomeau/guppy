@@ -10,7 +10,6 @@
     "files": [
       "build/**/*"
     ],
-    "asar": false,
     "asarUnpack": [
       "node_modules/yarn/"
     ]

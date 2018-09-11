@@ -12,13 +12,13 @@ const killProcessId = require('./services/kill-process-id.service');
 const electronStore = require('./services/electron-store.service');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
-let icon256Path = '../build/256x256.png';
+let icon256Path = '../public/256x256.png';
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
 // everything.
 if (process.env.NODE_ENV !== 'development') {
-  icon256Path = '../public/256x256.png';
+  icon256Path = '../build/256x256.png';
   fixPath();
 }
 
