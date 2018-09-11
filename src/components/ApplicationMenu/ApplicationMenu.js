@@ -16,7 +16,10 @@ import {
   openProjectInFolder,
   openProjectInEditor,
 } from '../../services/shell.service';
-import { getSelectedProject } from '../../reducers/projects.reducer';
+import {
+  getSelectedProject,
+  getProjectsArray,
+} from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 
 import type { Project, Task } from '../../types';
@@ -24,6 +27,7 @@ import type { Project, Task } from '../../types';
 const { app, process, Menu } = remote;
 
 type Props = {
+  projects: Array<Project>,
   selectedProject: ?Project,
   devServerTask: ?Task,
   createNewProjectStart: () => any,
@@ -31,6 +35,8 @@ type Props = {
   clearConsole: (task: Task) => any,
   showDeleteProjectPrompt: (project: any) => any,
   showResetStatePrompt: () => any,
+  showProjectSettings: () => any,
+  selectProject: (projectId: string) => any,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -55,6 +61,9 @@ class ApplicationMenu extends Component<Props> {
       clearConsole,
       showDeleteProjectPrompt,
       showResetStatePrompt,
+      showProjectSettings,
+      selectProject,
+      projects,
     } = props;
 
     const template = [
@@ -179,6 +188,11 @@ class ApplicationMenu extends Component<Props> {
           click: () => openProjectInEditor(selectedProject),
           accelerator: 'CmdOrCtrl+shift+E',
         },
+        {
+          label: isMac ? 'Open Settings' : 'Open settings',
+          click: () => showProjectSettings(),
+          accelerator: 'CmdOrCtrl+shift+,',
+        },
         { type: 'separator' },
       ];
 
@@ -194,6 +208,19 @@ class ApplicationMenu extends Component<Props> {
       submenu.push({
         label: isMac ? 'Delete Project' : 'Delete project',
         click: () => showDeleteProjectPrompt(selectedProject),
+      });
+
+      submenu.push({ type: 'separator' });
+
+      // Checking projects length not needed as we're having more than one project if the Current Project menu is available
+      submenu.push({
+        label: isMac ? 'Select Project' : 'Select project',
+        id: 'select-project',
+        submenu: createProjectSelectionSubmenu(
+          projects,
+          selectedProject.id,
+          selectProject
+        ),
       });
 
       template.splice(editMenuIndex, 0, {
@@ -221,6 +248,22 @@ class ApplicationMenu extends Component<Props> {
   }
 }
 
+// helpers
+export const createProjectSelectionSubmenu = (
+  projects: Array<Project>,
+  selectedProjectId: string,
+  selectProject: (id: string) => any
+): any => {
+  const isSelected = testId => testId === selectedProjectId;
+
+  return projects.map(({ name, id }) => ({
+    label: name,
+    type: isSelected(id) ? 'checkbox' : 'normal',
+    checked: isSelected(id),
+    click: () => selectProject(id),
+  }));
+};
+
 const mapStateToProps = state => {
   const selectedProject = getSelectedProject(state);
 
@@ -232,7 +275,8 @@ const mapStateToProps = state => {
       )
     : null;
 
-  return { selectedProject, devServerTask };
+  const projects = getProjectsArray(state);
+  return { selectedProject, devServerTask, projects };
 };
 
 const mapDispatchToProps = {
@@ -241,6 +285,8 @@ const mapDispatchToProps = {
   clearConsole: actions.clearConsole,
   showDeleteProjectPrompt: actions.showDeleteProjectPrompt,
   showResetStatePrompt: actions.showResetStatePrompt,
+  showProjectSettings: actions.showProjectSettings,
+  selectProject: actions.selectProject,
 };
 
 export default connect(
