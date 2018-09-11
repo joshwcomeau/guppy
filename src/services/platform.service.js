@@ -56,6 +56,10 @@ export const getBaseProjectEnvironment = (
   currentEnvironment: Object = window.process.env
 ) => ({
   ...currentEnvironment,
+  // NOTE: this option adds control characters to the output.
+  // If at some point we need "raw" output with no control characters, we
+  // should move this out into a "wrapping" function, and update current
+  // callsites to use it.
   FORCE_COLOR: true,
   PATH:
     currentEnvironment.PATH +
