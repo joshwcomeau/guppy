@@ -8,7 +8,7 @@ import {
 
 describe('queue reducer', () => {
   it('should return initial state', () => {
-    expect(reducer(undefined, {})).toEqual({});
+    expect(reducer()).toEqual({});
   });
 
   it(`should handle queue item start`, () => {

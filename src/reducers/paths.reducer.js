@@ -37,7 +37,7 @@ const homedir = isWin ? windowsHomeDir : os.homedir();
 // Noticing some weird quirks when I try to use a dev project on the compiled
 // "production" app, so separating their home paths should help.
 
-const initialState = {
+export const initialState = {
   homePath:
     process.env.NODE_ENV === 'development'
       ? path.join(homedir, 'guppy-projects-dev')
@@ -45,7 +45,7 @@ const initialState = {
   byId: {},
 };
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case ADD_PROJECT: {
       const { project } = action;
@@ -61,7 +61,7 @@ export default (state: State = initialState, action: Action) => {
     }
 
     case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { projectPath, project } = action;
+      const { project, projectPath } = action;
 
       return produce(state, draftState => {
         draftState.byId[project.guppy.id] = projectPath;
@@ -87,7 +87,7 @@ export default (state: State = initialState, action: Action) => {
       const { projectId } = action;
 
       return produce(state, draftState => {
-        delete draftState[projectId];
+        delete draftState.byId[projectId];
       });
     }
 

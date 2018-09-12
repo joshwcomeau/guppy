@@ -22,7 +22,7 @@ type State = boolean;
 
 const initialState = false;
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH:
       return true;

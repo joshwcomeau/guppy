@@ -357,7 +357,7 @@ export const saveProjectSettingsStart = (
 });
 
 export const saveProjectSettingsFinish = (
-  project: Project,
+  project: ProjectInternal,
   projectPath: string
 ) => ({
   type: SAVE_PROJECT_SETTINGS_FINISH,

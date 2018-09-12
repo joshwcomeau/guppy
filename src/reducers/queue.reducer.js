@@ -26,7 +26,7 @@ type State = {
 
 const initialState = {};
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case QUEUE_DEPENDENCY_INSTALL: {
       const { projectId, name, version, updating } = action;

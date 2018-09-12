@@ -42,7 +42,7 @@ type State = {
 
 export const initialState = {};
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH: {
       return produce(state, draftState => {

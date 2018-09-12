@@ -25,7 +25,7 @@ type State = {
 
 export const initialState = {};
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case LOAD_DEPENDENCY_INFO_FROM_DISK: {
       const { projectId, dependencies } = action;
