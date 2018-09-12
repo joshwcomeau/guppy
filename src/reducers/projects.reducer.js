@@ -128,8 +128,18 @@ const selectedIdReducer = (
       return action.projectId;
     }
 
-    case RESET_ALL_STATE:
+    case FINISH_DELETING_PROJECT: {
+      // Right now, it is only possible to delete the currently-selected
+      // project, so this condition will always be true. This is a guard against
+      // future changes.
+      const justDeletedSelectedProject = action.projectId === state;
+
+      return justDeletedSelectedProject ? null : state;
+    }
+
+    case RESET_ALL_STATE: {
       return initialState.selectedId;
+    }
 
     default:
       return state;

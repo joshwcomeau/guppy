@@ -79,6 +79,7 @@ class ProjectPage extends PureComponent<Props> {
             </PixelShifter>
             <SettingsButton />
           </FlexRow>
+
           <ProjectActionBar>
             <FillButton
               colors={COLORS.gray[200]}
