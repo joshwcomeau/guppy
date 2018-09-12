@@ -19,9 +19,13 @@ type Event =
   | 'import-project'
   | 'select-project'
   | 'run-task'
-  | 'update-dependency';
+  | 'add-dependency'
+  | 'update-dependency'
+  | 'delete-dependency'
+  | 'clear-console'
+  | 'delete-project';
 
-const createLogger = (environment: ?string = process.env.NODE_ENV) => {
+export const createLogger = (environment?: ?string = process.env.NODE_ENV) => {
   mixpanel.init(MIXPANEL_KEY);
 
   // Every user is given a distinct ID so that we can track return visits.
@@ -50,4 +54,6 @@ const createLogger = (environment: ?string = process.env.NODE_ENV) => {
   };
 };
 
-export default createLogger;
+// Export a singleton so that multiple modules can use the same instance.
+// We'll only ever want to create alternatives in tests.
+export default createLogger();
