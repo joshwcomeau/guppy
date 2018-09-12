@@ -15,7 +15,7 @@ import {
 
 describe('dependencies reducer', () => {
   it('should return initial state', () => {
-    expect(reducer(undefined, {})).toEqual({});
+    expect(reducer()).toEqual({});
   });
 
   it(`should handle ${LOAD_DEPENDENCY_INFO_FROM_DISK}`, () => {

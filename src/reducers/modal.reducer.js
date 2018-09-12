@@ -21,7 +21,7 @@ type State = 'new-project-wizard' | 'project-settings' | null;
 
 const initialState = null;
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case CREATE_NEW_PROJECT_START:
       return 'new-project-wizard';

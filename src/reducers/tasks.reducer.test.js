@@ -11,7 +11,7 @@ import reducer, { getTaskDescription, initialState } from './tasks.reducer';
 describe('Tasks reducer', () => {
   describe(REFRESH_PROJECTS_FINISH, () => {
     it('captures task data from new projects', () => {
-      const prevState = reducer(undefined, {});
+      const prevState = reducer();
 
       const action = {
         type: REFRESH_PROJECTS_FINISH,

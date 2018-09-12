@@ -35,7 +35,7 @@ export const initialState = {
   selectedId: null,
 };
 
-const byIdReducer = (state: ById = initialState.byId, action: Action) => {
+const byIdReducer = (state: ById = initialState.byId, action: Action = {}) => {
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH: {
       return action.projects;
@@ -89,7 +89,7 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
 
 const selectedIdReducer = (
   state: SelectedId = initialState.selectedId,
-  action: Action
+  action: Action = {}
 ) => {
   switch (action.type) {
     case ADD_PROJECT:

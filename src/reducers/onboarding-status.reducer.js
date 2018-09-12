@@ -23,7 +23,7 @@ export type State =
 // TODO: Pull this from localStorage
 const initialState = 'brand-new';
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case CREATE_NEW_PROJECT_START:
     case IMPORT_EXISTING_PROJECT_START: {
