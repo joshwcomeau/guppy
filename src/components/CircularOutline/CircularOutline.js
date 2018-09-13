@@ -59,7 +59,7 @@ class RoundedOutline extends Component<Props, State> {
   };
 
   wrapperNode: HTMLElement;
-  shapeNode: HTMLElement;
+  shapeNode: any;
 
   static defaultProps = {
     color1: COLORS.purple[500],
@@ -91,6 +91,14 @@ class RoundedOutline extends Component<Props, State> {
 
     if (prevState.pathLength === 0 && this.state.pathLength !== 0) {
       this.setState({ finishedAllMountingSteps: true });
+    }
+
+    if (this.state.pathLength !== null) {
+      const newPathLength = this.shapeNode.getTotalLength();
+
+      if (this.state.pathLength !== newPathLength) {
+        this.setState({ pathLength: newPathLength });
+      }
     }
   }
 
@@ -149,6 +157,10 @@ class RoundedOutline extends Component<Props, State> {
                   stroke={`url(#${svgId})`}
                   strokeWidth={strokeWidth}
                   strokeLinecap="round"
+                  style={{
+                    strokeDasharray: `${pathLength}, ${pathLength + 1}`,
+                    strokeDashoffset: interpolatedDashOffset,
+                  }}
                 />
               )}
           </Svg>
