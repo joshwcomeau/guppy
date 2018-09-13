@@ -135,7 +135,7 @@ export function* launchDevServer({ task }: Action): Saga<void> {
 }
 
 export function* taskRun({ task }: Action): Saga<void> {
-  const project = yield select(getProjectById, task.projectId);
+  const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, task.projectId);
   const { name } = task;
 
@@ -280,7 +280,7 @@ export function* taskComplete({ task }: Action): Saga<void> {
   // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
   // this instead.
   if (task.name === 'eject') {
-    const project = yield select(getProjectById, task.projectId);
+    const project = yield select(getProjectById, { projectId: task.projectId });
 
     yield put(loadDependencyInfoFromDisk(project.id, project.path));
   }

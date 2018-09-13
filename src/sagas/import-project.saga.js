@@ -85,7 +85,7 @@ export function* importProject({ path }: Action): Saga<void> {
     // Check to see if we already have a project with this ID.
     // In the future, maybe I can attach a suffix like `-copy`, but for
     // now I'll just reject it outright.
-    const alreadyExists = yield select(getInternalProjectById, projectId);
+    const alreadyExists = yield select(getInternalProjectById, { projectId });
     if (alreadyExists) {
       throw new Error('project-name-already-exists');
     }

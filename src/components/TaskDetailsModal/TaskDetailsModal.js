@@ -7,7 +7,7 @@ import moment from 'moment';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
-import { getTaskByProjectIdAndName } from '../../reducers/tasks.reducer';
+import { getTaskByProjectIdAndTaskName } from '../../reducers/tasks.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -227,7 +227,7 @@ const HorizontalRule = styled.div`
 `;
 
 const mapStateToProps = (state, ownProps) => ({
-  task: getTaskByProjectIdAndName(state, ownProps.projectId, ownProps.taskName),
+  task: getTaskByProjectIdAndTaskName(state, ownProps),
 });
 
 export default connect(

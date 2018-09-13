@@ -247,10 +247,5 @@ export const getDependencyMapForSelectedProject = (state: GlobalState) => {
     return [];
   }
 
-  const dependencies = getDependenciesForProjectId(state, { projectId });
-
-  return dependencies.reduce((acc, dep) => {
-    acc[dep.name] = dep;
-    return acc;
-  }, {});
+  return getDependenciesForProjectId(state, { projectId });
 };

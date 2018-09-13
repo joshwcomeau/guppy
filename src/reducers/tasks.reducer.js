@@ -292,15 +292,15 @@ type GlobalState = { tasks: State };
 
 export const getTasks = (state: any) => state.tasks;
 
-export const getTaskByProjectIdAndName = (
+export const getTaskByProjectIdAndTaskName = (
   state: GlobalState,
   props: {
     projectId: string,
-    name: string,
+    taskName: string,
   }
 ) =>
   state.tasks[props.projectId]
-    ? state.tasks[props.projectId][props.name]
+    ? state.tasks[props.projectId][props.taskName]
     : undefined;
 
 export const getTasksForProjectId = (
@@ -337,14 +337,4 @@ export const getDevServerTaskForProjectId = (
     default:
       throw new Error('Unrecognized project type: ' + props.projectType);
   }
-};
-
-export const getTaskByProjectIdAndTaskName = (
-  state: GlobalState,
-  props: {
-    projectId: string,
-    name: string,
-  }
-) => {
-  return state.tasks[props.projectId][props.name];
 };

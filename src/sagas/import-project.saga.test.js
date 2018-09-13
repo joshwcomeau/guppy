@@ -133,7 +133,7 @@ describe('import-project saga', () => {
         call(loadPackageJson, 'path/to/project')
       );
       expect(saga.next(json).value).toEqual(
-        select(getInternalProjectById, 'mocked-uuid-v1')
+        select(getInternalProjectById, { projectId: 'mocked-uuid-v1' })
       );
       expect(saga.next({ name: 'example' }).value).toEqual(
         call(handleImportError, expectedError)
@@ -149,7 +149,7 @@ describe('import-project saga', () => {
         call(loadPackageJson, 'path/to/project')
       );
       expect(saga.next(json).value).toEqual(
-        select(getInternalProjectById, 'mocked-uuid-v1')
+        select(getInternalProjectById, { projectId: 'mocked-uuid-v1' })
       );
       expect(saga.next().value).toEqual(call(inferProjectType, json));
       expect(saga.next(null).value).toEqual(
@@ -180,7 +180,7 @@ describe('import-project saga', () => {
         call(loadPackageJson, 'path/to/project')
       );
       expect(saga.next(json).value).toEqual(
-        select(getInternalProjectById, 'mocked-uuid-v1')
+        select(getInternalProjectById, { projectId: 'mocked-uuid-v1' })
       );
       expect(saga.next().value).toEqual(call(inferProjectType, json));
       expect(saga.next('create-react-app').value).toEqual(
