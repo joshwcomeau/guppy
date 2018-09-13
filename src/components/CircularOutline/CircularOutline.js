@@ -59,7 +59,7 @@ class RoundedOutline extends Component<Props, State> {
   };
 
   wrapperNode: HTMLElement;
-  shapeNode: any;
+  shapeNode: any; // "SVGPathElement" (which cannot be resolved), we need "getTotalLength()"
 
   static defaultProps = {
     color1: COLORS.purple[500],
@@ -77,20 +77,18 @@ class RoundedOutline extends Component<Props, State> {
   }
 
   componentDidUpdate(_: Props, prevState: State) {
-    if (
-      prevState.width == null &&
-      prevState.height == null &&
-      this.state.width !== null &&
-      this.state.height !== null
-    ) {
-      // $FlowFixMe
-      const pathLength = this.shapeNode.getTotalLength();
+    if (this.state.width !== null && this.state.height !== null) {
+      if (prevState.width == null && prevState.height == null) {
+        const pathLength = this.shapeNode.getTotalLength();
 
-      this.setState({ pathLength });
-    }
+        this.setState({ pathLength });
+      } else {
+        const { width, height } = this.wrapperNode.getBoundingClientRect();
 
-    if (prevState.pathLength === 0 && this.state.pathLength !== 0) {
-      this.setState({ finishedAllMountingSteps: true });
+        if (this.state.width !== width || this.state.height !== height) {
+          this.setState({ width, height });
+        }
+      }
     }
 
     if (this.state.pathLength !== null) {
@@ -99,6 +97,10 @@ class RoundedOutline extends Component<Props, State> {
       if (this.state.pathLength !== newPathLength) {
         this.setState({ pathLength: newPathLength });
       }
+    }
+
+    if (prevState.pathLength === 0 && this.state.pathLength !== 0) {
+      this.setState({ finishedAllMountingSteps: true });
     }
   }
 
@@ -149,8 +151,8 @@ class RoundedOutline extends Component<Props, State> {
                   innerRef={node => (this.shapeNode = node)}
                   x={0}
                   y={0}
-                  width="100%"
-                  height="100%"
+                  width={width}
+                  height={height}
                   rx={height / 2}
                   ry={height / 2}
                   fill="none"
