@@ -48,22 +48,27 @@ export const createProject = (overrides: any) => {
   };
 };
 
-export const createProjectInternal = (overrides: any) => ({
-  name: 'hello-world',
-  dependencies: {
-    react: '^16.5.0',
-    'react-dom': '^16.5.0',
-  },
-  scripts: {
-    start: 'react-scripts start',
-    build: 'react-scripts build',
-  },
-  guppy: {
-    id: '26890cf3-06b9-4b35-a92f-2fb8241b7f6d',
-    name: 'Hello World',
-    type: 'create-react-app',
-    color: '#00FFFF',
-    icon: 'path/to/icon',
-    createdAt: sept14thTimestamp,
-  },
-});
+export const createProjectInternal = (overrides: any) => {
+  const projectId = overrides ? overrides.projectId : uuid();
+
+  return {
+    name: 'hello-world',
+    dependencies: {
+      react: '^16.5.0',
+      'react-dom': '^16.5.0',
+    },
+    scripts: {
+      start: 'react-scripts start',
+      build: 'react-scripts build',
+    },
+    guppy: {
+      id: projectId,
+      name: 'Hello World',
+      type: 'create-react-app',
+      color: '#00FFFF',
+      icon: 'path/to/icon',
+      createdAt: sept14thTimestamp,
+    },
+    ...overrides,
+  };
+};
