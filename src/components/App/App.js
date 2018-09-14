@@ -7,6 +7,7 @@ import styled, { keyframes } from 'styled-components';
 import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getAppLoaded } from '../../reducers/app-loaded.reducer';
+import logger from '../../services/analytics.service';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -26,6 +27,8 @@ type Props = {
 class App extends PureComponent<Props> {
   componentDidMount() {
     window.addEventListener('beforeunload', this.killAllRunningProcesses);
+
+    logger.logEvent('load-application');
   }
 
   componentWillUnmount() {

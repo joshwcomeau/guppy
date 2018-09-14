@@ -8,6 +8,7 @@ import importProjectSaga from './import-project.saga';
 import taskSaga from './task.saga';
 import developmentSaga from './development.saga';
 import queueSaga from './queue.saga';
+import analyticsSaga from './analytics.saga';
 
 export default function*() {
   yield all([
@@ -19,5 +20,6 @@ export default function*() {
     saveProjectSettingsSaga(),
     developmentSaga(),
     queueSaga(),
+    analyticsSaga(),
   ]);
 }

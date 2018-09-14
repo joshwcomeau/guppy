@@ -1,13 +1,18 @@
 import mixpanel from 'mixpanel-browser'; // Mocked
 
 import electronStore from './electron-store.service';
-import createLogger, { MIXPANEL_KEY } from './analytics.service';
+import { createLogger, MIXPANEL_KEY } from './analytics.service';
 
 jest.mock('uuid/v1', () => () => 'mocked-uuid-v1');
 
 describe('Analytics service', () => {
   beforeEach(() => {
+    mixpanel.init.mockClear();
+    mixpanel.identify.mockClear();
     mixpanel.track.mockClear();
+    electronStore.get.mockClear();
+    electronStore.set.mockClear();
+    electronStore.clear();
   });
 
   describe('initialization', () => {
