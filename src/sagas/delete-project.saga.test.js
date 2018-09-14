@@ -1,11 +1,6 @@
 import electron from 'electron'; // Mocked
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 
-import rootSaga, {
-  deleteProject,
-  getNextProjectId,
-} from './delete-project.saga';
-
 import {
   SHOW_DELETE_PROJECT_PROMPT,
   finishDeletingProject,
@@ -13,6 +8,11 @@ import {
   createNewProjectStart,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
+import { createProject } from '../services/test-factories.service';
+import rootSaga, {
+  deleteProject,
+  getNextProjectId,
+} from './delete-project.saga';
 
 describe('delete-project saga', () => {
   describe('root delete-project saga', () => {
@@ -26,18 +26,20 @@ describe('delete-project saga', () => {
 
   describe('deleteProject', () => {
     it('deletes a specified project from disk', () => {
-      const project = {
+      const projectA = createProject({
         id: 'a',
         name: 'apple',
         path: '/path/to/apple',
-      };
+      });
+      const projectB = createProject({
+        id: 'b',
+        name: 'berry',
+        path: '/path/to/berry',
+      });
 
-      const projects = [
-        project,
-        { id: 'b', name: 'berry', path: '/path/to/berry' },
-      ];
+      const projects = [projectA, projectB];
 
-      const saga = deleteProject({ project });
+      const saga = deleteProject({ project: projectA });
 
       expect(saga.next().value).toEqual(
         call([electron.remote.dialog, electron.remote.dialog.showMessageBox], {
@@ -45,10 +47,10 @@ describe('delete-project saga', () => {
           buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
           defaultId: 0,
           cancelId: 2,
-          title: `Delete ${project.name}`,
-          message: `Are you sure you want to delete ${project.name}?`,
+          title: `Delete ${projectA.name}`,
+          message: `Are you sure you want to delete ${projectA.name}?`,
           detail: `Deleting from Guppy will remove ${
-            project.name
+            projectA.name
           } from the app, but doesn't remove it from your computer.\n\nIMPORTANT! Deleting from disk will send the project to trash!`,
         })
       );
@@ -60,12 +62,12 @@ describe('delete-project saga', () => {
       expect(saga.next(projects).value).toEqual(
         call(
           [electron.remote.shell, electron.remote.shell.moveItemToTrash],
-          project.path
+          projectA.path
         )
       );
 
       expect(saga.next(true).value).toEqual(
-        put(finishDeletingProject(project.id))
+        put(finishDeletingProject(projectA.id))
       );
 
       // Because there's another project, it should select the next one.
@@ -74,18 +76,21 @@ describe('delete-project saga', () => {
     });
 
     it('deletes a specified project from guppy', () => {
-      const project = {
+      const projectA = createProject({
         id: 'a',
         name: 'apple',
         path: '/path/to/apple',
-      };
+      });
 
-      const projects = [
-        project,
-        { id: 'b', name: 'berry', path: '/path/to/berry' },
-      ];
+      const projectB = createProject({
+        id: 'b',
+        name: 'berry',
+        path: '/path/to/berry',
+      });
 
-      const saga = deleteProject({ project });
+      const projects = [projectA, projectB];
+
+      const saga = deleteProject({ project: projectA });
 
       expect(saga.next().value).toEqual(
         call([electron.remote.dialog, electron.remote.dialog.showMessageBox], {
@@ -93,10 +98,10 @@ describe('delete-project saga', () => {
           buttons: ['Delete from Guppy', 'Delete from Disk', 'Cancel'],
           defaultId: 0,
           cancelId: 2,
-          title: `Delete ${project.name}`,
-          message: `Are you sure you want to delete ${project.name}?`,
+          title: `Delete ${projectA.name}`,
+          message: `Are you sure you want to delete ${projectA.name}?`,
           detail: `Deleting from Guppy will remove ${
-            project.name
+            projectA.name
           } from the app, but doesn't remove it from your computer.\n\nIMPORTANT! Deleting from disk will send the project to trash!`,
         })
       );
@@ -107,7 +112,7 @@ describe('delete-project saga', () => {
 
       // We are not deleting anything from disk so we simply move on to refresh state
       expect(saga.next(projects).value).toEqual(
-        put(finishDeletingProject(project.id))
+        put(finishDeletingProject(projectA.id))
       );
 
       // Because there's another project, it should select the next one.
@@ -116,11 +121,11 @@ describe('delete-project saga', () => {
     });
 
     it('prompts the user to create a new project, when deleting the final project', () => {
-      const project = {
+      const project = createProject({
         id: 'a',
         name: 'apple',
         path: '/path/to/apple',
-      };
+      });
 
       const projects = [project];
 
@@ -139,15 +144,15 @@ describe('delete-project saga', () => {
     });
 
     it("logs an error when the project can't be deleted", () => {
-      const project = {
+      const project = createProject({
         id: 'a',
         name: 'apple',
         path: '/path/to/apple',
-      };
+      });
 
       const projects = [
         project,
-        { id: 'b', name: 'berry', path: '/path/to/berry' },
+        createProject({ id: 'b', name: 'berry', path: '/path/to/berry' }),
       ];
 
       const saga = deleteProject({ project });
@@ -175,29 +180,41 @@ describe('delete-project saga', () => {
 
   describe('getNextProjectId', () => {
     it('gets the next project', () => {
-      const projects = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
+      const projects = [
+        createProject({ id: 'a' }),
+        createProject({ id: 'b' }),
+        createProject({ id: 'c' }),
+      ];
       const idToDelete = 'b';
 
       expect(getNextProjectId(projects, idToDelete)).toEqual('c');
     });
 
     it('gets the previous project, when deleting the last one', () => {
-      const projects = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
+      const projects = [
+        createProject({ id: 'a' }),
+        createProject({ id: 'b' }),
+        createProject({ id: 'c' }),
+      ];
       const idToDelete = 'c';
 
       expect(getNextProjectId(projects, idToDelete)).toEqual('b');
     });
 
     it('returns null if there are no more projects to select', () => {
-      const projects = [{ id: 'a' }];
+      const projects = [createProject({ id: 'a' })];
       const idToDelete = 'a';
 
       expect(getNextProjectId(projects, idToDelete)).toEqual(null);
     });
 
     it('throws an error if the project cannot be found', () => {
-      const projects = [{ id: 'a' }];
-      const idToDelete = 'b';
+      const projects = [
+        createProject({ id: 'a' }),
+        createProject({ id: 'b' }),
+        createProject({ id: 'c' }),
+      ];
+      const idToDelete = 'd';
 
       expect(() => getNextProjectId(projects, idToDelete)).toThrow();
     });
