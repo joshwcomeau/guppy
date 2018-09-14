@@ -132,6 +132,7 @@ export function* importProject({ path }: Action): Saga<void> {
       importExistingProjectFinish(
         path,
         writedPackageJson,
+        type,
         isOnboardingCompleted
       )
     );

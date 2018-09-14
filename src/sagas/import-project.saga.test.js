@@ -193,7 +193,14 @@ describe('import-project saga', () => {
         select(getOnboardingCompleted)
       );
       expect(saga.next(true).value).toEqual(
-        put(importExistingProjectFinish('path/to/project', jsonWithGuppy, true))
+        put(
+          importExistingProjectFinish(
+            'path/to/project',
+            jsonWithGuppy,
+            'create-react-app',
+            true
+          )
+        )
       );
       expect(saga.next().done).toBe(true);
       spyOnDate.mockRestore();

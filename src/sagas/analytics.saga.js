@@ -21,11 +21,12 @@ import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
   SELECT_PROJECT,
+  LAUNCH_DEV_SERVER,
+  RUN_TASK,
   CLEAR_CONSOLE,
   ADD_DEPENDENCY,
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
-  RUN_TASK,
   FINISH_DELETING_PROJECT,
 } from '../actions';
 
@@ -45,14 +46,18 @@ type LoggableActionsMap = {
 const loggableActions: LoggableActionsMap = {
   [ADD_PROJECT]: {
     name: 'create-project',
-    getMetadata: payload => ({ type: payload.project.type }),
+    getMetadata: payload => ({ type: payload.projectType }),
   },
   [IMPORT_EXISTING_PROJECT_FINISH]: {
     name: 'import-project',
-    getMetadata: payload => ({ type: payload.project.type }),
+    getMetadata: payload => ({ type: payload.projectType }),
   },
   [SELECT_PROJECT]: {
     name: 'select-project',
+    getMetadata: payload => ({}),
+  },
+  [LAUNCH_DEV_SERVER]: {
+    name: 'launch-dev-server',
     getMetadata: payload => ({}),
   },
   [RUN_TASK]: {

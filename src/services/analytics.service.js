@@ -19,11 +19,12 @@ export type EventType =
   | 'create-project'
   | 'import-project'
   | 'select-project'
+  | 'launch-dev-server'
   | 'run-task'
+  | 'clear-console'
   | 'add-dependency'
   | 'update-dependency'
   | 'delete-dependency'
-  | 'clear-console'
   | 'delete-project';
 
 export const createLogger = (environment?: ?string = process.env.NODE_ENV) => {
