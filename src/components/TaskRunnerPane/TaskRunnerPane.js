@@ -112,7 +112,7 @@ const mapStateToProps = state => {
   const selectedProjectId = getSelectedProjectId(state);
 
   const tasks = selectedProjectId
-    ? getTasksInTaskListForProjectId(state, selectedProjectId)
+    ? getTasksInTaskListForProjectId(state, { projectId: selectedProjectId })
     : [];
 
   return { tasks };

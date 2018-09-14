@@ -78,9 +78,11 @@ describe('task saga', () => {
     const mockProcess = mockSpawn(processId);
 
     it('should find project and projectPath', () => {
-      expect(saga.next().value).toEqual(select(getProjectById, task.projectId));
+      expect(saga.next().value).toEqual(
+        select(getProjectById, { projectId: task.projectId })
+      );
       expect(saga.next(project).value).toEqual(
-        select(getPathForProjectId, task.projectId)
+        select(getPathForProjectId, { projectId: task.projectId })
       );
     });
 
@@ -363,7 +365,9 @@ describe('task saga', () => {
       const saga = taskComplete({ task });
       saga.next();
 
-      expect(saga.next().value).toEqual(select(getProjectById, task.projectId));
+      expect(saga.next().value).toEqual(
+        select(getProjectById, { projectId: task.projectId })
+      );
       // stringify to avoid deep equal inconsistencies from thunk
       // TODO: remove `JSON.stringify` once `redux-thunk` is removed
       expect(JSON.stringify(saga.next(project).value)).toEqual(

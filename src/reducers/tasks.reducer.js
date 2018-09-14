@@ -17,6 +17,8 @@
  */
 
 import produce from 'immer';
+import { createSelector } from 'reselect';
+
 import {
   REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
@@ -34,10 +36,12 @@ import {
 import type { Action } from 'redux';
 import type { Task, ProjectType } from '../types';
 
+type TaskMap = {
+  [taskName: string]: Task,
+};
+
 type State = {
-  [projectId: string]: {
-    [taskName: string]: Task,
-  },
+  [projectId: string]: TaskMap,
 };
 
 export const initialState = {};
@@ -286,58 +290,51 @@ const buildNewTask = (
 // Selectors
 type GlobalState = { tasks: State };
 
-export const getTaskByProjectIdAndName = (
-  state: GlobalState,
-  projectId: string,
-  name: string
-) => (state.tasks[projectId] ? state.tasks[projectId][name] : undefined);
-
-export const getTasksForProjectId = (
-  state: any,
-  projectId: string
-): Array<Task> => {
-  const tasks = state.tasks[projectId];
-
-  if (!tasks) {
-    return [];
-  }
-
-  return Object.keys(state.tasks[projectId]).map(
-    name => state.tasks[projectId][name]
-  );
-};
-
-export const getTasksInTaskListForProjectId = (
-  state: GlobalState,
-  projectId: string
-) =>
-  getTasksForProjectId(state, projectId).filter(
-    task => !isDevServerTask(task.name)
-  );
-
-export const getDevServerTaskForProjectId = (
-  state: GlobalState,
-  projectId: string,
-  projectType: ProjectType
-) => {
-  switch (projectType) {
-    case 'create-react-app': {
-      return state.tasks[projectId].start;
-    }
-
-    case 'gatsby': {
-      return state.tasks[projectId].develop;
-    }
-
-    default:
-      throw new Error('Unrecognized project type: ' + projectType);
-  }
-};
+export const getTasks = (state: any) => state.tasks;
 
 export const getTaskByProjectIdAndTaskName = (
   state: GlobalState,
-  projectId: string,
-  name: string
+  props: {
+    projectId: string,
+    taskName: string,
+  }
+) =>
+  state.tasks[props.projectId]
+    ? state.tasks[props.projectId][props.taskName]
+    : undefined;
+
+export const getTasksForProjectId = (
+  state: any,
+  props: { projectId: string }
+): TaskMap => {
+  return state.tasks[props.projectId];
+};
+
+export const getTasksInTaskListForProjectId = createSelector(
+  [getTasksForProjectId],
+  tasks =>
+    Object.keys(tasks)
+      .map(taskId => tasks[taskId])
+      .filter(task => !isDevServerTask(task.name))
+);
+
+export const getDevServerTaskForProjectId = (
+  state: GlobalState,
+  props: {
+    projectId: string,
+    projectType: ProjectType,
+  }
 ) => {
-  return state.tasks[projectId][name];
+  switch (props.projectType) {
+    case 'create-react-app': {
+      return state.tasks[props.projectId].start;
+    }
+
+    case 'gatsby': {
+      return state.tasks[props.projectId].develop;
+    }
+
+    default:
+      throw new Error('Unrecognized project type: ' + props.projectType);
+  }
 };

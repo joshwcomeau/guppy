@@ -177,11 +177,10 @@ const mapStateToProps = state => {
 
   return {
     project: selectedProject,
-    task: getDevServerTaskForProjectId(
-      state,
-      selectedProject.id,
-      selectedProject.type
-    ),
+    task: getDevServerTaskForProjectId(state, {
+      projectId: selectedProject.id,
+      projectType: selectedProject.type,
+    }),
   };
 };
 

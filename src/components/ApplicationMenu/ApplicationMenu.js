@@ -268,11 +268,10 @@ const mapStateToProps = state => {
   const selectedProject = getSelectedProject(state);
 
   const devServerTask = selectedProject
-    ? getDevServerTaskForProjectId(
-        state,
-        selectedProject.id,
-        selectedProject.type
-      )
+    ? getDevServerTaskForProjectId(state, {
+        projectId: selectedProject.id,
+        projectType: selectedProject.type,
+      })
     : null;
 
   const projects = getProjectsArray(state);

@@ -109,8 +109,9 @@ const formatProjectPath = (homePath, projectId) =>
 //
 //
 // Selectors
-export const getProjectHomePath = (state: State = initialState) =>
-  state.homePath;
-export const getPathsArray = (state: any) => Object.values(state.paths.byId);
-export const getPathForProjectId = (state: any, projectId: string) =>
-  state.paths.byId[projectId];
+export const getPaths = (state: any) => state.paths.byId;
+export const getProjectHomePath = (state: any) => state.paths.homePath;
+export const getPathsArray = (state: any) => Object.values(getPaths(state));
+
+export const getPathForProjectId = (state: any, props: { projectId: string }) =>
+  state.paths.byId[props.projectId];
