@@ -156,6 +156,7 @@ const Wrapper = styled.div.attrs({
   display: flex;
   justify-content: center;
   align-items: center;
+  will-change: opacity;
 `;
 
 const Backdrop = styled.div`
