@@ -19,7 +19,7 @@ import {
   createDependency,
   createProject,
   createProjectInternal,
-} from '../services/test-factories.service';
+} from '../test-helpers/factories.js';
 import rootSaga, { handleAction } from './analytics.saga';
 
 describe('analytics saga', () => {
