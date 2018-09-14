@@ -159,7 +159,7 @@ class MainPane extends PureComponent<Props> {
 }
 
 const Wrapper = styled.div`
-  height: 470px;
+  height: 500px;
   will-change: transform;
 `;
 

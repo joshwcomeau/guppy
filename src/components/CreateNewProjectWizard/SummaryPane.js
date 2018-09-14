@@ -38,7 +38,7 @@ class SummaryPane extends PureComponent<Props> {
               Let's start by giving your new project a name.
             </Paragraph>
 
-            <Spacer size={100} />
+            <Spacer size={130} />
             <ImportExisting />
           </FadeIn>
         </IntroWrapper>

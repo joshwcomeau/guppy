@@ -127,6 +127,7 @@
     "redux-storage-decorator-migrate": "1.1.0",
     "redux-thunk": "2.2.0",
     "reselect": "3.0.1",
+    "resize-observer-polyfill": "1.5.0",
     "resolve": "1.6.0",
     "sass-loader": "7.0.0",
     "slug": "0.9.1",

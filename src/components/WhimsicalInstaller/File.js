@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-import type { FileStatus } from './WhimsicalInstaller.helpers';
+import type { FileStatus } from './WhimsicalInstaller.types';
 
 type Props = {
   x: number,
@@ -84,12 +84,12 @@ class File extends PureComponent<Props> {
           </defs>
           <path
             d={`
-            M0,0
-            L15,0
-            L20,5
-            L20,28
-            L0,28
-          `}
+                M0,0
+                L15,0
+                L20,5
+                L20,28
+                L0,28
+              `}
             stroke="none"
             fill={COLORS.white}
           />
@@ -106,20 +106,28 @@ class File extends PureComponent<Props> {
 }
 
 const isGrabbable = (status: FileStatus) =>
-  status !== 'being-inhaled' && status !== 'swallowed';
+  status !== 'being-captured' && status !== 'captured';
+
+const WIDTH_RATIO = 20 / 28;
 
 const Wrapper = styled.div.attrs({
   style: props => ({
-    top: props.y + 'px',
-    left: props.x + 'px',
-    transform: `translate(-50%, -50%) rotate(${props.rotation}deg)`,
+    transform: `
+      translate(
+        ${props.x - (props.size * WIDTH_RATIO) / 2}px,
+        ${props.y - props.size / 2}px
+      )
+      rotate(${props.rotation}deg)`,
   }),
 })`
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
   height: ${props => props.size}px;
   overflow: visible;
   will-change: transform;
+  transform-origin: center center;
   cursor: ${props => (isGrabbable(props.status) ? 'grab' : 'default')};
 
   &:active {
