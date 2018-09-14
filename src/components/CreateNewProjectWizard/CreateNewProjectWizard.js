@@ -29,6 +29,7 @@ type Props = {
   isOnboardingCompleted: boolean,
   addProject: (
     project: ProjectInternal,
+    projectType: ProjectType,
     isOnboardingCompleted: boolean
   ) => void,
   createNewProjectCancel: () => void,
@@ -115,11 +116,17 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
   finishBuilding = (project: ProjectInternal) => {
     const { isOnboardingCompleted } = this.props;
+    const { projectType } = this.state;
+
+    // Should be impossible
+    if (!projectType) {
+      throw new Error('Project created without projectType');
+    }
 
     this.props.createNewProjectFinish();
 
     this.timeoutId = window.setTimeout(() => {
-      this.props.addProject(project, isOnboardingCompleted);
+      this.props.addProject(project, projectType, isOnboardingCompleted);
 
       this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);

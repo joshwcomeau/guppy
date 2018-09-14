@@ -46,11 +46,11 @@ type LoggableActionsMap = {
 const loggableActions: LoggableActionsMap = {
   [ADD_PROJECT]: {
     name: 'create-project',
-    getMetadata: payload => ({ type: payload.project.type }),
+    getMetadata: payload => ({ type: payload.projectType }),
   },
   [IMPORT_EXISTING_PROJECT_FINISH]: {
     name: 'import-project',
-    getMetadata: payload => ({ type: payload.project.type }),
+    getMetadata: payload => ({ type: payload.projectType }),
   },
   [SELECT_PROJECT]: {
     name: 'select-project',
