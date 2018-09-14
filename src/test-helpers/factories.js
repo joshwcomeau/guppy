@@ -8,7 +8,11 @@ import uuid from 'uuid/v1';
 
 const sept14thTimestamp = 1536927197731;
 
-export const createTask = (overrides: any = {}) => ({
+type Overrides = {
+  [key: string]: any,
+};
+
+export const createTask = (overrides: Overrides = {}) => ({
   projectId: '6f36787f-3a7a-4b3e-a822-88b0b55db6cd',
   name: 'start',
   description: '',
@@ -20,7 +24,7 @@ export const createTask = (overrides: any = {}) => ({
   ...overrides,
 });
 
-export const createDependency = (overrides: any = {}) => ({
+export const createDependency = (overrides: Overrides = {}) => ({
   name: 'react',
   description: '',
   version: '16.5',
@@ -31,7 +35,7 @@ export const createDependency = (overrides: any = {}) => ({
   location: 'dependencies',
 });
 
-export const createProject = (overrides: any) => {
+export const createProject = (overrides: Overrides = {}) => {
   const projectId = overrides ? overrides.projectId : uuid();
 
   return {
@@ -48,7 +52,7 @@ export const createProject = (overrides: any) => {
   };
 };
 
-export const createProjectInternal = (overrides: any) => {
+export const createProjectInternal = (overrides: Overrides = {}) => {
   const projectId = overrides ? overrides.projectId : uuid();
 
   return {
