@@ -1,8 +1,6 @@
 // @flow
 import { migrateToReduxStorage } from './migrations';
 
-const ENGINE_KEY = 'test-key';
-
 describe('Redux migrations', () => {
   describe('Version 0 -> Version 1', () => {
     it('does nothing with no initial state to work with', () => {

@@ -9,15 +9,14 @@ import createProject from '../../services/create-project.service';
 
 import ProgressBar from '../ProgressBar';
 import Spacer from '../Spacer';
+import WhimsicalInstaller from '../WhimsicalInstaller';
+import AvailableWidth from '../AvailableWidth';
 import BuildStepProgress from './BuildStepProgress';
 
-import type { BuildStep } from './types';
-import type { SubmittedProject, Project } from '../../types';
+import type { BuildStep, Status } from './types';
+import type { Project, ProjectType } from '../../types';
 
 const BUILD_STEPS = {
-  creatingParentDirectory: {
-    copy: 'Creating parent directory',
-  },
   installingCliTool: {
     copy: 'Installing build tool',
   },
@@ -36,30 +35,69 @@ const BUILD_STEPS = {
 const BUILD_STEP_KEYS: Array<BuildStep> = Object.keys(BUILD_STEPS);
 
 type Props = {
-  project: SubmittedProject,
+  projectName: string,
+  projectType: ?ProjectType,
+  projectIcon: ?string,
+  status: Status,
   handleCompleteBuild: (project: Project) => void,
 };
 
 type State = {
   currentBuildStep: BuildStep,
   progress: number,
+  runInstaller: boolean,
 };
 
 class BuildPane extends PureComponent<Props, State> {
+  timeoutId: ?number;
   state = {
     currentBuildStep: BUILD_STEPS[0],
-    completed: false,
     progress: 0,
+    runInstaller: false,
   };
 
-  componentDidMount() {
+  componentDidUpdate(prevProps: Props) {
+    if (
+      prevProps.status === 'filling-in-form' &&
+      this.props.status === 'building-project'
+    ) {
+      this.buildProject();
+
+      // We want to wait a bit before starting the whimsy animation, because
+      // at this very moment, the pane is just beginning to unfold. We don't
+      // want to re-render mid-animation!
+      //
+      // Also, WhimsicalInstaller takes its bounding-box measurements when
+      // `runInstaller` becomes true, so we want it to be in its final position
+      // when this happens. Otherwise, clicking files in the air instantly
+      // "teleports" them a couple inches from the mouse :/
+      this.timeoutId = window.setTimeout(() => {
+        this.setState({ runInstaller: true });
+      }, 1000);
+    }
+  }
+
+  buildProject = () => {
+    const { projectName, projectType, projectIcon } = this.props;
+
+    if (!projectName || !projectType || !projectIcon) {
+      console.error('Missing one of:', {
+        projectName,
+        projectType,
+        projectIcon,
+      });
+      throw new Error(
+        'Tried to build project with insufficient data. See console for more info'
+      );
+    }
+
     createProject(
-      this.props.project,
+      { projectName, projectType, projectIcon },
       this.handleStatusUpdate,
       this.handleError,
       this.handleComplete
     );
-  }
+  };
 
   handleStatusUpdate = (output: any) => {
     // HACK: So, I need some way of translating the raw output from CRA
@@ -68,14 +106,9 @@ class BuildPane extends PureComponent<Props, State> {
     // but I don't have any better ideas.
     const message = output.toString();
 
-    if (message.match(/Created parent directory/i)) {
+    if (message.match(/Installing packages/i)) {
       this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[1],
-        progress: 0.1,
-      });
-    } else if (message.match(/Installing packages/i)) {
-      this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[3],
+        currentBuildStep: BUILD_STEP_KEYS[2],
         progress: 0.4,
       });
       // eslint-disable-next-line no-control-regex
@@ -105,7 +138,7 @@ class BuildPane extends PureComponent<Props, State> {
       }));
     } else if (message.match(/Dependencies installed/i)) {
       this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[4],
+        currentBuildStep: BUILD_STEP_KEYS[3],
         progress: 0.9,
       });
     }
@@ -119,7 +152,7 @@ class BuildPane extends PureComponent<Props, State> {
       // Everything appears to work though, so I'm just going to treat this
       // as a success.
       this.setState({
-        currentBuildStep: BUILD_STEP_KEYS[2],
+        currentBuildStep: BUILD_STEP_KEYS[1],
         progress: 0.2,
       });
     }
@@ -134,7 +167,7 @@ class BuildPane extends PureComponent<Props, State> {
   };
 
   render() {
-    const { currentBuildStep, progress } = this.state;
+    const { currentBuildStep, progress, runInstaller } = this.state;
 
     return (
       <Wrapper>
@@ -153,6 +186,15 @@ class BuildPane extends PureComponent<Props, State> {
             damping={progress === 1 ? 22 : 32}
           />
         </ProgressBarWrapper>
+
+        <WhimsicalWrapper>
+          <AvailableWidth>
+            {width => (
+              <WhimsicalInstaller isRunning={runInstaller} width={width} />
+            )}
+          </AvailableWidth>
+        </WhimsicalWrapper>
+
         <Title>Building Project...</Title>
 
         <BuildSteps>
@@ -194,7 +236,6 @@ const Wrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   height: 100%;
-  padding: 40px;
   background-image: linear-gradient(
     45deg,
     ${COLORS.blue[900]},
@@ -219,8 +260,17 @@ const BuildSteps = styled.div`
 `;
 
 const Title = styled.h1`
+  padding: 0 40px;
+  margin-top: -30px;
   font-size: 36px;
   text-align: center;
+`;
+
+const WhimsicalWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  /* Make sure it sits below the "Finished" overlay, when completed */
+  z-index: 1;
 `;
 
 const Finished = styled.div`

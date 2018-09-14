@@ -11,16 +11,23 @@ describe('WhimsicalInstaller helpers', () => {
     it('creates a valid path', () => {
       const width = 600;
       const height = 200;
+      const startPoint = { x: 100, y: 100 };
+      const endPoint = { x: 500, y: 100 };
 
-      const actualOutput = generateFlightPath(width, height);
+      const actualOutput = generateFlightPath(
+        width,
+        height,
+        startPoint,
+        endPoint
+      );
 
       // We expect a path to be created with predictable start/end points,
       // but the control point has an element of randomness on its `y` coord.
       expect(actualOutput.startPoint).toEqual({ x: 100, y: 100 });
       expect(actualOutput.endPoint).toEqual({ x: 500, y: 100 });
       expect(actualOutput.controlPoint.x).toEqual(300);
-      expect(actualOutput.controlPoint.y).toBeGreaterThanOrEqual(-60);
-      expect(actualOutput.controlPoint.y).toBeLessThanOrEqual(40);
+      expect(actualOutput.controlPoint.y).toBeGreaterThanOrEqual(height * -0.2);
+      expect(actualOutput.controlPoint.y).toBeLessThanOrEqual(height * 0.35);
     });
   });
 

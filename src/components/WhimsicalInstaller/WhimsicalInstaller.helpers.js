@@ -1,37 +1,13 @@
 // @flow
 import { random } from '../../utils';
 
-export type Point = { x: number, y: number };
-
-type BezierPath = {
-  startPoint: Point,
-  endPoint: Point,
-  controlPoint: Point,
-};
-
-export type FileStatus =
-  | 'autonomous' // Flying autonomously towards the file
-  | 'being-inhaled' // Very close to the folder, being sucked in
-  | 'swallowed' // At the very center of the folder, no longer active
-  | 'caught' // The user is grabbing the file
-  | 'released'; // The user has released a previously-grabbed file
-
-export type FileData = {
-  id: string,
-  x: number,
-  y: number,
-  size: number,
-  status: FileStatus,
-  flightPath: BezierPath,
-  speed?: {
-    horizontalSpeed: number,
-    verticalSpeed: number,
-  },
-};
+import type { Point, BezierPath } from './WhimsicalInstaller.types';
 
 export const generateFlightPath = (
   width: number,
-  height: number
+  height: number,
+  startPoint: Point,
+  endPoint: Point
 ): BezierPath => {
   // We can imagine this as an SVG created that spans the size of our area.
   //  ____________________________________
@@ -42,11 +18,8 @@ export const generateFlightPath = (
   //
   // We want to draw a quadratic bezier curve between the two, arcing up
   // slightly.
-  const startPoint = { x: width * (1 / 6), y: height * 0.5 };
-  const endPoint = { x: width * (5 / 6), y: height * 0.5 };
-
-  const minControlY = height * -0.3;
-  const maxControlY = height * 0.2;
+  const minControlY = height * -0.2;
+  const maxControlY = height * 0.35;
 
   const controlPoint = {
     x: width * 0.5,

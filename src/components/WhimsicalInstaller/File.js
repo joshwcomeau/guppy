@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-import type { FileStatus } from './WhimsicalInstaller.helpers';
+import type { FileStatus } from './WhimsicalInstaller.types';
 
 type Props = {
   x: number,
@@ -106,7 +106,7 @@ class File extends PureComponent<Props> {
 }
 
 const isGrabbable = (status: FileStatus) =>
-  status !== 'being-inhaled' && status !== 'swallowed';
+  status !== 'being-captured' && status !== 'captured';
 
 const WIDTH_RATIO = 20 / 28;
 
