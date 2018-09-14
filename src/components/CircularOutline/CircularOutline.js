@@ -26,9 +26,6 @@
  *                      can be animated
  *
  * There's surely a lot of room for improvement with this flow.
- *
- * Also, this component is oblivious to any parent resize-changes, so don't use
- * it in a component that has the propensity to change sizes.
  */
 import React, { Component } from 'react';
 import styled from 'styled-components';
@@ -62,7 +59,7 @@ class RoundedOutline extends Component<Props, State> {
   };
 
   wrapperNode: HTMLElement;
-  shapeNode: HTMLElement;
+  shapeNode: any; // "SVGPathElement" (which cannot be resolved), we need "getTotalLength()"
 
   static defaultProps = {
     color1: COLORS.purple[500],
@@ -80,16 +77,26 @@ class RoundedOutline extends Component<Props, State> {
   }
 
   componentDidUpdate(_: Props, prevState: State) {
-    if (
-      prevState.width == null &&
-      prevState.height == null &&
-      this.state.width !== null &&
-      this.state.height !== null
-    ) {
-      // $FlowFixMe
-      const pathLength = this.shapeNode.getTotalLength();
+    if (this.state.width !== null && this.state.height !== null) {
+      if (prevState.width == null && prevState.height == null) {
+        const pathLength = this.shapeNode.getTotalLength();
 
-      this.setState({ pathLength });
+        this.setState({ pathLength });
+      } else {
+        const { width, height } = this.wrapperNode.getBoundingClientRect();
+
+        if (this.state.width !== width || this.state.height !== height) {
+          this.setState({ width, height });
+        }
+      }
+    }
+
+    if (this.state.pathLength !== null) {
+      const newPathLength = this.shapeNode.getTotalLength();
+
+      if (this.state.pathLength !== newPathLength) {
+        this.setState({ pathLength: newPathLength });
+      }
     }
 
     if (prevState.pathLength === 0 && this.state.pathLength !== 0) {
@@ -147,7 +154,7 @@ class RoundedOutline extends Component<Props, State> {
                   width={width}
                   height={height}
                   rx={height / 2}
-                  ry={width / 2}
+                  ry={height / 2}
                   fill="none"
                   stroke={`url(#${svgId})`}
                   strokeWidth={strokeWidth}
