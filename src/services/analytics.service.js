@@ -1,6 +1,7 @@
 // @flow
 /**
  * We currently use Mixpanel for our analytics.
+ *
  * The goal of this file is to abstract that API, so that it can easily be
  * swapped in the future for a different provider.
  */
@@ -13,7 +14,7 @@ import electronStore from './electron-store.service';
 export const MIXPANEL_KEY = '5840a1a4b9bdcdb518471f0e0830baa2';
 const DISTINCT_ID_KEY = 'distinct-id';
 
-type Event =
+export type EventType =
   | 'load-application'
   | 'create-project'
   | 'import-project'
@@ -39,7 +40,7 @@ export const createLogger = (environment?: ?string = process.env.NODE_ENV) => {
   mixpanel.identify(distinctId);
 
   return {
-    logEvent: (event: Event, data: any) => {
+    logEvent: (event: EventType, data: any) => {
       if (environment !== 'production') {
         console.info('Event tracked', event, data);
         return;
