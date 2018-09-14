@@ -565,7 +565,7 @@ Object {
     };
     const action = { type: RESET_ALL_STATE };
 
-    expect(reducer(prevState, action)).toMatchInlineSnapshot(`Object {}`);
+    expect(reducer(prevState, action)).toEqual(initialState);
   });
 });
 
