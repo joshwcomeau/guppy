@@ -21,11 +21,12 @@ import {
   ADD_PROJECT,
   IMPORT_EXISTING_PROJECT_FINISH,
   SELECT_PROJECT,
+  LAUNCH_DEV_SERVER,
+  RUN_TASK,
   CLEAR_CONSOLE,
   ADD_DEPENDENCY,
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
-  RUN_TASK,
   FINISH_DELETING_PROJECT,
 } from '../actions';
 
@@ -53,6 +54,10 @@ const loggableActions: LoggableActionsMap = {
   },
   [SELECT_PROJECT]: {
     name: 'select-project',
+    getMetadata: payload => ({}),
+  },
+  [LAUNCH_DEV_SERVER]: {
+    name: 'launch-dev-server',
     getMetadata: payload => ({}),
   },
   [RUN_TASK]: {
