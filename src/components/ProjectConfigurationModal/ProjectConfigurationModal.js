@@ -8,7 +8,7 @@ import * as actions from '../../actions';
 
 import { COLORS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { isQueueEmpty } from '../../reducers/queue.reducer';
+import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -197,7 +197,7 @@ const mapStateToProps = state => {
   const project = getSelectedProject(state);
   const projectId = project && project.id;
 
-  const dependenciesChangingForProject = isQueueEmpty(state, { projectId });
+  const dependenciesChangingForProject = getIsQueueEmpty(state, { projectId });
 
   return {
     project,
