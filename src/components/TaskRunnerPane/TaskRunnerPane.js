@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
-import { getTasksInTaskListForProjectId } from '../../reducers/tasks.reducer';
+import {
+  getTasksInTaskListForProjectId,
+  isTaskDisabled,
+} from '../../reducers/tasks.reducer';
 import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Module from '../Module';
@@ -43,18 +46,6 @@ class TaskRunnerPane extends Component<Props, State> {
     }
   }
 
-  isTaskDisabled = (taskName: string) => {
-    const { dependenciesChangingForProject } = this.props;
-
-    // We want to lock the 'build' task while dependencies are being changed,
-    // as builds will likely fail during this time.
-    if (taskName === 'build') {
-      return dependenciesChangingForProject;
-    }
-
-    return false;
-  };
-
   handleToggleTask = (taskName: string) => {
     const { tasks, runTask, abortTask } = this.props;
 
@@ -82,7 +73,7 @@ class TaskRunnerPane extends Component<Props, State> {
   };
 
   render() {
-    const { tasks } = this.props;
+    const { tasks, dependenciesChangingForProject } = this.props;
     const { selectedTaskName } = this.state;
 
     if (tasks.length === 0) {
@@ -106,7 +97,7 @@ class TaskRunnerPane extends Component<Props, State> {
             description={task.description}
             status={task.status}
             processId={task.processId}
-            disabled={this.isTaskDisabled(task.name)}
+            isDisabled={isTaskDisabled(task, dependenciesChangingForProject)}
             onToggleTask={this.handleToggleTask}
             onViewDetails={this.handleViewDetails}
           />

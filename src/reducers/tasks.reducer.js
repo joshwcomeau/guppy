@@ -267,6 +267,19 @@ const getTaskType = name => {
   return sustainedTasks.includes(name) ? 'sustained' : 'short-term';
 };
 
+export const isTaskDisabled = (
+  task: Task,
+  dependenciesChangingForProject: boolean
+) => {
+  // We want to lock the 'build' task while dependencies are being changed,
+  // as builds will likely fail during this time.
+  if (task.name === 'build') {
+    return dependenciesChangingForProject;
+  }
+
+  return false;
+};
+
 // TODO: A lot of this stuff shouldn't be done here :/ maybe best to resolve
 // this in an action before it hits the reducer?
 const buildNewTask = (
