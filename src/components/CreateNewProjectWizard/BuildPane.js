@@ -7,10 +7,8 @@ import { check } from 'react-icons-kit/feather/check';
 import { COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
 
-import ProgressBar from '../ProgressBar';
 import Spacer from '../Spacer';
 import WhimsicalInstaller from '../WhimsicalInstaller';
-import AvailableWidth from '../AvailableWidth';
 import BuildStepProgress from './BuildStepProgress';
 
 import type { BuildStep, Status } from './types';
@@ -45,7 +43,7 @@ type Props = {
 
 type State = {
   currentBuildStep: BuildStep,
-  progress: number,
+  isCompleted: boolean,
   runInstaller: boolean,
 };
 
@@ -53,7 +51,7 @@ class BuildPane extends PureComponent<Props, State> {
   timeoutId: ?number;
   state = {
     currentBuildStep: BUILD_STEPS[0],
-    progress: 0,
+    isCompleted: false,
     runInstaller: false,
   };
 
@@ -62,8 +60,6 @@ class BuildPane extends PureComponent<Props, State> {
       prevProps.status === 'filling-in-form' &&
       this.props.status === 'building-project'
     ) {
-      this.buildProject();
-
       // We want to wait a bit before starting the whimsy animation, because
       // at this very moment, the pane is just beginning to unfold. We don't
       // want to re-render mid-animation!
@@ -73,8 +69,12 @@ class BuildPane extends PureComponent<Props, State> {
       // when this happens. Otherwise, clicking files in the air instantly
       // "teleports" them a couple inches from the mouse :/
       this.timeoutId = window.setTimeout(() => {
-        this.setState({ runInstaller: true });
-      }, 1000);
+        this.buildProject();
+
+        this.timeoutId = window.setTimeout(() => {
+          this.setState({ runInstaller: true });
+        }, 500);
+      }, 600);
     }
   }
 
@@ -111,37 +111,10 @@ class BuildPane extends PureComponent<Props, State> {
     if (message.match(/Installing packages/i)) {
       this.setState({
         currentBuildStep: BUILD_STEP_KEYS[2],
-        progress: 0.4,
       });
-      // eslint-disable-next-line no-control-regex
-    } else if (message.match(/Installing \[36mreact/i)) {
-      this.setState(state => ({
-        progress: state.progress + 0.025,
-      }));
-    } else if (message.match(/No lockfile found/i)) {
-      this.setState(state => ({
-        progress: state.progress + 0.025,
-      }));
-    } else if (message.match(/Resolving packages/i)) {
-      this.setState(state => ({
-        progress: state.progress + 0.05,
-      }));
-    } else if (message.match(/Fetching packages/i)) {
-      this.setState(state => ({
-        progress: state.progress + 0.05,
-      }));
-    } else if (message.match(/Linking dependencies/i)) {
-      this.setState(state => ({
-        progress: state.progress + 0.05,
-      }));
-    } else if (message.match(/Building fresh packages/i)) {
-      this.setState(state => ({
-        progress: state.progress + 0.15,
-      }));
     } else if (message.match(/Dependencies installed/i)) {
       this.setState({
         currentBuildStep: BUILD_STEP_KEYS[3],
-        progress: 0.9,
       });
     }
   };
@@ -155,25 +128,25 @@ class BuildPane extends PureComponent<Props, State> {
       // as a success.
       this.setState({
         currentBuildStep: BUILD_STEP_KEYS[1],
-        progress: 0.2,
       });
     }
   };
 
   handleComplete = (project: ProjectInternal) => {
-    this.setState({ progress: 1 });
+    this.setState({ isCompleted: true });
 
     window.setTimeout(() => {
+      // Allow for the "Succeeded!" message to flash before closing the modal
       this.props.handleCompleteBuild(project);
     }, 2000);
   };
 
   render() {
-    const { currentBuildStep, progress, runInstaller } = this.state;
+    const { currentBuildStep, isCompleted, runInstaller } = this.state;
 
     return (
       <Wrapper>
-        <Finished isVisible={progress === 1}>
+        <Finished isVisible={isCompleted}>
           <FinishedInnerWrapper>
             <IconBase size={128} icon={check} />
             <Spacer size={20} />
@@ -181,23 +154,15 @@ class BuildPane extends PureComponent<Props, State> {
           </FinishedInnerWrapper>
         </Finished>
 
-        <ProgressBarWrapper>
-          <ProgressBar
-            progress={progress}
-            stiffness={progress === 1 ? 128 : 64}
-            damping={progress === 1 ? 22 : 32}
-          />
-        </ProgressBarWrapper>
+        <Title>Building Project...</Title>
 
         <WhimsicalWrapper>
-          <AvailableWidth>
-            {width => (
-              <WhimsicalInstaller isRunning={runInstaller} width={width} />
-            )}
-          </AvailableWidth>
+          {/*
+            NOTE: Hardcoding a width because the performance suffers if it's
+            computed dynamically
+          */}
+          <WhimsicalInstaller isRunning={runInstaller} width={420} />
         </WhimsicalWrapper>
-
-        <Title>Building Project...</Title>
 
         <BuildSteps>
           {BUILD_STEP_KEYS.map(stepKey => {
@@ -205,7 +170,7 @@ class BuildPane extends PureComponent<Props, State> {
 
             let stepStatus;
 
-            if (progress === 1) {
+            if (isCompleted) {
               stepStatus = 'done';
             } else if (stepKey === currentBuildStep) {
               stepStatus = 'in-progress';
@@ -247,13 +212,7 @@ const Wrapper = styled.div`
   color: ${COLORS.white};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 0;
-`;
-
-const ProgressBarWrapper = styled.div`
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  right: 4px;
+  user-select: none;
 `;
 
 const BuildSteps = styled.div`
@@ -263,9 +222,9 @@ const BuildSteps = styled.div`
 
 const Title = styled.h1`
   padding: 0 40px;
-  margin-top: -30px;
   font-size: 36px;
   text-align: center;
+  pointer-events: none;
 `;
 
 const WhimsicalWrapper = styled.div`
