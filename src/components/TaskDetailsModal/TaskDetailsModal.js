@@ -240,9 +240,9 @@ const mapStateToProps = (state, ownProps) => {
     !!selectedProjectId && !getIsQueueEmpty(state, selectedProjectId);
 
   const task = getTaskByProjectIdAndTaskName(state, ownProps);
-
   const isDisabled =
     task && isTaskDisabled(task, dependenciesChangingForProject);
+
   return {
     task,
     isDisabled,
