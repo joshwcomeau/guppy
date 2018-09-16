@@ -234,12 +234,9 @@ const HorizontalRule = styled.div`
 `;
 
 const mapStateToProps = (state, ownProps) => {
-  const selectedProjectId = getSelectedProjectId(state);
-
-  const dependenciesChangingForProject =
-    !!selectedProjectId && !getIsQueueEmpty(state, selectedProjectId);
-
+  const dependenciesChangingForProject = !getIsQueueEmpty(state, ownProps);
   const task = getTaskByProjectIdAndTaskName(state, ownProps);
+
   const isDisabled =
     task && isTaskDisabled(task, dependenciesChangingForProject);
 

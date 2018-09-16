@@ -18,6 +18,7 @@ import TaskDetailsModal from '../TaskDetailsModal';
 import type { Task } from '../../types';
 
 type Props = {
+  projectId: string,
   tasks: Array<Task>,
   runTask: Function,
   abortTask: Function,
@@ -114,14 +115,12 @@ class TaskRunnerPane extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
-  const selectedProjectId = getSelectedProjectId(state);
-
+const mapStateToProps = (state, ownProps) => {
   const dependenciesChangingForProject =
-    selectedProjectId && !getIsQueueEmpty(state, selectedProjectId);
+    ownProps.projectId && !getIsQueueEmpty(state, ownProps);
 
-  const tasks = selectedProjectId
-    ? getTasksInTaskListForProjectId(state, { projectId: selectedProjectId })
+  const tasks = ownProps.projectId
+    ? getTasksInTaskListForProjectId(state, ownProps)
     : [];
 
   return { tasks, dependenciesChangingForProject };
