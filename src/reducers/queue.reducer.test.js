@@ -298,7 +298,7 @@ Object {
 
       const projectId = 'foo';
 
-      expect(getNextActionForProjectId(state, projectId))
+      expect(getNextActionForProjectId(state, { projectId }))
         .toMatchInlineSnapshot(`
 Object {
   "action": "install",
@@ -318,7 +318,7 @@ Object {
 
       const projectId = 'foo';
 
-      expect(getNextActionForProjectId(state, projectId)).toBe(undefined);
+      expect(getNextActionForProjectId(state, { projectId })).toBe(undefined);
     });
   });
 });

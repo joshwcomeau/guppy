@@ -28,7 +28,7 @@ const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 type Props = {
   project: Project | null,
   isVisible: boolean,
-  dependenciesChangingForProject: boolean,
+  dependenciesChangingForProject: ?boolean,
   hideModal: () => void,
   saveProjectSettings: (string, string, Project) => void,
 };
@@ -193,14 +193,20 @@ const DisabledText = styled.div`
   color: ${COLORS.gray[500]};
 `;
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   const project = getSelectedProject(state);
   const projectId = project && project.id;
+
+  // This component is rendered even when no project is selected.
+  // In that case, this prop isn't applicable.
+  const dependenciesChangingForProject = projectId
+    ? !isQueueEmpty(state, { projectId })
+    : null;
 
   return {
     project,
     isVisible: state.modal === 'project-settings',
-    dependenciesChangingForProject: !isQueueEmpty(state, projectId || ''),
+    dependenciesChangingForProject,
   };
 };
 

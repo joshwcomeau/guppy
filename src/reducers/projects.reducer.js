@@ -186,8 +186,15 @@ const prepareProjectForConsumption = (
     color: project.guppy.color,
     icon: project.guppy.icon,
     createdAt: project.guppy.createdAt,
-    tasks,
-    dependencies,
+    // prettier-ignore
+    tasks: tasks
+      ? Object.keys(tasks).map(taskId => tasks[taskId])
+      : [],
+    dependencies: dependencies
+      ? Object.keys(dependencies).map(
+          dependencyId => dependencies[dependencyId]
+        )
+      : [],
     path,
   };
 };
