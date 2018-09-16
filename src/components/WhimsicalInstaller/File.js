@@ -60,8 +60,8 @@ class File extends PureComponent<Props> {
         size={size}
         status={status}
         rotation={rotation}
-        onMouseDown={() =>
-          typeof handleMouseDown === 'function' && handleMouseDown(id)
+        onMouseDown={ev =>
+          typeof handleMouseDown === 'function' && handleMouseDown(ev, id)
         }
       >
         <svg viewBox="0 0 20 28" height="100%">

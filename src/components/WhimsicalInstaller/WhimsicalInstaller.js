@@ -196,10 +196,12 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     });
   };
 
-  handleClickFile = (id: string) => {
+  handleClickFile = (ev: SyntheticEvent, id: string) => {
     /**
      * Mark a file as "caught", unless the folder is in the middle of eating it
      */
+    ev.stopPropagation();
+
     const { status } = this.state.files[id];
 
     if (status === 'being-captured') {
@@ -212,14 +214,16 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     this.updateFile(id, { status: 'caught' });
   };
 
-  dragFile = ({ clientX, clientY }: any) => {
+  dragFile = (ev: any) => {
     /**
      * Drag a "caught" file around the screen
      */
+    ev.stopPropagation();
+
     const { files } = this.state;
 
-    const relativeX = clientX - this.wrapperBoundingBox.left;
-    const relativeY = clientY - this.wrapperBoundingBox.top;
+    const relativeX = ev.clientX - this.wrapperBoundingBox.left;
+    const relativeY = ev.clientY - this.wrapperBoundingBox.top;
 
     const grabbedFileId = Object.keys(files).find(
       id => files[id].status === 'caught'
@@ -259,8 +263,18 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
       return;
     }
 
-    let horizontalSpeed = relativeX - this.lastCoordinate.x;
-    let verticalSpeed = relativeY - this.lastCoordinate.y;
+    let horizontalSpeed;
+    let verticalSpeed;
+
+    // If the user clicks a file without dragging it, it's possible to not
+    // have a 'lastCoordinate'. In this case, the speed should be 0
+    if (!this.lastCoordinate) {
+      horizontalSpeed = 0;
+      verticalSpeed = 0;
+    }
+
+    horizontalSpeed = relativeX - this.lastCoordinate.x;
+    verticalSpeed = relativeY - this.lastCoordinate.y;
 
     if (!horizontalSpeed && !verticalSpeed) {
       // If the user lets the file go without moving the cursor at all, give
