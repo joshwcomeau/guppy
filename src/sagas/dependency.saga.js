@@ -30,7 +30,7 @@ export function* handleAddDependency({
   dependencyName,
   version,
 }: Action): Saga<void> {
-  const queuedAction = yield select(getNextActionForProjectId, projectId);
+  const queuedAction = yield select(getNextActionForProjectId, { projectId });
 
   yield put(queueDependencyInstall(projectId, dependencyName, version));
 
@@ -45,7 +45,7 @@ export function* handleUpdateDependency({
   dependencyName,
   latestVersion,
 }: Action): Saga<void> {
-  const queuedAction = yield select(getNextActionForProjectId, projectId);
+  const queuedAction = yield select(getNextActionForProjectId, { projectId });
 
   yield put(
     queueDependencyInstall(projectId, dependencyName, latestVersion, true)
@@ -60,7 +60,7 @@ export function* handleDeleteDependency({
   projectId,
   dependencyName,
 }: Action): Saga<void> {
-  const queuedAction = yield select(getNextActionForProjectId, projectId);
+  const queuedAction = yield select(getNextActionForProjectId, { projectId });
 
   yield put(queueDependencyUninstall(projectId, dependencyName));
 
@@ -73,7 +73,7 @@ export function* handleInstallDependenciesStart({
   projectId,
   dependencies,
 }: Action): Saga<void> {
-  const projectPath = yield select(getPathForProjectId, projectId);
+  const projectPath = yield select(getPathForProjectId, { projectId });
 
   try {
     yield call(installDependencies, projectPath, dependencies);
@@ -93,7 +93,7 @@ export function* handleUninstallDependenciesStart({
   projectId,
   dependencies,
 }: Action): Saga<void> {
-  const projectPath = yield select(getPathForProjectId, projectId);
+  const projectPath = yield select(getPathForProjectId, { projectId });
 
   try {
     yield call(uninstallDependencies, projectPath, dependencies);

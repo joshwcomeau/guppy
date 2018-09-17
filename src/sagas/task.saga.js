@@ -136,7 +136,9 @@ export function* launchDevServer({ task }: Action): Saga<void> {
 
 export function* taskRun({ task }: Action): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
-  const projectPath = yield select(getPathForProjectId, task.projectId);
+  const projectPath = yield select(getPathForProjectId, {
+    projectId: task.projectId,
+  });
   const { name } = task;
 
   // TEMPORARY HACK
