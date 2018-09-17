@@ -137,5 +137,7 @@ export const getNextActionForProjectId = (
   props: { projectId: string }
 ) => state.queue[props.projectId] && state.queue[props.projectId][0];
 
-export const isQueueEmpty = (state: any, props: { projectId: string }) =>
-  !getNextActionForProjectId(state, props);
+export const isQueueEmpty = (
+  state: any,
+  { projectId }: { projectId?: ?string }
+) => projectId && !getNextActionForProjectId(state, { projectId });

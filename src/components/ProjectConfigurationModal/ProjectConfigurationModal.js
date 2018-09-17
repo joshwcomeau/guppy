@@ -197,11 +197,7 @@ const mapStateToProps = state => {
   const project = getSelectedProject(state);
   const projectId = project && project.id;
 
-  // This component is rendered even when no project is selected.
-  // In that case, this prop isn't applicable.
-  const dependenciesChangingForProject = projectId
-    ? !isQueueEmpty(state, { projectId })
-    : null;
+  const dependenciesChangingForProject = isQueueEmpty(state, { projectId });
 
   return {
     project,
