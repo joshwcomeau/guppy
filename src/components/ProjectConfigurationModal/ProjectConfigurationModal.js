@@ -28,7 +28,7 @@ const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 type Props = {
   project: Project | null,
   isVisible: boolean,
-  dependenciesChangingForProject: ?boolean,
+  dependenciesChangingForProject: boolean,
   hideModal: () => void,
   saveProjectSettings: (string, string, Project) => void,
 };
