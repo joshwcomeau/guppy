@@ -35,21 +35,24 @@ export const windowsHomeDir = isWin ? path.join(os.homedir(), winDocPath) : '';
 export const formatCommandForPlatform = (command: string): string =>
   isWin ? `${command}.cmd` : command;
 
-export const PACKAGE_MANAGER_CMD = path.join(
-  remote.app.getAppPath(),
-  'node_modules/yarn/bin',
-  formatCommandForPlatform(PACKAGE_MANAGER)
-).replace('app.asar', 'app.asar.unpacked');
+export const PACKAGE_MANAGER_CMD = path
+  .join(
+    remote.app.getAppPath(),
+    'node_modules/yarn/bin',
+    formatCommandForPlatform(PACKAGE_MANAGER)
+  )
+  .replace('app.asar', 'app.asar.unpacked');
 
 // Forward the host env, and append the
 // project's .bin directory to PATH to allow
 // package scripts to function properly.
 export const getBaseProjectEnvironment = (projectPath: string) => ({
   ...window.process.env,
+  NODE: 'C:\\Program Files\\nodejs\\node.exe',
+  NODE_EXE: 'C:\\Program Files\\nodejs\\node.exe',
   PATH:
     window.process.env.PATH +
-    path.delimiter +
-    path.join(projectPath, 'node_modules', '.bin'),
+    path.join(projectPath, 'node_modules', '.bin', path.delimiter),
 });
 
 export const getCopyForOpeningFolder = () =>
