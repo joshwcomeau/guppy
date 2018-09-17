@@ -116,11 +116,13 @@ class TaskRunnerPane extends Component<Props, State> {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const projectId = getSelectedProjectId(state);
+
   const dependenciesChangingForProject =
-    ownProps.projectId && !getIsQueueEmpty(state, ownProps);
+    projectId && !getIsQueueEmpty(state, { projectId });
 
   const tasks = ownProps.projectId
-    ? getTasksInTaskListForProjectId(state, ownProps)
+    ? getTasksInTaskListForProjectId(state, { projectId })
     : [];
 
   return { tasks, dependenciesChangingForProject };

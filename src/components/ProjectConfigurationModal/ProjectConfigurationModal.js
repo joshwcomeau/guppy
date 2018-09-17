@@ -197,7 +197,7 @@ const mapStateToProps = state => {
   const project = getSelectedProject(state);
   const projectId = project && project.id;
 
-  const dependenciesChangingForProject = getIsQueueEmpty(state, { projectId });
+  const dependenciesChangingForProject = !getIsQueueEmpty(state, { projectId });
 
   return {
     project,

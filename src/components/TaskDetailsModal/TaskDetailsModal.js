@@ -7,7 +7,6 @@ import moment from 'moment';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
-import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import {
   getTaskByProjectIdAndTaskName,
   isTaskDisabled,

@@ -1,6 +1,5 @@
 // @flow
 import produce from 'immer';
-import { createSelector } from 'reselect';
 
 import {
   LOAD_DEPENDENCY_INFO_FROM_DISK,

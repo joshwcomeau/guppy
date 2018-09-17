@@ -106,7 +106,7 @@ class ProjectPage extends PureComponent<Props> {
           <DevelopmentServerPane leftSideWidth={300} />
 
           <Spacer size={30} />
-          <TaskRunnerPane leftSideWidth={200} projectId={project.id} />
+          <TaskRunnerPane leftSideWidth={200} />
 
           {project.dependencies.length > 0 && (
             <Fragment>
