@@ -129,3 +129,16 @@ export type Project = {
 };
 
 export type ProjectsMap = { [id: string]: Project };
+
+export type Panel = {
+  key: string,
+  Component: React$Node,
+  grid: {
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    minW: ?number,
+    maxW: ?number,
+  },
+};

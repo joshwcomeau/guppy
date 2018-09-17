@@ -1,4 +1,6 @@
 import { injectGlobal } from 'styled-components';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 import 'react-tippy/dist/tippy.css';
 import { COLORS } from './constants';
 import './fonts.css';

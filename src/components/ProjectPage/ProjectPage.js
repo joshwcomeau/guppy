@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
@@ -16,20 +16,78 @@ import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
 import SettingsButton from '../SettingsButton';
+import PanelsManager from '../PanelsManager';
 import {
   openProjectInEditor,
   openProjectInFolder,
 } from '../../services/shell.service';
 import { getCopyForOpeningFolder } from '../../services/platform.service';
 
-import type { Project } from '../../types';
+import type { Project, Panel } from '../../types';
+
+// const ResponsiveGridLayout = WidthProvider(Responsive);
 
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
 };
 
-class ProjectPage extends PureComponent<Props> {
+type State = {
+  panels: Array<Panel>,
+};
+
+const defaultPanels = [
+  {
+    key: 'dev-server-panel',
+    Component: <DevelopmentServerPane leftSideWidth={300} />, // todo: check if leftSideWidth is required
+    grid: { x: 0, y: 0, w: 8, h: 12, minW: 4, maxW: 8 },
+  },
+  {
+    key: 'task-runner-panel',
+    Component: <TaskRunnerPane leftSideWidth={200} />,
+    grid: { x: 0, y: 13, w: 8, h: 8, minW: 4, maxW: 8 },
+  },
+  {
+    key: 'dependencies-panel', // component: project.dependencies.length > 0 && (
+    Component: <DependencyManagementPane />, // todo: add check `project.dependencies.length > 0 && (<DependencyManagementPane />)` to component - was in render
+    grid: { x: 0, y: 21, w: 8, h: 14, minW: 6, maxW: 12 },
+  },
+];
+
+const createPanel = (key, panels, Component) => {
+  const prevPanel = panels[panels.length - 1];
+  return {
+    // static panel for now --> later new panel selection required before addding
+    key: key + panels.length,
+    Component,
+    grid: {
+      x: 0,
+      y: prevPanel.grid.y + prevPanel.grid.h,
+      w: 8,
+      h: 8,
+      minW: 8,
+      maxW: 12,
+    },
+  };
+};
+class ProjectPage extends React.Component<Props, State> {
+  state = {
+    panels: defaultPanels,
+  };
+
+  addPanel = () => {
+    // todo: More business logic required here --> for now just add a static panel
+    //       later, we need to check the advancedPanels for the projectType and if there are panels remaining that are not already added
+    //       also selection of panelToAdd required before calling addPanel
+    // todo: Check if this requires a Saga for managing panels.
+    this.setState(({ panels }) => ({
+      panels: [
+        ...panels,
+        createPanel('test', panels, <p>{'test' + panels.length}</p>),
+      ],
+    }));
+  };
+
   openIDE = () => {
     const { project } = this.props;
     openProjectInEditor(project);
@@ -64,7 +122,7 @@ class ProjectPage extends PureComponent<Props> {
 
   render() {
     const { project } = this.props;
-
+    const { panels } = this.state;
     return (
       <FadeIn>
         <MainContentWrapper>
@@ -102,20 +160,11 @@ class ProjectPage extends PureComponent<Props> {
             </FillButton>
           </ProjectActionBar>
 
-          <Spacer size={30} />
-          <DevelopmentServerPane leftSideWidth={300} />
-
-          <Spacer size={30} />
-          <TaskRunnerPane leftSideWidth={200} />
-
-          {project.dependencies.length > 0 && (
-            <Fragment>
-              <Spacer size={30} />
-              <DependencyManagementPane />
-            </Fragment>
-          )}
-
-          <Spacer size={60} />
+          <PanelsManager
+            panels={panels}
+            addPanel={this.addPanel}
+            simpleMode={false}
+          />
         </MainContentWrapper>
       </FadeIn>
     );
