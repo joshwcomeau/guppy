@@ -1,5 +1,6 @@
 // @flow
 import produce from 'immer';
+
 import {
   QUEUE_DEPENDENCY_INSTALL,
   QUEUE_DEPENDENCY_UNINSTALL,
@@ -137,7 +138,7 @@ export const getNextActionForProjectId = (
   props: { projectId: string }
 ) => state.queue[props.projectId] && state.queue[props.projectId][0];
 
-export const isQueueEmpty = (
+export const getIsQueueEmpty = (
   state: any,
   { projectId }: { projectId?: ?string }
 ) => projectId && !getNextActionForProjectId(state, { projectId });

@@ -8,7 +8,7 @@ import * as actions from '../../actions';
 
 import { COLORS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { isQueueEmpty } from '../../reducers/queue.reducer';
+import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -28,7 +28,7 @@ const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 type Props = {
   project: Project | null,
   isVisible: boolean,
-  dependenciesChangingForProject: ?boolean,
+  dependenciesChangingForProject: boolean,
   hideModal: () => void,
   saveProjectSettings: (string, string, Project) => void,
 };
@@ -197,7 +197,7 @@ const mapStateToProps = state => {
   const project = getSelectedProject(state);
   const projectId = project && project.id;
 
-  const dependenciesChangingForProject = isQueueEmpty(state, { projectId });
+  const dependenciesChangingForProject = !getIsQueueEmpty(state, { projectId });
 
   return {
     project,

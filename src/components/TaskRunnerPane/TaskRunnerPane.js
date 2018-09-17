@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
-import { getTasksInTaskListForProjectId } from '../../reducers/tasks.reducer';
+import {
+  getTasksInTaskListForProjectId,
+  isTaskDisabled,
+} from '../../reducers/tasks.reducer';
+import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Module from '../Module';
 import TaskRunnerPaneRow from '../TaskRunnerPaneRow';
@@ -14,9 +18,11 @@ import TaskDetailsModal from '../TaskDetailsModal';
 import type { Task } from '../../types';
 
 type Props = {
+  projectId: string,
   tasks: Array<Task>,
   runTask: Function,
   abortTask: Function,
+  dependenciesChangingForProject: boolean,
 };
 
 type State = {
@@ -28,7 +34,7 @@ class TaskRunnerPane extends Component<Props, State> {
     selectedTaskName: null,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     // It's possible that this task is deleted while the modal is open;
     // For example, This can happen when ejecting the project, since the
     // create-react-app "eject" task removes itself upon completion.
@@ -41,7 +47,7 @@ class TaskRunnerPane extends Component<Props, State> {
     }
   }
 
-  handleToggleTask = taskName => {
+  handleToggleTask = (taskName: string) => {
     const { tasks, runTask, abortTask } = this.props;
 
     // eslint-disable-next-line no-shadow
@@ -59,7 +65,7 @@ class TaskRunnerPane extends Component<Props, State> {
     isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
   };
 
-  handleViewDetails = taskName => {
+  handleViewDetails = (taskName: string) => {
     this.setState({ selectedTaskName: taskName });
   };
 
@@ -68,7 +74,7 @@ class TaskRunnerPane extends Component<Props, State> {
   };
 
   render() {
-    const { tasks } = this.props;
+    const { tasks, dependenciesChangingForProject } = this.props;
     const { selectedTaskName } = this.state;
 
     if (tasks.length === 0) {
@@ -92,6 +98,7 @@ class TaskRunnerPane extends Component<Props, State> {
             description={task.description}
             status={task.status}
             processId={task.processId}
+            isDisabled={isTaskDisabled(task, dependenciesChangingForProject)}
             onToggleTask={this.handleToggleTask}
             onViewDetails={this.handleViewDetails}
           />
@@ -109,13 +116,16 @@ class TaskRunnerPane extends Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  const selectedProjectId = getSelectedProjectId(state);
+  const projectId = getSelectedProjectId(state);
 
-  const tasks = selectedProjectId
-    ? getTasksInTaskListForProjectId(state, { projectId: selectedProjectId })
+  const dependenciesChangingForProject =
+    projectId && !getIsQueueEmpty(state, { projectId });
+
+  const tasks = projectId
+    ? getTasksInTaskListForProjectId(state, { projectId })
     : [];
 
-  return { tasks };
+  return { tasks, dependenciesChangingForProject };
 };
 
 export default connect(
