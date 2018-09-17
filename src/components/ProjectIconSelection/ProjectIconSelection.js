@@ -19,7 +19,7 @@ const DEFAULT_ICON_SIZE = 60;
 type Props = {
   selectedIcon: ?string,
   showRandomSubset: boolean | number,
-  onSelectIcon: (src: string) => void,
+  onSelectIcon: (src: string, ev: SyntheticMouseEvent<*>) => void,
 };
 
 type State = {
@@ -53,7 +53,7 @@ class ProjectIconSelection extends Component<Props, State> {
             <SelectableImage
               src={src}
               size={DEFAULT_ICON_SIZE}
-              onClick={() => this.props.onSelectIcon(src)}
+              onClick={ev => this.props.onSelectIcon(src, ev)}
               status={
                 selectedIcon === null
                   ? 'default'

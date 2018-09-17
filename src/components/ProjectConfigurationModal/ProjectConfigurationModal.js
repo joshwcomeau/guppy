@@ -79,7 +79,9 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
     }
   };
 
-  updateProjectIcon = (src: string) => {
+  updateProjectIcon = (src: string, ev) => {
+    ev.preventDefault();
+
     this.setState(prevState => ({
       projectIcon: src,
     }));
