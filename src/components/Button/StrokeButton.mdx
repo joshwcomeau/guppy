@@ -1,0 +1,83 @@
+---
+name: Button
+---
+
+import {Component, Fragment} from 'react'
+import { Playground, PropsTable, Docs } from 'docz'
+import {Toggle as ToggleState} from 'react-powerplug'
+
+import {COLORS} from '../../constants'
+import Showcase from '../../../.storybook/components/Showcase'
+import StrokeButton from './StrokeButton'
+
+# StrokeButton
+
+<PropsTable of={StrokeButton} />
+
+
+## Basic usage
+
+<Playground>
+  <StrokeButton>Default</StrokeButton>
+</Playground>
+
+
+## Sizes
+
+<Playground>
+  <StrokeButton size="xsmall">
+    Extra-small button
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton size="small">
+    Small button
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton size="medium">
+    Medium button
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton size="large">
+    Large button
+  </StrokeButton>
+</Playground>
+
+## Colors
+
+<Playground>
+  <StrokeButton color1={COLORS.green[500]} color2={COLORS.green[500]}>
+    Solid green
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton color1={COLORS.orange[500]} color2={COLORS.pink[300]}>
+    Orange to pink
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton color1={COLORS.teal[700]} color2={COLORS.lime[500]}>
+    Teal to lime
+  </StrokeButton>
+</Playground>
+
+
+
+## Toggleable
+
+<Playground>
+  <ToggleState>
+    {({ on, toggle }) => (
+      <StrokeButton showStroke={on} onClick={toggle}>
+        Toggle me!
+      </StrokeButton>
+    )}
+  </ToggleState>
+</Playground>
