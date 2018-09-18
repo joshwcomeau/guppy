@@ -2,6 +2,7 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "flowtype.flow-for-vscode"
+    "flowtype.flow-for-vscode",
+    "jpoissonnier.vscode-styled-components"
   ]
 }
