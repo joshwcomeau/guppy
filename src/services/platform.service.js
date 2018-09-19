@@ -48,8 +48,6 @@ export const PACKAGE_MANAGER_CMD = path
 // package scripts to function properly.
 export const getBaseProjectEnvironment = (projectPath: string) => ({
   ...window.process.env,
-  NODE: 'C:\\Program Files\\nodejs\\node.exe',
-  NODE_EXE: 'C:\\Program Files\\nodejs\\node.exe',
   PATH:
     window.process.env.PATH +
     path.join(projectPath, 'node_modules', '.bin', path.delimiter),
