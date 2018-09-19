@@ -13,7 +13,7 @@ const icons: Array<mixed> = importAll.sync(
 );
 const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 
-const DEFAULT_SUBSET = 21;
+const DEFAULT_SUBSET_LENGTH = 21;
 const DEFAULT_ICON_SIZE = 60;
 
 type Props = {
@@ -24,13 +24,17 @@ type Props = {
 };
 
 class ProjectIconSelection extends Component<Props> {
+  static defaultProps = {
+    limitTo: DEFAULT_SUBSET_LENGTH,
+  };
+
   randomizedIcons = shuffle(iconSrcs);
 
   render() {
     const { selectedIcon, limitTo, randomize } = this.props;
 
     const iconSet = randomize ? this.randomizedIcons : iconSrcs;
-    const shownIconSubset = iconSet.slice(0, limitTo || DEFAULT_SUBSET);
+    const shownIconSubset = iconSet.slice(0, limitTo);
 
     return (
       <ProjectIconWrapper>
@@ -62,11 +66,6 @@ const ProjectIconWrapper = styled.div`
 const SelectableImageWrapper = styled.div`
   display: inline-block;
   margin: 0px 10px 10px 0px;
-  @media ${BREAKPOINTS.sm} {
-    &:nth-of-type(n + 9) {
-      display: none;
-    }
-  }
 `;
 
 export default ProjectIconSelection;
