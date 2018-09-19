@@ -55,8 +55,7 @@ export const range = function(start, end, step) {
 };
 /* eslint-enable */
 
-export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
-export const sampleMany = (arr, size) => {
+export const shuffle = arr => {
   var shuffled = arr.slice(0),
     i = arr.length,
     temp,
@@ -67,7 +66,12 @@ export const sampleMany = (arr, size) => {
     shuffled[index] = shuffled[i];
     shuffled[i] = temp;
   }
-  return shuffled.slice(0, size);
+  return shuffled;
+};
+
+export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
+export const sampleMany = (arr, size) => {
+  return shuffle(arr).slice(0, size);
 };
 
 export const random = (min, max) =>
