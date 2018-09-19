@@ -110,7 +110,8 @@ class MainPane extends PureComponent<Props> {
                   >
                     <ProjectIconSelection
                       selectedIcon={projectIcon}
-                      showRandomSubset={true}
+                      randomize={true}
+                      limitTo={8}
                       onSelectIcon={this.updateProjectIcon}
                     />
                   </FormField>

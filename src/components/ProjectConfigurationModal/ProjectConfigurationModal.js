@@ -124,7 +124,6 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
             >
               <ProjectIconSelection
                 selectedIcon={projectIcon}
-                showRandomSubset={false}
                 onSelectIcon={this.updateProjectIcon}
               />
             </FormField>
