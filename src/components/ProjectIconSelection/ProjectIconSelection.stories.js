@@ -13,7 +13,7 @@ storiesOf('ProjectIconSelection', module).add(
     <Fragment>
       <Showcase label="Image selected">
         <ProjectIconSelection
-          selectedIcon={'/static/media/icon_pineapple.5d31b188.jpg'}
+          selectedIcon="/static/media/icon_pineapple.5d31b188.jpg"
           onSelectIcon={action('click')}
         />
       </Showcase>

@@ -70,9 +70,7 @@ export const shuffle = arr => {
 };
 
 export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
-export const sampleMany = (arr, size) => {
-  return shuffle(arr).slice(0, size);
-};
+export const sampleMany = (arr, size) => shuffle(arr).slice(0, size);
 
 export const random = (min, max) =>
   Math.floor(Math.random() * (max - min)) + min;
