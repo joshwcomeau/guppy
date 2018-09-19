@@ -14,28 +14,29 @@ storiesOf('ProjectIconSelection', module).add(
       <Showcase label="Image selected">
         <ProjectIconSelection
           selectedIcon={'/static/media/icon_pineapple.5d31b188.jpg'}
-          showRandomSubset={false}
           onSelectIcon={action('click')}
         />
       </Showcase>
-      <Showcase label="All available icons">
+      <Showcase label="All available icons by not passing a value to limitTo prop (max default number is 21)">
         <ProjectIconSelection
           selectedIcon={null}
-          showRandomSubset={false}
+          randomize={false}
           onSelectIcon={action('click')}
         />
       </Showcase>
-      <Showcase label="Show a default subset of icons (10)">
+      <Showcase label="Show a limited number of icons">
         <ProjectIconSelection
           selectedIcon={null}
-          showRandomSubset={true}
+          randomize={true}
+          limitTo={10}
           onSelectIcon={action('click')}
         />
       </Showcase>
-      <Showcase label="Show a custom subset of icons">
+      <Showcase label="Show a random subset of icons">
         <ProjectIconSelection
           selectedIcon={null}
-          showRandomSubset={5}
+          randomize={true}
+          limitTo={5}
           onSelectIcon={action('click')}
         />
       </Showcase>

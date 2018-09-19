@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import importAll from 'import-all.macro';
 
-import { sampleMany } from '../../utils';
+import { shuffle } from '../../utils';
 import { BREAKPOINTS } from '../../constants';
 
 import SelectableImage from '../SelectableImage';
@@ -13,42 +13,28 @@ const icons: Array<mixed> = importAll.sync(
 );
 const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 
-const DEFAULT_SUBSET = 10;
+const DEFAULT_SUBSET = 21;
 const DEFAULT_ICON_SIZE = 60;
 
 type Props = {
   selectedIcon: ?string,
-  showRandomSubset: boolean | number,
+  limitTo?: number,
+  randomize?: boolean,
   onSelectIcon: (src: string, ev: SyntheticMouseEvent<*>) => void,
 };
 
-type State = {
-  selectableIcons: Array<string>,
-};
+class ProjectIconSelection extends Component<Props> {
+  randomizedIcons = shuffle(iconSrcs);
 
-class ProjectIconSelection extends Component<Props, State> {
-  state = {
-    selectableIcons: [],
-  };
-  componentDidMount() {
-    const { showRandomSubset } = this.props;
-    const selectableIcons = !showRandomSubset
-      ? iconSrcs
-      : typeof showRandomSubset === 'number'
-        ? sampleMany(iconSrcs, showRandomSubset)
-        : sampleMany(iconSrcs, DEFAULT_SUBSET);
-
-    this.setState({
-      selectableIcons,
-    });
-  }
   render() {
-    const { selectedIcon } = this.props;
-    const { selectableIcons } = this.state;
+    const { selectedIcon, limitTo, randomize } = this.props;
+
+    const iconSet = randomize ? this.randomizedIcons : iconSrcs;
+    const shownIconSubset = iconSet.slice(0, limitTo || DEFAULT_SUBSET);
 
     return (
       <ProjectIconWrapper>
-        {selectableIcons.map((src: string) => (
+        {shownIconSubset.map((src: string) => (
           <SelectableImageWrapper key={src}>
             <SelectableImage
               src={src}
