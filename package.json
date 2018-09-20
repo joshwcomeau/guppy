@@ -2,7 +2,7 @@
   "name": "guppy",
   "productName": "Guppy",
   "version": "0.2.0",
-  "private": true,
+  "private": false,
   "main": "src/electron.js",
   "homepage": "./",
   "build": {
@@ -12,7 +12,8 @@
     ],
     "asarUnpack": [
       "node_modules/yarn/"
-    ]
+    ],
+    "publish": "github"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "build": "node scripts/build.js",
     "dist": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -c.extraMetadata.main=build/electron.js",
     "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl -c.extraMetadata.main=build/electron.js",
+    "publish": "yarn dist:all --publish always",
     "test": "node scripts/test.js --env=node",
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
@@ -48,6 +50,7 @@
     "electron-debug": "2.0.0",
     "electron-devtools-installer": "2.2.4",
     "electron-store": "2.0.0",
+    "electron-updater": "3.1.2",
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",

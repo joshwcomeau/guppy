@@ -3,6 +3,7 @@
  * It handles opening our app window, and quitting the application.
  */
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
@@ -34,7 +35,84 @@ let processIds = [];
 
 const MOVE_TO_APP_FOLDER_KEY = 'leave-application-in-original-location';
 
+// This logging setup is not required for auto-updates to work,
+// but it sure makes debugging easier :)
+//-------------------------------------------------------------------
+const log = console.log;
+// autoUpdater.logger = log;
+// autoUpdater.logger.transports.file.level = 'info';
+
+//-------------------------------------------------------------------
+// Open a window that displays the version
+//
+// THIS SECTION IS NOT REQUIRED
+//
+// This isn't required for auto-updates to work, but it's easier
+// for the app to show a window than to have to click "About" to see
+// that updates are working.
+//-------------------------------------------------------------------
+// let win;
+
+// function sendStatusToWindow(text) {
+//   log.info(text);
+//   win.webContents.send('message', text);
+// }
+
+// function createUpdaterWindow() {
+//   win = new BrowserWindow();
+//   win.webContents.openDevTools();
+//   win.on('closed', () => {
+//     win = null;
+//   });
+//   const versionUrl = url.format({
+//     pathname: path.join(__dirname, '/version.html'),
+//     protocol: 'file:',
+//     slashes: true,
+//     query: `#v${app.getVersion()}`,
+//   });
+
+//   win.loadURL(versionUrl);
+//   // win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
+//   return win;
+// }
+autoUpdater.on('checking-for-update', () => {
+  // sendStatusToWindow('Checking for update...');
+  log('Checking for update...');
+});
+autoUpdater.on('update-available', info => {
+  // sendStatusToWindow('Update available.');
+  log('Update available.');
+});
+autoUpdater.on('update-not-available', info => {
+  // sendStatusToWindow('Update not available.');
+  log('Update not available.');
+});
+autoUpdater.on('error', err => {
+  // sendStatusToWindow('Error in auto-updater. ' + err);
+  log('Error in auto-updater. ' + err);
+});
+autoUpdater.on('download-progress', progressObj => {
+  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message =
+    log_message +
+    ' (' +
+    progressObj.transferred +
+    '/' +
+    progressObj.total +
+    ')';
+  // sendStatusToWindow(log_message);
+  log(log_message);
+});
+autoUpdater.on('update-downloaded', info => {
+  // sendStatusToWindow('Update downloaded');
+  log('Update downloaded');
+});
+
 function createWindow() {
+  // Check if there is a newer version
+  autoUpdater.checkForUpdatesAndNotify();
+
   // Verifies if Guppy is already in the Applications folder
   // and prompts the user to move it if it isn't
   manageApplicationLocation();
