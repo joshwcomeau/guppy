@@ -2,15 +2,12 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
-import importAll from 'import-all.macro';
 
-import { BREAKPOINTS } from '../../constants';
-import { sampleMany } from '../../utils';
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
 
 import FormField from '../FormField';
-import SelectableImage from '../SelectableImage';
+import ProjectIconSelection from '../ProjectIconSelection';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
@@ -21,9 +18,6 @@ import SubmitButton from './SubmitButton';
 
 import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
-
-const icons = importAll.sync('../../assets/images/icons/icon_*.*');
-const iconSrcs = Object.values(icons);
 
 type Props = {
   projectName: string,
@@ -40,8 +34,6 @@ type Props = {
 };
 
 class MainPane extends PureComponent<Props> {
-  iconSubset = sampleMany(iconSrcs, 10);
-
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
 
@@ -116,24 +108,12 @@ class MainPane extends PureComponent<Props> {
                     focusOnClick={false}
                     isFocused={activeField === 'projectIcon'}
                   >
-                    <ProjectIconWrapper>
-                      {this.iconSubset.map(src => (
-                        <SelectableImageWrapper key={src}>
-                          <SelectableImage
-                            src={src}
-                            size={60}
-                            onClick={() => this.updateProjectIcon(src)}
-                            status={
-                              projectIcon === null
-                                ? 'default'
-                                : projectIcon === src
-                                  ? 'highlighted'
-                                  : 'faded'
-                            }
-                          />
-                        </SelectableImageWrapper>
-                      ))}
-                    </ProjectIconWrapper>
+                    <ProjectIconSelection
+                      selectedIcon={projectIcon}
+                      randomize={true}
+                      limitTo={8}
+                      onSelectIcon={this.updateProjectIcon}
+                    />
                   </FormField>
                 </FadeIn>
               )}
@@ -176,21 +156,6 @@ const GatsbyIcon = styled.img`
 const ProjectTypeTogglesWrapper = styled.div`
   margin-top: 8px;
   margin-left: -8px;
-`;
-
-const ProjectIconWrapper = styled.div`
-  margin-top: 16px;
-`;
-
-const SelectableImageWrapper = styled.div`
-  display: inline-block;
-  margin: 0px 10px 10px 0px;
-
-  @media ${BREAKPOINTS.sm} {
-    &:nth-of-type(n + 9) {
-      display: none;
-    }
-  }
 `;
 
 const SubmitButtonWrapper = styled.div`
