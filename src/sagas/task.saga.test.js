@@ -112,10 +112,16 @@ describe('task saga', () => {
       expect(saga.next(port).value).toEqual(
         call(getDevServerCommand, task, project.type, port)
       );
-      expect(saga.next({ args, env }).value).toEqual(
+      expect(
+        saga.next({
+          args,
+          env,
+        }).value
+      ).toEqual(
         call([childProcess, childProcess.spawn], PACKAGE_MANAGER_CMD, args, {
           cwd: projectPath,
           env: { ...getBaseProjectEnvironment(projectPath), ...env },
+          shell: true,
         })
       );
     });
@@ -191,6 +197,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -210,6 +217,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -229,6 +237,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
