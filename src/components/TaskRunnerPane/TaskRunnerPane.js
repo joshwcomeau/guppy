@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
-import { getTasksInTaskListForProjectId } from '../../reducers/tasks.reducer';
+import {
+  getTasksInTaskListForProjectId,
+  isTaskDisabled,
+} from '../../reducers/tasks.reducer';
+import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Module from '../Module';
 import TaskRunnerPaneRow from '../TaskRunnerPaneRow';
@@ -14,38 +18,40 @@ import TaskDetailsModal from '../TaskDetailsModal';
 import type { Task } from '../../types';
 
 type Props = {
+  projectId: string,
   tasks: Array<Task>,
   runTask: Function,
   abortTask: Function,
+  dependenciesChangingForProject: boolean,
 };
 
 type State = {
-  selectedTaskId: ?string,
+  selectedTaskName: ?string,
 };
 
 class TaskRunnerPane extends Component<Props, State> {
   state = {
-    selectedTaskId: null,
+    selectedTaskName: null,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     // It's possible that this task is deleted while the modal is open;
     // For example, This can happen when ejecting the project, since the
     // create-react-app "eject" task removes itself upon completion.
     const selectedTaskExists = nextProps.tasks.some(
-      task => task.id === this.state.selectedTaskId
+      task => task.name === this.state.selectedTaskName
     );
 
     if (!selectedTaskExists) {
-      this.setState({ selectedTaskId: null });
+      this.setState({ selectedTaskName: null });
     }
   }
 
-  handleToggleTask = taskId => {
+  handleToggleTask = (taskName: string) => {
     const { tasks, runTask, abortTask } = this.props;
 
     // eslint-disable-next-line no-shadow
-    const task = tasks.find(task => task.id === taskId);
+    const task = tasks.find(task => task.name === taskName);
 
     // Should be impossible, this is for Flow.
     if (!task) {
@@ -59,17 +65,17 @@ class TaskRunnerPane extends Component<Props, State> {
     isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
   };
 
-  handleViewDetails = taskId => {
-    this.setState({ selectedTaskId: taskId });
+  handleViewDetails = (taskName: string) => {
+    this.setState({ selectedTaskName: taskName });
   };
 
   handleDismissTaskDetails = () => {
-    this.setState({ selectedTaskId: null });
+    this.setState({ selectedTaskName: null });
   };
 
   render() {
-    const { tasks } = this.props;
-    const { selectedTaskId } = this.state;
+    const { tasks, dependenciesChangingForProject } = this.props;
+    const { selectedTaskName } = this.state;
 
     if (tasks.length === 0) {
       // If the user deletes all `scripts` from their package.json, we don't
@@ -78,6 +84,8 @@ class TaskRunnerPane extends Component<Props, State> {
       return null;
     }
 
+    const { projectId } = tasks[0];
+
     return (
       <Module
         title="Tasks"
@@ -85,20 +93,21 @@ class TaskRunnerPane extends Component<Props, State> {
       >
         {tasks.map(task => (
           <TaskRunnerPaneRow
-            key={task.id}
-            id={task.id}
+            key={task.name}
             name={task.name}
             description={task.description}
             status={task.status}
             processId={task.processId}
+            isDisabled={isTaskDisabled(task, dependenciesChangingForProject)}
             onToggleTask={this.handleToggleTask}
             onViewDetails={this.handleViewDetails}
           />
         ))}
 
         <TaskDetailsModal
-          taskId={selectedTaskId}
-          isVisible={!!selectedTaskId}
+          projectId={projectId}
+          taskName={selectedTaskName}
+          isVisible={!!selectedTaskName}
           onDismiss={this.handleDismissTaskDetails}
         />
       </Module>
@@ -107,13 +116,16 @@ class TaskRunnerPane extends Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  const selectedProjectId = getSelectedProjectId(state);
+  const projectId = getSelectedProjectId(state);
 
-  const tasks = selectedProjectId
-    ? getTasksInTaskListForProjectId(state, selectedProjectId)
+  const dependenciesChangingForProject =
+    projectId && !getIsQueueEmpty(state, { projectId });
+
+  const tasks = projectId
+    ? getTasksInTaskListForProjectId(state, { projectId })
     : [];
 
-  return { tasks };
+  return { tasks, dependenciesChangingForProject };
 };
 
 export default connect(

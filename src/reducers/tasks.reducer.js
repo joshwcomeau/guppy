@@ -17,6 +17,8 @@
  */
 
 import produce from 'immer';
+import { createSelector } from 'reselect';
+
 import {
   REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
@@ -34,13 +36,17 @@ import {
 import type { Action } from 'redux';
 import type { Task, ProjectType } from '../types';
 
+type TaskMap = {
+  [taskName: string]: Task,
+};
+
 type State = {
-  [uniqueTaskId: string]: Task,
+  [projectId: string]: TaskMap,
 };
 
 export const initialState = {};
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH: {
       return produce(state, draftState => {
@@ -50,7 +56,9 @@ export default (state: State = initialState, action: Action) => {
           Object.keys(project.scripts).forEach(name => {
             const command = project.scripts[name];
 
-            const uniqueTaskId = buildUniqueTaskId(projectId, name);
+            if (!draftState[projectId]) {
+              draftState[projectId] = {};
+            }
 
             // If this task already exists, we need to be careful.
             //
@@ -61,13 +69,12 @@ export default (state: State = initialState, action: Action) => {
             // But! We also store a bunch of metadata in this reducer, like
             // the log history, and the `timeSinceStatusChange`. So we don't
             // want to overwrite it, we want to merge it.
-            if (draftState[uniqueTaskId]) {
-              draftState[uniqueTaskId].command = command;
+            if (draftState[projectId][name]) {
+              draftState[projectId][name].command = command;
               return;
             }
 
-            draftState[uniqueTaskId] = buildNewTask(
-              uniqueTaskId,
+            draftState[projectId][name] = buildNewTask(
               projectId,
               name,
               command
@@ -79,7 +86,7 @@ export default (state: State = initialState, action: Action) => {
 
     case ADD_PROJECT:
     case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { project, oldProjectId } = action;
+      const { project } = action;
 
       const projectId = project.guppy.id;
 
@@ -87,20 +94,17 @@ export default (state: State = initialState, action: Action) => {
         Object.keys(project.scripts).forEach(name => {
           const command = project.scripts[name];
 
-          const uniqueTaskId = buildUniqueTaskId(projectId, name);
+          if (!draftState[projectId]) {
+            draftState[projectId] = {};
+          }
 
-          draftState[uniqueTaskId] = buildNewTask(
-            uniqueTaskId,
-            projectId,
-            name,
-            command
-          );
+          draftState[projectId][name] = buildNewTask(projectId, name, command);
         });
       });
     }
 
     case SAVE_PROJECT_SETTINGS_FINISH: {
-      const { project, oldProjectId } = action;
+      const { project } = action;
 
       const projectId = project.guppy.id;
 
@@ -108,20 +112,7 @@ export default (state: State = initialState, action: Action) => {
         Object.keys(project.scripts).forEach(name => {
           const command = project.scripts[name];
 
-          const uniqueTaskId = buildUniqueTaskId(projectId, name);
-
-          draftState[uniqueTaskId] = buildNewTask(
-            uniqueTaskId,
-            projectId,
-            name,
-            command
-          );
-
-          if (projectId !== oldProjectId) {
-            // remove old taskId because we changed the id
-            const oldUniqueTaskId = buildUniqueTaskId(oldProjectId, name);
-            delete draftState[oldUniqueTaskId];
-          }
+          draftState[projectId][name] = buildNewTask(projectId, name, command);
         });
       });
     }
@@ -136,8 +127,8 @@ export default (state: State = initialState, action: Action) => {
         // For periodic tasks, though, this is a 'pending' state.
         const nextStatus = task.type === 'short-term' ? 'pending' : 'success';
 
-        draftState[task.id].status = nextStatus;
-        draftState[task.id].timeSinceStatusChange = timestamp;
+        draftState[task.projectId][task.name].status = nextStatus;
+        draftState[task.projectId][task.name].timeSinceStatusChange = timestamp;
       });
     }
 
@@ -145,7 +136,7 @@ export default (state: State = initialState, action: Action) => {
       const { task } = action;
 
       return produce(state, draftState => {
-        draftState[task.id].logs = [];
+        draftState[task.projectId][task.name].logs = [];
       });
     }
 
@@ -157,7 +148,7 @@ export default (state: State = initialState, action: Action) => {
         // TODO: We should probably do this in `REFRESH_PROJECTS_FINISH`, which
         // is called right after the eject task succeeds!
         if (task.name === 'eject') {
-          delete draftState[task.id];
+          delete draftState[task.projectId][task.name];
           return;
         }
 
@@ -176,10 +167,9 @@ export default (state: State = initialState, action: Action) => {
           nextStatus = 'idle';
         }
 
-        draftState[task.id].status = nextStatus;
-        draftState[task.id].timeSinceStatusChange = timestamp;
-
-        delete draftState[task.id].processId;
+        draftState[task.projectId][task.name].status = nextStatus;
+        draftState[task.projectId][task.name].timeSinceStatusChange = timestamp;
+        delete draftState[task.projectId][task.name].processId;
       });
     }
 
@@ -187,10 +177,10 @@ export default (state: State = initialState, action: Action) => {
       const { task, processId, port } = action;
 
       return produce(state, draftState => {
-        draftState[task.id].processId = processId;
+        draftState[task.projectId][task.name].processId = processId;
 
         if (port) {
-          draftState[task.id].port = port;
+          draftState[task.projectId][task.name].port = port;
         }
       });
     }
@@ -207,7 +197,7 @@ export default (state: State = initialState, action: Action) => {
       }
 
       return produce(state, draftState => {
-        draftState[task.id].logs.push({ id: logId, text });
+        draftState[task.projectId][task.name].logs.push({ id: logId, text });
 
         // Either set or reset a failed status, based on the data received.
         const nextStatus = isError
@@ -216,7 +206,7 @@ export default (state: State = initialState, action: Action) => {
             ? 'pending'
             : 'success';
 
-        draftState[task.id].status = nextStatus;
+        draftState[task.projectId][task.name].status = nextStatus;
       });
     }
 
@@ -232,8 +222,6 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Helpers
-const buildUniqueTaskId = (projectId, name) => `${projectId}-${name}`;
-
 export const getTaskDescription = (name: string) => {
   // NOTE: This information is currently derivable, and it's bad to store
   // derivable data in the reducer... but, I expect soon this info will be
@@ -279,15 +267,26 @@ const getTaskType = name => {
   return sustainedTasks.includes(name) ? 'sustained' : 'short-term';
 };
 
+export const isTaskDisabled = (
+  task: Task,
+  dependenciesChangingForProject: boolean
+) => {
+  // We want to lock the 'build' task while dependencies are being changed,
+  // as builds will likely fail during this time.
+  if (task.name === 'build') {
+    return dependenciesChangingForProject;
+  }
+
+  return false;
+};
+
 // TODO: A lot of this stuff shouldn't be done here :/ maybe best to resolve
 // this in an action before it hits the reducer?
 const buildNewTask = (
-  id: string,
   projectId: string,
   name: string,
   command: string
 ): Task => ({
-  id,
   name,
   projectId,
   command,
@@ -304,50 +303,51 @@ const buildNewTask = (
 // Selectors
 type GlobalState = { tasks: State };
 
-export const getTaskById = (state: GlobalState, taskId: string) =>
-  state.tasks[taskId];
-
-export const getTasksForProjectId = (
-  state: any,
-  projectId: string
-): Array<Task> =>
-  Object.keys(state.tasks)
-    .map(taskId => state.tasks[taskId])
-    .filter(task => task.projectId === projectId);
-
-export const getTasksInTaskListForProjectId = (
-  state: GlobalState,
-  projectId: string
-) =>
-  getTasksForProjectId(state, projectId).filter(
-    task => !isDevServerTask(task.name)
-  );
-
-export const getDevServerTaskForProjectId = (
-  state: GlobalState,
-  projectId: string,
-  projectType: ProjectType
-) => {
-  switch (projectType) {
-    case 'create-react-app': {
-      return state.tasks[buildUniqueTaskId(projectId, 'start')];
-    }
-
-    case 'gatsby': {
-      return state.tasks[buildUniqueTaskId(projectId, 'develop')];
-    }
-
-    default:
-      throw new Error('Unrecognized project type: ' + projectType);
-  }
-};
+export const getTasks = (state: any) => state.tasks;
 
 export const getTaskByProjectIdAndTaskName = (
   state: GlobalState,
-  projectId: string,
-  name: string
-) => {
-  const uniqueTaskId = buildUniqueTaskId(projectId, name);
+  props: {
+    projectId: string,
+    taskName: string,
+  }
+) =>
+  state.tasks[props.projectId]
+    ? state.tasks[props.projectId][props.taskName]
+    : undefined;
 
-  return state.tasks[uniqueTaskId];
+export const getTasksForProjectId = (
+  state: any,
+  props: { projectId: string }
+): TaskMap => {
+  return state.tasks[props.projectId];
+};
+
+export const getTasksInTaskListForProjectId = createSelector(
+  [getTasksForProjectId],
+  tasks =>
+    Object.keys(tasks)
+      .map(taskId => tasks[taskId])
+      .filter(task => !isDevServerTask(task.name))
+);
+
+export const getDevServerTaskForProjectId = (
+  state: GlobalState,
+  props: {
+    projectId: string,
+    projectType: ProjectType,
+  }
+) => {
+  switch (props.projectType) {
+    case 'create-react-app': {
+      return state.tasks[props.projectId].start;
+    }
+
+    case 'gatsby': {
+      return state.tasks[props.projectId].develop;
+    }
+
+    default:
+      throw new Error('Unrecognized project type: ' + props.projectType);
+  }
 };

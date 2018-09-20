@@ -22,6 +22,7 @@ import {
   CHANGE_PROJECT_HOME_PATH,
 } from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
+import { getProjectNameSlug } from '../services/create-project.service';
 
 import type { Action } from 'redux';
 
@@ -36,7 +37,7 @@ const homedir = isWin ? windowsHomeDir : os.homedir();
 // Noticing some weird quirks when I try to use a dev project on the compiled
 // "production" app, so separating their home paths should help.
 
-const initialState = {
+export const initialState = {
   homePath:
     process.env.NODE_ENV === 'development'
       ? path.join(homedir, 'guppy-projects-dev')
@@ -44,14 +45,34 @@ const initialState = {
   byId: {},
 };
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
-    case ADD_PROJECT:
-    case IMPORT_EXISTING_PROJECT_FINISH: {
-      const { projectPath, project } = action;
+    case ADD_PROJECT: {
+      const { project } = action;
+
+      const projectNameSlug = getProjectNameSlug(project.guppy.name);
+
       return produce(state, draftState => {
-        draftState.byId[project.guppy.id] =
-          projectPath || formatProjectPath(state.homePath, project.guppy.id);
+        draftState.byId[project.guppy.id] = formatProjectPath(
+          state.homePath,
+          projectNameSlug
+        );
+      });
+    }
+
+    case IMPORT_EXISTING_PROJECT_FINISH: {
+      const { project, projectPath } = action;
+
+      return produce(state, draftState => {
+        draftState.byId[project.guppy.id] = projectPath;
+      });
+    }
+
+    case SAVE_PROJECT_SETTINGS_FINISH: {
+      const { project, projectPath } = action;
+
+      return produce(state, draftState => {
+        draftState.byId[project.guppy.id] = projectPath;
       });
     }
 
@@ -61,22 +82,12 @@ export default (state: State = initialState, action: Action) => {
         draftState.homePath = homePath;
       });
     }
-    case SAVE_PROJECT_SETTINGS_FINISH: {
-      const { project, projectPath, oldProjectId } = action;
 
-      return produce(state, draftState => {
-        // remove oldId if id changed & add new path
-        if (oldProjectId !== project.guppy.id) {
-          delete draftState.byId[oldProjectId];
-          draftState.byId[project.guppy.id] = projectPath;
-        }
-      });
-    }
     case FINISH_DELETING_PROJECT: {
       const { projectId } = action;
 
       return produce(state, draftState => {
-        delete draftState[projectId];
+        delete draftState.byId[projectId];
       });
     }
 
@@ -98,8 +109,9 @@ const formatProjectPath = (homePath, projectId) =>
 //
 //
 // Selectors
-export const getProjectHomePath = (state: State = initialState) =>
-  state.homePath;
-export const getPathsArray = (state: any) => Object.values(state.paths.byId);
-export const getPathForProjectId = (state: any, projectId: string) =>
-  state.paths.byId[projectId];
+export const getPaths = (state: any) => state.paths.byId;
+export const getProjectHomePath = (state: any) => state.paths.homePath;
+export const getPathsArray = (state: any) => Object.values(getPaths(state));
+
+export const getPathForProjectId = (state: any, props: { projectId: string }) =>
+  state.paths.byId[props.projectId];

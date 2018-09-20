@@ -16,7 +16,7 @@ import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 
 export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
-  const nextAction = yield select(getNextActionForProjectId, projectId);
+  const nextAction = yield select(getNextActionForProjectId, { projectId });
 
   // if there is another item in the queue, start it
   if (nextAction) {
@@ -27,7 +27,7 @@ export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
 export function* handleStartNextActionInQueue({
   projectId,
 }: Action): Saga<void> {
-  const nextAction = yield select(getNextActionForProjectId, projectId);
+  const nextAction = yield select(getNextActionForProjectId, { projectId });
 
   // if the queue is empty, take no further action
   if (!nextAction) return;

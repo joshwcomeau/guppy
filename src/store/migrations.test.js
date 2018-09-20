@@ -2,6 +2,7 @@
 import {
   migrateToReduxStorage,
   migrateToSupportProjectHomePath,
+  migrateToSupportNestedTaskReducer,
 } from './migrations';
 import rootReducer from '../reducers';
 
@@ -142,6 +143,96 @@ describe('Redux migrations', () => {
       state = migrateToReduxStorage(state);
 
       expect(() => migrateToSupportProjectHomePath(state)).not.toThrow();
+    });
+  });
+
+  describe('Version 2 -> Version 3', () => {
+    it('does nothing with no initial state to work with', () => {
+      const persistedState = null;
+
+      const expectedOutput = persistedState;
+      const actualOutput = migrateToSupportNestedTaskReducer(persistedState);
+
+      expect(actualOutput).toEqual(expectedOutput);
+    });
+
+    it('does not affect state without tasks', () => {
+      const persistedState = {
+        projects: {
+          hello: {
+            name: 'hello',
+          },
+        },
+      };
+
+      const expectedOutput = persistedState;
+      const actualOutput = migrateToSupportNestedTaskReducer(persistedState);
+
+      expect(actualOutput).toEqual(expectedOutput);
+    });
+
+    it('converts task state', () => {
+      const persistedState = {
+        tasks: {
+          'my-wonderful-project-start': {
+            id: 'my-wonderful-project-start',
+            projectId: 'my-wonderful-project',
+            name: 'start',
+            command: 'react-scripts start',
+          },
+          'my-wonderful-project-build': {
+            id: 'my-wonderful-project-build',
+            projectId: 'my-wonderful-project',
+            name: 'build',
+            command: 'react-scripts build',
+          },
+          'another-lovely-project-start': {
+            id: 'another-lovely-project-start',
+            projectId: 'another-lovely-project',
+            name: 'start',
+            command: 'react-scripts start',
+          },
+        },
+      };
+
+      const expectedOutput = {
+        tasks: {
+          'my-wonderful-project': {
+            start: {
+              projectId: 'my-wonderful-project',
+              name: 'start',
+              command: 'react-scripts start',
+            },
+            build: {
+              projectId: 'my-wonderful-project',
+              name: 'build',
+              command: 'react-scripts build',
+            },
+          },
+          'another-lovely-project': {
+            start: {
+              projectId: 'another-lovely-project',
+              name: 'start',
+              command: 'react-scripts start',
+            },
+          },
+        },
+      };
+
+      const actualOutput = migrateToSupportNestedTaskReducer(persistedState);
+      expect(actualOutput).toEqual(expectedOutput);
+    });
+
+    it('builds without crashing', () => {
+      let state = getInitialState();
+
+      expect(() => migrateToReduxStorage(state)).not.toThrow();
+      state = migrateToReduxStorage(state);
+
+      expect(() => migrateToSupportProjectHomePath(state)).not.toThrow();
+      state = migrateToSupportProjectHomePath(state);
+
+      expect(() => migrateToSupportNestedTaskReducer(state)).not.toThrow();
     });
   });
 });

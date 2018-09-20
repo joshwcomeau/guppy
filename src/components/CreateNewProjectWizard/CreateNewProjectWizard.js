@@ -7,7 +7,7 @@ import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
-import { getProjectId } from '../../services/create-project.service';
+import { getProjectNameSlug } from '../../services/create-project.service';
 
 import TwoPaneModal from '../TwoPaneModal';
 import Debounced from '../Debounced';
@@ -18,7 +18,7 @@ import BuildPane from './BuildPane';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, Project, ProjectInternal } from '../../types';
+import type { ProjectType, ProjectInternal } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 
@@ -27,7 +27,11 @@ type Props = {
   projectHomePath: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
-  addProject: (project: Project, isOnboardingCompleted: boolean) => void,
+  addProject: (
+    project: ProjectInternal,
+    projectType: ProjectType,
+    isOnboardingCompleted: boolean
+  ) => void,
   createNewProjectCancel: () => void,
   createNewProjectFinish: () => void,
 };
@@ -73,9 +77,13 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   verifyProjectNameUniqueness = (name: string) => {
+    const { projects } = this.props;
+
     // Check to see if this name is already taken
-    const id = getProjectId(name);
-    const isAlreadyTaken = !!this.props.projects[id];
+    const slug = getProjectNameSlug(name);
+    const isAlreadyTaken = !!Object.keys(this.props.projects).some(
+      id => projects[id].name === slug
+    );
 
     if (isAlreadyTaken) {
       this.setState({ isProjectNameTaken: true });
@@ -106,13 +114,19 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     });
   };
 
-  finishBuilding = (project: Project) => {
+  finishBuilding = (project: ProjectInternal) => {
     const { isOnboardingCompleted } = this.props;
+    const { projectType } = this.state;
+
+    // Should be impossible
+    if (!projectType) {
+      throw new Error('Project created without projectType');
+    }
 
     this.props.createNewProjectFinish();
 
     this.timeoutId = window.setTimeout(() => {
-      this.props.addProject(project, isOnboardingCompleted);
+      this.props.addProject(project, projectType, isOnboardingCompleted);
 
       this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);
@@ -190,7 +204,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
 const mapStateToProps = state => ({
   projects: getById(state),
-  projectHomePath: getProjectHomePath(state.paths),
+  projectHomePath: getProjectHomePath(state),
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
 });

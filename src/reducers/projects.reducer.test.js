@@ -328,7 +328,7 @@ describe('helpers', () => {
     it('gets project by id', () => {
       const id = 'test-id';
       const state = { projects: { byId: { [id]: 'testing' } } };
-      expect(getInternalProjectById(state, id)).toBe('testing');
+      expect(getInternalProjectById(state, { projectId: id })).toBe('testing');
     });
   });
 });

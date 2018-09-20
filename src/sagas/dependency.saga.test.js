@@ -52,7 +52,7 @@ describe('Dependency sagas', () => {
       const queuedAction = null;
 
       expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
+        select(getNextActionForProjectId, { projectId })
       );
       expect(saga.next(queuedAction).value).toEqual(
         put(
@@ -71,7 +71,7 @@ describe('Dependency sagas', () => {
       };
 
       expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
+        select(getNextActionForProjectId, { projectId })
       );
       expect(saga.next(queuedAction).value).toEqual(
         put(
@@ -103,7 +103,7 @@ describe('Dependency sagas', () => {
       const queuedAction = false;
 
       expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
+        select(getNextActionForProjectId, { projectId })
       );
       expect(saga.next(queuedAction).value).toEqual(
         put(
@@ -127,7 +127,7 @@ describe('Dependency sagas', () => {
       };
 
       expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
+        select(getNextActionForProjectId, { projectId })
       );
       expect(saga.next(queuedAction).value).toEqual(
         put(
@@ -162,7 +162,7 @@ describe('Dependency sagas', () => {
       const queuedAction = null;
 
       expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
+        select(getNextActionForProjectId, { projectId })
       );
       expect(saga.next(queuedAction).value).toEqual(
         put(queueDependencyUninstall(projectId, dependency.name))
@@ -179,7 +179,7 @@ describe('Dependency sagas', () => {
       };
 
       expect(saga.next().value).toEqual(
-        select(getNextActionForProjectId, projectId)
+        select(getNextActionForProjectId, { projectId })
       );
       expect(saga.next(queuedAction).value).toEqual(
         put(queueDependencyUninstall(projectId, dependency.name))
@@ -218,7 +218,9 @@ describe('Dependency sagas', () => {
         },
       ];
 
-      expect(saga.next().value).toEqual(select(getPathForProjectId, projectId));
+      expect(saga.next().value).toEqual(
+        select(getPathForProjectId, { projectId })
+      );
       expect(saga.next(projectPath).value).toEqual(
         call(installDependencies, projectPath, action.dependencies)
       );
@@ -234,7 +236,9 @@ describe('Dependency sagas', () => {
     it('should handle error', () => {
       const error = new Error('oops');
 
-      expect(saga.next().value).toEqual(select(getPathForProjectId, projectId));
+      expect(saga.next().value).toEqual(
+        select(getPathForProjectId, { projectId })
+      );
       saga.next(projectPath);
       expect(saga.throw(error).value).toEqual(
         call([console, console.error], 'Failed to install dependencies', error)
@@ -258,7 +262,9 @@ describe('Dependency sagas', () => {
     });
 
     it('should uninstall dependencies', () => {
-      expect(saga.next().value).toEqual(select(getPathForProjectId, projectId));
+      expect(saga.next().value).toEqual(
+        select(getPathForProjectId, { projectId })
+      );
       expect(saga.next(projectPath).value).toEqual(
         call(uninstallDependencies, projectPath, action.dependencies)
       );
@@ -271,7 +277,9 @@ describe('Dependency sagas', () => {
     it('should handle error', () => {
       const error = new Error('oops');
 
-      expect(saga.next().value).toEqual(select(getPathForProjectId, projectId));
+      expect(saga.next().value).toEqual(
+        select(getPathForProjectId, { projectId })
+      );
       saga.next(projectPath);
       expect(saga.throw(error).value).toEqual(
         call(

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
@@ -14,7 +14,7 @@ type Props = {
   children: React$Node,
 };
 
-class FormField extends Component<Props> {
+class FormField extends PureComponent<Props> {
   render() {
     const { label, useLabelTag, isFocused, hasError, children } = this.props;
 

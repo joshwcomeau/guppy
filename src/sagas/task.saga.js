@@ -33,8 +33,10 @@ import type { Task, ProjectType } from '../types';
 const chalk = new chalkRaw.constructor({ level: 3 });
 
 export function* launchDevServer({ task }: Action): Saga<void> {
-  const project = yield select(getProjectById, task.projectId);
-  const projectPath = yield select(getPathForProjectId, task.projectId);
+  const project = yield select(getProjectById, { projectId: task.projectId });
+  const projectPath = yield select(getPathForProjectId, {
+    projectId: task.projectId,
+  });
 
   try {
     const port = yield call(findAvailablePort);
@@ -65,19 +67,10 @@ export function* launchDevServer({ task }: Action): Saga<void> {
 
     const stdioChannel = createStdioChannel(child, {
       stdout: emitter => data => {
-        // Ok so, unfortunately, failure-to-compile is still pushed
-        // through stdout, not stderr. We want that message specifically
-        // to trigger an error state, and so we need to parse it.
-        const text = data.toString();
+        const text = stripUnusableControlCharacters(data.toString());
 
-        // Ok, so this workflow really needs to be rewritten.
-        // We can't safely assume that all `stderr` output indicates
-        // a breaking/blocking error, since Jest writes its standard
-        // output to `stderr` (presumably to keep it from displaying in
-        // CI logs). Currently the only thing we know for sure is a
-        // breaking error is when the dev server fails to compile, so we're
-        // specifically handling that case, but we need a better, more
-        // generalized solution.
+        // Re-route "Failed to compile" messages to stderr, since this should
+        // be treated as an error.
         // TODO: refactor error handling
         const isDevServerFail = text.includes('Failed to compile');
 
@@ -88,7 +81,9 @@ export function* launchDevServer({ task }: Action): Saga<void> {
         });
       },
       stderr: emitter => data => {
-        emitter({ channel: 'stderr', text: data.toString() });
+        const text = stripUnusableControlCharacters(data.toString());
+
+        emitter({ channel: 'stderr', text });
       },
       exit: emitter => code => {
         // For Windows Support
@@ -107,11 +102,11 @@ export function* launchDevServer({ task }: Action): Saga<void> {
     while (true) {
       const message = yield take(stdioChannel);
 
-      // eslint-disable-next-line default-case
       switch (message.channel) {
         case 'stdout':
           yield put(receiveDataFromTaskExecution(task, message.text));
           break;
+
         case 'stderr':
           yield put(
             receiveDataFromTaskExecution(
@@ -121,12 +116,16 @@ export function* launchDevServer({ task }: Action): Saga<void> {
             )
           );
           break;
+
         case 'exit':
           yield call(displayTaskComplete, task, message.wasSuccessful);
           yield put(
             completeTask(task, message.timestamp, message.wasSuccessful)
           );
           break;
+
+        default:
+          throw new Error('Unexpected channel for message: ' + message.channel);
       }
     }
   } catch (err) {
@@ -137,8 +136,10 @@ export function* launchDevServer({ task }: Action): Saga<void> {
 }
 
 export function* taskRun({ task }: Action): Saga<void> {
-  const project = yield select(getProjectById, task.projectId);
-  const projectPath = yield select(getPathForProjectId, task.projectId);
+  const project = yield select(getProjectById, { projectId: task.projectId });
+  const projectPath = yield select(getPathForProjectId, {
+    projectId: task.projectId,
+  });
   const { name } = task;
 
   // TEMPORARY HACK
@@ -178,6 +179,8 @@ export function* taskRun({ task }: Action): Saga<void> {
 
   const stdioChannel = createStdioChannel(child, {
     stdout: emitter => data => {
+      const text = stripUnusableControlCharacters(data.toString());
+
       // The 'eject' task prompts the user, to ask if they're sure.
       // We can bypass this prompt, as our UI already has an alert that
       // confirms this action.
@@ -193,10 +196,12 @@ export function* taskRun({ task }: Action): Saga<void> {
         sendCommandToProcess(child, 'y');
       }
 
-      emitter({ channel: 'stdout', text: data.toString() });
+      emitter({ channel: 'stdout', text });
     },
     stderr: emitter => data => {
-      emitter({ channel: 'stderr', text: data.toString() });
+      const text = stripUnusableControlCharacters(data.toString());
+
+      emitter({ channel: 'stderr', text });
     },
     exit: emitter => code => {
       const timestamp = new Date();
@@ -209,14 +214,15 @@ export function* taskRun({ task }: Action): Saga<void> {
   while (true) {
     const message = yield take(stdioChannel);
 
-    // eslint-disable-next-line default-case
     switch (message.channel) {
       case 'stdout':
         yield put(receiveDataFromTaskExecution(task, message.text));
         break;
+
       case 'stderr':
         yield put(receiveDataFromTaskExecution(task, message.text));
         break;
+
       case 'exit':
         yield call(displayTaskComplete, task, message.wasSuccessful);
         yield put(completeTask(task, message.timestamp, message.wasSuccessful));
@@ -224,6 +230,9 @@ export function* taskRun({ task }: Action): Saga<void> {
           yield put(loadDependencyInfoFromDisk(project.id, project.path));
         }
         break;
+
+      default:
+        throw new Error('Unexpected channel for message: ' + message.channel);
     }
   }
 }
@@ -275,7 +284,7 @@ export function* taskComplete({ task }: Action): Saga<void> {
   // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
   // this instead.
   if (task.name === 'eject') {
-    const project = yield select(getProjectById, task.projectId);
+    const project = yield select(getProjectById, { projectId: task.projectId });
 
     yield put(loadDependencyInfoFromDisk(project.id, project.path));
   }
@@ -302,12 +311,12 @@ const createStdioChannel = (
       // it will throw
     };
 
-    // TODO: if this channel is ever used with async handlers, make sure to
+    // NOTE: if this channel is ever used with async handlers, make sure to
     // use an expanding buffer in order to avoid losing any information
     // passed up by the child process. Initialize it at a length of 2 because
     // at bare minimum we expect to have 2 messages queued at some point (as
     // the exit channel completes, it should emit the return code of the process
-    // and then immediately END.
+    // and then immediately END.)
   });
 };
 
@@ -333,6 +342,12 @@ export const getDevServerCommand = (
       throw new Error('Unrecognized project type: ' + projectType);
   }
 };
+
+export const stripUnusableControlCharacters = (text: string) =>
+  // The control character '[1G' is meant to "Clear vertical tab stop at
+  // current line". Unfortunately, it isn't correctly parsed, and shows
+  // up in the output as "G".
+  text.replace(/\[1G/g, '');
 
 export const sendCommandToProcess = (child: any, command: string) => {
   // Commands have to be suffixed with '\n' to signal that the command is

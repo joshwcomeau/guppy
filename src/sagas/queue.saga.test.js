@@ -29,7 +29,7 @@ describe('handleQueueActionCompleted saga', () => {
     };
 
     expect(saga.next().value).toEqual(
-      select(getNextActionForProjectId, projectId)
+      select(getNextActionForProjectId, { projectId })
     );
     expect(saga.next(nextAction).value).toEqual(
       put(startNextActionInQueue(projectId))
@@ -41,7 +41,7 @@ describe('handleQueueActionCompleted saga', () => {
     const saga = handleQueueActionCompleted({ projectId });
 
     expect(saga.next().value).toEqual(
-      select(getNextActionForProjectId, projectId)
+      select(getNextActionForProjectId, { projectId })
     );
     expect(saga.next().done).toBe(true);
   });
@@ -57,7 +57,7 @@ describe('handleStartNextActionInQueue saga', () => {
 
   it('should do nothing if the queue is empty', () => {
     expect(saga.next().value).toEqual(
-      select(getNextActionForProjectId, projectId)
+      select(getNextActionForProjectId, { projectId })
     );
     expect(saga.next().done).toBe(true);
   });
@@ -69,7 +69,7 @@ describe('handleStartNextActionInQueue saga', () => {
     };
 
     expect(saga.next().value).toEqual(
-      select(getNextActionForProjectId, projectId)
+      select(getNextActionForProjectId, { projectId })
     );
     expect(saga.next(nextAction).value).toEqual(
       put(installDependenciesStart(projectId, nextAction.dependencies))
@@ -83,7 +83,7 @@ describe('handleStartNextActionInQueue saga', () => {
     };
 
     expect(saga.next().value).toEqual(
-      select(getNextActionForProjectId, projectId)
+      select(getNextActionForProjectId, { projectId })
     );
     expect(saga.next(nextAction).value).toEqual(
       put(uninstallDependenciesStart(projectId, nextAction.dependencies))

@@ -1,5 +1,6 @@
 // @flow
 import produce from 'immer';
+
 import {
   LOAD_DEPENDENCY_INFO_FROM_DISK,
   ADD_DEPENDENCY,
@@ -17,15 +18,17 @@ import {
 import type { Action } from 'redux';
 import type { Dependency } from '../types';
 
+type DependencyMap = {
+  [dependencyName: string]: Dependency,
+};
+
 type State = {
-  [projectId: string]: {
-    [dependencyName: string]: Dependency,
-  },
+  [projectId: string]: DependencyMap,
 };
 
 export const initialState = {};
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case LOAD_DEPENDENCY_INFO_FROM_DISK: {
       const { projectId, dependencies } = action;
@@ -151,17 +154,9 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Selectors
+export const getDependencies = (state: any) => state.dependencies;
+
 export const getDependenciesForProjectId = (
   state: any,
-  projectId: string
-): Array<Dependency> => {
-  const dependenciesForProject = state.dependencies[projectId];
-
-  if (!dependenciesForProject) {
-    return [];
-  }
-
-  return Object.keys(dependenciesForProject)
-    .sort()
-    .map(dependencyName => dependenciesForProject[dependencyName]);
-};
+  props: { projectId: string }
+): DependencyMap => state.dependencies[props.projectId];

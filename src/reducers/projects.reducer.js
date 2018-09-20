@@ -1,5 +1,6 @@
 // @flow
 import { combineReducers } from 'redux';
+import { createSelector } from 'reselect';
 import produce from 'immer';
 
 import {
@@ -12,9 +13,12 @@ import {
   SELECT_PROJECT,
   RESET_ALL_STATE,
 } from '../actions';
-import { getTasksForProjectId } from './tasks.reducer';
-import { getDependenciesForProjectId } from './dependencies.reducer';
-import { getPathForProjectId } from './paths.reducer';
+import { getTasks, getTasksForProjectId } from './tasks.reducer';
+import {
+  getDependencies,
+  getDependenciesForProjectId,
+} from './dependencies.reducer';
+import { getPaths, getPathForProjectId } from './paths.reducer';
 
 import type { Action } from 'redux';
 import type { ProjectInternal, Project } from '../types';
@@ -35,7 +39,7 @@ export const initialState = {
   selectedId: null,
 };
 
-const byIdReducer = (state: ById = initialState.byId, action: Action) => {
+const byIdReducer = (state: ById = initialState.byId, action: Action = {}) => {
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH: {
       return action.projects;
@@ -89,7 +93,7 @@ const byIdReducer = (state: ById = initialState.byId, action: Action) => {
 
 const selectedIdReducer = (
   state: SelectedId = initialState.selectedId,
-  action: Action
+  action: Action = {}
 ) => {
   switch (action.type) {
     case ADD_PROJECT:
@@ -128,8 +132,18 @@ const selectedIdReducer = (
       return action.projectId;
     }
 
-    case RESET_ALL_STATE:
+    case FINISH_DELETING_PROJECT: {
+      // Right now, it is only possible to delete the currently-selected
+      // project, so this condition will always be true. This is a guard against
+      // future changes.
+      const justDeletedSelectedProject = action.projectId === state;
+
+      return justDeletedSelectedProject ? null : state;
+    }
+
+    case RESET_ALL_STATE: {
       return initialState.selectedId;
+    }
 
     default:
       return state;
@@ -155,10 +169,15 @@ type GlobalState = { projects: State };
 //
 //  - Combine it with the tasks in `tasks.reducer`, since this is much more
 //    useful than project.scripts
-//  - Solve the ugliness with `project.guppy.X`
+//  - Combine it with the dependencies in `dependencies.reducer`
+//  - Fetch the project's on-disk path from `paths.reducer`
+//  - Serve a minimal subset of the `project` fields, avoiding the weirdness
+//    with multiple names, and all the raw unnecessary package.json data.
 const prepareProjectForConsumption = (
-  state: GlobalState,
-  project: ProjectInternal
+  project,
+  tasks,
+  dependencies,
+  path
 ): Project => {
   return {
     id: project.guppy.id,
@@ -167,9 +186,16 @@ const prepareProjectForConsumption = (
     color: project.guppy.color,
     icon: project.guppy.icon,
     createdAt: project.guppy.createdAt,
-    tasks: getTasksForProjectId(state, project.guppy.id),
-    dependencies: getDependenciesForProjectId(state, project.guppy.id),
-    path: getPathForProjectId(state, project.guppy.id),
+    // prettier-ignore
+    tasks: tasks
+      ? Object.keys(tasks).map(taskId => tasks[taskId])
+      : [],
+    dependencies: dependencies
+      ? Object.keys(dependencies).map(
+          dependencyId => dependencies[dependencyId]
+        )
+      : [],
+    path,
   };
 };
 
@@ -177,23 +203,50 @@ export const getById = (state: GlobalState) => state.projects.byId;
 export const getSelectedProjectId = (state: GlobalState) =>
   state.projects.selectedId;
 
-export const getInternalProjectById = (state: GlobalState, id: string) =>
-  getById(state)[id];
+export const getInternalProjectById = (
+  state: GlobalState,
+  props: { projectId: string }
+) => getById(state)[props.projectId];
 
-export const getProjectsArray = (state: GlobalState) => {
-  // $FlowFixMe
-  return Object.values(state.projects.byId)
-    .map(project =>
-      // $FlowFixMe
-      prepareProjectForConsumption(state, project)
-    )
-    .sort((p1, p2) => (p1.createdAt < p2.createdAt ? 1 : -1));
-};
+export const getProjectsArray = createSelector(
+  [getById, getTasks, getDependencies, getPaths],
+  (byId, tasks, dependencies, paths) => {
+    return Object.keys(byId)
+      .map(projectId => {
+        const project = byId[projectId];
 
-export const getProjectById = (state: GlobalState, id: string) =>
-  prepareProjectForConsumption(state, state.projects.byId[id]);
+        return prepareProjectForConsumption(
+          project,
+          tasks[projectId],
+          dependencies[projectId],
+          paths[projectId]
+        );
+      })
+      .sort((p1, p2) => (p1.createdAt < p2.createdAt ? 1 : -1));
+  }
+);
 
-// TODO: check the perf cost of this selector, memoize if it's non-trivial.
+export const getProjectById = createSelector(
+  [
+    getInternalProjectById,
+    getTasksForProjectId,
+    getDependenciesForProjectId,
+    getPathForProjectId,
+  ],
+  (internalProject, tasks, dependencies, path) => {
+    if (!internalProject) {
+      return null;
+    }
+
+    return prepareProjectForConsumption(
+      internalProject,
+      tasks,
+      dependencies,
+      path
+    );
+  }
+);
+
 export const getSelectedProject = (state: GlobalState) => {
   const selectedId = getSelectedProjectId(state);
 
@@ -201,13 +254,7 @@ export const getSelectedProject = (state: GlobalState) => {
     return null;
   }
 
-  const project = state.projects.byId[selectedId];
-
-  if (!project) {
-    return null;
-  }
-
-  return prepareProjectForConsumption(state, project);
+  return getProjectById(state, { projectId: selectedId });
 };
 
 export const getDependencyMapForSelectedProject = (state: GlobalState) => {
@@ -217,10 +264,5 @@ export const getDependencyMapForSelectedProject = (state: GlobalState) => {
     return [];
   }
 
-  const dependencies = getDependenciesForProjectId(state, projectId);
-
-  return dependencies.reduce((acc, dep) => {
-    acc[dep.name] = dep;
-    return acc;
-  }, {});
+  return getDependenciesForProjectId(state, { projectId });
 };

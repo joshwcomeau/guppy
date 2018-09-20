@@ -12,7 +12,7 @@ import { formatCommandForPlatform } from './platform.service';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
-import type { ProjectType } from '../types';
+import type { ProjectType, ProjectInternal } from '../types';
 
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
@@ -46,7 +46,7 @@ export default (
   projectHomePath: string,
   onStatusUpdate: (update: string) => void,
   onError: (err: string) => void,
-  onComplete: (packageJson: any) => void
+  onComplete: (packageJson: ProjectInternal) => void
 ) => {
   if (DISABLE) {
     onComplete(FAKE_CRA_PROJECT);
@@ -61,11 +61,11 @@ export default (
 
   onStatusUpdate('Created parent directory');
 
-  const id = getProjectId(projectName);
+  const projectDirectoryName = getProjectNameSlug(projectName);
 
   // For Windows Support
   // To support cross platform with slashes and escapes
-  const projectPath = path.join(projectHomePath, id);
+  const projectPath = path.join(projectHomePath, projectDirectoryName);
 
   const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
 
@@ -105,7 +105,7 @@ export default (
         // name key in package.json to `gatsby-starter-default`. Overwrite it so
         // project is named correctly.
         if (projectType === 'gatsby') {
-          packageJson.name = id;
+          packageJson.name = projectDirectoryName;
         }
 
         const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
@@ -130,7 +130,7 @@ export default (
 // Helpers
 //
 
-export const getProjectId = (projectName: string) =>
+export const getProjectNameSlug = (projectName: string) =>
   slug(projectName).toLowerCase();
 
 // Exported so that getColorForProject can be tested

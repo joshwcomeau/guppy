@@ -9,6 +9,7 @@ type Props = {
   isToggled: boolean,
   size: number,
   padding: number,
+  isDisabled: boolean,
   onToggle: (isToggled: boolean) => void,
 };
 
@@ -54,7 +55,7 @@ class Toggle extends PureComponent<Props> {
   };
 
   render() {
-    const { isToggled, size, padding, onToggle } = this.props;
+    const { isToggled, size, padding, isDisabled, onToggle } = this.props;
     const doublePadding = padding * 2;
 
     return (
@@ -62,7 +63,8 @@ class Toggle extends PureComponent<Props> {
         height={size + doublePadding}
         width={size * 2 + doublePadding}
         padding={padding}
-        onClick={() => onToggle(!isToggled)}
+        isDisabled={isDisabled}
+        onClick={() => !isDisabled && onToggle(!isToggled)}
       >
         <OnBackground isVisible={isToggled}>
           <Pulsing />
@@ -104,7 +106,8 @@ const Wrapper = styled.button`
   overflow: hidden; /* Hide 'OnBackground' corners */
   outline: none; /* TODO: better a11y story */
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
+  cursor: ${props => (props.isDisabled ? 'not-allowed' : 'pointer')};
+  opacity: ${props => (props.isDisabled ? 0.5 : 1)};
 `;
 
 const OnBackground = styled.div`

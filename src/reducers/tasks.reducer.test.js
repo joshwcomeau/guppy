@@ -11,7 +11,7 @@ import reducer, { getTaskDescription, initialState } from './tasks.reducer';
 describe('Tasks reducer', () => {
   describe(REFRESH_PROJECTS_FINISH, () => {
     it('captures task data from new projects', () => {
-      const prevState = reducer(undefined, {});
+      const prevState = reducer();
 
       const action = {
         type: REFRESH_PROJECTS_FINISH,
@@ -43,49 +43,51 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          id: 'foo-start',
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'sustained',
+        foo: {
+          start: {
+            projectId: 'foo',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'sustained',
+          },
         },
-        'bar-start': {
-          id: 'bar-start',
-          projectId: 'bar',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'sustained',
+        bar: {
+          start: {
+            projectId: 'bar',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'sustained',
+          },
         },
-        'baz-start': {
-          id: 'baz-start',
-          projectId: 'baz',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'sustained',
-        },
-        'baz-build': {
-          id: 'baz-build',
-          projectId: 'baz',
-          name: 'build',
-          command: 'react-scripts build',
-          description: getTaskDescription('build'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'short-term',
+        baz: {
+          start: {
+            projectId: 'baz',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'sustained',
+          },
+          build: {
+            projectId: 'baz',
+            name: 'build',
+            command: 'react-scripts build',
+            description: getTaskDescription('build'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'short-term',
+          },
         },
       };
 
@@ -97,17 +99,18 @@ describe('Tasks reducer', () => {
       const logs = [{ text: 'Thing happened', id: '1' }];
 
       const prevState = {
-        'foo-start': {
-          id: 'foo-start',
-          projectId: 'foo',
-          name: 'start',
-          // By default, our initial state has the default command for `start`
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
-          logs,
-          type: 'sustained',
+        foo: {
+          start: {
+            projectId: 'foo',
+            name: 'start',
+            // By default, our initial state has the default command for `start`
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: timestamp,
+            logs,
+            type: 'sustained',
+          },
         },
       };
 
@@ -136,27 +139,29 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          id: 'foo-start',
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start --some-flag=true',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
-          logs,
-          type: 'sustained',
+        foo: {
+          start: {
+            projectId: 'foo',
+            name: 'start',
+            command: 'react-scripts start --some-flag=true',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: timestamp,
+            logs,
+            type: 'sustained',
+          },
         },
-        'bar-start': {
-          id: 'bar-start',
-          projectId: 'bar',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'sustained',
+        bar: {
+          start: {
+            projectId: 'bar',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'sustained',
+          },
         },
       };
 
@@ -169,16 +174,17 @@ describe('Tasks reducer', () => {
       const timestamp = new Date();
 
       const prevState = {
-        'foo-start': {
-          id: 'foo-start',
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
-          logs: [],
-          type: 'sustained',
+        foo: {
+          start: {
+            projectId: 'foo',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: timestamp,
+            logs: [],
+            type: 'sustained',
+          },
         },
       };
 
@@ -195,27 +201,29 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          id: 'foo-start',
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
-          logs: [],
-          type: 'sustained',
+        foo: {
+          start: {
+            projectId: 'foo',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: timestamp,
+            logs: [],
+            type: 'sustained',
+          },
         },
-        'bar-start': {
-          id: 'bar-start',
-          projectId: 'bar',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'sustained',
+        bar: {
+          start: {
+            projectId: 'bar',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'sustained',
+          },
         },
       };
 
@@ -226,7 +234,6 @@ describe('Tasks reducer', () => {
   describe(RUN_TASK, () => {
     it('marks a task as running', () => {
       const mainTask = {
-        id: 'foo-start',
         projectId: 'foo',
         name: 'start',
         command: 'react-scripts start',
@@ -238,17 +245,18 @@ describe('Tasks reducer', () => {
       };
 
       const prevState = {
-        'foo-start': mainTask,
-        'foo-build': {
-          id: 'foo-build',
-          projectId: 'foo',
-          name: 'build',
-          command: 'react-scripts build',
-          description: getTaskDescription('build'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'short-term',
+        foo: {
+          start: mainTask,
+          build: {
+            projectId: 'foo',
+            name: 'build',
+            command: 'react-scripts build',
+            description: getTaskDescription('build'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'short-term',
+          },
         },
       };
 
@@ -264,27 +272,27 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          id: 'foo-start',
-          projectId: 'foo',
-          name: 'start',
-          command: 'react-scripts start',
-          description: getTaskDescription('start'),
-          status: 'success',
-          timeSinceStatusChange: timestamp,
-          logs: [],
-          type: 'sustained',
-        },
-        'foo-build': {
-          id: 'foo-build',
-          projectId: 'foo',
-          name: 'build',
-          command: 'react-scripts build',
-          description: getTaskDescription('build'),
-          status: 'idle',
-          timeSinceStatusChange: null,
-          logs: [],
-          type: 'short-term',
+        foo: {
+          start: {
+            projectId: 'foo',
+            name: 'start',
+            command: 'react-scripts start',
+            description: getTaskDescription('start'),
+            status: 'success',
+            timeSinceStatusChange: timestamp,
+            logs: [],
+            type: 'sustained',
+          },
+          build: {
+            projectId: 'foo',
+            name: 'build',
+            command: 'react-scripts build',
+            description: getTaskDescription('build'),
+            status: 'idle',
+            timeSinceStatusChange: null,
+            logs: [],
+            type: 'short-term',
+          },
         },
       };
 
@@ -295,7 +303,6 @@ describe('Tasks reducer', () => {
   describe(COMPLETE_TASK, () => {
     it('marks a sustained task as idle, when it was successful', () => {
       const mainTask = {
-        id: 'foo-start',
         projectId: 'foo',
         name: 'start',
         command: 'react-scripts start',
@@ -307,7 +314,6 @@ describe('Tasks reducer', () => {
       };
 
       const otherTask = {
-        id: 'foo-build',
         projectId: 'foo',
         name: 'build',
         command: 'react-scripts build',
@@ -319,8 +325,10 @@ describe('Tasks reducer', () => {
       };
 
       const prevState = {
-        'foo-start': mainTask,
-        'foo-build': otherTask,
+        foo: {
+          start: mainTask,
+          build: otherTask,
+        },
       };
 
       const timestamp = new Date();
@@ -334,12 +342,14 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          ...mainTask,
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
+        foo: {
+          start: {
+            ...mainTask,
+            status: 'idle',
+            timeSinceStatusChange: timestamp,
+          },
+          build: otherTask,
         },
-        'foo-build': otherTask,
       };
 
       expect(actualState).toEqual(expectedState);
@@ -347,7 +357,6 @@ describe('Tasks reducer', () => {
 
     it('marks a sustained task as idle, when it fails', () => {
       const mainTask = {
-        id: 'foo-start',
         projectId: 'foo',
         name: 'start',
         command: 'react-scripts start',
@@ -359,7 +368,6 @@ describe('Tasks reducer', () => {
       };
 
       const otherTask = {
-        id: 'foo-build',
         projectId: 'foo',
         name: 'build',
         command: 'react-scripts build',
@@ -371,8 +379,10 @@ describe('Tasks reducer', () => {
       };
 
       const prevState = {
-        'foo-start': mainTask,
-        'foo-build': otherTask,
+        foo: {
+          start: mainTask,
+          build: otherTask,
+        },
       };
 
       const timestamp = new Date();
@@ -386,12 +396,14 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          ...mainTask,
-          status: 'idle',
-          timeSinceStatusChange: timestamp,
+        foo: {
+          start: {
+            ...mainTask,
+            status: 'idle',
+            timeSinceStatusChange: timestamp,
+          },
+          build: otherTask,
         },
-        'foo-build': otherTask,
       };
 
       expect(actualState).toEqual(expectedState);
@@ -399,7 +411,6 @@ describe('Tasks reducer', () => {
 
     it('marks a short-term task as success, when it was successful', () => {
       const mainTask = {
-        id: 'foo-start',
         projectId: 'foo',
         name: 'start',
         command: 'react-scripts start',
@@ -411,7 +422,6 @@ describe('Tasks reducer', () => {
       };
 
       const otherTask = {
-        id: 'foo-build',
         projectId: 'foo',
         name: 'build',
         command: 'react-scripts build',
@@ -423,8 +433,10 @@ describe('Tasks reducer', () => {
       };
 
       const prevState = {
-        'foo-start': mainTask,
-        'foo-build': otherTask,
+        foo: {
+          start: mainTask,
+          build: otherTask,
+        },
       };
 
       const timestamp = new Date();
@@ -438,12 +450,14 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          ...mainTask,
-          status: 'success',
-          timeSinceStatusChange: timestamp,
+        foo: {
+          start: {
+            ...mainTask,
+            status: 'success',
+            timeSinceStatusChange: timestamp,
+          },
+          build: otherTask,
         },
-        'foo-build': otherTask,
       };
 
       expect(actualState).toEqual(expectedState);
@@ -451,7 +465,6 @@ describe('Tasks reducer', () => {
 
     it('marks a short-term task as failed, when it fails', () => {
       const mainTask = {
-        id: 'foo-start',
         projectId: 'foo',
         name: 'start',
         command: 'react-scripts start',
@@ -463,7 +476,6 @@ describe('Tasks reducer', () => {
       };
 
       const otherTask = {
-        id: 'foo-build',
         projectId: 'foo',
         name: 'build',
         command: 'react-scripts build',
@@ -475,8 +487,10 @@ describe('Tasks reducer', () => {
       };
 
       const prevState = {
-        'foo-start': mainTask,
-        'foo-build': otherTask,
+        foo: {
+          start: mainTask,
+          build: otherTask,
+        },
       };
 
       const timestamp = new Date();
@@ -490,12 +504,14 @@ describe('Tasks reducer', () => {
 
       const actualState = reducer(prevState, action);
       const expectedState = {
-        'foo-start': {
-          ...mainTask,
-          status: 'failed',
-          timeSinceStatusChange: timestamp,
+        foo: {
+          start: {
+            ...mainTask,
+            status: 'failed',
+            timeSinceStatusChange: timestamp,
+          },
+          build: otherTask,
         },
-        'foo-build': otherTask,
       };
 
       expect(actualState).toEqual(expectedState);

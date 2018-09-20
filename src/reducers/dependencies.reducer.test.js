@@ -1,7 +1,4 @@
-import reducer, {
-  getDependenciesForProjectId,
-  initialState,
-} from './dependencies.reducer';
+import reducer, { getDependenciesForProjectId } from './dependencies.reducer';
 import {
   LOAD_DEPENDENCY_INFO_FROM_DISK,
   ADD_DEPENDENCY,
@@ -18,7 +15,7 @@ import {
 
 describe('dependencies reducer', () => {
   it('should return initial state', () => {
-    expect(reducer(undefined, {})).toEqual({});
+    expect(reducer()).toEqual({});
   });
 
   it(`should handle ${LOAD_DEPENDENCY_INFO_FROM_DISK}`, () => {
@@ -592,24 +589,29 @@ describe('getDependenciesForProjectId selector', () => {
     },
   };
 
-  it('should return empty array if project has not dependencies', () => {
-    expect(getDependenciesForProjectId(state, 'baz')).toEqual([]);
+  it('should return undefined if project has not dependencies', () => {
+    expect(getDependenciesForProjectId(state, { projectId: 'baz' })).toEqual(
+      undefined
+    );
   });
 
   it('should return array of dependencies if they exists', () => {
-    expect(getDependenciesForProjectId(state, 'foo')).toEqual([
-      {
-        name: 'react',
-        status: 'idle',
-      },
-      {
-        name: 'react-dom',
-        status: 'idle',
-      },
-      {
-        name: 'redux',
-        status: 'idle',
-      },
-    ]);
+    expect(getDependenciesForProjectId(state, { projectId: 'foo' }))
+      .toMatchInlineSnapshot(`
+Object {
+  "react": Object {
+    "name": "react",
+    "status": "idle",
+  },
+  "react-dom": Object {
+    "name": "react-dom",
+    "status": "idle",
+  },
+  "redux": Object {
+    "name": "redux",
+    "status": "idle",
+  },
+}
+`);
   });
 });

@@ -18,11 +18,11 @@ import Toggle from '../Toggle';
 import type { TaskStatus } from '../../types';
 
 type Props = {
-  id: string,
   name: string,
   description: string,
   status: TaskStatus,
   processId?: number,
+  isDisabled: boolean,
   onToggleTask: (taskId: string) => void,
   onViewDetails: (taskId: string) => void,
 };
@@ -30,17 +30,17 @@ type Props = {
 class TaskRunnerPaneRow extends PureComponent<Props> {
   render() {
     const {
-      id,
       name,
       description,
       status,
       processId,
+      isDisabled,
       onToggleTask,
       onViewDetails,
     } = this.props;
 
     return (
-      <TaskCard key={id}>
+      <TaskCard>
         <NameColumn>
           <TaskName>{capitalize(name)}</TaskName>
           <TaskDescription>{description}</TaskDescription>
@@ -52,7 +52,7 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
         </StatusColumn>
 
         <LinkColumn>
-          <StrokeButton size="small" onClick={() => onViewDetails(id)}>
+          <StrokeButton size="small" onClick={() => onViewDetails(name)}>
             View Details
           </StrokeButton>
         </LinkColumn>
@@ -63,13 +63,15 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
               width={40}
               height={34}
               isRunning={!!processId}
-              onClick={() => onToggleTask(id)}
+              disabled={isDisabled}
+              onClick={() => onToggleTask(name)}
             />
           ) : (
             <Toggle
               size={24}
               isToggled={!!processId}
-              onToggle={() => onToggleTask(id)}
+              isDisabled={isDisabled}
+              onToggle={() => onToggleTask(name)}
             />
           )}
         </ActionsColumn>

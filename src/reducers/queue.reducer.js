@@ -1,5 +1,6 @@
 // @flow
 import produce from 'immer';
+
 import {
   QUEUE_DEPENDENCY_INSTALL,
   QUEUE_DEPENDENCY_UNINSTALL,
@@ -26,7 +27,7 @@ type State = {
 
 const initialState = {};
 
-export default (state: State = initialState, action: Action) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case QUEUE_DEPENDENCY_INSTALL: {
       const { projectId, name, version, updating } = action;
@@ -132,8 +133,12 @@ export default (state: State = initialState, action: Action) => {
 //
 //
 // Selectors
-export const getNextActionForProjectId = (state: any, projectId: string) =>
-  state.queue[projectId] && state.queue[projectId][0];
+export const getNextActionForProjectId = (
+  state: any,
+  props: { projectId: string }
+) => state.queue[props.projectId] && state.queue[props.projectId][0];
 
-export const isQueueEmpty = (state: any, projectId: string) =>
-  !getNextActionForProjectId(state, projectId);
+export const getIsQueueEmpty = (
+  state: any,
+  { projectId }: { projectId?: ?string }
+) => projectId && !getNextActionForProjectId(state, { projectId });

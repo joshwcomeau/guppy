@@ -7,7 +7,11 @@ import moment from 'moment';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { capitalize } from '../../utils';
-import { getTaskById } from '../../reducers/tasks.reducer';
+import {
+  getTaskByProjectIdAndTaskName,
+  isTaskDisabled,
+} from '../../reducers/tasks.reducer';
+import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -20,8 +24,10 @@ import WindowDimensions from '../WindowDimensions';
 import type { Task } from '../../types';
 
 type Props = {
-  taskId: ?string,
+  projectId: string,
+  taskName: ?string,
   isVisible: boolean,
+  isDisabled: boolean,
   onDismiss: () => void,
   // From Redux:
   task: Task,
@@ -113,7 +119,7 @@ class TaskDetailsModal extends PureComponent<Props> {
   };
 
   renderContents() {
-    const { task, isVisible } = this.props;
+    const { task, isVisible, isDisabled } = this.props;
 
     if (!isVisible) {
       return null;
@@ -147,6 +153,7 @@ class TaskDetailsModal extends PureComponent<Props> {
             ) : (
               <Toggle
                 size={32}
+                isDisabled={isDisabled}
                 isToggled={isRunning}
                 onToggle={this.handleToggle}
               />
@@ -225,9 +232,18 @@ const HorizontalRule = styled.div`
   border-bottom: 1px solid ${COLORS.gray[200]};
 `;
 
-const mapStateToProps = (state, ownProps) => ({
-  task: getTaskById(state, ownProps.taskId),
-});
+const mapStateToProps = (state, ownProps) => {
+  const dependenciesChangingForProject = !getIsQueueEmpty(state, ownProps);
+  const task = getTaskByProjectIdAndTaskName(state, ownProps);
+
+  const isDisabled =
+    task && isTaskDisabled(task, dependenciesChangingForProject);
+
+  return {
+    task,
+    isDisabled,
+  };
+};
 
 export default connect(
   mapStateToProps,

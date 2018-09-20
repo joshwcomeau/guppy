@@ -5,6 +5,8 @@ import { loadAllProjectDependencies } from '../services/read-from-disk.service';
 
 import type {
   Project,
+  ProjectInternal,
+  ProjectType,
   ProjectsMap,
   Task,
   Dependency,
@@ -62,6 +64,7 @@ export const SHOW_RESET_STATE_PROMPT = 'SHOW_RESET_STATE_PROMPT';
 export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 
 // project config related actions
+export const SHOW_PROJECT_SETTINGS = 'SHOW_PROJECT_SETTINGS';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
@@ -70,11 +73,13 @@ export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
 // Action Creators
 //
 export const addProject = (
-  project: Project,
+  project: ProjectInternal,
+  projectType: ProjectType,
   isOnboardingCompleted: boolean
 ) => ({
   type: ADD_PROJECT,
   project,
+  projectType,
   isOnboardingCompleted,
 });
 
@@ -320,12 +325,14 @@ export const importExistingProjectError = () => ({
 
 export const importExistingProjectFinish = (
   projectPath: string,
-  project: Project,
+  project: ProjectInternal,
+  projectType: ProjectType,
   isOnboardingCompleted: boolean
 ) => ({
   type: IMPORT_EXISTING_PROJECT_FINISH,
   projectPath,
   project,
+  projectType,
   isOnboardingCompleted,
 });
 
@@ -334,9 +341,8 @@ export const showDeleteProjectPrompt = (project: Project) => ({
   project,
 });
 
-export const showModal = (modal: string) => ({
-  type: SHOW_MODAL,
-  modal: modal,
+export const showProjectSettings = () => ({
+  type: SHOW_PROJECT_SETTINGS,
 });
 
 export const hideModal = () => ({
@@ -356,7 +362,7 @@ export const saveProjectSettingsStart = (
 });
 
 export const saveProjectSettingsFinish = (
-  project: Project,
+  project: ProjectInternal,
   projectPath: string
 ) => ({
   type: SAVE_PROJECT_SETTINGS_FINISH,
