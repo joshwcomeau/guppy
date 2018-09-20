@@ -44,6 +44,7 @@
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",
+    "react-beautiful-dnd": "^9.0.2",
     "yarn": "1.9.2"
   },
   "devDependencies": {
@@ -61,7 +62,7 @@
     "babel-loader": "8.0.0-beta.0",
     "babel-plugin-named-asset-import": "1.0.0-next.66cc7a90",
     "babel-plugin-react-docgen": "2.0.0-babel7.0",
-    "babel-preset-react-app": "3.1.2",
+    "babel-preset-react-app": "4.0.0-next.66cc7a90",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",

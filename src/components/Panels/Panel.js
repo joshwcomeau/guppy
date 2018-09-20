@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-
+import { Draggable } from 'react-beautiful-dnd';
 type Props = {
   initialWidth?: number,
   style: Object,
@@ -16,10 +16,18 @@ class Panel extends PureComponent<Props> {
   };
 
   render() {
-    const { width, height, initialWidth, style, ...delegated } = this.props;
+    const {
+      width,
+      height,
+      initialWidth,
+      style,
+      panelId,
+      ...delegated
+    } = this.props;
 
     return (
-      <div
+      <Draggable
+        droppableId={panelId}
         {...delegated}
         style={{
           width,
@@ -28,8 +36,12 @@ class Panel extends PureComponent<Props> {
           userSelect: 'text',
         }}
       >
-        {this.props.children}
-      </div>
+        {({ innerRef, draggableProps, dragHandleProps }, snapshot) => (
+          <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
+            {this.props.children}
+          </div>
+        )}
+      </Draggable>
     );
   }
 }

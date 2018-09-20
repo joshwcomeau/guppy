@@ -1,13 +1,13 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Resizer from './Resizer';
 
 // TODO: this should be a prop!
 const RESIZER_WIDTH = 5;
 
-type PanelWidths = { [id: string]: number };
+// type PanelWidths = { [id: string]: number };
 
 type Props = {
   size: number,
@@ -17,7 +17,91 @@ type Props = {
 };
 
 type State = {
-  panelSizes: PanelWidths,
+  // panelSizes: PanelWidths,
+  panelStatus: string,
+  panelItems: {
+    // todo: a per project panelItems array needed here later
+    [panelId: string]: {
+      id: string,
+      componentToRender: string,
+    },
+  },
+  columns: {
+    // todo: check if name panels is better instead of columns - but it's OK for now
+    [columnId: string]: {
+      id: string,
+      panelItemIds: Array<string>,
+      width: number,
+    },
+  },
+  columnOrder: Array<string>,
+};
+
+// beautiful-dnd setup
+// DragDropContext -- Panels
+//   <Droppable> -- Panels
+//      <Draggable> - Panel
+
+// data structure
+/*
+   initialPanelsState = {
+     panelStatus: 'first-render' | 'initialized',
+     panelItems: {
+       'module-1': {id: 'module-1', componentToRender: 'DevelopmentServerPane'},
+       'module-2': {id: 'module-1', componentToRender: 'TaskRunnerPane'},
+       'module-3': {id: 'module-1', componentToRender: 'DependencyManagementPane'},
+    },
+     columns: { // we could also name this panels
+       'column-1': {
+         id: 'column-1',
+         panelItemIds: ['module-1', 'module-2', 'module-3'],
+         width: x // calculated if panelStatus === 'first-render'
+       },
+       'column-2': {
+         id: 'column-2',
+         panelItemIds: [],
+         width: y // calculated if panelStatus === 'first-render'
+       },
+       'column-3': {
+         id: 'column-3',
+         panelItemIds: [],
+         width: z // calculated if panelStatus === 'first-render'
+       }
+     }
+     columnOrder: ['column-1', 'column-2', 'column-3']
+   }
+
+*/
+
+const initialPanelsState = {
+  panelStatus: 'first-render' | 'initialized',
+  panelItems: {
+    'module-1': { id: 'module-1', componentToRender: 'DevelopmentServerPane' },
+    'module-2': { id: 'module-1', componentToRender: 'TaskRunnerPane' },
+    'module-3': {
+      id: 'module-1',
+      componentToRender: 'DependencyManagementPane',
+    },
+  },
+  columns: {
+    // we could also name this panels
+    'column-1': {
+      id: 'column-1',
+      panelItemIds: ['module-1', 'module-2', 'module-3'],
+      width: 0, // calculated if panelStatus === 'first-render'
+    },
+    'column-2': {
+      id: 'column-2',
+      panelItemIds: [],
+      width: 0, // calculated if panelStatus === 'first-render'
+    },
+    'column-3': {
+      id: 'column-3',
+      panelItemIds: [],
+      width: 0, // calculated if panelStatus === 'first-render'
+    },
+  },
+  columnOrder: ['column-1', 'column-2', 'column-3'],
 };
 
 class Panels extends Component<Props, State> {
@@ -27,17 +111,20 @@ class Panels extends Component<Props, State> {
   startPanelWidths: PanelWidths;
   resizerIndex: ?number;
 
-  state = {};
+  state = initialPanelsState;
 
   static defaultProps = {
     style: {},
   };
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    const isFirstRender = Object.keys(state).length === 0;
+    const isFirstRender = state.panelStatus === 'first-render';
 
     if (isFirstRender) {
-      return { panelSizes: Panels.calculateInitialSizes(props) };
+      return {
+        panelStatus: 'initialized',
+        columns: Panels.calculateInitialSizes(props, state),
+      };
     }
 
     // If new panels are introduced, it's not really clear what should happen.
@@ -123,7 +210,10 @@ class Panels extends Component<Props, State> {
     }
   }
 
-  static calculateInitialSizes = ({ size, orientation, children }: Props) => {
+  static calculateInitialSizes = (
+    { size, orientation, children }: Props,
+    { columns }
+  ) => {
     const childrenArray = React.Children.toArray(children);
 
     const numOfResizers = childrenArray.length - 1;
@@ -263,6 +353,14 @@ class Panels extends Component<Props, State> {
     document.removeEventListener('mousemove', this.dragResize);
   };
 
+  onDragEnd = ({ destination, source }) => {
+    if (!destination) {
+      return;
+    }
+
+    // todo: add reordering code
+  };
+
   render() {
     const { size, children, style, orientation, ...delegated } = this.props;
     const { panelSizes } = this.state;
@@ -297,15 +395,19 @@ class Panels extends Component<Props, State> {
               ]
       );
 
+    const panels = this.state && childrenArray.map((panel, index) => panel);
+
     return (
-      <Wrapper
+      <DragDropContext
         {...delegated}
         orientation={orientation}
         style={{ ...style, [dimension]: size }}
         innerRef={node => (this.node = node)}
+        onDragEnd={this.onDragEnd}
       >
-        {interleavedChildren}
-      </Wrapper>
+        {/* {interleavedChildren} */}
+        {panels}
+      </DragDropContext>
     );
   }
 }
