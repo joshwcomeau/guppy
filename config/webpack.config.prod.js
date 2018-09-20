@@ -122,7 +122,7 @@ module.exports = {
   // electron builder entry script.
   entry: {
     main: [require.resolve('./polyfills'), paths.appIndexJs],
-    electron: paths.electronJs,
+    electron: ['babel-polyfill', paths.electronJs],
   },
   output: {
     // The build folder.
