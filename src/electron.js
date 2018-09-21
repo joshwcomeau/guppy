@@ -4,6 +4,7 @@
  */
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
 const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
@@ -38,9 +39,8 @@ const MOVE_TO_APP_FOLDER_KEY = 'leave-application-in-original-location';
 // This logging setup is not required for auto-updates to work,
 // but it sure makes debugging easier :)
 //-------------------------------------------------------------------
-const log = console.log;
-// autoUpdater.logger = log;
-// autoUpdater.logger.transports.file.level = 'info';
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
 
 //-------------------------------------------------------------------
 // Open a window that displays the version
@@ -104,9 +104,20 @@ autoUpdater.on('download-progress', progressObj => {
   // sendStatusToWindow(log_message);
   log(log_message);
 });
-autoUpdater.on('update-downloaded', info => {
-  // sendStatusToWindow('Update downloaded');
-  log('Update downloaded');
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.',
+  };
+
+  dialog.showMessageBox(dialogOpts, response => {
+    if (response === 0) autoUpdater.quitAndInstall();
+  });
 });
 
 function createWindow() {

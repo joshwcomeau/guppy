@@ -1,7 +1,7 @@
 {
   "name": "guppy",
   "productName": "Guppy",
-  "version": "0.3.0-alpha2",
+  "version": "0.3.0-alpha.3",
   "private": true,
   "main": "src/electron.js",
   "homepage": "./",
@@ -58,7 +58,6 @@
     "yarn": "1.9.2"
   },
   "devDependencies": {
-    "babel-polyfill": "6.26.0",
     "@babel/core": "7.0.0-rc.1",
     "@babel/runtime": "7.0.0-beta.44",
     "@storybook/addon-actions": "3.4.10",
@@ -73,6 +72,7 @@
     "babel-loader": "8.0.0-beta.0",
     "babel-plugin-named-asset-import": "1.0.0-next.66cc7a90",
     "babel-plugin-react-docgen": "2.0.0-babel7.0",
+    "babel-polyfill": "6.26.0",
     "babel-preset-react-app": "4.0.0-next.66cc7a90",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.4.1",
@@ -84,6 +84,7 @@
     "dotenv-expand": "4.2.0",
     "electron": "2.0.1",
     "electron-builder": "20.28.4",
+    "electron-log": "^2.2.17",
     "eslint": "4.15.0",
     "eslint-config-react-app": "3.0.0-next.66cc7a90",
     "eslint-loader": "1.9.0",
