@@ -83,8 +83,4 @@ const Wrapper = styled.div`
     rotate(${props => props.rotation}deg);
 `;
 
-const Orbiter = styled.div`
-  display: inline-block;
-`;
-
 export default PlanetCloud;

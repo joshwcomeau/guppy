@@ -2,7 +2,6 @@
 
 export type Field = 'projectName' | 'projectType' | 'projectIcon';
 export type BuildStep =
-  | 'creatingParentDirectory'
   | 'installingCliTool'
   | 'creatingProjectDirectory'
   | 'installingDependencies'

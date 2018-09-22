@@ -183,17 +183,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
               />
             }
             backface={
-              readyToBeBuilt && (
-                <BuildPane
-                  // Ugh. For some reason, even when I conditionally render
-                  // this <BuildPane> when `project` is complete, Flow doesn't
-                  // like it.
-                  // $FlowFixMe
-                  project={project}
-                  projectHomePath={projectHomePath}
-                  handleCompleteBuild={this.finishBuilding}
-                />
-              )
+              <BuildPane
+                {...project}
+                status={status}
+                projectHomePath={projectHomePath}
+                handleCompleteBuild={this.finishBuilding}
+              />
             }
           />
         )}

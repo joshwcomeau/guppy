@@ -1,4 +1,7 @@
-import reducer, { getDependenciesForProjectId } from './dependencies.reducer';
+import reducer, {
+  getDependenciesForProjectId,
+  initialState,
+} from './dependencies.reducer';
 import {
   LOAD_DEPENDENCY_INFO_FROM_DISK,
   ADD_DEPENDENCY,
@@ -565,7 +568,7 @@ Object {
     };
     const action = { type: RESET_ALL_STATE };
 
-    expect(reducer(prevState, action)).toMatchInlineSnapshot(`Object {}`);
+    expect(reducer(prevState, action)).toEqual(initialState);
   });
 });
 
