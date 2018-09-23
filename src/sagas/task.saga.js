@@ -134,9 +134,11 @@ export function* launchDevServer({ task }: Action): Saga<void> {
   }
 }
 
-export function runInstall(installCommand: any): Promise<void> {
+export function waitUntilChildProcessToComplete(
+  installCommand: any
+): Promise<void> {
   return new Promise((resolve, reject) => {
-    installCommand.on('exit', (code: number, signal: string) => {
+    installCommand.on('exit', (code: number) => {
       if (code === 0) {
         resolve(undefined);
       } else {
@@ -247,9 +249,10 @@ export function* taskRun({ task }: Action): Saga<void> {
             }
           );
 
-          // `runInstall` waits for proper exit before moving on otherwise the next
-          // tasks (UI related) run too early before `yarn install` is finished
-          yield call(runInstall, installCommand);
+          // `waitUntilChildProcessToComplete` waits for proper exit before moving on
+          // otherwise the next tasks (UI related) run too early before `yarn install`
+          // is finished
+          yield call(waitUntilChildProcessToComplete, installCommand);
           yield put(loadDependencyInfoFromDisk(project.id, project.path));
         }
 
