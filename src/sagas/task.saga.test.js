@@ -11,6 +11,7 @@ import {
   displayTaskComplete,
   taskComplete,
   getDevServerCommand,
+  waitForChildProcessToComplete,
 } from './task.saga';
 import {
   attachTaskMetadata,
@@ -286,6 +287,21 @@ describe('task saga', () => {
         // copies of the same anonymous function. As such, their JSON
         // stringified representations are used for testing equality.
         // TODO: remove `JSON.stringify` once `redux-thunk` is removed
+
+        const installCommand = call(
+          [childProcess, childProcess.spawn],
+          PACKAGE_MANAGER_CMD,
+          ['install'],
+          {
+            cwd: projectPath,
+            env: getBaseProjectEnvironment(projectPath),
+          }
+        );
+
+        expect(JSON.stringify(saga.next(installCommand).value)).toEqual(
+          JSON.stringify(call(waitForChildProcessToComplete, installCommand))
+        );
+
         expect(JSON.stringify(saga.next().value)).toEqual(
           JSON.stringify(
             put(loadDependencyInfoFromDisk(task.projectId, projectPath))
