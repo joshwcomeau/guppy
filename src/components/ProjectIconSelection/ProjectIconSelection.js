@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import importAll from 'import-all.macro';
 
 import { shuffle } from '../../utils';
-import { BREAKPOINTS } from '../../constants';
 
 import SelectableImage from '../SelectableImage';
 
