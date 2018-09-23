@@ -134,7 +134,7 @@ export function* launchDevServer({ task }: Action): Saga<void> {
   }
 }
 
-export function waitUntilChildProcessToComplete(
+export function waitForChildProcessToComplete(
   installCommand: any
 ): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -249,10 +249,10 @@ export function* taskRun({ task }: Action): Saga<void> {
             }
           );
 
-          // `waitUntilChildProcessToComplete` waits for proper exit before moving on
+          // `waitForChildProcessToComplete` waits for proper exit before moving on
           // otherwise the next tasks (UI related) run too early before `yarn install`
           // is finished
-          yield call(waitUntilChildProcessToComplete, installCommand);
+          yield call(waitForChildProcessToComplete, installCommand);
           yield put(loadDependencyInfoFromDisk(project.id, project.path));
         }
 

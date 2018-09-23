@@ -52,12 +52,10 @@ class TaskRunnerPaneRow extends PureComponent<Props> {
         </StatusColumn>
 
         <LinkColumn>
-          {name !== 'eject' ? (
+          {name === 'eject' ? null : (
             <StrokeButton size="small" onClick={() => onViewDetails(name)}>
               View Details
             </StrokeButton>
-          ) : (
-            ''
           )}
         </LinkColumn>
 
