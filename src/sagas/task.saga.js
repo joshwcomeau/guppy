@@ -134,6 +134,20 @@ export function* launchDevServer({ task }: Action): Saga<void> {
   }
 }
 
+export function waitForChildProcessToComplete(
+  installProcess: any
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    installProcess.on('exit', (code: number) => {
+      if (code === 0) {
+        resolve(undefined);
+      } else {
+        reject(new Error('Exit with error code: ' + code));
+      }
+    });
+  });
+}
+
 export function* taskRun({ task }: Action): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, {
@@ -222,11 +236,28 @@ export function* taskRun({ task }: Action): Saga<void> {
         break;
 
       case 'exit':
-        yield call(displayTaskComplete, task, message.wasSuccessful);
-        yield put(completeTask(task, message.timestamp, message.wasSuccessful));
         if (task.name === 'eject') {
+          // Run a fresh install of dependencies after ejecting to get around issue
+          // documented here https://github.com/facebook/create-react-app/issues/4433
+          const installProcess = yield call(
+            [childProcess, childProcess.spawn],
+            PACKAGE_MANAGER_CMD,
+            ['install'],
+            {
+              cwd: projectPath,
+              env: getBaseProjectEnvironment(projectPath),
+            }
+          );
+
+          // `waitForChildProcessToComplete` waits for proper exit before moving on
+          // otherwise the next tasks (UI related) run too early before `yarn install`
+          // is finished
+          yield call(waitForChildProcessToComplete, installProcess);
           yield put(loadDependencyInfoFromDisk(project.id, project.path));
         }
+
+        yield call(displayTaskComplete, task, message.wasSuccessful);
+        yield put(completeTask(task, message.timestamp, message.wasSuccessful));
         break;
 
       default:
