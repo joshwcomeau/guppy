@@ -235,7 +235,7 @@ describe('task saga', () => {
       );
     });
 
-    describe('running', () => {
+    describe('ejecting', () => {
       const task = { name: 'eject', projectId: 'pickled-tulip' };
       const saga = cloneableGenerator(taskRun)({ task });
 
@@ -266,29 +266,14 @@ describe('task saga', () => {
         );
       });
 
-      it('should complete on exit', () => {
+      it('should reinstall dependencies and complete on exit', () => {
         const timestamp = new Date();
 
         // `take` a log message
         saga.next();
 
-        expect(
-          saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
-        ).toEqual(call(displayTaskComplete, task, true));
-
-        expect(saga.next().value).toEqual(
-          put(completeTask(task, timestamp, true))
-        );
-      });
-
-      it('should reload dependencies after eject', () => {
-        // `loadDependencyInfoFromDisk` is a thunk, thus two copies
-        // constructed with identical arguments will return unique
-        // copies of the same anonymous function. As such, their JSON
-        // stringified representations are used for testing equality.
-        // TODO: remove `JSON.stringify` once `redux-thunk` is removed
-
-        const installCommand = call(
+        // ejecting requires that dependencies are reinstalled
+        const installProcessDescription = call(
           [childProcess, childProcess.spawn],
           PACKAGE_MANAGER_CMD,
           ['install'],
@@ -298,14 +283,30 @@ describe('task saga', () => {
           }
         );
 
-        expect(JSON.stringify(saga.next(installCommand).value)).toEqual(
-          JSON.stringify(call(waitForChildProcessToComplete, installCommand))
+        expect(
+          saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
+        ).toEqual(installProcessDescription);
+
+        expect(saga.next(installProcessDescription).value).toEqual(
+          call(waitForChildProcessToComplete, installProcessDescription)
         );
 
+        // The next call is to `loadDependencyInfoFromDisk`, which is a thunk.
+        // Thunks produce anonymous functions, which means we can't easily
+        // test it. For now, just verify that it produces a function.
+        // TODO: remove `JSON.stringify` once `redux-thunk` is removed
         expect(JSON.stringify(saga.next().value)).toEqual(
           JSON.stringify(
             put(loadDependencyInfoFromDisk(task.projectId, projectPath))
           )
+        );
+
+        expect(
+          saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
+        ).toEqual(call(displayTaskComplete, task, true));
+
+        expect(saga.next().value).toEqual(
+          put(completeTask(task, timestamp, true))
         );
       });
     });
