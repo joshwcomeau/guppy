@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
 import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 import { Toggle as ToggleState } from 'react-powerplug';

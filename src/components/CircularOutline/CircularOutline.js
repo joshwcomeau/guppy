@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Spring } from 'react-spring';
+import { Spring, animated } from 'react-spring';
 
 import { COLORS } from '../../constants';
 
@@ -42,7 +42,7 @@ class CircularOutline extends Component<Props> {
     const dashOffset = isShown ? circumference : 0;
 
     return (
-      <Spring config={springSettings} to={{ dashOffset }}>
+      <Spring native config={springSettings} to={{ dashOffset }}>
         {interpolated => (
           <Svg width={size} height={size}>
             <defs>
@@ -64,7 +64,7 @@ class CircularOutline extends Component<Props> {
               </linearGradient>
             </defs>
 
-            <ellipse
+            <animated.ellipse
               cx={radius}
               cy={radius}
               rx={radius}
