@@ -39,7 +39,7 @@ class CircularOutline extends Component<Props> {
     const radius = size / 2;
     const circumference = 2 * Math.PI * radius;
 
-    const dashOffset = isShown ? circumference : 0;
+    const dashOffset = isShown ? 0 : circumference;
 
     return (
       <Spring native config={springSettings} to={{ dashOffset }}>
