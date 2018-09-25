@@ -23,7 +23,7 @@ const springSettings = {
   restDisplacementThreshold: 10,
 };
 
-class RoundedOutline extends Component<Props> {
+class CircularOutline extends Component<Props> {
   static defaultProps = {
     color1: COLORS.purple[500],
     color2: COLORS.violet[500],
@@ -96,4 +96,4 @@ const Svg = styled.svg`
   transform: rotate(-90deg);
 `;
 
-export default RoundedOutline;
+export default CircularOutline;
