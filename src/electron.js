@@ -78,7 +78,7 @@ function createWindow() {
   });
 
   // set up some chrome extensions
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV === 'development') {
     const {
       default: installExtension,
       REACT_DEVELOPER_TOOLS,
@@ -113,7 +113,6 @@ function createWindow() {
       slashes: true,
     });
   mainWindow.loadURL(startUrl);
-  mainWindow.toggleDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
