@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
+import DetectActive from '../DetectActive';
 import ButtonBase from './ButtonBase';
 
 type Props = {
@@ -13,43 +14,11 @@ type Props = {
   children: React$Node,
 };
 
-type State = {
-  isActive: boolean,
-};
-
-class StrokeButton extends Component<Props, State> {
-  state = {
-    isActive: false,
-  };
-
+class StrokeButton extends Component<Props> {
   static defaultProps = {
     fillColor: COLORS.white,
     strokeColors: [COLORS.purple[500], COLORS.violet[500]],
     showStroke: true,
-  };
-
-  handleMouseDown = ev => {
-    if (typeof this.props.onMouseDown === 'function') {
-      this.props.onMouseDown(ev);
-    }
-
-    this.setState({ isActive: true });
-  };
-
-  handleMouseUp = ev => {
-    if (typeof this.props.onMouseUp === 'function') {
-      this.props.onMouseUp(ev);
-    }
-
-    this.setState({ isActive: false });
-  };
-
-  handleMouseLeave = ev => {
-    if (typeof this.props.onMouseLeave === 'function') {
-      this.props.onMouseLeave(ev);
-    }
-
-    this.setState({ isActive: false });
   };
 
   render() {
@@ -60,28 +29,25 @@ class StrokeButton extends Component<Props, State> {
       children,
       ...delegated
     } = this.props;
-    const { isActive } = this.state;
 
     return (
-      <Wrapper>
-        <Foreground>
-          <ButtonBase
-            background={fillColor}
-            {...delegated}
-            onMouseDown={this.handleMouseDown}
-            onMouseUp={this.handleMouseUp}
-            onMouseLeave={this.handleMouseLeave}
-          >
-            <span style={{ display: 'block' }}>{children}</span>
-          </ButtonBase>
-        </Foreground>
+      <DetectActive>
+        {isActive => (
+          <Wrapper>
+            <Foreground>
+              <ButtonBase background={fillColor} {...delegated}>
+                <span style={{ display: 'block' }}>{children}</span>
+              </ButtonBase>
+            </Foreground>
 
-        <Background
-          colors={strokeColors}
-          isVisible={showStroke}
-          isActive={isActive}
-        />
-      </Wrapper>
+            <Background
+              colors={strokeColors}
+              isVisible={showStroke}
+              isActive={isActive}
+            />
+          </Wrapper>
+        )}
+      </DetectActive>
     );
   }
 }
