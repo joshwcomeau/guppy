@@ -1,7 +1,7 @@
 {
   "name": "guppy",
   "productName": "Guppy",
-  "version": "0.2.4",
+  "version": "0.3.0-alpha.1",
   "private": true,
   "main": "src/electron.js",
   "homepage": "./",
