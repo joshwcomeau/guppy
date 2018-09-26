@@ -1,0 +1,68 @@
+---
+name: FillButton
+menu: Button
+---
+
+import {Component, Fragment} from 'react'
+import { Playground, PropsTable, Docs } from 'docz'
+
+import {COLORS} from '../../constants'
+import FillButton from './FillButton'
+
+# FillButton
+
+<PropsTable of={FillButton} />
+
+
+## Basic usage
+
+<Playground>
+  <FillButton>Default</FillButton>
+</Playground>
+
+
+## Sizes
+
+<Playground>
+  <FillButton size="xsmall">
+    Extra-small button
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton size="small">
+    Small button
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton size="medium">
+    Medium button
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton size="large">
+    Large button
+  </FillButton>
+</Playground>
+
+## Colors
+
+<Playground>
+  <FillButton colors={[COLORS.green[500], COLORS.green[500]]}>
+    Solid green
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton colors={[COLORS.orange[500], COLORS.pink[300]]}>
+    Orange to pink
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton colors={[COLORS.teal[700], COLORS.lime[500]]}>
+    Teal to lime
+  </FillButton>
+</Playground>

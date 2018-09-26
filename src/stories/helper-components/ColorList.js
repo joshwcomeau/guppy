@@ -1,11 +1,11 @@
 // @flow
 import React, { Fragment } from 'react';
-import { storiesOf } from '@storybook/react';
 import styled from 'styled-components';
 
-import Heading from '../components/Heading';
-import { contrastingColor } from '../utils';
-import { COLORS } from '../constants';
+import { COLORS } from '../../constants';
+import { contrastingColor } from '../../utils';
+
+import Heading from '../../components/Heading';
 
 const COMMON_COLORS = {
   pink: {
@@ -61,9 +61,9 @@ const COMMON_COLORS = {
   },
 };
 
-const ColorList = ({ colors }) => (
+const ColorList = () => (
   <Fragment>
-    {Object.entries(colors)
+    {Object.entries(COMMON_COLORS)
       .filter(([_, gradient]) => typeof gradient === 'object')
       .map(([name, gradient], i) => (
         <Fragment key={i}>
@@ -82,10 +82,6 @@ const ColorList = ({ colors }) => (
   </Fragment>
 );
 
-storiesOf('Colors', module)
-  .add('Commonly-used', () => <ColorList colors={COMMON_COLORS} />)
-  .add('All', () => <ColorList colors={COLORS} />);
-
 const ColorBlock = styled.div`
   background: ${props => props.color};
   border-radius: 4px;
@@ -94,3 +90,5 @@ const ColorBlock = styled.div`
   padding: 10px;
   margin-bottom: 10px;
 `;
+
+export default ColorList;
