@@ -28,13 +28,13 @@ class DetectActive extends Component<Props, State> {
 
   render() {
     return (
-      <div
+      <span
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onMouseLeave={this.handleMouseLeave}
       >
         {this.props.children(this.state.isActive)}
-      </div>
+      </span>
     );
   }
 }

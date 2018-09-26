@@ -19,6 +19,9 @@ type Props = {
 const springSettings = {
   tension: 150,
   friction: 22,
+  // We want to tweak the 'onRest' timing so that the animation ends a bit
+  // earlier. Otherwise, we wind up with a surprisingly long wait while the
+  // very end of the stroke disappears, when hiding the stroke.
   restSpeedThreshold: 3,
   restDisplacementThreshold: 10,
 };
@@ -93,6 +96,7 @@ const Svg = styled.svg`
   position: absolute;
   top: 0;
   left: 0;
+  /* Have the animation start from the top, not the right */
   transform: rotate(-90deg);
 `;
 
