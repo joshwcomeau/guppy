@@ -157,20 +157,20 @@ export class ProjectPage extends PureComponent<Props> {
 
           <ProjectActionBar>
             <FillButton
+              size="small"
               colors={COLORS.gray[200]}
               hoverColors={COLORS.gray[300]}
               textColor={COLORS.gray[900]}
-              size="small"
               onClick={this.openFolder}
             >
               {getCopyForOpeningFolder()}
             </FillButton>
             <Spacer size={15} />
             <FillButton
+              size="small"
               colors={COLORS.gray[200]}
               hoverColors={COLORS.gray[300]}
               textColor={COLORS.gray[900]}
-              size="small"
               onClick={this.openIDE}
             >
               Open in Editor

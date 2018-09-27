@@ -14,60 +14,10 @@ import ButtonBase from './ButtonBase'
 > Note: You probably don't want to use this component directly. It's just the
 > underlying shared bit of code between FillButton and StrokeButton.
 
+<PropsTable of={ButtonBase} />
+
 ## Basic usage
 
 <Playground>
   <ButtonBase>Default</ButtonBase>
-</Playground>
-
-## Sizes
-
-<Playground>
-  <ButtonBase size="xsmall">
-    Extra-small button
-  </ButtonBase>
-</Playground>
-
-<Playground>
-  <ButtonBase size="small">
-    Small button
-  </ButtonBase>
-</Playground>
-
-<Playground>
-  <ButtonBase size="medium">
-    Medium button
-  </ButtonBase>
-</Playground>
-
-<Playground>
-  <ButtonBase size="large">
-    Large button
-  </ButtonBase>
-</Playground>
-
-## Colors
-
-<Playground>
-  <ButtonBase
-    background={COLORS.blue[700]}
-    hoverBackground={COLORS.violet[700]}
-    textColor={COLORS.yellow[500]}
-  >
-    Solid colors
-  </ButtonBase>
-</Playground>
-
-<Playground>
-  <ButtonBase
-    background={`linear-gradient(0deg, ${COLORS.blue[700]}, ${
-      COLORS.violet[500]
-    })`}
-    hoverBackground={`linear-gradient(0deg, ${COLORS.red[700]}, ${
-      COLORS.orange[500]
-    })`}
-    textColor={COLORS.yellow[500]}
-  >
-    Gradients
-  </ButtonBase>
 </Playground>

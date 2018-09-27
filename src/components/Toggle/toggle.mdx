@@ -1,0 +1,64 @@
+---
+name: Toggle
+---
+
+import { Playground, PropsTable } from 'docz'
+import { Toggle as ToggleState } from 'react-powerplug'
+import { Tooltip } from 'react-tippy';
+
+import { COLORS } from '../../constants'
+import Toggle from './Toggle'
+
+import 'react-tippy/dist/tippy.css';
+
+
+# Toggle
+
+<PropsTable of={Toggle} />
+
+
+## Default
+
+> Used for primary toggles. There shouldn't be many of these on the screen at once.
+
+<Playground>
+  <ToggleState>
+    {({ on, toggle }) => (
+      <Toggle isToggled={on} onToggle={toggle} />
+    )}
+  </ToggleState>
+</Playground>
+
+## Smaller
+
+> Used for secondary toggles, like changing a setting or switching on a secondary action.
+
+<Playground>
+  <ToggleState>
+    {({ on, toggle }) => (
+      <Toggle
+        isToggled={on}
+        onToggle={toggle}
+        size={24}
+      />
+    )}
+  </ToggleState>
+</Playground>
+
+## Disabled
+
+> Used when an action is impossible. To avoid confusion, please pair it with a tooltip that explains why the tooltip is disabled.
+
+<Playground>
+  <ToggleState>
+    {({ on, toggle }) => (
+      <Tooltip title="Please wait for installation to finish" position="top">
+        <Toggle
+          isDisabled={true}
+          isToggled={on}
+          onToggle={toggle}
+        />
+      </Tooltip>
+    )}
+  </ToggleState>
+</Playground>
