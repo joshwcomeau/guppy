@@ -60,7 +60,7 @@ class PlanetMoon extends Component<Props> {
 
     return (
       <Wrapper planetSize={planetSize} tilt={tilt} offset={offset} size={size}>
-        <Orbit innerRef={node => (this.node = node)}>
+        <Orbit ref={node => (this.node = node)}>
           <Moon size={size}>
             <Top color={colorObj.string()} radius={size / 2} />
             <Back color={colorObj.darken(0.5).string()} radius={size / 2} />

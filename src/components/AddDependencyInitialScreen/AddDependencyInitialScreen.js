@@ -33,7 +33,7 @@ class AddDependencyInitialScreen extends Component<Props> {
   }
 }
 
-const InstructionsParagraph = Paragraph.extend`
+const InstructionsParagraph = styled(Paragraph)`
   font-size: 1.4rem;
   color: ${COLORS.gray[600]};
 `;

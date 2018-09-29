@@ -5,9 +5,14 @@ import { configure, addDecorator } from '@storybook/react';
 import { COLORS } from '../src/constants';
 import Wrapper from './components/Wrapper';
 
-import '../src/global-styles';
+import GlobalStyles from '../src/global-styles';
 
-const WrapperDecorator = storyFn => <Wrapper>{storyFn()}</Wrapper>;
+const WrapperDecorator = storyFn => (
+  <>
+    <GlobalStyles />
+    <Wrapper>{storyFn()}</Wrapper>
+  </>
+);
 
 addDecorator(WrapperDecorator);
 
