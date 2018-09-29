@@ -58,7 +58,7 @@ class RoundedOutline extends Component<Props, State> {
     finishedAllMountingSteps: false,
   };
 
-  wrapperNode: HTMLElement;
+  wrapperNode: ?HTMLElement;
   shapeNode: any; // "SVGPathElement" (which cannot be resolved), we need "getTotalLength()"
 
   static defaultProps = {
@@ -71,9 +71,11 @@ class RoundedOutline extends Component<Props, State> {
   componentDidMount() {
     // On first mount, we need to figure out how big the available area is.
     // This will affect how large the outline is.
-    const { width, height } = this.wrapperNode.getBoundingClientRect();
+    if (this.wrapperNode) {
+      const { width, height } = this.wrapperNode.getBoundingClientRect();
 
-    this.setState({ width, height });
+      this.setState({ width, height });
+    }
   }
 
   componentDidUpdate(_: Props, prevState: State) {
@@ -83,10 +85,12 @@ class RoundedOutline extends Component<Props, State> {
 
         this.setState({ pathLength });
       } else {
-        const { width, height } = this.wrapperNode.getBoundingClientRect();
+        if (this.wrapperNode) {
+          const { width, height } = this.wrapperNode.getBoundingClientRect();
 
-        if (this.state.width !== width || this.state.height !== height) {
-          this.setState({ width, height });
+          if (this.state.width !== width || this.state.height !== height) {
+            this.setState({ width, height });
+          }
         }
       }
     }
@@ -123,7 +127,7 @@ class RoundedOutline extends Component<Props, State> {
       >
         {({ interpolatedDashOffset }) => (
           <Svg
-            innerRef={node => (this.wrapperNode = node)}
+            ref={node => (this.wrapperNode = node)}
             width="100%"
             height="100%"
           >
@@ -148,7 +152,7 @@ class RoundedOutline extends Component<Props, State> {
             {typeof width === 'number' &&
               typeof height === 'number' && (
                 <Rect
-                  innerRef={node => (this.shapeNode = node)}
+                  ref={node => (this.shapeNode = node)}
                   x={0}
                   y={0}
                   width={width}

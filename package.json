@@ -132,7 +132,7 @@
     "sass-loader": "7.0.0",
     "slug": "0.9.1",
     "style-loader": "0.19.1",
-    "styled-components": "3.2.6",
+    "styled-components": "^4.0.0-beta.9",
     "svgr": "1.8.1",
     "sw-precache-webpack-plugin": "0.11.4",
     "thread-loader": "1.1.2",

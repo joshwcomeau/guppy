@@ -10,11 +10,17 @@ type Props = {
   children: React$Node,
 };
 
-const TextInput = ({ isFocused, hasError, children, ...delegated }: Props) => (
-  <Wrapper isFocused={isFocused} hasError={hasError}>
-    <InputElem {...delegated} />
-    {children}
-  </Wrapper>
+// $FlowFixMe https://github.com/facebook/react/issues/12553
+const TextInput = React.forwardRef(
+  (
+    { isFocused, hasError, children, ...delegated }: Props,
+    ref: React.RefObject
+  ) => (
+    <Wrapper ref={ref} isFocused={isFocused} hasError={hasError}>
+      <InputElem {...delegated} />
+      {children}
+    </Wrapper>
+  )
 );
 
 const getBorderColor = (props: Props) => {

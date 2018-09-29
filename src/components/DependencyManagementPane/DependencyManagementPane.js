@@ -217,7 +217,7 @@ const Wrapper = styled.div`
   max-height: 475px;
 `;
 
-const DependencyList = Card.extend`
+const DependencyList = styled(Card)`
   flex: 6;
   display: flex;
   flex-direction: column;
@@ -319,7 +319,7 @@ const DependencyVersion = styled.span`
       : COLORS.transparentBlack[400]}};
 `;
 
-const MainContent = Card.extend`
+const MainContent = styled(Card)`
   flex: 12;
   margin-left: 15px;
   padding: 0;

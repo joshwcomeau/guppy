@@ -5,7 +5,7 @@
  * with styled-components. Just gonna override the provided global styles.
  */
 import React, { Component } from 'react';
-import styled, { injectGlobal } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { SearchBox } from 'react-instantsearch/dom';
 
 import { COLORS } from '../../constants';
@@ -18,6 +18,7 @@ class AddDependencySearchBox extends Component<Props> {
   render() {
     return (
       <Wrapper>
+        <SearchBoxGlobalStyle />
         <SearchBox
           onChange={this.props.onChange}
           autoFocus={true}
@@ -33,7 +34,7 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-injectGlobal`
+const SearchBoxGlobalStyle = createGlobalStyle`
   .ais-SearchBox {
     /* width: 100%; */
   }
