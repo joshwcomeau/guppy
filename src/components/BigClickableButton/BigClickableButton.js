@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated } from 'react-spring';
 import styled from 'styled-components';
 import Color from 'color';
 
@@ -63,25 +63,26 @@ class BigClickableButton extends Component<Props, State> {
     // depressed (full thickness).
     // Otherwise, the amount of depression will depend on whether or not the
     // button is "on".
-    // prettier-ignore
-    const amountDepressed = isActive
-      ? thickness
-      : isOn
-        ? thickness - 2
-        : 0;
+    // transition order is always 0 => thickness =>  thickness - 2
+    const amountDepressedOptions = [0, thickness, thickness - 2];
+
+    const depressedToIndex = isActive ? 1 : isOn ? 2 : 0;
+    const depressedFromIndex =
+      depressedToIndex === 0 ? 2 : depressedToIndex - 1;
 
     return (
       <OuterWrapper thickness={thickness}>
-        <Motion
-          style={{
-            offset: spring(amountDepressed, {
-              stiffness: 196,
-              damping: 16,
-            }),
+        <Spring
+          from={{ offset: amountDepressedOptions[depressedFromIndex] }}
+          to={{ offset: amountDepressedOptions[depressedToIndex] }}
+          config={{
+            tension: 196,
+            friction: 16,
           }}
+          native
         >
-          {({ offset }) => (
-            <Wrapper width={width} height={height} offset={offset}>
+          {interpolated => (
+            <Wrapper width={width} height={height} offset={interpolated.offset}>
               <Button
                 width={width}
                 height={height}
@@ -121,7 +122,7 @@ class BigClickableButton extends Component<Props, State> {
               </ButtonSideWrapper>
             </Wrapper>
           )}
-        </Motion>
+        </Spring>
       </OuterWrapper>
     );
   }
@@ -134,12 +135,12 @@ const OuterWrapper = styled.div`
   padding-bottom: ${props => props.thickness}px;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = animated(styled.div`
   position: relative;
   width: ${props => props.width}px;
   height: ${props => props.height}px;
   transform: ${props => `translate(${props.offset}px, ${props.offset}px)`};
-`;
+`);
 
 const Button = styled.button`
   width: ${props => props.width}px;
