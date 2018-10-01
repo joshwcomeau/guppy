@@ -1,2 +1,3 @@
 [build]
 command = "yarn build-docz"
+publish = ".docz/dist"
