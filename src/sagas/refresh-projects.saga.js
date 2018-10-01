@@ -13,8 +13,6 @@ import { showCustomError } from '../services/custom-dialog.service';
 import type { Saga } from 'redux-saga';
 
 export function* refreshProjects(): Saga<void> {
-  const pathsArray = yield select(getPathsArray);
-
   try {
     yield call(checkIfNodeIsAvailable); // returns node version string
   } catch (err) {
@@ -37,6 +35,7 @@ export function* refreshProjects(): Saga<void> {
     );
     return;
   }
+  const pathsArray = yield select(getPathsArray);
 
   try {
     const projectsFromDisk = yield call(loadGuppyProjects, pathsArray);

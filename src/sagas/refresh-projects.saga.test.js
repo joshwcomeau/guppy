@@ -9,6 +9,7 @@ import {
 } from '../actions';
 import { getPathsArray } from '../reducers/paths.reducer';
 import { loadGuppyProjects } from '../services/read-from-disk.service';
+import { checkIfNodeIsAvailable } from '../services/shell.service';
 
 describe('refresh-projects saga', () => {
   describe('root import-project saga', () => {
@@ -23,6 +24,8 @@ describe('refresh-projects saga', () => {
   describe('refreshProjects', () => {
     it('fetches and dispatches project info', () => {
       const saga = refreshProjects();
+
+      expect(saga.next().value).toEqual(call(checkIfNodeIsAvailable));
 
       // select the paths from Redux state
       expect(saga.next().value).toEqual(select(getPathsArray));
@@ -66,6 +69,8 @@ describe('refresh-projects saga', () => {
 
     it('dispatches an error when it cannot fetch the projects', () => {
       const saga = refreshProjects();
+
+      expect(saga.next().value).toEqual(call(checkIfNodeIsAvailable));
 
       // select the paths from Redux state
       expect(saga.next().value).toEqual(select(getPathsArray));
