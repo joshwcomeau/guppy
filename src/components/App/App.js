@@ -1,13 +1,14 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import styled, { keyframes } from 'styled-components';
 
 import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 import logger from '../../services/analytics.service';
+import { checkIfNodeIsAvailable } from '../../services/shell.service';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -24,11 +25,44 @@ type Props = {
   selectedProjectId: ?Project,
 };
 
-class App extends PureComponent<Props> {
-  componentDidMount() {
-    window.addEventListener('beforeunload', this.killAllRunningProcesses);
+type State = {
+  isNodeJsMissing: boolean,
+};
 
-    logger.logEvent('load-application');
+const { dialog, shell } = remote;
+
+class App extends PureComponent<Props, State> {
+  state = {
+    isNodeJsMissing: false,
+  };
+
+  componentDidMount() {
+    const logAppLoaded = node_version => {
+      logger.logEvent('load-application', {
+        node_version: node_version || 'missing',
+      });
+    };
+
+    checkIfNodeIsAvailable()
+      .then(result => {
+        logAppLoaded(result.trim());
+        this.setState({ isNodeJsMissing: false });
+      })
+      .catch(error => {
+        this.setState({
+          isNodeJsMissing: true,
+        });
+        dialog.showErrorBox(
+          'Node missing',
+          'It looks like Node.js isn\'t installed. Node is required to use Guppy.\nWhen you click "OK", you\'ll be directed to instructions to download and install Node.'
+        );
+        shell.openExternal(
+          'https://github.com/joshwcomeau/guppy/blob/master/README.md#installation'
+        );
+        logAppLoaded();
+      });
+
+    window.addEventListener('beforeunload', this.killAllRunningProcesses);
   }
 
   componentWillUnmount() {
@@ -41,6 +75,7 @@ class App extends PureComponent<Props> {
 
   render() {
     const { isAppLoaded, selectedProjectId } = this.props;
+    const { isNodeJsMissing } = this.state;
 
     return (
       <Fragment>
@@ -58,7 +93,8 @@ class App extends PureComponent<Props> {
           </Wrapper>
         )}
 
-        <CreateNewProjectWizard />
+        {/* Only show wizard if Node.js is available */}
+        {!isNodeJsMissing && <CreateNewProjectWizard />}
         <ProjectConfigurationModal />
       </Fragment>
     );
