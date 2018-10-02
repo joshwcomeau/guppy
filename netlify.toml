@@ -1,8 +1,8 @@
 [build]
-  command = "yarn build-docz"
-  publish = ".docz/dist"
+  command = 'yarn build-docz'
+  publish = '.docz/dist'
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = '/*'
+  to = '/index.html'
   status = 200
