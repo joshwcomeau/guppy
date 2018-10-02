@@ -3,12 +3,9 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
-import { remote } from 'electron';
 
 import { COLORS } from '../../constants';
-import createProject, {
-  checkIfProjectExists,
-} from '../../services/create-project.service';
+import createProject from '../../services/create-project.service';
 
 import Spacer from '../Spacer';
 import WhimsicalInstaller from '../WhimsicalInstaller';
@@ -16,8 +13,6 @@ import BuildStepProgress from './BuildStepProgress';
 
 import type { BuildStep, Status } from './types';
 import type { ProjectType, ProjectInternal } from '../../types';
-
-const { dialog } = remote;
 
 const BUILD_STEPS = {
   installingCliTool: {
@@ -102,32 +97,13 @@ class BuildPane extends PureComponent<Props, State> {
       );
     }
 
-    // todo: How to add this earlier because the build pane already transitioned to installation panel?
-    if (checkIfProjectExists(projectHomePath, projectName)) {
-      // show warning that it will override the project folder
-      dialog.showMessageBox(
-        {
-          type: 'warning',
-          title: 'Project directory exists',
-          message:
-            'Do you like to override the project at the specified location? (No undo possible)',
-          buttons: ['No', 'Yes'],
-        },
-        result => {
-          if (result === 0) {
-            return; // exit creation
-          }
-
-          createProject(
-            { projectName, projectType, projectIcon },
-            this.props.projectHomePath,
-            this.handleStatusUpdate,
-            this.handleError,
-            this.handleComplete
-          );
-        }
-      );
-    }
+    createProject(
+      { projectName, projectType, projectIcon },
+      this.props.projectHomePath,
+      this.handleStatusUpdate,
+      this.handleError,
+      this.handleComplete
+    );
   };
 
   handleStatusUpdate = (output: any) => {
