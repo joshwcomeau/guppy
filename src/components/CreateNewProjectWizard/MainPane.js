@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated } from 'react-spring';
 import styled from 'styled-components';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
@@ -58,9 +58,13 @@ class MainPane extends PureComponent<Props> {
 
     return (
       <Fragment>
-        <Motion style={{ offset: spring(currentStepIndex === 0 ? 50 : 0) }}>
+        <Spring
+          from={{ offset: currentStepIndex === 0 ? 0 : 50 }}
+          to={{ offset: currentStepIndex === 0 ? 50 : 0 }}
+          native
+        >
           {({ offset }) => (
-            <Wrapper style={{ transform: `translateY(${offset}px)` }}>
+            <Wrapper translateY={offset}>
               <ProjectName
                 name={projectName}
                 isFocused={activeField === 'projectName'}
@@ -119,7 +123,7 @@ class MainPane extends PureComponent<Props> {
               )}
             </Wrapper>
           )}
-        </Motion>
+        </Spring>
         <SubmitButtonWrapper>
           <SubmitButton
             isDisabled={
@@ -138,10 +142,14 @@ class MainPane extends PureComponent<Props> {
   }
 }
 
-const Wrapper = styled.div`
+const Wrapper = animated(styled.div.attrs({
+  style: props => ({
+    transform: `translateY(${props.translateY}px)`,
+  }),
+})`
   height: 500px;
   will-change: transform;
-`;
+`);
 
 const ReactIcon = styled.img`
   width: 32px;
