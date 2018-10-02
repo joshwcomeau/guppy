@@ -67,13 +67,11 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   }
 
   toggleRunning = () => {
-    if (this.props.isRunning) {
-      if (this.wrapperNode) {
-        this.wrapperBoundingBox = this.wrapperNode.getBoundingClientRect();
+    if (this.props.isRunning && this.wrapperNode) {
+      this.wrapperBoundingBox = this.wrapperNode.getBoundingClientRect();
 
-        this.fileGenerationLoop();
-        this.tick();
-      }
+      this.fileGenerationLoop();
+      this.tick();
     } else if (!this.props.isRunning) {
       window.clearTimeout(this.generationLoopId);
       window.cancelAnimationFrame(this.tickId);

@@ -10,12 +10,12 @@ type Props = {
   children: React$Node,
 };
 
+// TODO: Change this to the supported flow type of React.refObject which is currently not supported
+type RefObject = { current: null | HTMLElement };
+
 // $FlowFixMe https://github.com/facebook/react/issues/12553
 const TextInput = React.forwardRef(
-  (
-    { isFocused, hasError, children, ...delegated }: Props,
-    ref: React.RefObject
-  ) => (
+  ({ isFocused, hasError, children, ...delegated }: Props, ref: RefObject) => (
     <Wrapper ref={ref} isFocused={isFocused} hasError={hasError}>
       <InputElem {...delegated} />
       {children}

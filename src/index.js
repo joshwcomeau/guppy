@@ -8,7 +8,7 @@ import App from './components/App';
 import NodeProvider from './components/NodeProvider';
 import DevTools from './components/DevTools';
 
-import GlobalStyle from './global-styles';
+import GlobalStyles from './components/GlobalStyles';
 
 const store = configureStore();
 
@@ -18,7 +18,7 @@ ReactDOM.render(
   <Provider store={store}>
     <NodeProvider>
       <Fragment>
-        <GlobalStyle />
+        <GlobalStyles />
         <App />
         <DevTools />
       </Fragment>
