@@ -14,13 +14,13 @@ export const openProjectInFolder = (project: Project) =>
 export const openProjectInEditor = (project: Project) =>
   launchEditor(project.path, 1, 1);
 
-export const checkIfNodeIsAvailable = () =>
-  new Promise((resolve, reject) =>
+export const getNodeJsVersion = () =>
+  new Promise(resolve =>
     exec('node -v', (error, stdout) => {
       if (error) {
-        return reject(error);
+        return resolve();
       }
 
-      resolve(stdout);
+      resolve(stdout.trim());
     })
   );
