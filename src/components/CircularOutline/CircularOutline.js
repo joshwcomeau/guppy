@@ -10,8 +10,7 @@ import { COLORS } from '../../constants';
 
 type Props = {
   size: number,
-  color1: string,
-  color2: string,
+  colors?: string[],
   strokeWidth: number,
   isShown: boolean,
 };
@@ -28,15 +27,14 @@ const springSettings = {
 
 class CircularOutline extends Component<Props> {
   static defaultProps = {
-    color1: COLORS.purple[500],
-    color2: COLORS.violet[500],
+    colors: [COLORS.purple[500], COLORS.violet[500]],
     strokeWidth: 2,
   };
 
   render() {
-    const { size, color1, color2, strokeWidth, isShown } = this.props;
+    const { size, colors, strokeWidth, isShown } = this.props;
 
-    const svgId = `${color1.replace('#', '')}-${color2.replace('#', '')}`;
+    const svgId = `${colors.map(color => color.replace('#', '')).join('-')}`;
 
     // Yay middle-school maths
     const radius = size / 2;
@@ -53,14 +51,23 @@ class CircularOutline extends Component<Props> {
                 <stop
                   offset="0%"
                   style={{
-                    stopColor: color1,
+                    stopColor: colors[0] || COLORS.purple[500],
                     stopOpacity: 1,
                   }}
                 />
+                {colors.slice(1, colors.length - 1).map((color, i, colorsInTheMiddle) => (
+                  <stop
+                    offset={`${(i * 100 / (colorsInTheMiddle.length + 1)).toFixed(2)}%`}
+                    style={{
+                      stopColor: color,
+                      stopOpacity: 1,
+                    }}
+                  />
+                ))}
                 <stop
                   offset="100%"
                   style={{
-                    stopColor: color2,
+                    stopColor: colors[colors.length - 1] || COLORS.purple[500],
                     stopOpacity: 1,
                   }}
                 />
