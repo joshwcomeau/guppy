@@ -2,12 +2,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
+import { remote } from 'electron';
 
 import * as actions from '../../actions';
 import { getById } from '../../reducers/projects.reducer';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
+import { checkIfProjectExists } from '../../services/create-project.service';
 
 import TwoPaneModal from '../TwoPaneModal';
 import Debounced from '../Debounced';
@@ -21,6 +23,7 @@ import type { Field, Status, Step } from './types';
 import type { ProjectType, ProjectInternal } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
+const { dialog } = remote;
 
 type Props = {
   projects: { [projectId: string]: ProjectInternal },
@@ -96,16 +99,48 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     }
   };
 
+  checkProjectLocationUsage = () => {
+    return new Promise((resolve, reject) => {
+      const projectName = getProjectNameSlug(this.state.projectName);
+      if (checkIfProjectExists(this.props.projectHomePath, projectName)) {
+        // show warning that the project folder already exists & stop creation
+        dialog.showMessageBox(
+          {
+            type: 'warning',
+            title: 'Project directory exists',
+            message:
+              "Looks like there's already a project with that name. Did you mean to import it instead?",
+            buttons: ['OK'],
+          },
+          result => {
+            if (result === 0) {
+              return reject();
+            }
+
+            resolve();
+          }
+        );
+      } else {
+        resolve();
+      }
+    });
+  };
   handleSubmit = () => {
     const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
     const nextStep = FORM_STEPS[currentStepIndex + 1];
 
     if (!nextStep) {
-      this.setState({
-        activeField: null,
-        status: 'building-project',
-      });
-      return;
+      return this.checkProjectLocationUsage()
+        .then(() => {
+          // not in use
+          this.setState({
+            activeField: null,
+            status: 'building-project',
+          });
+        })
+        .catch(() => {
+          // Swallow any errors, as the promise above will have shown the appropriate dialog on error
+        });
     }
 
     this.setState({

@@ -21,7 +21,7 @@ type Props = {
   handleFocus: () => void,
   handleBlur: () => void,
   handleChange: (val: string) => void,
-  handleSubmit: () => void,
+  handleSubmit: () => Promise<any> | void,
 };
 
 type State = {

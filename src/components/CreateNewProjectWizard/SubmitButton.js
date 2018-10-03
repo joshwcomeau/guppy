@@ -14,7 +14,7 @@ type Props = {
   readyToBeSubmitted: boolean,
   hasBeenSubmitted: boolean,
   isDisabled: boolean,
-  onSubmit: () => void,
+  onSubmit: () => ?Promise<any>,
 };
 
 const SubmitButton = ({
