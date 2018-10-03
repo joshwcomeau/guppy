@@ -7,7 +7,7 @@
  * ReactMotion instances, and that could be bad for perf).
  */
 import React, { PureComponent } from 'react';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated, config } from 'react-spring';
 import styled from 'styled-components';
 
 import { COLORS, Z_INDICES } from '../../constants';
@@ -26,19 +26,30 @@ type State = {
   isBeingDismissed: boolean,
 };
 
-const foldSpringSettings = {
-  stiffness: 66,
-  damping: 20,
-};
-
-const transitTranslateSpringSettings = {
-  stiffness: 95,
-  damping: 25,
-};
-
-const transitOpacitySpringSettings = {
-  stiffness: 170,
-  damping: 22,
+const springConfig = key => {
+  switch (key) {
+    case 'foldCenteringTranslate': {
+      return {
+        tension: 66,
+        friction: 20,
+      };
+    }
+    case 'transitTranslate': {
+      return {
+        tension: 95,
+        friction: 25,
+      };
+    }
+    case 'transitOpacity': {
+      return {
+        tension: 170,
+        friction: 22,
+      };
+    }
+    default: {
+      return config.default;
+    }
+  }
 };
 
 class TwoPaneModal extends PureComponent<Props, State> {
@@ -84,45 +95,54 @@ class TwoPaneModal extends PureComponent<Props, State> {
     const inTransit =
       transitionState === 'entering' || transitionState === 'exiting';
 
-    // prettier-ignore
-    const transitTranslate = transitionState === 'entering' || isBeingDismissed
-        ? 50
+    const transitTranslateOptions = [0, 50, -50];
+    const transitTranslateToIndex =
+      transitionState === 'entering' || isBeingDismissed
+        ? 1
         : transitionState === 'exiting'
-          ? -50
+          ? 2
           : 0;
+    const transitTranslateFromIndex =
+      transitTranslateToIndex === 0 ? 2 : transitTranslateToIndex - 1;
+    const foldDegrees = {
+      from: isFolded ? 0 : 180,
+      to: isFolded ? 180 : 0,
+    };
+    const foldCenteringTranslate = {
+      from: isFolded ? 0 : -25,
+      to: isFolded ? -25 : 0,
+    };
+    const transitOpacity = {
+      from: inTransit ? 1 : 0,
+      to: inTransit ? 0 : 1,
+    };
 
     return (
-      <Motion
-        style={{
-          foldDegrees: spring(isFolded ? 180 : 0, foldSpringSettings),
-          foldCenteringTranslate: spring(
-            isFolded ? -25 : 0,
-            foldSpringSettings
-          ),
-          interpolatedTransitTranslate: spring(
-            transitTranslate,
-            transitTranslateSpringSettings
-          ),
-          transitOpacity: spring(
-            inTransit ? 0 : 1,
-            transitOpacitySpringSettings
-          ),
+      <Spring
+        from={{
+          foldDegrees: foldDegrees.from,
+          foldCenteringTranslate: foldCenteringTranslate.from,
+          transitTranslate: transitTranslateOptions[transitTranslateFromIndex],
+          transitOpacity: transitOpacity.from,
         }}
+        to={{
+          foldDegrees: foldDegrees.to,
+          foldCenteringTranslate: foldCenteringTranslate.to,
+          transitTranslate: transitTranslateOptions[transitTranslateToIndex],
+          transitOpacity: transitOpacity.to,
+        }}
+        config={springConfig}
+        animated
       >
-        {({
-          foldDegrees,
-          foldCenteringTranslate,
-          interpolatedTransitTranslate,
-          transitOpacity,
-        }) => (
-          <Wrapper opacity={transitOpacity} clickable={!inTransit}>
+        {interpolated => (
+          <Wrapper opacity={interpolated.transitOpacity} clickable={!inTransit}>
             <Backdrop onClick={this.dismiss} />
 
             <PaneWrapper
-              translateX={foldCenteringTranslate}
-              translateY={interpolatedTransitTranslate}
+              translateX={interpolated.foldCenteringTranslate}
+              translateY={interpolated.transitTranslate}
             >
-              <LeftHalf foldDegrees={foldDegrees}>
+              <LeftHalf foldDegrees={interpolated.foldDegrees}>
                 <LeftPaneWrapper
                   style={{
                     pointerEvents: isFolded ? 'none' : 'auto',
@@ -144,12 +164,12 @@ class TwoPaneModal extends PureComponent<Props, State> {
             </PaneWrapper>
           </Wrapper>
         )}
-      </Motion>
+      </Spring>
     );
   }
 }
 
-const Wrapper = styled.div.attrs({
+const Wrapper = animated(styled.div.attrs({
   style: props => ({
     opacity: props.opacity,
     pointerEvents: props.clickable ? 'auto' : 'none',
@@ -165,7 +185,7 @@ const Wrapper = styled.div.attrs({
   justify-content: center;
   align-items: center;
   will-change: opacity;
-`;
+`);
 
 const Backdrop = styled.div`
   position: absolute;
