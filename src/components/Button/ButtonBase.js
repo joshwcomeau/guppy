@@ -86,14 +86,6 @@ const ButtonBaseStyles = styled.button`
     opacity: 0.75;
   }
 
-  /*
-    HACK: We want to double the border-thickness of StrokeButton when active.
-    This feels hacky, but it would also be hacky to manage this state in React.
-  */
-  &:not(:disabled):active rect {
-    stroke-width: 4;
-  }
-
   &:not(:disabled):active {
     transform-origin: center center;
     transform: ${props => props.activeSplat && 'scale(1.1)'};

@@ -13,13 +13,7 @@ type Props = {
 };
 
 const AddProjectButton = ({ size, isVisible, onClick }: Props) => (
-  <Button
-    size={size}
-    isVisible={isVisible}
-    color1="rgba(255, 255, 255, 0.1)"
-    color2="rgba(255, 255, 255, 0.1)"
-    onClick={onClick}
-  >
+  <Button size={size} isVisible={isVisible} onClick={onClick}>
     <IconWrapper>
       <IconBase size={30} icon={plus} style={{ color: COLORS.white }} />
     </IconWrapper>
