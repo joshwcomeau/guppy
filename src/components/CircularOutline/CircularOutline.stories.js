@@ -47,12 +47,29 @@ storiesOf('CircularOutline', module).add(
           )}
         </Toggleable>
       </Showcase>
-      <Showcase label="Different colors">
+      <Showcase label="Single color">
+        <Toggleable size={40} background="#555">
+          {isShown => (
+            <CircularOutline colors={['yellow']} size={40} isShown={isShown} />
+          )}
+        </Toggleable>
+      </Showcase>
+      <Showcase label="Two colors">
         <Toggleable size={40} background="#555">
           {isShown => (
             <CircularOutline
-              color1="hotpink"
-              color2="yellow"
+              colors={['yellow', 'hotpink']}
+              size={40}
+              isShown={isShown}
+            />
+          )}
+        </Toggleable>
+      </Showcase>
+      <Showcase label="Three colors">
+        <Toggleable size={40} background="#555">
+          {isShown => (
+            <CircularOutline
+              colors={['yellow', 'hotpink', 'purple']}
               size={40}
               isShown={isShown}
             />

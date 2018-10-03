@@ -9,15 +9,14 @@ type Status = 'default' | 'highlighted' | 'faded';
 
 type Props = {
   size: number,
-  color1: string,
-  color2: string,
+  colors: Array<string>,
   status: Status,
   children: (status: Status) => React$Node,
 };
 
 class SelectableItem extends Component<Props> {
   render() {
-    const { size, color1, color2, status, children, ...delegated } = this.props;
+    const { size, colors, status, children, ...delegated } = this.props;
 
     return (
       <DetectActive>
@@ -25,8 +24,7 @@ class SelectableItem extends Component<Props> {
           <ButtonElem size={size} {...delegated}>
             <OutlineWrapper size={size}>
               <CircularOutline
-                color1={color1}
-                color2={color2}
+                colors={colors}
                 size={size + 6}
                 strokeWidth={isActive ? 4 : 2}
                 isShown={status === 'highlighted'}
