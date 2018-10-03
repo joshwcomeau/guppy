@@ -109,7 +109,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
             type: 'warning',
             title: 'Project directory exists',
             message:
-              'Please pick a different location or name.\nYou could also manually delete the project from disk and create the project with that name.',
+              "Looks like there's already a project with that name. Did you mean to import it instead?",
             buttons: ['OK'],
           },
           result => {
@@ -138,7 +138,9 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
             status: 'building-project',
           });
         })
-        .catch(() => {});
+        .catch(() => {
+          // Swallow any errors, as the promise above will have shown the appropriate dialog on error
+        });
     }
 
     this.setState({

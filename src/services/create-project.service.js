@@ -25,7 +25,7 @@ type ProjectInfo = {
   projectIcon: string,
 };
 
-export const checkIfProjectExists = (dir, projectName) =>
+export const checkIfProjectExists = (dir: string, projectName: string) =>
   fs.existsSync(path.join(dir, projectName));
 
 /**
