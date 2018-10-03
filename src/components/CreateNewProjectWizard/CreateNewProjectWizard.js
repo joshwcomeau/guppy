@@ -103,14 +103,14 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     return new Promise((resolve, reject) => {
       const projectName = getProjectNameSlug(this.state.projectName);
       if (checkIfProjectExists(this.props.projectHomePath, projectName)) {
-        // show warning that it will override the project folder
+        // show warning that the project folder already exists & stop creation
         dialog.showMessageBox(
           {
             type: 'warning',
             title: 'Project directory exists',
             message:
-              'Do you like to override the project at the specified location? (No undo possible)',
-            buttons: ['No', 'Yes'],
+              'Please pick a different location or name.\nYou could also manually delete the project from disk and create the project with that name.',
+            buttons: ['OK'],
           },
           result => {
             if (result === 0) {
@@ -132,7 +132,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     if (!nextStep) {
       return this.checkProjectLocationUsage()
         .then(() => {
-          // not in use or accepted to override
+          // not in use
           this.setState({
             activeField: null,
             status: 'building-project',

@@ -83,7 +83,6 @@ class BuildPane extends PureComponent<Props, State> {
       projectName,
       projectType,
       projectIcon,
-      projectHomePath,
     } = this.props;
 
     if (!projectName || !projectType || !projectIcon) {
