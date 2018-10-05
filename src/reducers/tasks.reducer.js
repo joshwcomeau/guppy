@@ -269,6 +269,7 @@ const preExistingTasks = [
 ];
 
 export const isLifeCycleHook = (name: string, tasks: Array<Task>) => {
+  // a lifecycle hook  always start with `pre` or `post`
   if (!name.startsWith('pre') && !name.startsWith('post')) {
     return false;
   }
