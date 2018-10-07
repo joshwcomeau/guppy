@@ -106,13 +106,13 @@ app.on('window-all-closed', function() {
   }
 });
 
-app.on('before-quit', ev => {
-  if (processIds.length) {
-    ev.preventDefault();
-    killAllRunningProcesses();
-    app.quit();
-  }
-});
+// app.on('before-quit', ev => {
+//   if (processIds.length) {
+//     ev.preventDefault();
+//     killAllRunningProcesses();
+//     app.quit();
+//   }
+// });
 
 app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
@@ -131,7 +131,11 @@ ipcMain.on('removeProcessId', (event, processId) => {
 });
 
 ipcMain.on('killAllRunningProcesses', event => {
-  killAllRunningProcesses();
+  if (processIds.length) {
+    event.preventDefault();
+    killAllRunningProcesses();
+  }
+  app.quit();
 });
 
 const killAllRunningProcesses = () => {

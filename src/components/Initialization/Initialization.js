@@ -38,14 +38,33 @@ class Initialization extends PureComponent<Props, State> {
     logger.logEvent('load-application', {
       node_version: nodeVersion,
     });
-    window.addEventListener('beforeunload', this.killAllRunningProcesses);
+    window.addEventListener('beforeunload', this.appWillClose);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('beforeunload', this.killAllRunningProcesses);
+    window.removeEventListener('beforeunload', this.appWillClose);
   }
 
-  killAllRunningProcesses = () => {
+  appWillClose = async evt => {
+    const { isQueueEmpty } = this.props;
+
+    if (!isQueueEmpty) {
+      // warn user
+      // todo: check if create project is in progress
+      const result = await dialog.showMessageBox({
+        type: 'warn',
+        message:
+          'Queue not empty do you really want to quit? <Add open actions here...>',
+        buttons: ['Abort', 'Proceed (UNSAFE)'],
+      });
+
+      evt.returnVal = result === 1; // proceed selected
+      if (result === 0) {
+        return;
+      }
+    }
+
+    // if we're here queue is empty or user wants to proceed
     ipcRenderer.send('killAllRunningProcesses');
   };
 
@@ -53,12 +72,14 @@ class Initialization extends PureComponent<Props, State> {
     const { children, isAppLoaded } = this.props;
     const { wasSuccessfullyInitialized } = this.state;
 
+    console.log('app init', this.props.isQueueEmpty);
     return children(wasSuccessfullyInitialized && isAppLoaded);
   }
 }
 
 const mapStateToProps = state => ({
   isAppLoaded: getAppLoaded(state),
+  isQueueEmpty: Object.keys(state.queue).length === 0,
 });
 
 export default connect(mapStateToProps)(Initialization);
