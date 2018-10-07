@@ -8,7 +8,6 @@ import {
 } from '../actions';
 import { loadGuppyProjects } from '../services/read-from-disk.service';
 import { getPathsArray } from '../reducers/paths.reducer';
-
 import type { Saga } from 'redux-saga';
 
 export function* refreshProjects(): Saga<void> {
