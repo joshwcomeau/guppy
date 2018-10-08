@@ -46,6 +46,15 @@ export default (state: State = initialState, action: Action = {}) => {
     }
 
     case REFRESH_PROJECTS_FINISH: {
+      const projectKeys = Object.keys(action.projects);
+
+      if (
+        !projectKeys.length &&
+        (state === 'done' || state === 'introducing-sidebar')
+      ) {
+        return 'brand-new';
+      }
+
       // In earlier versions of the app, we would automatically parse the
       // Guppy project directory for projects.
       //
@@ -58,8 +67,6 @@ export default (state: State = initialState, action: Action = {}) => {
       // scanning directories for projects, this shouldn't be an issue anymore.
       // This change is for older clients, and can safely be removed in
       // winter 2018.
-      const projectKeys = Object.keys(action.projects);
-
       return projectKeys.length > 0 ? 'done' : state;
     }
 
