@@ -1,5 +1,7 @@
 import electron from 'electron'; // Mocked
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import rimraf from 'rimraf';
+import * as path from 'path';
 
 import rootSaga, {
   deleteProject,
@@ -54,8 +56,12 @@ describe('delete-project saga', () => {
       );
 
       // Next, we select the projects, passing in `1` to confirm the prompt
-      // (`0` is the ID of the "Delete from Disk" option).
+      // (`1` is the ID of the "Delete from Disk" option).
       expect(saga.next(1).value).toEqual(select(getProjectsArray));
+
+      expect(saga.next(projects).value).toEqual(
+        call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'))
+      );
 
       expect(saga.next(projects).value).toEqual(
         call(
@@ -157,7 +163,8 @@ describe('delete-project saga', () => {
       // Confirm dialog
       saga.next(1);
       // Pass in the projects to the select call
-      saga.next(projects);
+      saga.next(projects); // node_modules
+      saga.next(projects); // project folder
 
       // Return `false` to `successfullyDeleted`
       expect(saga.next(false).value).toEqual(

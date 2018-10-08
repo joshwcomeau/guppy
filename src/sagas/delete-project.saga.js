@@ -1,6 +1,8 @@
 // @flow
 import { remote } from 'electron';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import rimraf from 'rimraf';
+import * as path from 'path';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
@@ -81,6 +83,10 @@ export function* deleteProject({ project }: Action): Saga<void> {
 
   if (shouldDeleteFromDisk) {
     // Run the deletion from disk
+    // first delete node_modules folder permanently (faster than moving to trash)
+    yield call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'));
+
+    // delete project folder
     const successfullyDeletedFromDisk = yield call(
       [shell, shell.moveItemToTrash],
       project.path
