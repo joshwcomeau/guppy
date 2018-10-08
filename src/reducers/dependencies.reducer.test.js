@@ -552,7 +552,7 @@ Object {
 `);
   });
 
-  it(`should handle ${REFRESH_PROJECTS_FINISH} and remove nonn-existing projects`, () => {
+  it(`should handle ${REFRESH_PROJECTS_FINISH} and remove non-existing projects`, () => {
     const prevState = {
       foo: {
         redux: {
@@ -574,9 +574,7 @@ Object {
       projects: [],
     };
 
-    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
-Object {}
-`);
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`Object {}`);
   });
 
   it(`should handle ${RESET_ALL_STATE}`, () => {

@@ -144,13 +144,13 @@ export default (state: State = initialState, action: Action = {}) => {
     }
 
     case REFRESH_PROJECTS_FINISH: {
-      // check if project still exists
+      // If a project was removed, clear out its associated dependencies.
       return produce(state, draftState => {
         const depIds = Object.keys(draftState);
-        const ids = Object.keys(action.projects);
+        const projectIds = Object.keys(action.projects);
+
         depIds.forEach(id => {
-          if (ids.indexOf(id) === -1) {
-            // project removed
+          if (!projectIds.includes(id)) {
             delete draftState[id];
           }
         });
