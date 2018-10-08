@@ -25,6 +25,9 @@ type ProjectInfo = {
   projectIcon: string,
 };
 
+export const checkIfProjectExists = (dir: string, projectName: string) =>
+  fs.existsSync(path.join(dir, projectName));
+
 /**
  * This service manages the creation of a new project.
  * It is in charge of interfacing with the host machine to:

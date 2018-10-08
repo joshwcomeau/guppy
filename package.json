@@ -112,6 +112,7 @@
     "react-icons-kit": "1.1.5",
     "react-instantsearch": "5.1.0",
     "react-motion": "0.5.2",
+    "react-powerplug": "1.0.0-rc.1",
     "react-redux": "5.0.7",
     "react-spring": "5.3.8",
     "react-tippy": "1.2.2",

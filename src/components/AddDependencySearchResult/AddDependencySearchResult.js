@@ -115,8 +115,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
     return (
       <StrokeButton
         size="small"
-        color1={COLORS.green[700]}
-        color2={COLORS.lightGreen[500]}
+        strokeColors={[COLORS.green[700], COLORS.lightGreen[500]]}
         textColor={COLORS.green[700]}
         onClick={() => addDependency(projectId, hit.name, hit.version)}
       >

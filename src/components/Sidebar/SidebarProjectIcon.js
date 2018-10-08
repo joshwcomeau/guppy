@@ -28,8 +28,7 @@ const SidebarProjectIcon = ({
 }: Props) => {
   const sharedProps = {
     size,
-    color1: COLORS.white,
-    color2: COLORS.white,
+    colors: [COLORS.white],
     status: isSelected ? 'highlighted' : 'faded',
     onClick: handleSelect,
   };

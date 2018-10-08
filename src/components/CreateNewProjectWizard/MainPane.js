@@ -30,7 +30,7 @@ type Props = {
   isProjectNameTaken: boolean,
   updateFieldValue: (field: Field, value: any) => void,
   focusField: (field: ?Field) => void,
-  handleSubmit: () => void,
+  handleSubmit: () => Promise<any> | void,
 };
 
 class MainPane extends PureComponent<Props> {

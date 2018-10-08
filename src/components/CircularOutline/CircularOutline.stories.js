@@ -1,97 +1,89 @@
 // @flow
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
 import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
+import { Toggle as ToggleState } from 'react-powerplug';
 
 import Showcase from '../../../.storybook/components/Showcase';
 import CircularOutline from './CircularOutline';
+import FillButton from '../Button/FillButton';
 import styled from 'styled-components';
 
-type Props = { children: (data: any) => React$Node };
-type State = { copyIndex: number };
-
-const BUTTON_COPY = [
-  'hello',
-  'hello world',
-  '!',
-  'Wow this is so long why is it so long ahhhhhhhhhhhh',
-];
-class CopyManager extends Component<Props, State> {
-  state = {
-    copyIndex: 0,
-  };
-
-  cycleCopy = () => {
-    // This line means we always get a value between 0-3:
-    const nextCopyIndex = (this.state.copyIndex + 1) % BUTTON_COPY.length;
-
-    this.setState({ copyIndex: nextCopyIndex });
-  };
-
-  render() {
-    const { children } = this.props;
-    const { copyIndex } = this.state;
-
-    const copy = BUTTON_COPY[copyIndex];
-
-    return (
+type Props = {
+  size: number,
+  background?: string,
+  children: (isShown: boolean) => React$Node,
+};
+const Toggleable = ({ size, background = '#EEE', children }: Props) => (
+  <ToggleState>
+    {({ on, toggle }) => (
       <Fragment>
-        <button onClick={this.cycleCopy}>Change Size</button>
+        <Wrapper background={background} size={size}>
+          {children(on)}
+        </Wrapper>
         <br />
         <br />
-        <ButtonElem>
-          <OutlineWrapper>{children(copy)}</OutlineWrapper>
-          {copy}
-        </ButtonElem>
+        <FillButton colors={['#333']} onClick={toggle}>
+          Toggle
+        </FillButton>
       </Fragment>
-    );
-  }
-}
+    )}
+  </ToggleState>
+);
 
 storiesOf('CircularOutline', module).add(
-  'dynamicSizing',
+  'default',
   withInfo()(() => (
     <Fragment>
-      <Showcase label="Dynamic Sizing">
-        <CopyManager>
-          {copy => (
-            <CircularOutline
-              color1={'red'}
-              color2={'blue'}
-              strokeWidth={2}
-              isShown={true}
-              animateChanges={true}
-            >
-              {copy}
-            </CircularOutline>
+      <Showcase label="Default">
+        <Toggleable size={40}>
+          {isShown => <CircularOutline size={40} isShown={isShown} />}
+        </Toggleable>
+      </Showcase>
+      <Showcase label="Larger">
+        <Toggleable size={70}>
+          {isShown => (
+            <CircularOutline size={70} strokeWidth={4} isShown={isShown} />
           )}
-        </CopyManager>
+        </Toggleable>
+      </Showcase>
+      <Showcase label="Single color">
+        <Toggleable size={40} background="#555">
+          {isShown => (
+            <CircularOutline colors={['yellow']} size={40} isShown={isShown} />
+          )}
+        </Toggleable>
+      </Showcase>
+      <Showcase label="Two colors">
+        <Toggleable size={40} background="#555">
+          {isShown => (
+            <CircularOutline
+              colors={['yellow', 'hotpink']}
+              size={40}
+              isShown={isShown}
+            />
+          )}
+        </Toggleable>
+      </Showcase>
+      <Showcase label="Three colors">
+        <Toggleable size={40} background="#555">
+          {isShown => (
+            <CircularOutline
+              colors={['yellow', 'hotpink', 'purple']}
+              size={40}
+              isShown={isShown}
+            />
+          )}
+        </Toggleable>
       </Showcase>
     </Fragment>
   ))
 );
 
-const ButtonElem = styled.button`
+const Wrapper = styled.div`
   position: relative;
   width: ${props => props.size}px;
   height: ${props => props.size}px;
-  border: none;
-  background: none;
-  outline: none;
-  padding: 0;
-  cursor: pointer;
-
-  &:active rect {
-    stroke-width: 4;
-  }
-`;
-
-const OutlineWrapper = styled.div`
-  position: absolute;
-  z-index: 3;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  pointer-events: none;
+  background: ${props => props.background};
+  border-radius: 50%;
 `;
