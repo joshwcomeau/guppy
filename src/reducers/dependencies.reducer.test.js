@@ -13,6 +13,7 @@ import {
   UNINSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_ERROR,
   UNINSTALL_DEPENDENCIES_FINISH,
+  REFRESH_PROJECTS_FINISH,
   RESET_ALL_STATE,
 } from '../actions';
 
@@ -548,6 +549,33 @@ Object {
 Object {
   "foo": Object {},
 }
+`);
+  });
+
+  it(`should handle ${REFRESH_PROJECTS_FINISH} and remove nonn-existing projects`, () => {
+    const prevState = {
+      foo: {
+        redux: {
+          name: 'redux',
+          status: 'queued-delete',
+          location: 'dependencies',
+          description: 'dependency description',
+          keywords: ['key', 'words'],
+          version: '3.2',
+          homepage: 'https://dependency-homepage.io',
+          license: 'MIT',
+          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+        },
+      },
+    };
+
+    const action = {
+      type: REFRESH_PROJECTS_FINISH,
+      projects: [],
+    };
+
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {}
 `);
   });
 
