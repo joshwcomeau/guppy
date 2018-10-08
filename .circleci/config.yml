@@ -30,3 +30,9 @@ jobs:
       # report coverage
       - run: yarn report-coverage
 
+      # Flowjs check
+      - run: yarn flow
+
+      # Linter
+      - run: yarn lint
+

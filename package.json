@@ -24,10 +24,11 @@
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
     "flow": "flow",
-    "lint": "eslint .",
+    "lint": "eslint src/**/*.js config/**/*.js",
     "prettier": "prettier --write",
     "detect-port": "cross-env ./node_modules/detect-port-alt/bin/detect-port 3000",
-    "precommit": "yarn run flow && lint-staged",
+    "precommit": "lint-staged",
+    "prepush": "yarn run flow",
     "build-storybook": "build-storybook -c .storybook -o storybook-static",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
