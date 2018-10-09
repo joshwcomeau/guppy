@@ -79,7 +79,7 @@ class TerminalOutput extends PureComponent<Props> {
           >
             <FillButton
               size="xsmall"
-              colors={[COLORS.red[700], COLORS.red[500]]}
+              colors={[COLORS.pink[300], COLORS.red[500]]}
               onClick={this.handleClear}
             >
               Clear
