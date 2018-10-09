@@ -123,6 +123,14 @@ export default (
             onComplete(packageJson);
           }
         );
+
+        if (projectType === 'create-react-app') {
+          // CRA 2.0 introduces functionality to immediately init a git repo
+          // Need to do a commit after creation to make sure the repo is clean
+          childProcess.exec('git add -A && git commit -m "Add to Guppy"', {
+            cwd: projectPath,
+          });
+        }
       }
     );
   });
