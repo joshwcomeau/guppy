@@ -5,6 +5,10 @@ export const processLogger = (child, label) => {
     return; // no logging
   }
 
+  if (!child.stdout) {
+    return; // needed during tests
+  }
+
   // Todo: Handle color codes in logging to console (if supported). There are many control characters in the console output.
   child.stdout.on('data', data => {
     // data is an uint8 array --> decode to string
