@@ -82,7 +82,7 @@ class Initialization extends PureComponent<Props, State> {
       const result = dialog.showMessageBox({
         type: 'warning',
         message:
-          'mapActionsToStringThere are active tasks. Do you really want to quit?\n\n' +
+          'There are active tasks. Do you really want to quit?\n\n' +
           mapActionsToString,
         buttons: ['Abort', 'Yes, proceed (UNSAFE)'],
       });
