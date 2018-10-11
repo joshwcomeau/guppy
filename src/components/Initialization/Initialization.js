@@ -58,23 +58,24 @@ class Initialization extends PureComponent<Props, State> {
     // Map actions to the following string format (multiple projects & multiple queued tasks). For each project it will be a string like:
     // Task in project <project.name>:\n
     // - <Installing or Queued> <count> task(s)\n
-    const mapActionsToString = activeActions.map(
-      actionItem =>
-        'Tasks in project ' +
-        actionItem.name +
-        ':\n' +
-        actionItem.pending.map(
-          task =>
-            '* ' +
-            (task.active
-              ? actionCaption[task.action] || task.action
-              : 'Queued') +
-            ' ' +
-            task.dependencies.length +
-            ' task(s)\n'
-        ) +
-        '\n'
-    );
+    const mapActionsToString = activeActions
+      .map(
+        actionItem =>
+          `Tasks in project ${actionItem.name}:\n` +
+          actionItem.pending
+            .map(
+              task =>
+                '* ' +
+                (task.active
+                  ? actionCaption[task.action] || task.action
+                  : 'Queued') +
+                ' ' +
+                task.dependencies.length +
+                ' task(s)'
+            )
+            .join('\n')
+      )
+      .join('\n');
 
     if (!isQueueEmpty) {
       // warn user
