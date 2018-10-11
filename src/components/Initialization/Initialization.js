@@ -60,9 +60,9 @@ class Initialization extends PureComponent<Props, State> {
     // Task in project <project.name>:\n
     // - <Installing or Queued> <count> task(s)\n
     const mapActionsToString = activeActions
-      .map(
-        actionItem =>
-          `Tasks in project ${actionItem.name}:\n` +
+      .map(actionItem =>
+        [
+          `Tasks in project ${actionItem.name}:`,
           actionItem.pending
             .map(
               task =>
@@ -74,7 +74,9 @@ class Initialization extends PureComponent<Props, State> {
                 task.dependencies.length +
                 ' task(s)'
             )
-            .join('\n')
+            .join('\n'),
+          '',
+        ].join('\n')
       )
       .join('\n');
 
