@@ -53,6 +53,7 @@ class Initialization extends PureComponent<Props, State> {
 
     const actionCaption = {
       install: 'Installing',
+      uninstall: 'Uninstalling',
     };
 
     // Map actions to the following string format (multiple projects & multiple queued tasks). For each project it will be a string like:
