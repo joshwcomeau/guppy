@@ -5,6 +5,7 @@ import { ipcRenderer, remote } from 'electron';
 import logger from '../../services/analytics.service';
 import { getNodeJsVersion } from '../../services/shell.service';
 import { getAppLoaded } from '../../reducers/app-loaded.reducer';
+import { getProjectsArray } from '../../reducers/projects.reducer';
 
 const { dialog, shell } = remote;
 
@@ -43,7 +44,37 @@ class Initialization extends PureComponent<Props, State> {
   }
 
   appWillClose = () => {
-    const { isQueueEmpty } = this.props;
+    const { isQueueEmpty, queue, projects } = this.props;
+
+    const activeActions = Object.keys(queue).map(projectId => ({
+      name: projects.find(project => project.id === projectId).name,
+      pending: queue[projectId],
+    }));
+
+    const actionCaption = {
+      install: 'Installing',
+    };
+
+    // Map actions to the following string format (multiple projects & multiple queued tasks). For each project it will be a string like:
+    // Task in project <project.name>:\n
+    // - <Installing or Queued> <count> task(s)\n
+    const mapActionsToString = activeActions.map(
+      actionItem =>
+        'Tasks in project ' +
+        actionItem.name +
+        ':\n' +
+        actionItem.pending.map(
+          task =>
+            '* ' +
+            (task.active
+              ? actionCaption[task.action] || task.action
+              : 'Queued') +
+            ' ' +
+            task.dependencies.length +
+            ' task(s)\n'
+        ) +
+        '\n'
+    );
 
     if (!isQueueEmpty) {
       // warn user
@@ -51,7 +82,8 @@ class Initialization extends PureComponent<Props, State> {
       const result = dialog.showMessageBox({
         type: 'warning',
         message:
-          'There are active tasks. Do you really want to quit? <Add open actions here...>',
+          'mapActionsToStringThere are active tasks. Do you really want to quit?\n\n' +
+          mapActionsToString,
         buttons: ['Abort', 'Yes, proceed (UNSAFE)'],
       });
 
@@ -77,6 +109,8 @@ class Initialization extends PureComponent<Props, State> {
 const mapStateToProps = state => ({
   isAppLoaded: getAppLoaded(state),
   isQueueEmpty: Object.keys(state.queue).length === 0,
+  queue: state.queue,
+  projects: getProjectsArray(state),
 });
 
 export default connect(mapStateToProps)(Initialization);
