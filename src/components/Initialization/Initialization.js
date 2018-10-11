@@ -38,33 +38,30 @@ class Initialization extends PureComponent<Props, State> {
     logger.logEvent('load-application', {
       node_version: nodeVersion,
     });
-    window.addEventListener('beforeunload', this.appWillClose);
+
+    ipcRenderer.on('app-will-close', this.appWillClose);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('beforeunload', this.appWillClose);
-  }
-
-  appWillClose = async evt => {
+  appWillClose = () => {
     const { isQueueEmpty } = this.props;
 
     if (!isQueueEmpty) {
       // warn user
       // todo: check if create project is in progress
-      const result = await dialog.showMessageBox({
-        type: 'warn',
+      const result = dialog.showMessageBox({
+        type: 'warning',
         message:
-          'Queue not empty do you really want to quit? <Add open actions here...>',
-        buttons: ['Abort', 'Proceed (UNSAFE)'],
+          'There are active tasks. Do you really want to quit? <Add open actions here...>',
+        buttons: ['Abort', 'Yes, proceed (UNSAFE)'],
       });
 
-      evt.returnVal = result === 1; // proceed selected
       if (result === 0) {
+        ipcRenderer.send('triggerClose', false);
         return;
       }
     }
 
-    // if we're here queue is empty or user wants to proceed
+    ipcRenderer.send('triggerClose', true);
     ipcRenderer.send('killAllRunningProcesses');
   };
 

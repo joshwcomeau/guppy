@@ -30,6 +30,9 @@ let mainWindow;
 // before the app quits.
 let processIds = [];
 
+// Used for renderer tasks on close (emitting event app-will-close once)
+let emitAppWillClose = true;
+
 const MOVE_TO_APP_FOLDER_KEY = 'leave-application-in-original-location';
 
 function createWindow() {
@@ -82,6 +85,14 @@ function createWindow() {
       slashes: true,
     });
   mainWindow.loadURL(startUrl);
+
+  mainWindow.on('close', e => {
+    if (emitAppWillClose) {
+      emitAppWillClose = false;
+      mainWindow.webContents.send('app-will-close');
+      e.preventDefault();
+    }
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -136,6 +147,16 @@ ipcMain.on('killAllRunningProcesses', event => {
     killAllRunningProcesses();
   }
   app.quit();
+});
+
+ipcMain.on('triggerClose', (e, proceed) => {
+  if (!proceed) {
+    // user aborted
+    emitAppWillClose = true; // reset flag
+    return;
+  }
+
+  mainWindow.close();
 });
 
 const killAllRunningProcesses = () => {
