@@ -51,35 +51,6 @@ class Initialization extends PureComponent<Props, State> {
       pending: queue[projectId],
     }));
 
-    const actionCaption = {
-      install: 'Installing',
-      uninstall: 'Uninstalling',
-    };
-
-    // Map actions to the following string format (multiple projects & multiple queued tasks). For each project it will be a string like:
-    // Task in project <project.name>:\n
-    // - <Installing or Queued> <count> task(s)\n
-    const mapActionsToString = activeActions
-      .map(actionItem =>
-        [
-          `Tasks in project ${actionItem.name}:`,
-          actionItem.pending
-            .map(
-              task =>
-                '* ' +
-                (task.active
-                  ? actionCaption[task.action] || task.action
-                  : 'Queued') +
-                ' ' +
-                task.dependencies.length +
-                ' task(s)'
-            )
-            .join('\n'),
-          '',
-        ].join('\n')
-      )
-      .join('\n');
-
     if (!isQueueEmpty) {
       // warn user
       // todo: check if create project is in progress
@@ -87,7 +58,7 @@ class Initialization extends PureComponent<Props, State> {
         type: 'warning',
         message:
           'There are active tasks. Do you really want to quit?\n\n' +
-          mapActionsToString,
+          mapActionsToString(activeActions),
         buttons: ['Abort', 'Yes, proceed (UNSAFE)'],
       });
 
@@ -109,6 +80,34 @@ class Initialization extends PureComponent<Props, State> {
     return children(wasSuccessfullyInitialized && isAppLoaded);
   }
 }
+
+// helpers
+export const actionCaption = {
+  install: 'Installing',
+  uninstall: 'Uninstalling',
+};
+
+export const mapTasksPerProjectToString = task => {
+  const pluralizedTask = task.dependencies.length > 1 ? 'tasks' : 'task';
+  const actionName = task.active
+    ? actionCaption[task.action] || task.action
+    : 'Queued'; // task.action install or uninstall will be mapped to Installing or Uninstalling if active
+  return `- ${actionName} ${task.dependencies.length} ${pluralizedTask}`;
+};
+
+// Map actions to the following string format (multiple projects & multiple queued tasks). For each project it will be a string like:
+// Task in project <project.name>:\n
+// - <Installing or Queued> <count> task(s)\n
+export const mapActionsToString = (activeActions: Array<any>) =>
+  activeActions
+    .map(actionItem =>
+      [
+        `Tasks in project ${actionItem.name}:`,
+        actionItem.pending.map(mapTasksPerProjectToString).join('\n'),
+        '',
+      ].join('\n')
+    )
+    .join('\n');
 
 const mapStateToProps = state => ({
   isAppLoaded: getAppLoaded(state),
