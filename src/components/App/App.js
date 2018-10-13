@@ -8,6 +8,7 @@ import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
 import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 import logger from '../../services/analytics.service';
+import { initializePath } from '../../services/platform.service';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -26,6 +27,8 @@ type Props = {
 
 class App extends PureComponent<Props> {
   componentDidMount() {
+    initializePath();
+
     window.addEventListener('beforeunload', this.killAllRunningProcesses);
 
     logger.logEvent('load-application');

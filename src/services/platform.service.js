@@ -56,16 +56,38 @@ export const PACKAGE_MANAGER_CMD = path
 export const getBaseProjectEnvironment = (
   projectPath: string,
   currentEnvironment: Object = window.process.env
-) => ({
-  ...currentEnvironment, // NOTE: this option adds control characters to the output.
-  // If at some point we need "raw" output with no control characters, we
-  // should move this out into a "wrapping" function, and update current
-  // callsites to use it.
-  FORCE_COLOR: true,
-  PATH:
-    currentEnvironment.PATH +
-    path.join(projectPath, 'node_modules', '.bin', path.delimiter),
-});
+) => {
+  return {
+    ...currentEnvironment,
+    // NOTE: `FORCE_COLOR` adds control characters to the output.
+    // If at some point we need "raw" output with no control characters, we
+    // should move this out into a "wrapping" function, and update current
+    // callsites to use it.
+    FORCE_COLOR: true,
+    PATH:
+      currentEnvironment.PATH +
+      path.join(projectPath, 'node_modules', '.bin', path.delimiter),
+  };
+};
+
+// For some reason, MacOS doesn't get the PATH initialzied properly, since
+// .bashrc (a file meant to be sourced for interactive shells) isn't read.
+// This helper method fixes that.
+export const initializePath = () => {
+  if (process.env.NODE_ENV !== 'development' && isMac) {
+    try {
+      childProcess.exec(
+        'source ~/.bashrc && echo $PATH',
+        (err, updatedPath) => {
+          window.process.env.PATH = updatedPath;
+        }
+      );
+    } catch (e) {
+      // If no `.bashrc` exists, we have no work to do.
+      // The PATH should already be set correctly.
+    }
+  }
+};
 
 export const getCopyForOpeningFolder = () =>
   // For Mac users, use the more-common term 'Finder'.
