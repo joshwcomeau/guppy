@@ -147,7 +147,7 @@ export default (state: State = initialState, action: Action = {}) => {
         // For the eject task, we simply want to delete this task altogether.
         // TODO: We should probably do this in `REFRESH_PROJECTS_FINISH`, which
         // is called right after the eject task succeeds!
-        if (task.name === 'eject') {
+        if (task.name === 'eject' && wasSuccessful) {
           delete draftState[task.projectId][task.name];
           return;
         }
