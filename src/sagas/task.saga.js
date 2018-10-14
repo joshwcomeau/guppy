@@ -32,6 +32,11 @@ import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { Task, ProjectType } from '../types';
 
+// Mapping type for config template variables '$port'
+export type VariableMap = {
+  $port: string,
+};
+
 const chalk = new chalkRaw.constructor({ level: 3 });
 
 export function* launchDevServer({ task }: Action): Saga<void> {
@@ -357,7 +362,10 @@ const createStdioChannel = (
   });
 };
 
-export const substituteConfigVariables = (configObject, variableMap) => {
+export const substituteConfigVariables = (
+  configObject: any,
+  variableMap: VariableMap
+) => {
   // e.g. $port inside args will be replaced with variable reference from variabeMap obj. {$port: port}
   return Object.keys(configObject).reduce(
     (config, key) => {

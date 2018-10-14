@@ -223,9 +223,9 @@ export default (state: State = initialState, action: Action = {}) => {
 //
 //
 // Helpers
-export const devServerTaskNames = Object.keys(projectConfigs).map(
-  projectType => projectConfigs[projectType].devServer.taskName
-);
+export const devServerTaskNames: Array<string> = Object.keys(
+  projectConfigs
+).map(projectType => projectConfigs[projectType].devServer.taskName);
 
 export const getTaskDescription = (name: string) => {
   // NOTE: This information is currently derivable, and it's bad to store
