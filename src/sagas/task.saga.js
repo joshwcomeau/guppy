@@ -264,7 +264,7 @@ export function* taskRun({ task }: Action): Saga<void> {
               title: 'Oops!',
               message: 'Dirty git state detected',
               detail:
-                'Oh no! In order to eject, git state must be clean. Please commit your changes to continue ejecting.',
+                'Oh no! In order to eject, git state must be clean. Please commit your changes and retry ejecting.',
             });
           }
 
