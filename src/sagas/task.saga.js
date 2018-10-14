@@ -226,7 +226,7 @@ export function* taskRun({ task }: Action): Saga<void> {
       );
 
       emitter({
-        channel: uncleanRepo === true ? 'exit' : 'stderr',
+        channel: uncleanRepo ? 'exit' : 'stderr',
         text,
         uncleanRepo,
       });
@@ -255,7 +255,7 @@ export function* taskRun({ task }: Action): Saga<void> {
       case 'exit':
         if (task.name === 'eject') {
           // If ejecting failed due to unclean repo, then throw up a dialog
-          if (uncleanRepo === true) {
+          if (uncleanRepo) {
             dialog.showMessageBox({
               type: 'warning',
               buttons: ['Ok'],
