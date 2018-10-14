@@ -76,7 +76,6 @@ class Initialization extends PureComponent<Props, State> {
     const { children, isAppLoaded } = this.props;
     const { wasSuccessfullyInitialized } = this.state;
 
-    console.log('app init', this.props.isQueueEmpty);
     return children(wasSuccessfullyInitialized && isAppLoaded);
   }
 }
