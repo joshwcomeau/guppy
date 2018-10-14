@@ -1,5 +1,6 @@
 // @flow
 import { PACKAGE_MANAGER_CMD } from './platform.service';
+import { processLogger } from './process-logger.service';
 import * as childProcess from 'child_process';
 
 import type { QueuedDependency } from '../types';
@@ -24,7 +25,7 @@ const spawnProcess = (
       'exit',
       code => (code ? reject(output.stderr) : resolve(output.stdout))
     );
-    // logger(child) // service will be used here later
+    processLogger(child, 'DEPENDENCY');
   });
 
 export const getDependencyInstallationCommand = (
