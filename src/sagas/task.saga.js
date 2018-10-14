@@ -374,6 +374,11 @@ export const getDevServerCommand = (
         args: ['run', task.name, '-p', port],
         env: {},
       };
+    // todo: refactor so it's easier to add new project types
+    case 'nextjs':
+      return {
+        args: ['run', task.name, '-p', port],
+      };
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }

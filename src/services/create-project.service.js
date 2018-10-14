@@ -5,6 +5,7 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as uuid from 'uuid/v1';
+import { processLogger } from './process-logger.service';
 
 import { COLORS } from '../constants';
 
@@ -73,6 +74,8 @@ export default (
   const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
 
   const process = childProcess.spawn(instruction, args);
+
+  processLogger(process, 'CREATE_PROJECT');
 
   process.stdout.on('data', onStatusUpdate);
   process.stderr.on('data', onError);
@@ -169,6 +172,10 @@ export const getBuildInstructions = (
       return [command, 'create-react-app', projectPath];
     case 'gatsby':
       return [command, 'gatsby', 'new', projectPath];
+    case 'nextjs':
+      // todo: add an issue at create-next-app so creating project with path will work
+      // --> for now fixed on a fork
+      return [command, 'github:awolf81/create-next-app', projectPath];
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }

@@ -16,6 +16,8 @@ export const getDocumentationLink = (projectType: ProjectType) => {
       return 'https://github.com/facebook/create-react-app#user-guide';
     case 'gatsby':
       return 'https://www.gatsbyjs.org/docs/';
+    case 'nextjs':
+      return 'https://nextjs.org/docs/';
     default:
       throw new Error('Unrecognized project type: ' + projectType);
   }

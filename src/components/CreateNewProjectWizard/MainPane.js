@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
+import nextjsIconSrc from '../../assets/images/nextjs.svg';
 
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
@@ -79,6 +80,7 @@ class MainPane extends PureComponent<Props> {
                     isFocused={activeField === 'projectType'}
                   >
                     <ProjectTypeTogglesWrapper>
+                      {/* Todo: Make it easier to add new flows - e.g. map over an array to generate the UI*/}
                       <ButtonWithIcon
                         showStroke={projectType === 'create-react-app'}
                         icon={<ReactIcon src={reactIconSrc} />}
@@ -95,6 +97,14 @@ class MainPane extends PureComponent<Props> {
                         onClick={() => this.updateProjectType('gatsby')}
                       >
                         Gatsby
+                      </ButtonWithIcon>
+                      <Spacer inline size={10} />
+                      <ButtonWithIcon
+                        showStroke={projectType === 'nextjs'}
+                        icon={<GatsbyIcon src={nextjsIconSrc} />}
+                        onClick={() => this.updateProjectType('nextjs')}
+                      >
+                        Next.js
                       </ButtonWithIcon>
                     </ProjectTypeTogglesWrapper>
                   </FormField>

@@ -1,5 +1,5 @@
 // @flow
-export type ProjectType = 'create-react-app' | 'gatsby';
+export type ProjectType = 'create-react-app' | 'gatsby' | 'nextjs';
 
 export type SubmittedProject = {
   projectName: string,
