@@ -15,6 +15,7 @@ import {
   receiveDataFromTaskExecution,
   loadDependencyInfoFromDisk,
 } from '../actions';
+import projectConfigs from '../config/project-types';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
@@ -356,32 +357,58 @@ const createStdioChannel = (
   });
 };
 
+export const substituteConfigVariables = (configObject, variableMap) => {
+  // e.g. $port inside args will be replaced with variable reference from variabeMap obj. {$port: port}
+  return Object.keys(configObject).reduce(
+    (config, key) => {
+      if (config[key] instanceof Array) {
+        // replace $port inside args array
+        config[key] = config[key].map(arg => variableMap[arg] || arg);
+      } else {
+        // check config[key] e.g. is {env: { PORT: '$port'} }
+        if (config[key] instanceof Object) {
+          // config[key] = {PORT: '$port'}, key = 'env'
+          config[key] = Object.keys(config[key]).reduce(
+            (newObj, nestedKey) => {
+              // use replacement value if available
+              newObj[nestedKey] =
+                variableMap[newObj[nestedKey]] || newObj[nestedKey];
+              return newObj;
+            },
+            { ...config[key] }
+          );
+        }
+      }
+      // todo: add top level substiution - not used yet but maybe needed later e.g. { env: $port } won't be replaced.
+      //       Bad example but just to have it as reminder.
+      return config;
+    },
+    { ...configObject }
+  );
+};
+
 export const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
   port: string
 ) => {
-  switch (projectType) {
-    case 'create-react-app':
-      return {
-        args: ['run', task.name],
-        env: {
-          PORT: port,
-        },
-      };
-    case 'gatsby':
-      return {
-        args: ['run', task.name, '-p', port],
-        env: {},
-      };
-    // todo: refactor so it's easier to add new project types
-    case 'nextjs':
-      return {
-        args: ['run', task.name, '-p', port],
-      };
-    default:
-      throw new Error('Unrecognized project type: ' + projectType);
+  const config = projectConfigs[projectType];
+
+  if (!config) {
+    throw new Error('Unrecognized project type: ' + projectType);
   }
+
+  // Substitution is needed as we'd like to have $port as args or in env
+  // we can use it in either position and it will be subsituted with the port value here
+  const devServer = substituteConfigVariables(config.devServer, {
+    // pass every value that is needed in the commands here
+    $port: port,
+  });
+
+  return {
+    args: devServer.args,
+    env: devServer.env || {},
+  };
 };
 
 export const stripUnusableControlCharacters = (text: string) =>

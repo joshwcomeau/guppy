@@ -32,6 +32,7 @@ import {
   CLEAR_CONSOLE,
   RESET_ALL_STATE,
 } from '../actions';
+import projectConfigs from '../config/project-types';
 
 import type { Action } from 'redux';
 import type { Task, ProjectType } from '../types';
@@ -222,6 +223,10 @@ export default (state: State = initialState, action: Action = {}) => {
 //
 //
 // Helpers
+export const devServerTaskNames = Object.keys(projectConfigs).map(
+  projectType => projectConfigs[projectType].devServer.taskName
+);
+
 export const getTaskDescription = (name: string) => {
   // NOTE: This information is currently derivable, and it's bad to store
   // derivable data in the reducer... but, I expect soon this info will be
@@ -251,9 +256,7 @@ export const getTaskDescription = (name: string) => {
 
 export const isDevServerTask = (name: string) =>
   // Gatsby and create-react-app use different names for the same task.
-  // also next.js uses a different name
-  // todo: refactor this mapping
-  name === 'start' || name === 'develop' || name === 'dev';
+  devServerTaskNames.indexOf(name) !== -1;
 
 // https://docs.npmjs.com/misc/scripts
 const preExistingTasks = [
@@ -293,7 +296,7 @@ const getTaskType = name => {
   // For a dev server, "running" is a successful status - it means there are
   // no errors - while for a short-term task, "running" is essentially the same
   // as "loading", it's a yellow-light kind of thing.
-  const sustainedTasks = ['start', 'develop', 'dev'];
+  const sustainedTasks = devServerTaskNames; // We could have other tasks we could add - for now we also could use devServerTaskNames directly
 
   return sustainedTasks.includes(name) ? 'sustained' : 'short-term';
 };
@@ -372,21 +375,10 @@ export const getDevServerTaskForProjectId = (
     projectType: ProjectType,
   }
 ) => {
-  switch (props.projectType) {
-    case 'create-react-app': {
-      return state.tasks[props.projectId].start;
-    }
-
-    case 'gatsby': {
-      return state.tasks[props.projectId].develop;
-    }
-    // todo: refactor so it's easier to add new flows
-    case 'nextjs': {
-      console.log('get dev', state.tasks[props.projectId]);
-      return state.tasks[props.projectId].dev;
-    }
-
-    default:
-      throw new Error('Unrecognized project type: ' + props.projectType);
+  const config = projectConfigs[props.projectType];
+  const { taskName } = config.devServer;
+  if (!config) {
+    throw new Error('Unrecognized project type: ' + props.projectType);
   }
+  return state.tasks[props.projectId][taskName];
 };

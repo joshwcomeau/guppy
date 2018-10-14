@@ -5,6 +5,7 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as uuid from 'uuid/v1';
+import projectConfigs from '../config/project-types';
 import { processLogger } from './process-logger.service';
 
 import { COLORS } from '../constants';
@@ -110,9 +111,11 @@ export default (
         // Gatsby specific fix - the command 'npx gatsby new ...' always sets the
         // name key in package.json to `gatsby-starter-default`. Overwrite it so
         // project is named correctly.
-        if (projectType === 'gatsby') {
-          packageJson.name = projectDirectoryName;
-        }
+        // if (projectType === 'gatsby') {
+        //   packageJson.name = projectDirectoryName;
+        // }
+        // Todo: Check if always setting the name is a problem --> we don't want project-type specific stuff here
+        packageJson.name = projectDirectoryName;
 
         const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
 
@@ -167,16 +170,9 @@ export const getBuildInstructions = (
   // Windows tries to run command as a script rather than on a cmd
   // To force it we add *.cmd to the commands
   const command = formatCommandForPlatform('npx');
-  switch (projectType) {
-    case 'create-react-app':
-      return [command, 'create-react-app', projectPath];
-    case 'gatsby':
-      return [command, 'gatsby', 'new', projectPath];
-    case 'nextjs':
-      // todo: add an issue at create-next-app so creating project with path will work
-      // --> for now fixed on a fork
-      return [command, 'github:awolf81/create-next-app', projectPath];
-    default:
-      throw new Error('Unrecognized project type: ' + projectType);
+  if (!projectConfigs.hasOwnProperty(projectType)) {
+    throw new Error('Unrecognized project type: ' + projectType);
   }
+
+  return [command, ...projectConfigs[projectType].create.args(projectPath)];
 };
