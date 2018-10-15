@@ -1,3 +1,4 @@
+// @flow
 import { select, put, takeEvery } from 'redux-saga/effects';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 

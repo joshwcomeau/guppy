@@ -15,13 +15,13 @@ import {
 import type { Action } from 'redux';
 import type { QueuedDependency, QueueAction } from '../types';
 
-type QueueEntry = {
+export type QueueEntry = {
   action: QueueAction,
   active: boolean,
   dependencies: Array<QueuedDependency>,
 };
 
-type State = {
+export type State = {
   [projectId: string]: Array<QueueEntry>,
 };
 
