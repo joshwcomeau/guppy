@@ -25,6 +25,7 @@ import {
   getBaseProjectEnvironment,
   PACKAGE_MANAGER_CMD,
 } from '../services/platform.service';
+import { processLogger } from '../services/process-logger.service';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
@@ -56,6 +57,8 @@ export function* launchDevServer({ task }: Action): Saga<void> {
         env: { ...getBaseProjectEnvironment(projectPath), ...env },
       }
     );
+
+    processLogger(child, 'DEVSERVER');
 
     // Now that we have a port/processId for the server, attach it to
     // the task. The port is used for opening the app, the pid is used
@@ -181,6 +184,8 @@ export function* taskRun({ task }: Action): Saga<void> {
     }
   );
 
+  processLogger(child, 'TASK');
+
   // TODO: Does the renderer process still need to know about the child
   // processId?
   yield put(attachTaskMetadata(task, child.pid));
@@ -248,6 +253,8 @@ export function* taskRun({ task }: Action): Saga<void> {
               env: getBaseProjectEnvironment(projectPath),
             }
           );
+
+          processLogger(installProcess, 'EJECT_INSTALL');
 
           // `waitForChildProcessToComplete` waits for proper exit before moving on
           // otherwise the next tasks (UI related) run too early before `yarn install`
