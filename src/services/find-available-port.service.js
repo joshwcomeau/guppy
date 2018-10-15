@@ -1,3 +1,4 @@
+// @flow
 /**
  * Find a clear port to run a server on.
  *
@@ -24,9 +25,11 @@ export default () =>
       const command = isWin
         ? `netstat -aon | find "${port}"`
         : `lsof -i :${port}`;
-      const env = isWin && {
-        cwd: 'C:\\Windows\\System32',
-      };
+      const env = isWin
+        ? {
+            cwd: 'C:\\Windows\\System32',
+          }
+        : undefined;
       childProcess.exec(command, env, (err, res) => {
         // Ugh, childProcess assumes that no output means that there was an
         // error, and `lsof` emits nothing when the port is empty. So,
