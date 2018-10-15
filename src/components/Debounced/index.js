@@ -1,1 +1,2 @@
-export { default } from "./Debounced";
+// @flow
+export { default } from './Debounced';

@@ -1,1 +1,2 @@
-export { default } from "./Modal";
+// @flow
+export { default } from './Modal';

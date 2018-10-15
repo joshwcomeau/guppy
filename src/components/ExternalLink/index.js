@@ -1,1 +1,2 @@
-export { default } from "./ExternalLink";
+// @flow
+export { default } from './ExternalLink';

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Spring, animated, interpolate } from 'react-spring';
@@ -16,12 +17,10 @@ type Props = {
   // support an 'app' modal in the future
   settingsFor: 'project',
   showProjectSettings: () => void,
+  action: () => void,
 };
 
 type State = {
-  rotations: number,
-  scale: number,
-  color: number,
   hovered: boolean,
 };
 

@@ -1,1 +1,2 @@
-export { default } from "./ProjectDependencies";
+// @flow
+export { default } from './ProjectDependencies';

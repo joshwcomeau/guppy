@@ -1,3 +1,4 @@
+// @flow
 import { injectGlobal } from 'styled-components';
 import 'react-tippy/dist/tippy.css';
 import { COLORS } from './constants';

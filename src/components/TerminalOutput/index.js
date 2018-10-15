@@ -1,1 +1,2 @@
-export { default } from "./TerminalOutput";
+// @flow
+export { default } from './TerminalOutput';

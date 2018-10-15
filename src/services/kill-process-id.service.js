@@ -1,3 +1,4 @@
+// @flow
 /**
  * NOTE: This service is used both by the Electron client
  * and server, so it must only contain Node-compatible (read: non-ES6)
@@ -12,7 +13,7 @@ const isWin = /^win/.test(os.platform());
 
 // Kill the process with the given pid, as well as all
 // its descendants down through the entire tree.
-const killProcessId = doomedProcessId => {
+const killProcessId = (doomedProcessId: string) => {
   if (isWin) {
     // For Windows Support
     // On Windows there is only one process so no need for psTree (see below)

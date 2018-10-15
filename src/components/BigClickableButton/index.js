@@ -1,1 +1,2 @@
-export { default } from "./BigClickableButton";
+// @flow
+export { default } from './BigClickableButton';

@@ -1,3 +1,4 @@
+// @flow
 import { combineReducers } from 'redux';
 
 import appLoaded from './app-loaded.reducer';

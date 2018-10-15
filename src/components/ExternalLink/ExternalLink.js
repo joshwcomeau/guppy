@@ -10,7 +10,7 @@ type Props = {
   children: React$Node,
   color: string,
   hoverColor?: string,
-  showUnderline: boolean,
+  showUnderline?: boolean,
   display: string,
 };
 

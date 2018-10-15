@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import reducer, { initialState } from './paths.reducer';
 import {
   IMPORT_EXISTING_PROJECT_FINISH,

@@ -1,1 +1,2 @@
-export { default } from "./LargeLED";
+// @flow
+export { default } from './LargeLED';

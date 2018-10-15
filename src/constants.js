@@ -1,3 +1,4 @@
+// @flow
 import packageJson from '../package.json';
 
 export const COLORS = {

@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import mixpanel from 'mixpanel-browser'; // Mocked
 import { call, takeEvery } from 'redux-saga/effects';
 
