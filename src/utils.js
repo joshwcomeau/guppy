@@ -38,7 +38,7 @@ export const shuffle = <T>(arr: Array<T>): Array<T> => {
 
 export const sample = <T>(arr: Array<T>): T =>
   arr[Math.floor(Math.random() * arr.length)];
-export const sampleMany = <T>(arr: Array<T>, size: number): T =>
+export const sampleMany = <T>(arr: Array<T>, size: number): Array<T> =>
   shuffle(arr).slice(0, size);
 
 export const random = (min: number, max: number) =>

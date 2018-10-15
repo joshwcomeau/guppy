@@ -19,5 +19,8 @@ export const FAKE_CRA_PROJECT = {
     id: 'haidddd',
     name: 'Haidddd',
     icon: '/static/media/icon_blueorange.174c0078.jpg',
+    color: '#FFF',
+    createdAt: Date.now(),
+    type: 'gatsby',
   },
 };

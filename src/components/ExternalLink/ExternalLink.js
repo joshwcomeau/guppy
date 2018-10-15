@@ -6,7 +6,7 @@ import { shell } from 'electron';
 import { COLORS } from '../../constants';
 
 type Props = {
-  href: string,
+  href: string | null,
   children: React$Node,
   color: string,
   hoverColor?: string,
