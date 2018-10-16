@@ -4,6 +4,7 @@ import uuid from 'uuid/v1';
 import { loadAllProjectDependencies } from '../services/read-from-disk.service';
 
 import type {
+  AppSettings,
   Project,
   ProjectInternal,
   ProjectType,
@@ -68,6 +69,11 @@ export const SHOW_PROJECT_SETTINGS = 'SHOW_PROJECT_SETTINGS';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
+
+// app settings
+export const SHOW_APP_SETTINGS = 'SHOW_APP_SETTINGS';
+export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
+
 //
 //
 // Action Creators
@@ -347,6 +353,16 @@ export const showProjectSettings = () => ({
 
 export const hideModal = () => ({
   type: HIDE_MODAL,
+});
+
+// app settings
+export const showAppSettings = () => ({
+  type: SHOW_APP_SETTINGS,
+});
+
+export const saveAppSettingsStart = (settings: AppSettings) => ({
+  type: SAVE_APP_SETTINGS_START,
+  settings,
 });
 
 // project settings related actions

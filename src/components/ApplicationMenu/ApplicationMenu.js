@@ -36,6 +36,7 @@ type Props = {
   showDeleteProjectPrompt: (project: any) => any,
   showResetStatePrompt: () => any,
   showProjectSettings: () => any,
+  showAppSettings: () => any,
   selectProject: (projectId: string) => any,
 };
 
@@ -66,6 +67,7 @@ class ApplicationMenu extends Component<Props> {
       showDeleteProjectPrompt,
       showResetStatePrompt,
       showProjectSettings,
+      showAppSettings,
       selectProject,
       projects,
     } = props;
@@ -86,6 +88,12 @@ class ApplicationMenu extends Component<Props> {
               : '&Import existing project...',
             click: showImportExistingProjectPrompt,
             accelerator: 'CmdOrCtrl+I',
+          },
+          !isMac && {
+            // Linux & Windows only
+            label: '&Preferences...',
+            click: showAppSettings,
+            accelerator: 'Ctrl+,',
           },
         ],
       },
@@ -286,6 +294,7 @@ const mapDispatchToProps = {
   showDeleteProjectPrompt: actions.showDeleteProjectPrompt,
   showResetStatePrompt: actions.showResetStatePrompt,
   showProjectSettings: actions.showProjectSettings,
+  showAppSettings: actions.showAppSettings,
   selectProject: actions.selectProject,
 };
 

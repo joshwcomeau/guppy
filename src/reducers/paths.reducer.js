@@ -20,10 +20,10 @@ import {
   SAVE_PROJECT_SETTINGS_FINISH,
   RESET_ALL_STATE,
   CHANGE_PROJECT_HOME_PATH,
+  // REFRESH_PROJECTS_FINISH,
 } from '../actions';
 import { windowsHomeDir, isWin } from '../services/platform.service';
 import { getProjectNameSlug } from '../services/create-project.service';
-
 import type { Action } from 'redux';
 
 type State = {
@@ -33,15 +33,15 @@ type State = {
   },
 };
 
-const homedir = isWin ? windowsHomeDir : os.homedir();
+// const homedir = isWin ? windowsHomeDir : os.homedir();
 // Noticing some weird quirks when I try to use a dev project on the compiled
 // "production" app, so separating their home paths should help.
 
 export const initialState = {
-  homePath:
-    process.env.NODE_ENV === 'development'
-      ? path.join(homedir, 'guppy-projects-dev')
-      : path.join(homedir, 'guppy-projects'),
+  homePath: '', // --> moved to app settings
+  // process.env.NODE_ENV === 'development'
+  //   ? path.join(homedir, 'guppy-projects-dev')
+  //   : path.join(homedir, 'guppy-projects'),
   byId: {},
 };
 

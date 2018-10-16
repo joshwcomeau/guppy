@@ -8,6 +8,7 @@ type Props = {
   isFocused: boolean,
   hasError: boolean,
   children: React$Node,
+  hideCursor: boolean,
 };
 
 const TextInput = ({ isFocused, hasError, children, ...delegated }: Props) => (
@@ -41,6 +42,7 @@ const InputElem = styled.input`
   border-radius: 0px;
   outline: none;
   font-size: 21px;
+  text-indent: ${props => (props.hideCursor ? '-9999em' : '')};
 
   &::placeholder {
     color: ${COLORS.gray[300]};

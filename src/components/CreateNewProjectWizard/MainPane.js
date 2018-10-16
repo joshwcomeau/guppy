@@ -11,6 +11,7 @@ import ProjectIconSelection from '../ProjectIconSelection';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
+import ProjectTypeSelection from '../ProjectTypeSelection';
 
 import ProjectName from './ProjectName';
 import ProjectPath from './ProjectPath';
@@ -73,32 +74,37 @@ class MainPane extends PureComponent<Props> {
               <ProjectPath projectName={projectName} />
 
               {currentStepIndex > 0 && (
-                <FadeIn>
-                  <FormField
-                    label="Project Type"
-                    isFocused={activeField === 'projectType'}
-                  >
-                    <ProjectTypeTogglesWrapper>
-                      <ButtonWithIcon
-                        showStroke={projectType === 'create-react-app'}
-                        icon={<ReactIcon src={reactIconSrc} />}
-                        onClick={() =>
-                          this.updateProjectType('create-react-app')
-                        }
-                      >
-                        Vanilla React
-                      </ButtonWithIcon>
-                      <Spacer inline size={10} />
-                      <ButtonWithIcon
-                        showStroke={projectType === 'gatsby'}
-                        icon={<GatsbyIcon src={gatsbyIconSrc} />}
-                        onClick={() => this.updateProjectType('gatsby')}
-                      >
-                        Gatsby
-                      </ButtonWithIcon>
-                    </ProjectTypeTogglesWrapper>
-                  </FormField>
-                </FadeIn>
+                <ProjectTypeSelection
+                  activeField={activeField}
+                  projectType={projectType}
+                  onSelect={this.updateProjectType}
+                />
+                // <FadeIn>
+                //   <FormField
+                //     label="Project Type"
+                //     isFocused={activeField === 'projectType'}
+                //   >
+                //     <ProjectTypeTogglesWrapper>
+                //       <ButtonWithIcon
+                //         showStroke={projectType === 'create-react-app'}
+                //         icon={<ReactIcon src={reactIconSrc} />}
+                //         onClick={() =>
+                //           this.updateProjectType('create-react-app')
+                //         }
+                //       >
+                //         Vanilla React
+                //       </ButtonWithIcon>
+                //       <Spacer inline size={10} />
+                //       <ButtonWithIcon
+                //         showStroke={projectType === 'gatsby'}
+                //         icon={<GatsbyIcon src={gatsbyIconSrc} />}
+                //         onClick={() => this.updateProjectType('gatsby')}
+                //       >
+                //         Gatsby
+                //       </ButtonWithIcon>
+                //     </ProjectTypeTogglesWrapper>
+                //   </FormField>
+                // </FadeIn>
               )}
 
               {currentStepIndex > 1 && (
@@ -143,20 +149,20 @@ const Wrapper = styled.div`
   will-change: transform;
 `;
 
-const ReactIcon = styled.img`
-  width: 32px;
-  height: 32px;
-`;
+// const ReactIcon = styled.img`
+//   width: 32px;
+//   height: 32px;
+// `;
 
-const GatsbyIcon = styled.img`
-  width: 22px;
-  height: 22px;
-`;
+// const GatsbyIcon = styled.img`
+//   width: 22px;
+//   height: 22px;
+// `;
 
-const ProjectTypeTogglesWrapper = styled.div`
-  margin-top: 8px;
-  margin-left: -8px;
-`;
+// const ProjectTypeTogglesWrapper = styled.div`
+//   margin-top: 8px;
+//   margin-left: -8px;
+// `;
 
 const SubmitButtonWrapper = styled.div`
   position: absolute;
