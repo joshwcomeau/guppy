@@ -5,7 +5,6 @@ import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
 
 import FormField from '../FormField';
-// import ProjectIconSelection from '../ProjectIconSelection';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';

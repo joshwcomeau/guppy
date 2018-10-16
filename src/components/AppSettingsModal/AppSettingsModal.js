@@ -38,16 +38,6 @@ class AppSettingsModal extends PureComponent<Props, State> {
     newSettings: this.props.settings,
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (!nextProps.project) {
-  //     return;
-  //   }
-  //   this.setState({
-  //     newName: nextProps.project.name,
-  //     projectIcon: nextProps.project.icon,
-  //   });
-  // }
-
   saveSettings = (ev: SyntheticEvent<*>) => {
     ev.preventDefault();
 
@@ -94,7 +84,6 @@ class AppSettingsModal extends PureComponent<Props, State> {
     const { hideModal, isVisible } = this.props;
     const newSettings = this.state.newSettings;
     // const { activeField } = this.state;
-    // const { projectIcon } = this.state;
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
         <ModalHeader title="Preferences" />
@@ -162,11 +151,6 @@ const SectionTitle = styled.h2`
 const Actions = styled.div`
   text-align: center;
   padding-bottom: 16px;
-`;
-
-const DisabledText = styled.div`
-  padding-top: 16px;
-  color: ${COLORS.gray[500]};
 `;
 
 const mapStateToProps = state => {

@@ -1,18 +1,11 @@
 // @flow
-// import path from 'path';
 import { remote } from 'electron';
 import React, { PureComponent } from 'react';
-// import { connect } from 'react-redux';
-// import { Tooltip } from 'react-tippy';
 import styled from 'styled-components';
 
-// import { changeProjectHomePath } from '../../actions';
-// import { getProjectHomePath } from '../../reducers/paths.reducer';
-// import { getProjectNameSlug } from '../../services/create-project.service';
 import { COLORS } from '../../constants';
 
 import TextButton from '../TextButton';
-// import TextInput from '../TextInput';
 
 type Props = {
   path: string,
@@ -20,7 +13,7 @@ type Props = {
   onSelect: () => void,
 };
 
-class DirectoryPicker extends PureComponent<Props, State> {
+class DirectoryPicker extends PureComponent<Props> {
   static defaultProps = {
     pathToSelectMessage: 'Select the directory',
   };
@@ -42,10 +35,6 @@ class DirectoryPicker extends PureComponent<Props, State> {
         // Only a single path should be selected
         const [firstPath] = paths;
         this.props.onSelect(firstPath);
-        // this.props.changeProjectHomePath(firstPath);
-        // this.setState({
-        //   selectedPath: firstPath,
-        // });
       }
     );
   };
