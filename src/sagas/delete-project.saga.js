@@ -6,6 +6,7 @@ import * as path from 'path';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
+  startDeletingProject,
   finishDeletingProject,
   selectProject,
   createNewProjectStart,
@@ -82,6 +83,9 @@ export function* deleteProject({ project }: Action): Saga<void> {
   const nextSelectedProjectId = getNextProjectId(projects, project.id);
 
   if (shouldDeleteFromDisk) {
+    // Delete from disk tasks some time, so show a loading screen
+    yield put(startDeletingProject());
+
     // Run the deletion from disk
     // first delete node_modules folder permanently (faster than moving to trash)
     yield call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'));

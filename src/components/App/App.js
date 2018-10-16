@@ -5,6 +5,7 @@ import styled, { keyframes } from 'styled-components';
 
 import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
+import { getBlockingStatus } from '../../reducers/app-status.reducer';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -14,34 +15,33 @@ import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 import ProjectConfigurationModal from '../ProjectConfigurationModal';
 import Initialization from '../Initialization';
+import LoadingScreen from '../LoadingScreen';
 
 import type { Project } from '../../types';
 
 type Props = {
   selectedProjectId: ?Project,
+  showLoadingScreen: boolean,
 };
 
 class App extends PureComponent<Props> {
   render() {
-    const { selectedProjectId } = this.props;
-
+    const { selectedProjectId, showLoadingScreen } = this.props;
+    console.log(showLoadingScreen);
     return (
       <Initialization>
         {wasSuccessfullyInitialized =>
           wasSuccessfullyInitialized && (
             <Fragment>
               <Titlebar />
-
               <Wrapper>
                 <ApplicationMenu />
-
+                {showLoadingScreen && <LoadingScreen />}
                 <Sidebar />
-
                 <MainContent>
                   {selectedProjectId ? <ProjectPage /> : <IntroScreen />}
                 </MainContent>
               </Wrapper>
-
               <CreateNewProjectWizard />
               <ProjectConfigurationModal />
             </Fragment>
@@ -74,6 +74,7 @@ const MainContent = styled.div`
 
 const mapStateToProps = state => ({
   selectedProjectId: getSelectedProjectId(state),
+  showLoadingScreen: getBlockingStatus(state),
 });
 
 export default connect(mapStateToProps)(App);

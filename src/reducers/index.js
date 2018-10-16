@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import appLoaded from './app-loaded.reducer';
+import appStatus from './app-status.reducer';
 import projects from './projects.reducer';
 import tasks from './tasks.reducer';
 import dependencies from './dependencies.reducer';
@@ -11,6 +12,7 @@ import queue from './queue.reducer';
 
 export default combineReducers({
   appLoaded,
+  appStatus,
   projects,
   tasks,
   dependencies,
