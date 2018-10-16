@@ -6,6 +6,7 @@ import * as path from 'path';
 import rootSaga, {
   deleteProject,
   getNextProjectId,
+  waitForAsyncRimraf,
 } from './delete-project.saga';
 
 import {
@@ -64,7 +65,7 @@ describe('delete-project saga', () => {
       expect(saga.next(projects).value).toEqual(put(startDeletingProject()));
 
       expect(saga.next(projects).value).toEqual(
-        call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'))
+        call(waitForAsyncRimraf, project.path)
       );
 
       expect(saga.next(projects).value).toEqual(
