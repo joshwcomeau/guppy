@@ -15,7 +15,6 @@ type Props = {
 class LoadingScreen extends PureComponent<Props> {
   render() {
     const { showLoadingScreen } = this.props;
-    console.log(showLoadingScreen);
     return (
       <Window isVisible={showLoadingScreen}>
         <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />

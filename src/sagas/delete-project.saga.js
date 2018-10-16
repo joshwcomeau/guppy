@@ -88,7 +88,15 @@ export function* deleteProject({ project }: Action): Saga<void> {
 
     // Run the deletion from disk
     // first delete node_modules folder permanently (faster than moving to trash)
-    yield call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'));
+    yield new Promise((resolve, reject) =>
+      rimraf(path.join(project.path, 'node_modules'), err => {
+        if (err) {
+          reject();
+          return;
+        }
+        resolve();
+      })
+    );
 
     // delete project folder
     const successfullyDeletedFromDisk = yield call(
