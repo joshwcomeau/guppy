@@ -14,7 +14,7 @@
  * for example, what people name their projects, because that doesn't teach
  * us anything about how we can make Guppy better.
  */
-import { call, takeEvery } from 'redux-saga/effects';
+import { call, takeEvery, select } from 'redux-saga/effects';
 
 import logger from '../services/analytics.service';
 import {
@@ -29,6 +29,7 @@ import {
   DELETE_DEPENDENCY,
   FINISH_DELETING_PROJECT,
 } from '../actions';
+import { getPrivacySettings } from '../reducers/app-settings.reducer';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
@@ -93,7 +94,8 @@ const loggableActions: LoggableActionsMap = {
 };
 
 export function* handleAction({ type, ...payload }: Action): Saga<void> {
-  if (loggableActions[type]) {
+  const { enableUsageTracking } = yield select(getPrivacySettings);
+  if (loggableActions[type] && enableUsageTracking) {
     const { name, getMetadata } = loggableActions[type];
     const metadata = getMetadata(payload);
 

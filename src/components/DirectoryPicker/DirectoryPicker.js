@@ -25,7 +25,8 @@ class DirectoryPicker extends PureComponent<Props, State> {
     pathToSelectMessage: 'Select the directory',
   };
 
-  updatePath = () => {
+  updatePath = (ev: SyntheticEvent<*>) => {
+    ev.preventDefault();
     remote.dialog.showOpenDialog(
       {
         message: this.props.pathToSelectMessage,
@@ -58,7 +59,7 @@ class DirectoryPicker extends PureComponent<Props, State> {
 
     return (
       <Wrapper>
-        <DirectoryButton onClick={() => this.updatePath()} hideCursor={true}>
+        <DirectoryButton onClick={this.updatePath} hideCursor={true}>
           {fullProjectPath}
         </DirectoryButton>
       </Wrapper>

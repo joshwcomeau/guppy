@@ -10,6 +10,7 @@ import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 
+import { ProjectType } from '../../types';
 type Props = {
   activeField: string,
   label?: string,
@@ -22,8 +23,13 @@ class ProjectTypeSelection extends PureComponent<Props> {
     label: 'Project Type',
   };
 
+  select = (ev: SyntheticEvent<*>, projectType: ProjectType) => {
+    ev.preventDefault();
+    this.props.onSelect(projectType);
+  };
+
   render() {
-    const { activeField, projectType, label, onSelect } = this.props;
+    const { activeField, projectType, label } = this.props;
     return (
       <FadeIn>
         <FormField label={label} isFocused={activeField === 'projectType'}>
@@ -31,7 +37,9 @@ class ProjectTypeSelection extends PureComponent<Props> {
             <ButtonWithIcon
               showStroke={projectType === 'create-react-app'}
               icon={<ReactIcon src={reactIconSrc} />}
-              onClick={() => onSelect('create-react-app')}
+              onClick={(ev: SyntheticEvent<*>) =>
+                this.select(ev, 'create-react-app')
+              }
             >
               Vanilla React
             </ButtonWithIcon>
@@ -39,7 +47,7 @@ class ProjectTypeSelection extends PureComponent<Props> {
             <ButtonWithIcon
               showStroke={projectType === 'gatsby'}
               icon={<GatsbyIcon src={gatsbyIconSrc} />}
-              onClick={() => onSelect('gatsby')}
+              onClick={(ev: SyntheticEvent<*>) => this.select(ev, 'gatsby')}
             >
               Gatsby
             </ButtonWithIcon>

@@ -1,5 +1,5 @@
 import mixpanel from 'mixpanel-browser'; // Mocked
-import { call, takeEvery } from 'redux-saga/effects';
+import { call, takeEvery, select } from 'redux-saga/effects';
 
 import {
   ADD_PROJECT,
@@ -14,6 +14,7 @@ import {
   FINISH_DELETING_PROJECT,
 } from '../actions';
 import logger from '../services/analytics.service';
+import { getPrivacySettings } from '../reducers/app-settings.reducer';
 import {
   createTask,
   createProject,
@@ -22,6 +23,14 @@ import {
 import rootSaga, { handleAction } from './analytics.saga';
 
 describe('analytics saga', () => {
+  const initialState = {
+    appSettings: {
+      privacy: {
+        enableUsageTracking: true,
+      },
+    },
+  };
+
   beforeEach(() => {
     mixpanel.init.mockClear();
     mixpanel.identify.mockClear();
@@ -46,6 +55,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().done).toBe(true);
       expect(mixpanel.track.mock.calls).toEqual([]);
     });
@@ -61,6 +71,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'create-project', { type: 'create-react-app' })
       );
@@ -79,6 +90,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'import-project', { type: 'gatsby' })
       );
@@ -94,6 +106,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'select-project', {})
       );
@@ -110,6 +123,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'launch-dev-server', {})
       );
@@ -126,6 +140,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'run-task', { name: 'build' })
       );
@@ -141,6 +156,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'clear-console', {})
       );
@@ -157,6 +173,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'add-dependency', { dependencyName: 'redux' })
       );
@@ -174,6 +191,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'update-dependency', { dependencyName: 'redux' })
       );
@@ -190,6 +208,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'delete-dependency', { dependencyName: 'redux' })
       );
@@ -205,6 +224,7 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
       expect(saga.next().value).toEqual(
         call(logger.logEvent, 'delete-project', {})
       );

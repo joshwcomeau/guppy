@@ -178,6 +178,12 @@ class ApplicationMenu extends Component<Props> {
           { role: 'hide' },
           { role: 'hideothers' },
           { role: 'unhide' },
+          { role: 'separator' },
+          {
+            label: 'Preferences...',
+            click: showAppSettings,
+            accelerator: 'Ctrl+,',
+          },
           { type: 'separator' },
           { role: 'quit' },
         ],

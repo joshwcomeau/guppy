@@ -13,23 +13,24 @@ import ModalHeader from '../ModalHeader';
 import Spacer from '../Spacer';
 import { FillButton } from '../Button';
 import FormField from '../FormField';
+import Toggle from '../Toggle';
+
 // import TextInput from '../TextInput';
 import DirectoryPicker from '../DirectoryPicker';
 import ProjectTypeSelection from '../ProjectTypeSelection';
 
-import type { AppSettings, Project, ProjectType } from '../../types';
+import type { AppSettings, ProjectType } from '../../types';
 
 type Props = {
-  project: Project | null,
   isVisible: boolean,
-  dependenciesChangingForProject: boolean,
+  settings: AppSettings,
   hideModal: () => void,
-  saveProjectSettings: (string, string, Project) => void,
+  saveAppSettings: (newSettings: AppSettings) => void,
 };
 
 type State = {
   newSettings: AppSettings,
-  activeField: string,
+  // activeField: string,
 };
 
 class AppSettingsModal extends PureComponent<Props, State> {
@@ -51,46 +52,21 @@ class AppSettingsModal extends PureComponent<Props, State> {
     ev.preventDefault();
 
     const { saveAppSettings } = this.props;
-    // if (!project) {
-    //   return;
-    // }
     const { newSettings } = this.state;
 
     saveAppSettings(newSettings);
   };
 
-  // changeProjectName = (ev: SyntheticKeyboardEvent<*>) => {
-  //   this.setState({
-  //     newName: ev.currentTarget.value,
-  //   });
-  // };
-
-  // handleKeyPress = (ev: SyntheticKeyboardEvent<*>) => {
-  //   // When pressing the "enter" key, we want to submit the form.
-  //   // This doesn't happen automatically because we're using buttons for the
-  //   // project icons, and so it delegates the keypress to the first icon,
-  //   // instead of to the submit button at the end.
-  //   if (ev.key === 'Enter') {
-  //     this.saveSettings(ev);
-  //     return;
-  //   }
-  // };
-
-  // updateProjectIcon = (src: string, ev) => {
-  //   ev.preventDefault();
-
-  //   this.setState(prevState => ({
-  //     projectIcon: src,
+  // setActive = (name: string) => {
+  //   this.setState(state => ({
+  //     activeField: name,
   //   }));
   // };
 
-  setActive = (name: string) => {
-    this.setState(state => ({
-      activeField: name,
-    }));
-  };
-
-  selectDefaultProjectPath = selectedPath => {
+  // todo: refactor state update methods into single method & use dotty https://www.npmjs.com/package/dotty
+  //       method params keyString, value
+  //       --> keyString = general.defaultProjectPath
+  selectDefaultProjectPath = (selectedPath): AppSettings => {
     this.setState(
       produce(draftState => {
         draftState.newSettings.general.defaultProjectPath = selectedPath;
@@ -98,10 +74,18 @@ class AppSettingsModal extends PureComponent<Props, State> {
     );
   };
 
-  selectDefaultProjectType = (projectType: ProjectType) => {
+  selectDefaultProjectType = (projectType: ProjectType): AppSettings => {
     this.setState(
       produce(draftState => {
         draftState.newSettings.general.defaultProjectType = projectType;
+      })
+    );
+  };
+
+  toggleUsageTracking = (enableUsageTracking: boolean): AppSettings => {
+    this.setState(
+      produce(draftState => {
+        draftState.newSettings.privacy.enableUsageTracking = enableUsageTracking;
       })
     );
   };
@@ -111,16 +95,11 @@ class AppSettingsModal extends PureComponent<Props, State> {
     const newSettings = this.state.newSettings;
     // const { activeField } = this.state;
     // const { projectIcon } = this.state;
-    console.log(
-      'appsettings modal render',
-      this.state.newSettings.general.defaultProjectPath
-    );
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
         <ModalHeader title="Preferences" />
 
         <MainContent>
-          <pre>{JSON.stringify(this.state.newSettings, null, 2)}</pre>
           <form onSubmit={this.saveSettings}>
             {/* // todo: Refactor to map over settings so this renders dynamically -
                          needs additional info on state e.g. component for rendering + props
@@ -141,6 +120,18 @@ class AppSettingsModal extends PureComponent<Props, State> {
               <ProjectTypeSelection
                 projectType={newSettings.general.defaultProjectType}
                 onSelect={this.selectDefaultProjectType}
+              />
+            </FormField>
+
+            <SectionTitle>Privacy</SectionTitle>
+            <FormField
+              label="Enable anonymous usage tracking"
+              focusOnClick={false}
+            >
+              {/* <Spacer size={5} /> */}
+              <Toggle
+                isToggled={newSettings.privacy.enableUsageTracking}
+                onToggle={this.toggleUsageTracking}
               />
             </FormField>
 

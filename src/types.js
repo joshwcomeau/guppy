@@ -136,6 +136,6 @@ export type AppSettings = {
     defaultProjectType: ProjectType,
   },
   privacy: {
-    trackingAllowed: boolean,
+    enableUsageTracking: boolean,
   },
 };

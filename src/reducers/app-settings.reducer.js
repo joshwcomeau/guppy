@@ -27,13 +27,7 @@ import type { AppSettings } from '../types';
 
 const homedir = isWin ? windowsHomeDir : os.homedir();
 
-// const projectPath =
-//   process.env.NODE_ENV === 'development'
-//     ? path.join(homedir, 'guppy-projects-dev')
-//     : path.join(homedir, 'guppy-projects');
-
-// console.log('projectpath', projectPath);
-const initialState = {
+const initialState: AppSettings = {
   general: {
     defaultProjectPath:
       process.env.NODE_ENV === 'development'
@@ -42,17 +36,16 @@ const initialState = {
     defaultProjectType: 'create-react-app',
   },
   privacy: {
-    trackingAllowed: true,
+    enableUsageTracking: true,
   },
 };
 
 export default (state: AppSettings = initialState, action: Action = {}) => {
-  console.log('app settings', state, action);
   switch (action.type) {
     case SAVE_APP_SETTINGS_START:
-      return produce(state, draftState => {
-        draftState = action.settings;
-      });
+      return {
+        ...action.settings,
+      };
 
     default:
       return state;
@@ -63,5 +56,11 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
 //
 //
 // Selectors
-export const getDefaultProjectPath = state =>
+export const getDefaultProjectPath = (state: AppSettings) =>
   state.appSettings.general.defaultProjectPath;
+
+export const getDefaultProjectType = (state: AppSettings) =>
+  state.appSettings.general.defaultProjectType;
+
+export const getPrivacySettings = (state: AppSettings) =>
+  state.appSettings.privacy;

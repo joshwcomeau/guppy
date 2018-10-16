@@ -2,6 +2,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
@@ -12,6 +13,10 @@ import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 import ProjectTypeSelection from '../ProjectTypeSelection';
+import {
+  getDefaultProjectType,
+  getDefaultProjectPath,
+} from '../../reducers/app-settings.reducer';
 
 import ProjectName from './ProjectName';
 import ProjectPath from './ProjectPath';
@@ -47,6 +52,7 @@ class MainPane extends PureComponent<Props> {
 
   render() {
     const {
+      projectHome,
       projectName,
       projectType,
       projectIcon,
@@ -71,7 +77,10 @@ class MainPane extends PureComponent<Props> {
                 handleSubmit={handleSubmit}
                 isProjectNameTaken={isProjectNameTaken}
               />
-              <ProjectPath projectName={projectName} />
+              <ProjectPath
+                projectName={projectName}
+                projectHome={projectHome}
+              />
 
               {currentStepIndex > 0 && (
                 <ProjectTypeSelection
@@ -172,4 +181,9 @@ const SubmitButtonWrapper = styled.div`
   text-align: center;
 `;
 
-export default MainPane;
+const mapStateToProps = state => ({
+  projectType: getDefaultProjectType(state),
+  projectHome: getDefaultProjectPath(state),
+});
+
+export default connect(mapStateToProps)(MainPane);
