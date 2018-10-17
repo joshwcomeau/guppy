@@ -284,7 +284,12 @@ describe('task saga', () => {
         );
 
         expect(
-          saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
+          saga.next({
+            channel: 'exit',
+            timestamp,
+            wasSuccessful: true,
+            uncleanRepo: false,
+          }).value
         ).toEqual(installProcessDescription);
 
         expect(saga.next(installProcessDescription).value).toEqual(
