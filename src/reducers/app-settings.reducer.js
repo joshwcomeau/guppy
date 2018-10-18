@@ -27,7 +27,7 @@ import type { AppSettings } from '../types';
 // "production" app, so separating their home paths should help.
 const homedir = isWin ? windowsHomeDir : os.homedir();
 
-const initialState: AppSettings = {
+export const initialState: AppSettings = {
   general: {
     defaultProjectPath:
       process.env.NODE_ENV === 'development'
