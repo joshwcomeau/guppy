@@ -7,6 +7,7 @@ import produce from 'immer';
 import * as actions from '../../actions';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { COLORS } from '../../constants';
+import { setNested } from '../../utils';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -18,7 +19,7 @@ import Toggle from '../Toggle';
 import DirectoryPicker from '../DirectoryPicker';
 import ProjectTypeSelection from '../ProjectTypeSelection';
 
-import type { AppSettings, ProjectType } from '../../types';
+import type { AppSettings } from '../../types';
 
 type Props = {
   isVisible: boolean,
@@ -45,29 +46,13 @@ class AppSettingsModal extends PureComponent<Props, State> {
     saveAppSettings(newSettings);
   };
 
-  // todo: refactor state update methods into single method & use dotty https://www.npmjs.com/package/dotty
-  //       method params keyString, value
-  //       --> keyString = general.defaultProjectPath
-  selectDefaultProjectPath = (selectedPath): AppSettings => {
-    this.setState(
-      produce(draftState => {
-        draftState.newSettings.general.defaultProjectPath = selectedPath;
-      })
-    );
-  };
-
-  selectDefaultProjectType = (projectType: ProjectType): AppSettings => {
-    this.setState(
-      produce(draftState => {
-        draftState.newSettings.general.defaultProjectType = projectType;
-      })
-    );
-  };
-
-  toggleUsageTracking = (enableUsageTracking: boolean): AppSettings => {
-    this.setState(
-      produce(draftState => {
-        draftState.newSettings.privacy.enableUsageTracking = enableUsageTracking;
+  // Update setting by key
+  // Notice: Key will be nested e.g. 'general.defaultProjectPath' that's why we're using utility function setNested
+  updateSetting = (key: string, value: any) => {
+    this.setState(state =>
+      // produce could be used with currying here - so no state passed to produce. But Flow couldn't detect the right return type.
+      produce(state, draftState => {
+        setNested(draftState.newSettings, key, value);
       })
     );
   };
@@ -91,14 +76,18 @@ class AppSettingsModal extends PureComponent<Props, State> {
               <Spacer size={5} />
               <DirectoryPicker
                 path={newSettings.general.defaultProjectPath}
-                onSelect={this.selectDefaultProjectPath}
+                onSelect={path =>
+                  this.updateSetting('general.defaultProjectPath', path)
+                }
               />
             </FormField>
 
             <ProjectTypeSelection
               label="Default Project Type"
               projectType={newSettings.general.defaultProjectType}
-              onSelect={this.selectDefaultProjectType}
+              onSelect={projectType =>
+                this.updateSetting('general.defaultProjectType', projectType)
+              }
             />
 
             <SectionTitle>Privacy</SectionTitle>
@@ -108,7 +97,9 @@ class AppSettingsModal extends PureComponent<Props, State> {
             >
               <Toggle
                 isToggled={newSettings.privacy.enableUsageTracking}
-                onToggle={this.toggleUsageTracking}
+                onToggle={value =>
+                  this.updateSetting('privacy.enableUsageTracking', value)
+                }
               />
             </FormField>
 

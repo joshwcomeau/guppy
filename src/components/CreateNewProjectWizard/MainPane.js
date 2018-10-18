@@ -4,13 +4,8 @@ import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import reactIconSrc from '../../assets/images/react-icon.svg';
-import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
-
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
-import ButtonWithIcon from '../ButtonWithIcon';
-import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 import ProjectTypeSelection from '../ProjectTypeSelection';
 import {
@@ -26,6 +21,7 @@ import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
 
 type Props = {
+  projectHome: string,
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
@@ -45,8 +41,10 @@ class MainPane extends PureComponent<Props> {
 
   updateProjectName = (projectName: string) =>
     this.props.updateFieldValue('projectName', projectName);
-  updateProjectType = (projectType: ProjectType) =>
+  updateProjectType = (projectType: ProjectType) => {
+    console.log('update type', projectType);
     this.props.updateFieldValue('projectType', projectType);
+  };
   updateProjectIcon = (projectIcon: string) =>
     this.props.updateFieldValue('projectIcon', projectIcon);
 

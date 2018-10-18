@@ -5,6 +5,10 @@ import Transition from 'react-transition-group/Transition';
 import { remote } from 'electron';
 
 import * as actions from '../../actions';
+import {
+  getAppSettings,
+  getDefaultProjectPath,
+} from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
@@ -20,12 +24,13 @@ import BuildPane from './BuildPane';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, ProjectInternal } from '../../types';
+import type { ProjectType, ProjectInternal, AppSettings } from '../../types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 const { dialog } = remote;
 
 type Props = {
+  settings: AppSettings,
   projects: { [projectId: string]: ProjectInternal },
   projectHomePath: string,
   isVisible: boolean,
@@ -44,6 +49,7 @@ type State = {
   projectType: ?ProjectType,
   projectIcon: ?string,
   activeField: ?Field,
+  settings: ?AppSettings,
   status: Status,
   currentStep: Step,
   isProjectNameTaken: boolean,
@@ -57,18 +63,27 @@ const initialState = {
   status: 'filling-in-form',
   currentStep: 'projectName',
   isProjectNameTaken: false,
+  settings: null,
 };
 
 class CreateNewProjectWizard extends PureComponent<Props, State> {
   state = initialState;
   timeoutId: number;
 
+  componentDidMount() {
+    this.setState({
+      projectType: this.props.settings.general.defaultProjectType,
+    });
+  }
+
   componentWillUnmount() {
     window.clearTimeout(this.timeoutId);
   }
 
   updateFieldValue = (field: Field, value: any) => {
-    this.setState({ [field]: value, activeField: field });
+    this.setState({ [field]: value, activeField: field }, () => {
+      console.log('update field', field, this.state);
+    });
 
     if (field === 'projectName') {
       this.verifyProjectNameUniqueness(value);
@@ -168,7 +183,10 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   reinitialize = () => {
-    this.setState(initialState);
+    this.setState({
+      ...initialState,
+      projectType: this.props.settings.general.defaultProjectType,
+    });
   };
 
   render() {
@@ -237,6 +255,7 @@ const mapStateToProps = state => ({
   projectHomePath: getProjectHomePath(state),
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
+  settings: getAppSettings(state),
 });
 
 const mapDispatchToProps = {

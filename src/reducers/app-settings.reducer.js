@@ -56,6 +56,7 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
 //
 //
 // Selectors
+export const getAppSettings = (state: any) => state.appSettings;
 export const getDefaultProjectPath = (state: any) =>
   state.appSettings.general.defaultProjectPath;
 

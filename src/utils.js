@@ -321,3 +321,17 @@ export const contrastingColor = (
     return '#fff';
   }
 };
+
+// Set value on nested object
+// based on answer from webjay here https://stackoverflow.com/questions/18936915/dynamically-set-property-of-nested-object#38616729
+// e.g. path = 'general.defaultProjectType', value="create-react-app"
+export const setNested = (obj, path, value) => {
+  const pList = path.split('.');
+  const key = pList.pop();
+  const pointer = pList.reduce((accumulator, currentValue) => {
+    if (accumulator[currentValue] === undefined) accumulator[currentValue] = {};
+    return accumulator[currentValue];
+  }, obj);
+  pointer[key] = value;
+  return obj;
+};

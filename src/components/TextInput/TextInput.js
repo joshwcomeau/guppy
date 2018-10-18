@@ -42,7 +42,6 @@ const InputElem = styled.input`
   border-radius: 0px;
   outline: none;
   font-size: 21px;
-  text-indent: ${props => (props.hideCursor ? '-9999em' : '')};
 
   &::placeholder {
     color: ${COLORS.gray[300]};
