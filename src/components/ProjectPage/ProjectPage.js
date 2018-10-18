@@ -2,6 +2,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
+import { Tooltip } from 'react-tippy';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
@@ -64,6 +65,7 @@ class ProjectPage extends PureComponent<Props> {
 
   render() {
     const { project } = this.props;
+    const { path } = project;
 
     return (
       <FadeIn>
@@ -73,9 +75,11 @@ class ProjectPage extends PureComponent<Props> {
               x={-2}
               reason="Align left edge of title with the modules on page"
             >
-              <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
-                {project.name}
-              </Heading>
+              <Tooltip title={path} position="bottom">
+                <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
+                  {project.name}
+                </Heading>
+              </Tooltip>
             </PixelShifter>
             <SettingsButton />
           </FlexRow>
