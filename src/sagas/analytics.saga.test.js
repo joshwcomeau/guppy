@@ -23,10 +23,6 @@ import {
 import rootSaga, { handleAction } from './analytics.saga';
 
 describe('analytics saga', () => {
-  // const initialState = {
-  //   enableUsageTracking: true,
-  // };
-
   beforeEach(() => {
     mixpanel.init.mockClear();
     mixpanel.identify.mockClear();
