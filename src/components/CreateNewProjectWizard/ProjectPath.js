@@ -86,15 +86,15 @@ const DirectoryButton = styled(TextButton)`
   text-decoration: none;
 `;
 
-// const mapStateToProps = state => ({
-//   projectHome: getProjectHomePath(state),
-// });
+const mapStateToProps = state => ({
+  projectHome: getProjectHomePath(state),
+});
 
 const mapDispatchToProps = {
   changeProjectHomePath,
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ProjectPath);

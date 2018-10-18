@@ -73,7 +73,7 @@ export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
 // app settings
 export const SHOW_APP_SETTINGS = 'SHOW_APP_SETTINGS';
 export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
-
+export const INITIALIZE_HOMEPATH = 'INITIALIZE_HOMEPATH'; // initialize defaultProjectPath to homePath
 //
 //
 // Action Creators
@@ -362,6 +362,11 @@ export const showAppSettings = () => ({
 
 export const saveAppSettingsStart = (settings: AppSettings) => ({
   type: SAVE_APP_SETTINGS_START,
+  settings,
+});
+
+export const initializeHomePath = (settings: AppSettings) => ({
+  type: INITIALIZE_HOMEPATH,
   settings,
 });
 

@@ -5,10 +5,7 @@ import Transition from 'react-transition-group/Transition';
 import { remote } from 'electron';
 
 import * as actions from '../../actions';
-import {
-  getAppSettings,
-  getDefaultProjectPath,
-} from '../../reducers/app-settings.reducer';
+import { getAppSettings } from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
 import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
@@ -42,6 +39,7 @@ type Props = {
   ) => void,
   createNewProjectCancel: () => void,
   createNewProjectFinish: () => void,
+  initializeHomePath: AppSettings => void,
 };
 
 type State = {
@@ -71,9 +69,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   timeoutId: number;
 
   componentDidMount() {
-    this.setState({
-      projectType: this.props.settings.general.defaultProjectType,
-    });
+    this.reinitialize(); // needed to load app settings
   }
 
   componentWillUnmount() {
@@ -81,9 +77,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   }
 
   updateFieldValue = (field: Field, value: any) => {
-    this.setState({ [field]: value, activeField: field }, () => {
-      console.log('update field', field, this.state);
-    });
+    this.setState({ [field]: value, activeField: field });
 
     if (field === 'projectName') {
       this.verifyProjectNameUniqueness(value);
@@ -183,10 +177,13 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   reinitialize = () => {
+    const { settings } = this.props;
+
     this.setState({
       ...initialState,
-      projectType: this.props.settings.general.defaultProjectType,
+      projectType: settings.general.defaultProjectType,
     });
+    this.props.initializeHomePath(settings);
   };
 
   render() {
@@ -262,6 +259,7 @@ const mapDispatchToProps = {
   addProject: actions.addProject,
   createNewProjectCancel: actions.createNewProjectCancel,
   createNewProjectFinish: actions.createNewProjectFinish,
+  initializeHomePath: actions.initializeHomePath,
 };
 
 export default connect(

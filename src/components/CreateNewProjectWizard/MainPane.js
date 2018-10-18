@@ -2,16 +2,11 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
 import FadeIn from '../FadeIn';
 import ProjectTypeSelection from '../ProjectTypeSelection';
-import {
-  getDefaultProjectType,
-  getDefaultProjectPath,
-} from '../../reducers/app-settings.reducer';
 
 import ProjectName from './ProjectName';
 import ProjectPath from './ProjectPath';
@@ -21,7 +16,6 @@ import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
 
 type Props = {
-  projectHome: string,
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
@@ -41,16 +35,13 @@ class MainPane extends PureComponent<Props> {
 
   updateProjectName = (projectName: string) =>
     this.props.updateFieldValue('projectName', projectName);
-  updateProjectType = (projectType: ProjectType) => {
-    console.log('update type', projectType);
+  updateProjectType = (projectType: ProjectType) =>
     this.props.updateFieldValue('projectType', projectType);
-  };
   updateProjectIcon = (projectIcon: string) =>
     this.props.updateFieldValue('projectIcon', projectIcon);
 
   render() {
     const {
-      projectHome,
       projectName,
       projectType,
       projectIcon,
@@ -75,10 +66,7 @@ class MainPane extends PureComponent<Props> {
                 handleSubmit={handleSubmit}
                 isProjectNameTaken={isProjectNameTaken}
               />
-              <ProjectPath
-                projectName={projectName}
-                projectHome={projectHome}
-              />
+              <ProjectPath projectName={projectName} />
 
               {currentStepIndex > 0 && (
                 <ProjectTypeSelection
@@ -138,9 +126,4 @@ const SubmitButtonWrapper = styled.div`
   text-align: center;
 `;
 
-const mapStateToProps = state => ({
-  projectType: getDefaultProjectType(state),
-  projectHome: getDefaultProjectPath(state),
-});
-
-export default connect(mapStateToProps)(MainPane);
+export default MainPane;

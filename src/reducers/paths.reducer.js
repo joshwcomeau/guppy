@@ -19,6 +19,8 @@ import {
   SAVE_PROJECT_SETTINGS_FINISH,
   RESET_ALL_STATE,
   CHANGE_PROJECT_HOME_PATH,
+  SAVE_APP_SETTINGS_START,
+  INITIALIZE_HOMEPATH,
 } from '../actions';
 import { getProjectNameSlug } from '../services/create-project.service';
 import type { Action } from 'redux';
@@ -70,6 +72,13 @@ export default (state: State = initialState, action: Action = {}) => {
       const { homePath } = action;
       return produce(state, draftState => {
         draftState.homePath = homePath;
+      });
+    }
+
+    case SAVE_APP_SETTINGS_START:
+    case INITIALIZE_HOMEPATH: {
+      return produce(state, draftState => {
+        draftState.homePath = action.settings.general.defaultProjectPath;
       });
     }
 
