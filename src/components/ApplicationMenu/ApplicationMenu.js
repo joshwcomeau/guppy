@@ -89,12 +89,6 @@ class ApplicationMenu extends Component<Props> {
             click: showImportExistingProjectPrompt,
             accelerator: 'CmdOrCtrl+I',
           },
-          !isMac && {
-            // Linux & Windows only
-            label: '&Preferences...',
-            click: showAppSettings,
-            accelerator: 'Ctrl+,',
-          },
         ],
       },
       {
@@ -166,6 +160,16 @@ class ApplicationMenu extends Component<Props> {
       },
     ];
 
+    // Add preferences menu item for Linux/Windows
+    if (!isMac) {
+      template[0].submenu.push({
+        // Linux & Windows only
+        label: '&Preferences...',
+        click: showAppSettings,
+        accelerator: 'Ctrl+,',
+      });
+    }
+
     // MacOS menus start with the app name (Guppy) and offer some standard
     // options:
     if (process.platform === 'darwin') {
@@ -178,7 +182,6 @@ class ApplicationMenu extends Component<Props> {
           { role: 'hide' },
           { role: 'hideothers' },
           { role: 'unhide' },
-          { role: 'separator' },
           {
             label: 'Preferences...',
             click: showAppSettings,

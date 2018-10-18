@@ -15,7 +15,6 @@ import { FillButton } from '../Button';
 import FormField from '../FormField';
 import Toggle from '../Toggle';
 
-// import TextInput from '../TextInput';
 import DirectoryPicker from '../DirectoryPicker';
 import ProjectTypeSelection from '../ProjectTypeSelection';
 
@@ -30,7 +29,6 @@ type Props = {
 
 type State = {
   newSettings: AppSettings,
-  // activeField: string,
 };
 
 class AppSettingsModal extends PureComponent<Props, State> {
@@ -46,12 +44,6 @@ class AppSettingsModal extends PureComponent<Props, State> {
 
     saveAppSettings(newSettings);
   };
-
-  // setActive = (name: string) => {
-  //   this.setState(state => ({
-  //     activeField: name,
-  //   }));
-  // };
 
   // todo: refactor state update methods into single method & use dotty https://www.npmjs.com/package/dotty
   //       method params keyString, value
@@ -83,7 +75,6 @@ class AppSettingsModal extends PureComponent<Props, State> {
   render() {
     const { hideModal, isVisible } = this.props;
     const newSettings = this.state.newSettings;
-    // const { activeField } = this.state;
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
         <ModalHeader title="Preferences" />
@@ -104,20 +95,17 @@ class AppSettingsModal extends PureComponent<Props, State> {
               />
             </FormField>
 
-            <FormField label="Default Project Type" focusOnClick={false}>
-              <Spacer size={5} />
-              <ProjectTypeSelection
-                projectType={newSettings.general.defaultProjectType}
-                onSelect={this.selectDefaultProjectType}
-              />
-            </FormField>
+            <ProjectTypeSelection
+              label="Default Project Type"
+              projectType={newSettings.general.defaultProjectType}
+              onSelect={this.selectDefaultProjectType}
+            />
 
             <SectionTitle>Privacy</SectionTitle>
             <FormField
               label="Enable anonymous usage tracking"
               focusOnClick={false}
             >
-              {/* <Spacer size={5} /> */}
               <Toggle
                 isToggled={newSettings.privacy.enableUsageTracking}
                 onToggle={this.toggleUsageTracking}

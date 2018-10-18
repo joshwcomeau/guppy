@@ -10,7 +10,7 @@ import TextButton from '../TextButton';
 type Props = {
   path: string,
   pathToSelectMessage: ?string,
-  onSelect: () => void,
+  onSelect: string => void,
 };
 
 class DirectoryPicker extends PureComponent<Props> {

@@ -17,14 +17,14 @@
 import { SAVE_APP_SETTINGS_START } from '../actions';
 import * as os from 'os';
 import * as path from 'path';
-import produce from 'immer';
 
 import { windowsHomeDir, isWin } from '../services/platform.service';
-// import { getProjectNameSlug } from '../services/create-project.service';
 
 import type { Action } from 'redux';
 import type { AppSettings } from '../types';
 
+// Noticing some weird quirks when I try to use a dev project on the compiled
+// "production" app, so separating their home paths should help.
 const homedir = isWin ? windowsHomeDir : os.homedir();
 
 const initialState: AppSettings = {
@@ -56,11 +56,10 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
 //
 //
 // Selectors
-export const getDefaultProjectPath = (state: AppSettings) =>
+export const getDefaultProjectPath = (state: any) =>
   state.appSettings.general.defaultProjectPath;
 
-export const getDefaultProjectType = (state: AppSettings) =>
+export const getDefaultProjectType = (state: any) =>
   state.appSettings.general.defaultProjectType;
 
-export const getPrivacySettings = (state: AppSettings) =>
-  state.appSettings.privacy;
+export const getPrivacySettings = (state: any) => state.appSettings.privacy;
