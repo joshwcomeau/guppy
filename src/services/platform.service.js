@@ -70,23 +70,26 @@ export const getBaseProjectEnvironment = (
   };
 };
 
-// For some reason, MacOS doesn't get the PATH initialzied properly, since
-// .bashrc (a file meant to be sourced for interactive shells) isn't read.
-// This helper method fixes that.
+// When using NVM on a Mac, node is added to the PATH in .bashrc, but this
+// file isn't read in production.
+// NOTE: This is something that fix-path is supposed to do for us, but it
+// isn't working :/
 export const initializePath = () => {
-  if (process.env.NODE_ENV !== 'development' && isMac) {
-    try {
-      childProcess.exec(
-        'source ~/.bashrc && echo $PATH',
-        (err, updatedPath) => {
-          window.process.env.PATH = updatedPath;
-        }
-      );
-    } catch (e) {
-      // If no `.bashrc` exists, we have no work to do.
-      // The PATH should already be set correctly.
+  childProcess.exec('which node', (_, version) => {
+    if (!version) {
+      try {
+        childProcess.exec(
+          'source ~/.bashrc && echo $PATH',
+          (err, updatedPath) => {
+            window.process.env.PATH = updatedPath;
+          }
+        );
+      } catch (e) {
+        // If no `.bashrc` exists, we have no work to do.
+        // The PATH should already be set correctly.
+      }
     }
-  }
+  });
 };
 
 export const getCopyForOpeningFolder = () =>
