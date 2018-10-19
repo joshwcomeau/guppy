@@ -8,7 +8,6 @@ type Props = {
   isFocused: boolean,
   hasError: boolean,
   children: React$Node,
-  hideCursor: boolean,
 };
 
 const TextInput = ({ isFocused, hasError, children, ...delegated }: Props) => (
