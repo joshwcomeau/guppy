@@ -4,7 +4,10 @@ import reducer, {
   getDefaultProjectType,
   getPrivacySettings,
 } from './app-settings.reducer';
-import { SAVE_APP_SETTINGS_START } from '../actions';
+import {
+  SAVE_APP_SETTINGS_START,
+  CHANGE_DEFAULT_PROJECT_PATH,
+} from '../actions';
 
 describe('App-Settings reducer', () => {
   it('should return initial state', () => {
@@ -28,6 +31,33 @@ describe('App-Settings reducer', () => {
     expect(reducer(prevState, action).general.defaultProjectPath).toEqual(
       testPath
     );
+  });
+
+  describe('should change default project path', () => {
+    it('updates the `defaultProjectPath` field', () => {
+      const prevState = {
+        ...initialState,
+        general: {
+          defaultProjectPath: 'this/is/home',
+        },
+      };
+
+      const action = {
+        type: CHANGE_DEFAULT_PROJECT_PATH,
+        defaultProjectPath: 'Users/john_doe/work',
+      };
+
+      expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "general": Object {
+    "defaultProjectPath": "Users/john_doe/work",
+  },
+  "privacy": Object {
+    "enableUsageTracking": true,
+  },
+}
+`);
+    });
   });
 
   it('should select the right key', () => {

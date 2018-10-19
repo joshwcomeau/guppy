@@ -73,18 +73,20 @@ export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
 // app settings
 export const SHOW_APP_SETTINGS = 'SHOW_APP_SETTINGS';
 export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
-export const INITIALIZE_HOMEPATH = 'INITIALIZE_HOMEPATH'; // initialize defaultProjectPath to homePath
+export const CHANGE_DEFAULT_PROJECT_PATH = 'CHANGE_DEFAULT_PROJECT_PATH';
 //
 //
 // Action Creators
 //
 export const addProject = (
   project: ProjectInternal,
+  projectHomePath: string,
   projectType: ProjectType,
   isOnboardingCompleted: boolean
 ) => ({
   type: ADD_PROJECT,
   project,
+  projectHomePath,
   projectType,
   isOnboardingCompleted,
 });
@@ -139,11 +141,6 @@ export const createNewProjectCancel = () => ({
 
 export const createNewProjectFinish = () => ({
   type: CREATE_NEW_PROJECT_FINISH,
-});
-
-export const changeProjectHomePath = (homePath: string) => ({
-  type: CHANGE_PROJECT_HOME_PATH,
-  homePath,
 });
 
 export const dismissSidebarIntro = () => ({
@@ -365,9 +362,9 @@ export const saveAppSettingsStart = (settings: AppSettings) => ({
   settings,
 });
 
-export const initializeHomePath = (settings: AppSettings) => ({
-  type: INITIALIZE_HOMEPATH,
-  settings,
+export const changeDefaultProjectPath = (defaultProjectPath: string) => ({
+  type: CHANGE_DEFAULT_PROJECT_PATH,
+  defaultProjectPath,
 });
 
 // project settings related actions

@@ -14,7 +14,11 @@
  * once enough state has been loaded for us to show the user some UI.
  */
 
-import { SAVE_APP_SETTINGS_START } from '../actions';
+import {
+  SAVE_APP_SETTINGS_START,
+  CHANGE_DEFAULT_PROJECT_PATH,
+} from '../actions';
+import produce from 'immer';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -46,6 +50,11 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
       return {
         ...action.settings,
       };
+
+    case CHANGE_DEFAULT_PROJECT_PATH:
+      return produce(state, draftState => {
+        draftState.general.defaultProjectPath = action.defaultProjectPath;
+      });
 
     default:
       return state;

@@ -18,15 +18,12 @@ import {
   FINISH_DELETING_PROJECT,
   SAVE_PROJECT_SETTINGS_FINISH,
   RESET_ALL_STATE,
-  CHANGE_PROJECT_HOME_PATH,
-  SAVE_APP_SETTINGS_START,
-  INITIALIZE_HOMEPATH,
 } from '../actions';
 import { getProjectNameSlug } from '../services/create-project.service';
+
 import type { Action } from 'redux';
 
 type State = {
-  homePath: string,
   byId: {
     [projectId: string]: string,
   },
@@ -41,12 +38,12 @@ export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case ADD_PROJECT: {
       const { project } = action;
-
+      const defaultProjectPath = action.projectHomePath;
       const projectNameSlug = getProjectNameSlug(project.guppy.name);
 
       return produce(state, draftState => {
         draftState.byId[project.guppy.id] = formatProjectPath(
-          state.homePath,
+          defaultProjectPath,
           projectNameSlug
         );
       });
@@ -65,20 +62,6 @@ export default (state: State = initialState, action: Action = {}) => {
 
       return produce(state, draftState => {
         draftState.byId[project.guppy.id] = projectPath;
-      });
-    }
-
-    case CHANGE_PROJECT_HOME_PATH: {
-      const { homePath } = action;
-      return produce(state, draftState => {
-        draftState.homePath = homePath;
-      });
-    }
-
-    case SAVE_APP_SETTINGS_START:
-    case INITIALIZE_HOMEPATH: {
-      return produce(state, draftState => {
-        draftState.homePath = action.settings.general.defaultProjectPath;
       });
     }
 
@@ -109,7 +92,7 @@ const formatProjectPath = (homePath, projectId) =>
 //
 // Selectors
 export const getPaths = (state: any) => state.paths.byId;
-export const getProjectHomePath = (state: any) => state.paths.homePath;
+// export const getProjectHomePath = (state: any) => state.paths.homePath;
 export const getPathsArray = (state: any) => Object.values(getPaths(state));
 
 export const getPathForProjectId = (state: any, props: { projectId: string }) =>

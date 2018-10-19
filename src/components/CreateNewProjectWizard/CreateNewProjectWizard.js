@@ -5,9 +5,11 @@ import Transition from 'react-transition-group/Transition';
 import { remote } from 'electron';
 
 import * as actions from '../../actions';
-import { getAppSettings } from '../../reducers/app-settings.reducer';
+import {
+  getAppSettings,
+  getDefaultProjectPath,
+} from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
-import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { checkIfProjectExists } from '../../services/create-project.service';
@@ -34,12 +36,12 @@ type Props = {
   isOnboardingCompleted: boolean,
   addProject: (
     project: ProjectInternal,
+    projectHomePath: string,
     projectType: ProjectType,
     isOnboardingCompleted: boolean
   ) => void,
   createNewProjectCancel: () => void,
   createNewProjectFinish: () => void,
-  initializeHomePath: AppSettings => void,
 };
 
 type State = {
@@ -159,7 +161,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: ProjectInternal) => {
-    const { isOnboardingCompleted } = this.props;
+    const { isOnboardingCompleted, projectHomePath } = this.props;
     const { projectType } = this.state;
 
     // Should be impossible
@@ -170,7 +172,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     this.props.createNewProjectFinish();
 
     this.timeoutId = window.setTimeout(() => {
-      this.props.addProject(project, projectType, isOnboardingCompleted);
+      this.props.addProject(
+        project,
+        projectHomePath,
+        projectType,
+        isOnboardingCompleted
+      );
 
       this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);
@@ -183,7 +190,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       ...initialState,
       projectType: settings.general.defaultProjectType,
     });
-    this.props.initializeHomePath(settings);
   };
 
   render() {
@@ -249,7 +255,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
 const mapStateToProps = state => ({
   projects: getById(state),
-  projectHomePath: getProjectHomePath(state),
+  projectHomePath: getDefaultProjectPath(state),
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
   settings: getAppSettings(state),
@@ -259,7 +265,6 @@ const mapDispatchToProps = {
   addProject: actions.addProject,
   createNewProjectCancel: actions.createNewProjectCancel,
   createNewProjectFinish: actions.createNewProjectFinish,
-  initializeHomePath: actions.initializeHomePath,
 };
 
 export default connect(

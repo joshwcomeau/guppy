@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import produce from 'immer';
 
 import * as actions from '../../actions';
-import { getProjectHomePath } from '../../reducers/paths.reducer';
+import { getDefaultProjectPath } from '../../reducers/app-settings.reducer';
 import { COLORS } from '../../constants';
 import { setNested } from '../../utils';
 
@@ -134,7 +134,7 @@ const Actions = styled.div`
 
 const mapStateToProps = state => {
   return {
-    projectHomePath: getProjectHomePath(state),
+    projectHomePath: getDefaultProjectPath(state),
     settings: state.appSettings,
     isVisible: state.modal === 'app-settings',
   };

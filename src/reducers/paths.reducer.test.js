@@ -1,46 +1,23 @@
 import reducer, { initialState } from './paths.reducer';
-import { initialAppSettingsState } from './app-settings.reducer';
 
 import {
   IMPORT_EXISTING_PROJECT_FINISH,
   ADD_PROJECT,
   SAVE_PROJECT_SETTINGS_FINISH,
-  CHANGE_PROJECT_HOME_PATH,
   FINISH_DELETING_PROJECT,
   RESET_ALL_STATE,
-  SAVE_APP_SETTINGS_START,
-  INITIALIZE_HOMEPATH,
 } from '../actions';
-import { reduce } from 'rxjs/operators';
 
 // The paths reducer initial state chooses a platform-specific home path.
 // To avoid dealing with all that, we'll just supply an initial state in
 // all tests
 const platformSafeInitialState = {
-  homePath: 'path/to/projects',
   byId: {},
 };
 
 describe('Paths reducer', () => {
   it('should return initial state', () => {
     expect(reducer()).toEqual(initialState);
-  });
-
-  it('should set defaultProjectPath', () => {
-    const createAction = actionType => ({
-      type: actionType,
-      settings: {
-        ...initialAppSettingsState,
-        general: { defaultProjectPath: '/some/path' },
-      },
-    });
-    const prevState = initialState;
-    expect(
-      reducer(prevState, createAction(SAVE_APP_SETTINGS_START)).homePath
-    ).toEqual('/some/path');
-    expect(
-      reducer(prevState, createAction(INITIALIZE_HOMEPATH)).homePath
-    ).toEqual('/some/path');
   });
 
   describe(ADD_PROJECT, () => {
@@ -56,6 +33,7 @@ describe('Paths reducer', () => {
             start: 'react-scripts start',
           },
         },
+        projectHomePath: 'path/to/projects/',
       };
 
       expect(reducer(prevState, action)).toMatchInlineSnapshot(`
@@ -63,7 +41,6 @@ Object {
   "byId": Object {
     "fds8fd7s97f": "path/to/projects/hello-world",
   },
-  "homePath": "path/to/projects",
 }
 `);
     });
@@ -90,7 +67,6 @@ Object {
   "byId": Object {
     "abc123456789": "Users/john_doe/work",
   },
-  "homePath": "path/to/projects",
 }
 `);
     });
@@ -122,32 +98,6 @@ Object {
   "byId": Object {
     "xyz789": "Users/john_doe/work",
   },
-  "homePath": "path/to/projects",
-}
-`);
-    });
-  });
-
-  describe(CHANGE_PROJECT_HOME_PATH, () => {
-    it('updates the `homePath` field', () => {
-      const prevState = {
-        byId: {
-          abcxyz: 'this/is/home',
-        },
-        homePath: 'this/is/home',
-      };
-
-      const action = {
-        type: CHANGE_PROJECT_HOME_PATH,
-        homePath: 'Users/john_doe/work',
-      };
-
-      expect(reducer(prevState, action)).toMatchInlineSnapshot(`
-Object {
-  "byId": Object {
-    "abcxyz": "this/is/home",
-  },
-  "homePath": "Users/john_doe/work",
 }
 `);
     });
@@ -173,7 +123,6 @@ Object {
   "byId": Object {
     "abcxyz": "this/is/home",
   },
-  "homePath": "path/to/projects",
 }
 `);
     });
