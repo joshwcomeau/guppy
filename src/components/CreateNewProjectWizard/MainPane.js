@@ -101,7 +101,7 @@ class MainPane extends PureComponent<Props> {
                       <Spacer inline size={10} />
                       <ButtonWithIcon
                         showStroke={projectType === 'nextjs'}
-                        icon={<GatsbyIcon src={nextjsIconSrc} />}
+                        icon={<NextjsIcon src={nextjsIconSrc} />}
                         onClick={() => this.updateProjectType('nextjs')}
                       >
                         Next.js
@@ -159,6 +159,11 @@ const ReactIcon = styled.img`
 `;
 
 const GatsbyIcon = styled.img`
+  width: 22px;
+  height: 22px;
+`;
+
+const NextjsIcon = styled.img`
   width: 22px;
   height: 22px;
 `;
