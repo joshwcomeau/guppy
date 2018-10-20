@@ -5,9 +5,11 @@ import rootSaga, {
   handleUpdateDependency,
   handleDeleteDependency,
   handleInstallDependenciesStart,
+  handleReinstallDependenciesStart,
   handleUninstallDependenciesStart,
   handleLoadDependencyInfoFromDiskStart,
 } from './dependency.saga';
+import { waitForAsyncRimraf } from './delete-project.saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
@@ -22,6 +24,7 @@ import {
   INSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_START,
   LOAD_DEPENDENCY_INFO_FROM_DISK_START,
+  REINSTALL_DEPENDENCIES_START,
   queueDependencyInstall,
   queueDependencyUninstall,
   installDependenciesError,
@@ -29,6 +32,9 @@ import {
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
+  reinstallDependencies,
+  reinstallDependenciesFinish,
+  refreshProjectsStart,
 } from '../actions';
 
 describe('Dependency sagas', () => {
@@ -253,6 +259,36 @@ describe('Dependency sagas', () => {
     });
   });
 
+  describe('startReinstallingDependencies saga', () => {
+    it('should reinstall dependencies', () => {
+      const action = { projectId };
+      const saga = handleReinstallDependenciesStart(action);
+
+      expect(saga.next().value).toEqual(
+        select(getPathForProjectId, {
+          projectId,
+        })
+      );
+      expect(saga.next('project/path').value).toEqual(
+        call(waitForAsyncRimraf, 'project/path')
+      );
+
+      // TODO: Why is JSON.stringify needed for the next expect?
+      //       With-out it we're getting 'Compared values have no visual difference.'
+      expect(JSON.stringify(saga.next().value)).toEqual(
+        JSON.stringify(call(reinstallDependencies, 'project/path'))
+      );
+      expect(saga.next().value).toEqual(put(reinstallDependenciesFinish()));
+      expect(saga.next().value).toEqual(put(refreshProjectsStart()));
+    });
+
+    it('should fail silently with-out projectId', () => {
+      const action = { projectId: null };
+      const saga = handleReinstallDependenciesStart(action);
+
+      expect(saga.next().value).toBeUndefined();
+    });
+  });
   describe('startUninstallingDependencies saga', () => {
     const action = {
       projectId,
@@ -313,6 +349,12 @@ describe('Dependency sagas', () => {
       );
       expect(saga.next().value).toEqual(
         takeEvery(INSTALL_DEPENDENCIES_START, handleInstallDependenciesStart)
+      );
+      expect(saga.next().value).toEqual(
+        takeEvery(
+          REINSTALL_DEPENDENCIES_START,
+          handleReinstallDependenciesStart
+        )
       );
       expect(saga.next().value).toEqual(
         takeEvery(

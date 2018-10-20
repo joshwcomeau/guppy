@@ -4,23 +4,28 @@ import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
   installDependencies,
+  reinstallDependencies,
   uninstallDependencies,
 } from '../services/dependencies.service';
 import {
   loadProjectDependencies,
   loadAllProjectDependencies,
 } from '../services/read-from-disk.service';
+import { waitForAsyncRimraf } from './delete-project.saga';
 import {
   ADD_DEPENDENCY,
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
   INSTALL_DEPENDENCIES_START,
+  REINSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_START,
   LOAD_DEPENDENCY_INFO_FROM_DISK_START,
   queueDependencyInstall,
   queueDependencyUninstall,
   installDependenciesError,
   installDependenciesFinish,
+  reinstallDependenciesFinish,
+  reinstallDependenciesError,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
@@ -31,6 +36,7 @@ import {
   installDependenciesStart,
   uninstallDependenciesStart,
   loadDependencyInfoFromDiskStart,
+  refreshProjectsStart,
 } from '../actions';
 
 import type { Saga } from 'redux-saga';
@@ -100,6 +106,35 @@ export function* handleInstallDependenciesStart({
   }
 }
 
+export function* handleReinstallDependenciesStart({
+  projectId,
+}: Action): Saga<void> {
+  if (!projectId) {
+    // don't trigger a reinstall if we're not having a projectId --> fail silently
+    return;
+  }
+  const projectPath = yield select(getPathForProjectId, { projectId });
+  try {
+    // delete node_modules folder
+    yield call(waitForAsyncRimraf, projectPath);
+
+    // reinstall dependencies
+    yield call(reinstallDependencies, projectPath);
+
+    // reinstall finished --> hide waiting spinner
+    yield put(reinstallDependenciesFinish());
+
+    yield put(refreshProjectsStart());
+  } catch (err) {
+    yield call(
+      [console, console.error],
+      'Failed to reinstall dependencies',
+      err
+    );
+    yield put(reinstallDependenciesError(projectId));
+  }
+}
+
 export function* handleUninstallDependenciesStart({
   projectId,
   dependencies,
@@ -145,6 +180,10 @@ export default function* rootSaga(): Saga<void> {
   yield takeEvery(UPDATE_DEPENDENCY, handleUpdateDependency);
   yield takeEvery(DELETE_DEPENDENCY, handleDeleteDependency);
   yield takeEvery(INSTALL_DEPENDENCIES_START, handleInstallDependenciesStart);
+  yield takeEvery(
+    REINSTALL_DEPENDENCIES_START,
+    handleReinstallDependenciesStart
+  );
   yield takeEvery(
     UNINSTALL_DEPENDENCIES_START,
     handleUninstallDependenciesStart

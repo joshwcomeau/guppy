@@ -3,21 +3,30 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { getBlockingStatus } from '../../reducers/app-status.reducer';
+import Spacer from '../Spacer';
+import {
+  getBlockingStatus,
+  getStatusText,
+} from '../../reducers/app-status.reducer';
 
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
 import { COLORS, Z_INDICES } from '../../constants';
 
 type Props = {
   showLoadingScreen: boolean,
+  statusText: string,
 };
 
 class LoadingScreen extends PureComponent<Props> {
   render() {
-    const { showLoadingScreen } = this.props;
+    const { showLoadingScreen, statusText } = this.props;
     return (
       <Window isVisible={showLoadingScreen}>
-        <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />
+        <Wrapper>
+          <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />
+          <Spacer size={10} />
+          <InfoText>{statusText}</InfoText>
+        </Wrapper>
       </Window>
     );
   }
@@ -34,12 +43,22 @@ const Window = styled.div`
   z-index: ${Z_INDICES.loadingScreen};
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const InfoText = styled.p`
+  text-align: center;
+`;
+
 const FishSpinner = styled.img`
   width: 150px;
 `;
 
 const mapStateToProps = state => ({
   showLoadingScreen: getBlockingStatus(state),
+  statusText: getStatusText(state),
 });
 
 export default connect(mapStateToProps)(LoadingScreen);

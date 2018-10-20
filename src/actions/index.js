@@ -45,6 +45,9 @@ export const DELETE_DEPENDENCY = 'DELETE_DEPENDENCY';
 export const INSTALL_DEPENDENCIES_START = 'INSTALL_DEPENDENCIES_START';
 export const INSTALL_DEPENDENCIES_ERROR = 'INSTALL_DEPENDENCIES_ERROR';
 export const INSTALL_DEPENDENCIES_FINISH = 'INSTALL_DEPENDENCIES_FINISH';
+export const REINSTALL_DEPENDENCIES_START = 'REINSTALL_DEPENDENCIES_START';
+export const REINSTALL_DEPENDENCIES_FINISH = 'REINSTALL_DEPENDENCIES_FINISH';
+export const REINSTALL_DEPENDENCIES_ERROR = 'REINSTALL_DEPENDENCIES_ERROR';
 export const UNINSTALL_DEPENDENCIES_START = 'UNINSTALL_DEPENDENCIES_START';
 export const UNINSTALL_DEPENDENCIES_ERROR = 'UNINSTALL_DEPENDENCIES_ERROR';
 export const UNINSTALL_DEPENDENCIES_FINISH = 'UNINSTALL_DEPENDENCIES_FINISH';
@@ -74,6 +77,11 @@ export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
 export const SHOW_APP_SETTINGS = 'SHOW_APP_SETTINGS';
 export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
 export const CHANGE_DEFAULT_PROJECT_PATH = 'CHANGE_DEFAULT_PROJECT_PATH';
+
+// Status text for loading screen
+export const SET_STATUS_TEXT = 'SET_STATUS_TEXT';
+export const RESET_STATUS_TEXT = 'RESET_STATUS_TEXT';
+
 //
 //
 // Action Creators
@@ -274,6 +282,20 @@ export const installDependenciesFinish = (
   dependencies,
 });
 
+export const reinstallDependencies = (projectId: string) => ({
+  type: REINSTALL_DEPENDENCIES_START,
+  projectId,
+});
+
+export const reinstallDependenciesFinish = () => ({
+  type: REINSTALL_DEPENDENCIES_FINISH,
+});
+
+export const reinstallDependenciesError = (projectId: string) => ({
+  type: REINSTALL_DEPENDENCIES_ERROR,
+  projectId,
+});
+
 export const uninstallDependenciesStart = (
   projectId: string,
   dependencies: Array<QueuedDependency>
@@ -418,3 +440,10 @@ export const showResetStatePrompt = () => ({
 });
 
 export const resetAllState = () => ({ type: RESET_ALL_STATE });
+
+// Status text for Loading screen
+// todo: Check if we need a better naming as there are probably more status messages in the future.
+export const setStatusText = (statusText: string) => ({
+  type: SET_STATUS_TEXT,
+  statusText,
+});

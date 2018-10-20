@@ -41,6 +41,7 @@ type Props = {
   showProjectSettings: Dispatch<typeof actions.showProjectSettings>,
   showAppSettings: Dispatch<typeof actions.showAppSettings>,
   selectProject: Dispatch<typeof actions.selectProject>,
+  reinstallDependencies: Dispatch<typeof actions.reinstallDependencies>,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -73,6 +74,7 @@ class ApplicationMenu extends Component<Props> {
       showAppSettings,
       selectProject,
       projects,
+      reinstallDependencies,
     } = props;
 
     const template = [
@@ -222,6 +224,11 @@ class ApplicationMenu extends Component<Props> {
           click: () => showProjectSettings(),
           accelerator: 'CmdOrCtrl+shift+,',
         },
+        {
+          label: isMac ? 'Reinstall Dependencies' : 'Reinstall dependencies',
+          click: () => reinstallDependencies(selectedProject.id),
+          accelerator: 'CmdOrCtrl+alt+R',
+        },
         { type: 'separator' },
       ];
 
@@ -308,6 +315,7 @@ const mapDispatchToProps = {
   showProjectSettings: actions.showProjectSettings,
   showAppSettings: actions.showAppSettings,
   selectProject: actions.selectProject,
+  reinstallDependencies: actions.reinstallDependencies,
 };
 
 export default connect(
