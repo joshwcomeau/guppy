@@ -75,7 +75,7 @@ export const getBaseProjectEnvironment = (
 // NOTE: This is something that fix-path is supposed to do for us, but it
 // isn't working :/
 export const initializePath = () => {
-  childProcess.exec('which node', (_, version) => {
+  childProcess.exec('which node', { env: window.process.env }, (_, version) => {
     if (!version) {
       try {
         childProcess.exec(
