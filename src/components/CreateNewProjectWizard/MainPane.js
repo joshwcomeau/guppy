@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
-import nextjsIconSrc from '../../assets/images/nextjs.svg';
+import nextjsIconSrc from '../../assets/images/nextjs_small.png';
 
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
