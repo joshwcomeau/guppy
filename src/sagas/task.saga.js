@@ -362,6 +362,9 @@ const createStdioChannel = (
   });
 };
 
+// We're using "template" variables inside the project type configuration file (config/project-types.js)
+// so with the following function we can replace the string $port with the real port number e.g. 3000
+// (see type VariableMap for used mapping strings)
 export const substituteConfigVariables = (
   configObject: any,
   variableMap: VariableMap
