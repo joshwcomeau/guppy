@@ -73,7 +73,7 @@ export const getBaseProjectEnvironment = (
 // When using NVM on a Mac, node is added to the PATH in .bashrc, but this
 // file isn't read in production.
 // NOTE: This is something that fix-path is supposed to do for us, but it
-// isn't working :/
+// isn't working :/ so this is just a quick fix.
 export const initializePath = () => {
   childProcess.exec('which node', { env: window.process.env }, (_, version) => {
     if (!version) {
@@ -81,7 +81,9 @@ export const initializePath = () => {
         childProcess.exec(
           'source ~/.bashrc && echo $PATH',
           (err, updatedPath) => {
-            window.process.env.PATH = updatedPath;
+            if (updatedPath) {
+              window.process.env.PATH = updatedPath;
+            }
           }
         );
       } catch (e) {
