@@ -12,6 +12,7 @@ import {
   isTaskDisabled,
 } from '../../reducers/tasks.reducer';
 import { getIsQueueEmpty } from '../../reducers/queue.reducer';
+import { getSelectedProject } from '../../reducers/projects.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
@@ -21,7 +22,7 @@ import EjectButton from '../EjectButton';
 import TerminalOutput from '../TerminalOutput';
 import WindowDimensions from '../WindowDimensions';
 
-import type { Task } from '../../types';
+import type { Task, Project } from '../../types';
 
 type Props = {
   projectId: string,
@@ -31,19 +32,22 @@ type Props = {
   onDismiss: () => void,
   // From Redux:
   task: Task,
+  project: Project,
   runTask: (task: Task, timestamp: Date) => any,
-  abortTask: (task: Task, timestamp: Date) => any,
+  abortTask: (task: Task, projectType: string, timestamp: Date) => any,
 };
 
 class TaskDetailsModal extends PureComponent<Props> {
   handleToggle = () => {
-    const { task, runTask, abortTask } = this.props;
+    const { task, runTask, abortTask, project } = this.props;
 
     const isRunning = !!task.processId;
 
     const timestamp = new Date();
 
-    isRunning ? abortTask(task, timestamp) : runTask(task, timestamp);
+    isRunning
+      ? abortTask(task, project.type, timestamp)
+      : runTask(task, timestamp);
   };
 
   renderPrimaryStatusText = () => {
@@ -233,6 +237,7 @@ const HorizontalRule = styled.div`
 `;
 
 const mapStateToProps = (state, ownProps) => {
+  const selectedProject = getSelectedProject(state);
   const dependenciesChangingForProject = !getIsQueueEmpty(state, ownProps);
   const task = getTaskByProjectIdAndTaskName(state, ownProps);
 
@@ -241,6 +246,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     task,
+    project: selectedProject,
     isDisabled,
   };
 };

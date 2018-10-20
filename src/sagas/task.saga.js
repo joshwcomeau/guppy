@@ -279,7 +279,7 @@ export function* taskRun({ task }: Action): Saga<void> {
   }
 }
 
-export function* taskAbort({ task }: Action): Saga<void> {
+export function* taskAbort({ task, projectType }: Action): Saga<void> {
   const { processId, name } = task;
 
   yield call(killProcessId, processId);
@@ -291,7 +291,7 @@ export function* taskAbort({ task }: Action): Saga<void> {
   // but given that we're treating `start` as its own special thing,
   // I'm realizing that it should vary depending on the task type.
   // TODO: Find a better place for this to live.
-  const abortMessage = isDevServerTask(name)
+  const abortMessage = isDevServerTask(name, projectType)
     ? 'Server stopped'
     : 'Task aborted';
 

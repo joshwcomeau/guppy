@@ -223,9 +223,29 @@ export default (state: State = initialState, action: Action = {}) => {
 //
 //
 // Helpers
-export const devServerTaskNames: Array<string> = Object.keys(
-  projectConfigs
-).map(projectType => projectConfigs[projectType].devServer.taskName);
+//
+// devServerTaskNameMap is a mapping Object
+// Needed because next.js also contains a script named 'start' which is not the devServer task.
+// So we can test if name is a devServerName by simply accessing map['create-react-app'][testString] which will return true or undefined.
+// Mapping Object structure:
+// {
+//   'create-react-app': {
+//     'start': true
+//    },
+//   ...
+// }
+// Notice: We could simplify this by using projectConfigs[projectType].devServer.taskName === name in isDevServer check but
+//         we also need it in getTaskType which runs before the reducer so we don't have access to projectType.
+export const devServerTaskNameMap = Object.keys(projectConfigs).reduce(
+  (devServerNamesObj, projectType) => {
+    const name = projectConfigs[projectType].devServer.taskName;
+    devServerNamesObj[projectType] = {
+      [name]: true,
+    };
+    return devServerNamesObj;
+  },
+  {}
+);
 
 export const getTaskDescription = (name: string) => {
   // NOTE: This information is currently derivable, and it's bad to store
@@ -254,9 +274,9 @@ export const getTaskDescription = (name: string) => {
   }
 };
 
-export const isDevServerTask = (name: string) =>
-  // Gatsby and create-react-app use different names for the same task.
-  devServerTaskNames.indexOf(name) !== -1;
+export const isDevServerTask = (name: string, projectType: string) =>
+  // Each framework uses a different name for the task that starts the development server
+  projectConfigs[projectType].devServer.taskName === name;
 
 // https://docs.npmjs.com/misc/scripts
 const preExistingTasks = [
@@ -296,8 +316,19 @@ const getTaskType = name => {
   // For a dev server, "running" is a successful status - it means there are
   // no errors - while for a short-term task, "running" is essentially the same
   // as "loading", it's a yellow-light kind of thing.
-  const sustainedTasks = devServerTaskNames; // We could have other tasks we could add - for now we also could use devServerTaskNames directly
+  // Todo: We need to re-work this as next.js has two long-running tasks dev & start.
+  //       How do we handle it? This needs to be discussed in an issue - will be create soon.
 
+  // {create-react-app: { start: true } } --> ["start", ...]
+  const sustainedTasks = Object.keys(devServerTaskNameMap).reduce(
+    (devServerTaskNames, projectType) => {
+      devServerTaskNames.push(
+        Object.keys(devServerTaskNameMap[projectType])[0]
+      );
+      return devServerTaskNames;
+    },
+    []
+  );
   return sustainedTasks.includes(name) ? 'sustained' : 'short-term';
 };
 
@@ -357,14 +388,20 @@ export const getTasksForProjectId = (
   return state.tasks[props.projectId];
 };
 
+// Todo: Why is it not possible to move getTypeOfSelectedProject to projects.reducer.js? Always getting an error from reselect that it is undefined.
+const getTypeOfSelectedProject = (state: any, props) => {
+  return state.projects.byId[props.projectId].guppy.type;
+};
+
 export const getTasksInTaskListForProjectId = createSelector(
-  [getTasksForProjectId],
-  tasks =>
+  [getTasksForProjectId, getTypeOfSelectedProject],
+  (tasks, projectType) =>
     Object.keys(tasks)
       .map(taskId => tasks[taskId])
       .filter(
         (task, i, tasksArray) =>
-          !isDevServerTask(task.name) && !isLifeCycleHook(task.name, tasksArray)
+          !isDevServerTask(task.name, projectType) &&
+          !isLifeCycleHook(task.name, tasksArray)
       )
 );
 
