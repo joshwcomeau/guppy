@@ -56,7 +56,8 @@ export const spawnProcessChannel = (
     });
 
     child.on('exit', code => {
-      emitter(code ? output.stderr : output.stdout);
+      console.log('exiting', code);
+      // emitter(code ? output.stderr : output.stdout);
       emitter(END);
       // return code ? reject(output.stderr) : resolve(output.stdout);
     });
@@ -97,4 +98,4 @@ export const uninstallDependencies = (
   );
 
 export const reinstallDependencies = (projectPath: string) =>
-  spawnProcess(PACKAGE_MANAGER_CMD, ['install'], projectPath);
+  spawnProcessChannel(PACKAGE_MANAGER_CMD, ['install'], projectPath);

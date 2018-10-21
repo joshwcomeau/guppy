@@ -1,5 +1,5 @@
 // @flow
-import { select, call, put, takeEvery } from 'redux-saga/effects';
+import { select, call, put, take, takeEvery } from 'redux-saga/effects';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
@@ -37,6 +37,7 @@ import {
   uninstallDependenciesStart,
   loadDependencyInfoFromDiskStart,
   refreshProjectsStart,
+  setStatusText,
 } from '../actions';
 
 import type { Saga } from 'redux-saga';
@@ -119,7 +120,19 @@ export function* handleReinstallDependenciesStart({
     yield call(waitForAsyncRimraf, projectPath);
 
     // reinstall dependencies
-    yield call(reinstallDependencies, projectPath);
+    const channel = yield call(reinstallDependencies, projectPath);
+
+    // EventChannel for progress updating on loadingSrceen.
+    try {
+      while (true) {
+        let message = yield take(channel);
+        const progress = showProgress(message);
+        console.log('will set progress', progress);
+        yield put(setStatusText(progress));
+      }
+    } catch (err) {
+      console.log('error', err);
+    }
 
     // reinstall finished --> hide waiting spinner
     yield put(reinstallDependenciesFinish());
@@ -168,6 +181,16 @@ export function* handleLoadDependencyInfoFromDiskStart({
       err
     );
   }
+}
+
+// helpers
+export function showProgress(message: string) {
+  const [text, progressStr, totalStr] = /\[(\d+)\/(\d+)\]/.exec(message);
+  const progress = parseInt(progressStr);
+  const total = parseInt(totalStr);
+
+  console.log('progress', text, progress, total);
+  return `Please wait. Installation Status ${(progress / total) * 100}%`;
 }
 
 // Installs/uninstalls fail silently - the only notice of a failed action
