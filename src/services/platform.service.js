@@ -70,19 +70,25 @@ export const getBaseProjectEnvironment = (
   };
 };
 
-// When using NVM on a Mac, node is added to the PATH in .bashrc, but this
-// file isn't read in production.
-// NOTE: This is something that fix-path is supposed to do for us, but it
-// isn't working :/ so this is just a quick fix.
+window.childProcess = childProcess;
+
+// HACK: With electron-builder, we're having some issues on mac finding Node.
+// This is because for some reason, the PATH is not updated properly :(
+// 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
+// reasons.
 export const initializePath = () => {
   childProcess.exec('which node', { env: window.process.env }, (_, version) => {
-    if (!version) {
+    if (!version && isMac) {
+      // For users with a standard Node installation, node will be in
+      // /usr/local/bin
+      // For users using NVM, the path to Node will be added to `.bashrc`.
+      // Add both to the PATH.
       try {
         childProcess.exec(
           'source ~/.bashrc && echo $PATH',
           (err, updatedPath) => {
             if (updatedPath) {
-              window.process.env.PATH = updatedPath;
+              window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
             }
           }
         );
