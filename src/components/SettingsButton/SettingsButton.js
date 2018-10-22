@@ -9,7 +9,7 @@ import { COLORS } from '../../constants';
 
 import * as actions from '../../actions';
 
-import type { Dispatch } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   size: number,

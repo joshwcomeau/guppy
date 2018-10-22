@@ -22,7 +22,8 @@ import {
 } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 
-import type { Project, Task, Dispatch } from '../../types';
+import type { Project, Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const { app, process, Menu } = remote;
 

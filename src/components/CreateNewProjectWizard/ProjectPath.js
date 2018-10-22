@@ -13,7 +13,7 @@ import { COLORS } from '../../constants';
 
 import TextButton from '../TextButton';
 
-import type { Dispatch } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   projectHome: string,

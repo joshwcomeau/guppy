@@ -10,7 +10,8 @@ import { FillButton } from '../Button';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 
-import type { Task, Dispatch } from '../../types';
+import type { Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 var Convert = require('ansi-to-html');
 var convert = new Convert();

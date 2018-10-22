@@ -17,7 +17,8 @@ import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
 import TextInput from '../TextInput';
 
-import type { Project, Dispatch } from '../../types';
+import type { Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project | null,

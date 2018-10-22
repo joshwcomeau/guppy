@@ -11,12 +11,22 @@ import {
   UNINSTALL_DEPENDENCIES_ERROR,
   UNINSTALL_DEPENDENCIES_FINISH,
   START_NEXT_ACTION_IN_QUEUE,
+  installDependenciesError,
+  installDependenciesFinish,
+  uninstallDependenciesError,
+  uninstallDependenciesFinish,
 } from '../actions';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
+import type { ReturnType } from '../actions/types';
 
-export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
+export function* handleQueueActionCompleted({
+  projectId,
+}:
+  | ReturnType<typeof installDependenciesError>
+  | ReturnType<typeof installDependenciesFinish>
+  | ReturnType<typeof uninstallDependenciesError>
+  | ReturnType<typeof uninstallDependenciesFinish>): Saga<void> {
   const nextAction = yield select(getNextActionForProjectId, { projectId });
 
   // if there is another item in the queue, start it
@@ -27,7 +37,7 @@ export function* handleQueueActionCompleted({ projectId }: Action): Saga<void> {
 
 export function* handleStartNextActionInQueue({
   projectId,
-}: Action): Saga<void> {
+}: ReturnType<typeof startNextActionInQueue>): Saga<void> {
   const nextAction = yield select(getNextActionForProjectId, { projectId });
 
   // if the queue is empty, take no further action

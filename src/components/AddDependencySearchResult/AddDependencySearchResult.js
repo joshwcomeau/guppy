@@ -23,7 +23,8 @@ import Middot from '../Middot';
 import { StrokeButton } from '../Button';
 import CustomHighlight from '../CustomHighlight';
 
-import type { DependencyStatus, Dispatch } from '../../types';
+import type { DependencyStatus } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const DEPENDENCY_ACTIONS_COPY = {
   idle: 'Installed',

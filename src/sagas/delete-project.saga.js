@@ -6,6 +6,7 @@ import * as path from 'path';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
+  showDeleteProjectPrompt,
   startDeletingProject,
   finishDeletingProject,
   selectProject,
@@ -13,9 +14,9 @@ import {
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { Project } from '../types';
+import type { ReturnType } from '../actions/types';
 
 const { dialog, shell } = remote;
 
@@ -60,7 +61,9 @@ export function waitForAsyncRimraf(projectPath: string): Promise<void> {
   );
 }
 
-export function* deleteProject({ project }: Action): Saga<void> {
+export function* deleteProject({
+  project,
+}: ReturnType<typeof showDeleteProjectPrompt>): Saga<void> {
   // NOTE: we're using this form of `call` because it appears to work best
   // with Flow. Once https://github.com/joshwcomeau/guppy/pull/154 is merged,
   // we should try changing this to:

@@ -12,7 +12,7 @@ import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
 
-import type { Dispatch } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   shouldHideContent: boolean,

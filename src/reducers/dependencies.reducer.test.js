@@ -4,7 +4,7 @@ import reducer, {
   initialState,
 } from './dependencies.reducer';
 import {
-  LOAD_DEPENDENCY_INFO_FROM_DISK,
+  LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH,
   ADD_DEPENDENCY,
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
@@ -23,13 +23,13 @@ describe('dependencies reducer', () => {
     expect(reducer()).toEqual({});
   });
 
-  it(`should handle ${LOAD_DEPENDENCY_INFO_FROM_DISK}`, () => {
+  it(`should handle ${LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH}`, () => {
     const prevState = {
       baz: {},
     };
 
     const action = {
-      type: LOAD_DEPENDENCY_INFO_FROM_DISK,
+      type: LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH,
       projectId: 'foo',
       dependencies: { redux: {} },
     };

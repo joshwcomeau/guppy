@@ -12,7 +12,7 @@ import {
   UNINSTALL_DEPENDENCIES_FINISH,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 import type { QueuedDependency, QueueAction } from '../types';
 
 export type QueueEntry = {

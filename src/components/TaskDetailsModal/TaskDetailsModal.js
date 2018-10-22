@@ -21,7 +21,8 @@ import EjectButton from '../EjectButton';
 import TerminalOutput from '../TerminalOutput';
 import WindowDimensions from '../WindowDimensions';
 
-import type { Task, Dispatch } from '../../types';
+import type { Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   projectId: string,

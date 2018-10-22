@@ -1,7 +1,7 @@
 // @flow
 import { START_DELETING_PROJECT, FINISH_DELETING_PROJECT } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 
 type State = {
   blockingActionActive: boolean,

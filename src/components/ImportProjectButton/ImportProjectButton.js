@@ -6,7 +6,7 @@ import * as actions from '../../actions';
 
 import TextButton from '../TextButton';
 
-import type { Dispatch } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   color: string,

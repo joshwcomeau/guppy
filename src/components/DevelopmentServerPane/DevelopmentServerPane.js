@@ -18,7 +18,8 @@ import ExternalLink from '../ExternalLink';
 import OnlyOn from '../OnlyOn';
 import DevelopmentServerStatus from '../DevelopmentServerStatus';
 
-import type { Project, Task, Dispatch } from '../../types';
+import type { Project, Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,

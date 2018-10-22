@@ -13,7 +13,10 @@ import {
   completeTask,
   attachTaskMetadata,
   receiveDataFromTaskExecution,
-  loadDependencyInfoFromDisk,
+  loadDependencyInfoFromDiskStart,
+  launchDevServer,
+  runTask,
+  abortTask,
 } from '../actions';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
@@ -27,15 +30,18 @@ import {
 } from '../services/platform.service';
 import { processLogger } from '../services/process-logger.service';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { ChildProcess } from 'child_process';
 import type { Task, ProjectType } from '../types';
+import type { ReturnType } from '../actions/types';
+
 const { dialog } = remote;
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
-export function* launchDevServer({ task }: Action): Saga<void> {
+export function* handleLaunchDevServer({
+  task,
+}: ReturnType<typeof launchDevServer>): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, {
     projectId: task.projectId,
@@ -153,7 +159,7 @@ export function waitForChildProcessToComplete(
   });
 }
 
-export function* taskRun({ task }: Action): Saga<void> {
+export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, {
     projectId: task.projectId,
@@ -287,7 +293,7 @@ export function* taskRun({ task }: Action): Saga<void> {
           // otherwise the next tasks (UI related) run too early before `yarn install`
           // is finished
           yield call(waitForChildProcessToComplete, installProcess);
-          yield put(loadDependencyInfoFromDisk(project.id, project.path));
+          yield put(loadDependencyInfoFromDiskStart(project.id, project.path));
         }
 
         yield call(displayTaskComplete, task, message.wasSuccessful);
@@ -300,7 +306,7 @@ export function* taskRun({ task }: Action): Saga<void> {
   }
 }
 
-export function* taskAbort({ task }: Action): Saga<void> {
+export function* taskAbort({ task }: ReturnType<typeof abortTask>): Saga<void> {
   const { processId, name } = task;
 
   yield call(killProcessId, processId);
@@ -333,7 +339,9 @@ export function* displayTaskComplete(
   yield put(receiveDataFromTaskExecution(task, message));
 }
 
-export function* taskComplete({ task }: Action): Saga<void> {
+export function* taskComplete({
+  task,
+}: ReturnType<typeof completeTask>): Saga<void> {
   if (task.processId) {
     yield call(
       [ipcRenderer, ipcRenderer.send],
@@ -349,7 +357,7 @@ export function* taskComplete({ task }: Action): Saga<void> {
   if (task.name === 'eject') {
     const project = yield select(getProjectById, { projectId: task.projectId });
 
-    yield put(loadDependencyInfoFromDisk(project.id, project.path));
+    yield put(loadDependencyInfoFromDiskStart(project.id, project.path));
   }
 }
 
@@ -419,7 +427,7 @@ export const sendCommandToProcess = (child: ChildProcess, command: string) => {
 };
 
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(LAUNCH_DEV_SERVER, launchDevServer);
+  yield takeEvery(LAUNCH_DEV_SERVER, handleLaunchDevServer);
   // these saga handlers are named in reverse order (RUN_TASK => taskRun, etc.)
   // to avoid naming conflicts with their related actions (completeTask is
   // already an action creator).

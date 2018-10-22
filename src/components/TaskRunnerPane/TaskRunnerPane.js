@@ -15,7 +15,8 @@ import Module from '../Module';
 import TaskRunnerPaneRow from '../TaskRunnerPaneRow';
 import TaskDetailsModal from '../TaskDetailsModal';
 
-import type { Task, Dispatch } from '../../types';
+import type { Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   projectId: string,

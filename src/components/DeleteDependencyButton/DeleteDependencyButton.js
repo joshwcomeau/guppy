@@ -10,7 +10,7 @@ import { FillButton } from '../Button';
 import Spinner from '../Spinner';
 import PixelShifter from '../PixelShifter';
 
-import type { Dispatch } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const { dialog } = remote;
 

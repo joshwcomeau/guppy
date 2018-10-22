@@ -14,7 +14,8 @@ import Spinner from '../Spinner';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 
-import type { Dependency, Dispatch } from '../../types';
+import type { Dependency } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   projectId: string,

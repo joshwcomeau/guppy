@@ -21,7 +21,8 @@ import SidebarProjectIcon from './SidebarProjectIcon';
 import AddProjectButton from './AddProjectButton';
 import IntroductionBlurb from './IntroductionBlurb';
 
-import type { Project, Dispatch } from '../../types';
+import type { Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 type Props = {

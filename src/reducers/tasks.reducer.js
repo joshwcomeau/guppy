@@ -33,7 +33,7 @@ import {
   RESET_ALL_STATE,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 import type { Task, ProjectType } from '../types';
 
 type TaskMap = {
@@ -49,9 +49,10 @@ export const initialState = {};
 export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH: {
+      const { projects } = action;
       return produce(state, draftState => {
-        Object.keys(action.projects).forEach(projectId => {
-          const project = action.projects[projectId];
+        Object.keys(projects).forEach(projectId => {
+          const project = projects[projectId];
 
           Object.keys(project.scripts).forEach(name => {
             const command = project.scripts[name];
@@ -186,7 +187,10 @@ export default (state: State = initialState, action: Action = {}) => {
     case RECEIVE_DATA_FROM_TASK_EXECUTION: {
       const { task, text, isError, logId } = action;
 
-      if (task.name === 'eject' && !state[task.id]) {
+      if (
+        task.name === 'eject' &&
+        (!state[task.projectId] || !state[task.projectId][task.name])
+      ) {
         // When ejecting a CRA project, the `eject` task is removed from the
         // project, since it's a 1-time operation.
         // TODO: We should avoid sending this action, we don't need to capture

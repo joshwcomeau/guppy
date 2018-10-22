@@ -22,12 +22,13 @@ import {
 } from '../../services/shell.service';
 import { getCopyForOpeningFolder } from '../../services/platform.service';
 
-import type { Project, Dispatch } from '../../types';
+import type { Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
   loadDependencyInfoFromDisk: Dispatch<
-    typeof actions.loadDependencyInfoFromDisk
+    typeof actions.loadDependencyInfoFromDiskStart
   >,
 };
 
@@ -150,6 +151,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDisk,
+    loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDiskStart,
   }
 )(ProjectPage);

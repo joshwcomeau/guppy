@@ -30,7 +30,7 @@ import {
   FINISH_DELETING_PROJECT,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 import type { Saga } from 'redux-saga';
 import type { EventType } from '../services/analytics.service';
 
@@ -92,6 +92,7 @@ const loggableActions: LoggableActionsMap = {
   },
 };
 
+// $FlowFixMe
 export function* handleAction({ type, ...payload }: Action): Saga<void> {
   if (loggableActions[type]) {
     const { name, getMetadata } = loggableActions[type];
