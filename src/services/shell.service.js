@@ -15,7 +15,7 @@ export const openProjectInEditor = (project: Project) =>
   launchEditor(project.path, 1, 1);
 
 export const getNodeJsVersion = () =>
-  new Promise(resolve =>
+  new Promise<string | void>(resolve =>
     exec('node -v', (error, stdout) => {
       if (error) {
         return resolve();

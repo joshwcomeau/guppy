@@ -159,11 +159,11 @@ export const findRight = <T>(
     .find(predicate);
 
 export function requestAnimationFramePromise() {
-  return new Promise(resolve => window.requestAnimationFrame(resolve));
+  return new Promise<void>(resolve => window.requestAnimationFrame(resolve));
 }
 
 export function setTimeoutPromise(duration?: number) {
-  return new Promise(resolve => window.setTimeout(resolve, duration));
+  return new Promise<void>(resolve => window.setTimeout(resolve, duration));
 }
 
 export const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1);
@@ -189,9 +189,6 @@ export const convertHexToRGBA = (hex: string, alpha: number = 1) => {
 
 export const hyphenate = (str: string) =>
   str.replace(/([A-Z])/g, '-$1').toLowerCase();
-
-export const delay = (duration?: number) =>
-  new Promise(resolve => window.setTimeout(resolve, duration));
 
 export const getTimeOfDay = () => {
   const now = new Date();

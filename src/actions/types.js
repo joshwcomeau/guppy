@@ -18,7 +18,7 @@ declare function returnType<V>(
 
 export type ReturnType<T> = $Call<typeof returnType, T>;
 
-export type Actions = $ObjMap<typeof actions, typeof returnType>;
+type Actions = $ObjMap<typeof actions, typeof returnType>;
 
 // the Action type is the union of the values of the return types of the action creators
 export type Action = $Values<Actions>;
@@ -33,6 +33,20 @@ declare function arguments<A, B, C, D>((A, B, C, D) => any): [A, B, C, D];
 declare function arguments<A, B, C, D, E>(
   (A, B, C, D, E) => any
 ): [A, B, C, D, E];
+declare function argumentsAndVoid(() => any): (...args: []) => void;
+declare function argumentsAndVoid<A>((A) => any): (...args: [A]) => void;
+declare function argumentsAndVoid<A, B>(
+  (A, B) => any
+): (...args: [A, B]) => void;
+declare function argumentsAndVoid<A, B, C>(
+  (A, B, C) => any
+): (...args: [A, B, C]) => void;
+declare function argumentsAndVoid<A, B, C, D>(
+  (A, B, C, D) => any
+): (...args: [A, B, C, D]) => void;
+declare function argumentsAndVoid<A, B, C, D, E>(
+  (A, B, C, D, E) => any
+): (...args: [A, B, C, D, E]) => void;
 /* eslint-enable */
 
 export type Arguments<T> = $Call<typeof arguments, T>;
@@ -40,4 +54,8 @@ export type Arguments<T> = $Call<typeof arguments, T>;
 // The Dispatched version of an action creator has the same arguments but returns void
 export type Dispatch<T> = (...args: Arguments<T>) => void;
 
-// TODO: figure out how to export a map of all the dispatched actions creators
+// TODO: it'd be nice to be able to do `ActionsCreators.addDependency` instead
+// of `Dispatch<typeof actions.addDependency> but that's not possible yet because
+// see https://github.com/facebook/flow/issues/2865
+// Same for Actions
+// export type ActionCreators = $ObjMap<typeof actions, typeof argumentsAndVoid>;
