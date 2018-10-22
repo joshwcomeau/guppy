@@ -1,7 +1,7 @@
 // @flow
 import { select, call, put, take, takeEvery } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import * as childProcess from 'child_process';
 import chalkRaw from 'chalk';
 
@@ -25,11 +25,13 @@ import {
   getBaseProjectEnvironment,
   PACKAGE_MANAGER_CMD,
 } from '../services/platform.service';
+import { processLogger } from '../services/process-logger.service';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { ChildProcess } from 'child_process';
 import type { Task, ProjectType } from '../types';
+const { dialog } = remote;
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
@@ -57,6 +59,8 @@ export function* launchDevServer({ task }: Action): Saga<void> {
         env: { ...getBaseProjectEnvironment(projectPath), ...env },
       }
     );
+
+    processLogger(child, 'DEVSERVER');
 
     // Now that we have a port/processId for the server, attach it to
     // the task. The port is used for opening the app, the pid is used
@@ -182,6 +186,8 @@ export function* taskRun({ task }: Action): Saga<void> {
     }
   );
 
+  processLogger(child, 'TASK');
+
   // TODO: Does the renderer process still need to know about the child
   // processId?
   yield put(attachTaskMetadata(task, child.pid));
@@ -214,7 +220,17 @@ export function* taskRun({ task }: Action): Saga<void> {
     stderr: emitter => data => {
       const text = stripUnusableControlCharacters(data.toString());
 
-      emitter({ channel: 'stderr', text });
+      // When trying to eject, there will be an error from CRA if git state
+      // isn't clean. We can use this.
+      const uncleanRepo = text.includes(
+        'git repository has untracked files or uncommitted changes'
+      );
+
+      emitter({
+        channel: uncleanRepo ? 'exit' : 'stderr',
+        text,
+        uncleanRepo,
+      });
     },
     exit: emitter => code => {
       const timestamp = new Date();
@@ -226,6 +242,7 @@ export function* taskRun({ task }: Action): Saga<void> {
 
   while (true) {
     const message = yield take(stdioChannel);
+    const { uncleanRepo } = message;
 
     switch (message.channel) {
       case 'stdout':
@@ -238,6 +255,20 @@ export function* taskRun({ task }: Action): Saga<void> {
 
       case 'exit':
         if (task.name === 'eject') {
+          // If ejecting failed due to unclean repo, then throw up a dialog
+          if (uncleanRepo) {
+            dialog.showMessageBox({
+              type: 'warning',
+              buttons: ['Ok'],
+              defaultId: 0,
+              cancelId: 0,
+              title: 'Oops!',
+              message: 'Dirty git state detected',
+              detail:
+                'Oh no! In order to eject, git state must be clean. Please commit your changes and retry ejecting.',
+            });
+          }
+
           // Run a fresh install of dependencies after ejecting to get around issue
           // documented here https://github.com/facebook/create-react-app/issues/4433
           const installProcess = yield call(
@@ -249,6 +280,8 @@ export function* taskRun({ task }: Action): Saga<void> {
               env: getBaseProjectEnvironment(projectPath),
             }
           );
+
+          processLogger(installProcess, 'EJECT_INSTALL');
 
           // `waitForChildProcessToComplete` waits for proper exit before moving on
           // otherwise the next tasks (UI related) run too early before `yarn install`

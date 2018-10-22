@@ -7,6 +7,7 @@ import * as path from 'path';
 import rootSaga, {
   deleteProject,
   getNextProjectId,
+  waitForAsyncRimraf,
 } from './delete-project.saga';
 
 import {
@@ -14,6 +15,7 @@ import {
   finishDeletingProject,
   selectProject,
   createNewProjectStart,
+  startDeletingProject,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
@@ -60,8 +62,11 @@ describe('delete-project saga', () => {
       // (`1` is the ID of the "Delete from Disk" option).
       expect(saga.next(1).value).toEqual(select(getProjectsArray));
 
+      // Show fish spinner (loading) screen
+      expect(saga.next(projects).value).toEqual(put(startDeletingProject()));
+
       expect(saga.next(projects).value).toEqual(
-        call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'))
+        call(waitForAsyncRimraf, project.path)
       );
 
       expect(saga.next(projects).value).toEqual(
@@ -163,7 +168,9 @@ describe('delete-project saga', () => {
       saga.next();
       // Confirm dialog
       saga.next(1);
+
       // Pass in the projects to the select call
+      saga.next(projects); // Fish spinner (loading) screen
       saga.next(projects); // node_modules
       saga.next(projects); // project folder
 

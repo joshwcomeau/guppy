@@ -6,6 +6,7 @@ import * as path from 'path';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
+  startDeletingProject,
   finishDeletingProject,
   selectProject,
   createNewProjectStart,
@@ -47,6 +48,18 @@ export const getNextProjectId = (
   return nextProject.id;
 };
 
+export function waitForAsyncRimraf(projectPath: string): Promise<void> {
+  return new Promise((resolve, reject) =>
+    rimraf(path.join(projectPath, 'node_modules'), err => {
+      if (err) {
+        reject();
+        return;
+      }
+      resolve();
+    })
+  );
+}
+
 export function* deleteProject({ project }: Action): Saga<void> {
   // NOTE: we're using this form of `call` because it appears to work best
   // with Flow. Once https://github.com/joshwcomeau/guppy/pull/154 is merged,
@@ -82,9 +95,12 @@ export function* deleteProject({ project }: Action): Saga<void> {
   const nextSelectedProjectId = getNextProjectId(projects, project.id);
 
   if (shouldDeleteFromDisk) {
+    // Delete from disk tasks some time, so show a loading screen
+    yield put(startDeletingProject());
+
     // Run the deletion from disk
     // first delete node_modules folder permanently (faster than moving to trash)
-    yield call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'));
+    yield call(waitForAsyncRimraf, project.path);
 
     // delete project folder
     const successfullyDeletedFromDisk = yield call(

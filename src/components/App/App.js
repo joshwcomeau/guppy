@@ -14,6 +14,7 @@ import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 import ProjectConfigurationModal from '../ProjectConfigurationModal';
 import Initialization from '../Initialization';
+import LoadingScreen from '../LoadingScreen';
 
 import type { Project } from '../../types';
 
@@ -24,24 +25,20 @@ type Props = {
 class App extends PureComponent<Props> {
   render() {
     const { selectedProjectId } = this.props;
-
     return (
       <Initialization>
         {wasSuccessfullyInitialized =>
           wasSuccessfullyInitialized && (
             <Fragment>
               <Titlebar />
-
               <Wrapper>
                 <ApplicationMenu />
-
+                <LoadingScreen />
                 <Sidebar />
-
                 <MainContent>
                   {selectedProjectId ? <ProjectPage /> : <IntroScreen />}
                 </MainContent>
               </Wrapper>
-
               <CreateNewProjectWizard />
               <ProjectConfigurationModal />
             </Fragment>
