@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated, config } from 'react-spring';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 
@@ -46,7 +46,14 @@ export const SIDEBAR_WIDTH = 70;
 const SIDEBAR_OVERFLOW = 20;
 const SIDEBAR_ICON_SIZE = 45;
 
-const springSettings = { stiffness: 200, damping: 20, precision: 0.75 };
+const springConfig = key =>
+  key === 'sidebarOffsetPercentage'
+    ? {
+        tension: 200,
+        friction: 20,
+        precision: 0.75,
+      }
+    : config.default;
 
 const INTRO_SEQUENCE_STEPS = [
   'sidebar-slide-in',
@@ -111,24 +118,22 @@ class Sidebar extends PureComponent<Props, State> {
     const finishedOnboarding = onboardingStatus === 'done';
 
     return (
-      <Motion
-        style={{
-          sidebarOffsetPercentage: finishedOnboarding
-            ? 0
-            : spring(isVisible ? 0 : -100, springSettings),
-          firstProjectPosition: finishedOnboarding
-            ? 0
-            : spring(introSequenceStepIndex >= 1 ? 0 : -150),
+      <Spring
+        to={{
+          sidebarOffsetPercentage: finishedOnboarding || isVisible ? 0 : -100,
+          firstProjectPosition:
+            finishedOnboarding || introSequenceStepIndex >= 1 ? 0 : -150,
         }}
+        config={springConfig}
       >
-        {({ sidebarOffsetPercentage, firstProjectPosition }) => (
+        {interpolated => (
           <Fragment>
-            <Wrapper offset={`${sidebarOffsetPercentage}%`}>
+            <Wrapper offset={`${interpolated.sidebarOffsetPercentage}%`}>
               <IntroductionBlurb
                 isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
               />
 
-              <Projects offset={`${firstProjectPosition}px`}>
+              <Projects offset={`${interpolated.firstProjectPosition}px`}>
                 {projects.map(project => (
                   <Fragment key={project.id}>
                     <Tooltip title={project.name} position="right">
@@ -157,12 +162,12 @@ class Sidebar extends PureComponent<Props, State> {
             {isVisible && <SidebarSpacer />}
           </Fragment>
         )}
-      </Motion>
+      </Spring>
     );
   }
 }
 
-const Wrapper = styled.nav.attrs({
+const Wrapper = animated(styled.nav.attrs({
   style: props => ({
     transform: `translateX(${props.offset})`,
   }),
@@ -182,7 +187,7 @@ const Wrapper = styled.nav.attrs({
   );
   transform: translateX(${props => props.offset});
   will-change: transform;
-`;
+`);
 
 const SidebarSpacer = styled.div`
   position: relative;
