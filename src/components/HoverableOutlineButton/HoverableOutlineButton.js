@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import { StrokeButton } from '../Button';
 
 type Props = {
-  color1: string,
-  color2: string,
   handleMouseEnter: () => void,
   handleMouseLeave: () => void,
   children: React$Node,
@@ -29,13 +27,11 @@ class HoverableOutlineButton extends Component<Props, State> {
   };
 
   render() {
-    const { color1, color2, children, ...delegated } = this.props;
+    const { children, ...delegated } = this.props;
     const { isHovered } = this.state;
 
     return (
       <StrokeButton
-        color1={color1}
-        color2={color2}
         showStroke={isHovered}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}

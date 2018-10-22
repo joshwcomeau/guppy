@@ -28,6 +28,9 @@ type ProjectInfo = {
   projectIcon: string,
 };
 
+export const checkIfProjectExists = (dir: string, projectName: string) =>
+  fs.existsSync(path.join(dir, projectName));
+
 /**
  * This service manages the creation of a new project.
  * It is in charge of interfacing with the host machine to:
@@ -126,6 +129,21 @@ export default (
             onComplete(packageJson);
           }
         );
+
+        if (projectType === 'create-react-app') {
+          try {
+            // CRA 2.0 immediately initializes a git repo upon project creation
+            // so we need to immediately commit the Guppy updates to package.json
+            childProcess.exec(
+              'git add package.json && git commit -m "Add Guppy data to package.json"',
+              {
+                cwd: projectPath,
+              }
+            );
+          } catch (err) {
+            // Ignore
+          }
+        }
       }
     );
   });

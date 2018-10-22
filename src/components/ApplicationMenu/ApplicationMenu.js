@@ -52,6 +52,10 @@ class ApplicationMenu extends Component<Props> {
     }
   }
 
+  openGithubLink = pathname => {
+    shell.openExternal(`${GUPPY_REPO_URL}/${pathname}`);
+  };
+
   buildMenu = (props: Props) => {
     const {
       selectedProject,
@@ -139,11 +143,16 @@ class ApplicationMenu extends Component<Props> {
         submenu: [
           {
             label: isMac ? 'Getting Started' : 'Getting started',
-            click: this.openGettingStartedDocs,
+            click: () =>
+              this.openGithubLink('blob/master/docs/getting-started.md'),
           },
           {
             label: isMac ? 'Report an Issue' : 'Report an issue',
-            click: this.openReportIssue,
+            click: () => this.openGithubLink('issues/new/choose'),
+          },
+          {
+            label: isMac ? 'Privacy Policy' : 'Privacy policy',
+            click: () => this.openGithubLink('blob/master/PRIVACY.md'),
           },
         ],
       },
@@ -233,14 +242,6 @@ class ApplicationMenu extends Component<Props> {
     this.menu = Menu.buildFromTemplate(template);
 
     Menu.setApplicationMenu(this.menu);
-  };
-
-  openGettingStartedDocs = () => {
-    shell.openExternal(`${GUPPY_REPO_URL}/blob/master/docs/getting-started.md`);
-  };
-
-  openReportIssue = () => {
-    shell.openExternal(`${GUPPY_REPO_URL}/issues/new/choose`);
   };
 
   render() {

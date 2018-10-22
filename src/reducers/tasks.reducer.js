@@ -145,9 +145,7 @@ export default (state: State = initialState, action: Action = {}) => {
 
       return produce(state, draftState => {
         // For the eject task, we simply want to delete this task altogether.
-        // TODO: We should probably do this in `REFRESH_PROJECTS_FINISH`, which
-        // is called right after the eject task succeeds!
-        if (task.name === 'eject') {
+        if (task.name === 'eject' && wasSuccessful) {
           delete draftState[task.projectId][task.name];
           return;
         }
@@ -253,6 +251,35 @@ export const isDevServerTask = (name: string) =>
   // Gatsby and create-react-app use different names for the same task.
   name === 'start' || name === 'develop';
 
+// https://docs.npmjs.com/misc/scripts
+const preExistingTasks = [
+  'install',
+  'publish',
+  'publishOnly',
+  'pack',
+  'uninstall',
+  'version',
+  'test',
+  'stop',
+  'start',
+  'restart',
+  'shrinkwrap',
+];
+
+export const isLifeCycleHook = (name: string, tasks: Array<Task>) => {
+  // a lifecycle hook  always start with `pre` or `post`
+  if (!name.startsWith('pre') && !name.startsWith('post')) {
+    return false;
+  }
+
+  const potentialTaskName = name.replace(/^(pre|post)/, '');
+
+  return (
+    tasks.some(task => task.name === potentialTaskName) ||
+    preExistingTasks.indexOf(potentialTaskName) !== -1
+  );
+};
+
 const getTaskType = name => {
   // We have two kinds of tasks:
   // - long-running tasks, like the dev server
@@ -328,7 +355,10 @@ export const getTasksInTaskListForProjectId = createSelector(
   tasks =>
     Object.keys(tasks)
       .map(taskId => tasks[taskId])
-      .filter(task => !isDevServerTask(task.name))
+      .filter(
+        (task, i, tasksArray) =>
+          !isDevServerTask(task.name) && !isLifeCycleHook(task.name, tasksArray)
+      )
 );
 
 export const getDevServerTaskForProjectId = (

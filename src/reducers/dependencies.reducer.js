@@ -12,6 +12,7 @@ import {
   UNINSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_ERROR,
   UNINSTALL_DEPENDENCIES_FINISH,
+  REFRESH_PROJECTS_FINISH,
   RESET_ALL_STATE,
 } from '../actions';
 
@@ -138,6 +139,20 @@ export default (state: State = initialState, action: Action = {}) => {
       return produce(state, draftState => {
         dependencies.forEach(dependency => {
           delete draftState[projectId][dependency.name];
+        });
+      });
+    }
+
+    case REFRESH_PROJECTS_FINISH: {
+      // If a project was removed, clear out its associated dependencies.
+      return produce(state, draftState => {
+        const depIds = Object.keys(draftState);
+        const projectIds = Object.keys(action.projects);
+
+        depIds.forEach(id => {
+          if (!projectIds.includes(id)) {
+            delete draftState[id];
+          }
         });
       });
     }

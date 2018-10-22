@@ -16,7 +16,6 @@ import {
 import logger from '../services/analytics.service';
 import {
   createTask,
-  createDependency,
   createProject,
   createProjectInternal,
 } from '../test-helpers/factories.js';

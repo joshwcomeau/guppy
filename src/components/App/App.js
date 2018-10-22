@@ -1,14 +1,10 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { ipcRenderer } from 'electron';
 import styled, { keyframes } from 'styled-components';
 
 import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
-import { getAppLoaded } from '../../reducers/app-loaded.reducer';
-import logger from '../../services/analytics.service';
-import { initializePath } from '../../services/platform.service';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -17,53 +13,38 @@ import ApplicationMenu from '../ApplicationMenu';
 import ProjectPage from '../ProjectPage';
 import CreateNewProjectWizard from '../CreateNewProjectWizard';
 import ProjectConfigurationModal from '../ProjectConfigurationModal';
+import Initialization from '../Initialization';
+import LoadingScreen from '../LoadingScreen';
 
 import type { Project } from '../../types';
 
 type Props = {
-  isAppLoaded: boolean,
   selectedProjectId: ?Project,
 };
 
 class App extends PureComponent<Props> {
-  componentDidMount() {
-    initializePath();
-
-    window.addEventListener('beforeunload', this.killAllRunningProcesses);
-
-    logger.logEvent('load-application');
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('beforeunload', this.killAllRunningProcesses);
-  }
-
-  killAllRunningProcesses = () => {
-    ipcRenderer.send('killAllRunningProcesses');
-  };
-
   render() {
-    const { isAppLoaded, selectedProjectId } = this.props;
-
+    const { selectedProjectId } = this.props;
     return (
-      <Fragment>
-        <Titlebar />
-
-        {isAppLoaded && (
-          <Wrapper>
-            <ApplicationMenu />
-
-            <Sidebar />
-
-            <MainContent>
-              {selectedProjectId ? <ProjectPage /> : <IntroScreen />}
-            </MainContent>
-          </Wrapper>
-        )}
-
-        <CreateNewProjectWizard />
-        <ProjectConfigurationModal />
-      </Fragment>
+      <Initialization>
+        {wasSuccessfullyInitialized =>
+          wasSuccessfullyInitialized && (
+            <Fragment>
+              <Titlebar />
+              <Wrapper>
+                <ApplicationMenu />
+                <LoadingScreen />
+                <Sidebar />
+                <MainContent>
+                  {selectedProjectId ? <ProjectPage /> : <IntroScreen />}
+                </MainContent>
+              </Wrapper>
+              <CreateNewProjectWizard />
+              <ProjectConfigurationModal />
+            </Fragment>
+          )
+        }
+      </Initialization>
     );
   }
 }
@@ -90,7 +71,6 @@ const MainContent = styled.div`
 
 const mapStateToProps = state => ({
   selectedProjectId: getSelectedProjectId(state),
-  isAppLoaded: getAppLoaded(state),
 });
 
 export default connect(mapStateToProps)(App);

@@ -32,10 +32,11 @@
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
     "flow": "flow",
-    "lint": "eslint .",
+    "lint": "eslint src/**/*.js config/**/*.js",
     "prettier": "prettier --write",
     "detect-port": "cross-env ./node_modules/detect-port-alt/bin/detect-port 3000",
-    "precommit": "yarn run flow && lint-staged",
+    "precommit": "lint-staged",
+    "prepush": "yarn run flow",
     "build-storybook": "build-storybook -c .storybook -o storybook-static",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
@@ -55,6 +56,7 @@
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",
+    "rimraf": "2.6.2",
     "yarn": "1.9.2"
   },
   "devDependencies": {
@@ -123,6 +125,7 @@
     "react-icons-kit": "1.1.5",
     "react-instantsearch": "5.1.0",
     "react-motion": "0.5.2",
+    "react-powerplug": "1.0.0-rc.1",
     "react-redux": "5.0.7",
     "react-spring": "5.3.8",
     "react-tippy": "1.2.2",
@@ -138,6 +141,7 @@
     "redux-storage-decorator-migrate": "1.1.0",
     "redux-thunk": "2.2.0",
     "reselect": "3.0.1",
+    "resize-observer-polyfill": "1.5.0",
     "resolve": "1.6.0",
     "sass-loader": "7.0.0",
     "slug": "0.9.1",

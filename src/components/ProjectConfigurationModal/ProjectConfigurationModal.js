@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import importAll from 'import-all.macro';
 
 import * as actions from '../../actions';
 
@@ -15,15 +14,10 @@ import ModalHeader from '../ModalHeader';
 import Spacer from '../Spacer';
 import { FillButton } from '../Button';
 import FormField from '../FormField';
-import SelectableImage from '../SelectableImage';
+import ProjectIconSelection from '../ProjectIconSelection';
 import TextInput from '../TextInput';
 
 import type { Project } from '../../types';
-
-const icons: Array<mixed> = importAll.sync(
-  '../../assets/images/icons/icon_*.*'
-);
-const iconSrcs: Array<string> = Object.values(icons).map(src => String(src));
 
 type Props = {
   project: Project | null,
@@ -85,7 +79,7 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
     }
   };
 
-  updateProjectIcon = (ev, src: string) => {
+  updateProjectIcon = (src: string, ev) => {
     ev.preventDefault();
 
     this.setState(prevState => ({
@@ -128,24 +122,10 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
               focusOnClick={false}
               isFocused={activeField === 'projectIcon'}
             >
-              <ProjectIconWrapper>
-                {iconSrcs.map((src: string) => (
-                  <SelectableImageWrapper key={src}>
-                    <SelectableImage
-                      src={src}
-                      size={60}
-                      onClick={ev => this.updateProjectIcon(ev, src)}
-                      status={
-                        projectIcon === null
-                          ? 'default'
-                          : projectIcon === src
-                            ? 'highlighted'
-                            : 'faded'
-                      }
-                    />
-                  </SelectableImageWrapper>
-                ))}
-              </ProjectIconWrapper>
+              <ProjectIconSelection
+                selectedIcon={projectIcon}
+                onSelectIcon={this.updateProjectIcon}
+              />
             </FormField>
 
             <Actions>
@@ -172,15 +152,6 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
 
 const MainContent = styled.section`
   padding: 25px;
-`;
-
-const ProjectIconWrapper = styled.div`
-  margin-top: 16px;
-`;
-
-const SelectableImageWrapper = styled.div`
-  display: inline-block;
-  margin: 0px 10px 10px 0px;
 `;
 
 const Actions = styled.div`
