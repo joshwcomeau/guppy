@@ -23,7 +23,7 @@ import Middot from '../Middot';
 import { StrokeButton } from '../Button';
 import CustomHighlight from '../CustomHighlight';
 
-import type { DependencyStatus } from '../../types';
+import type { DependencyStatus, Dispatch } from '../../types';
 
 const DEPENDENCY_ACTIONS_COPY = {
   idle: 'Installed',
@@ -38,11 +38,7 @@ const DEPENDENCY_ACTIONS_COPY = {
 type Props = {
   projectId: string,
   currentStatus: ?DependencyStatus,
-  addDependency: (
-    projectId: string,
-    dependencyName: string,
-    version: string
-  ) => any,
+  addDependency: Dispatch<typeof actions.addDependency>,
   hit: {
     name: string,
     description: string,

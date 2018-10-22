@@ -13,10 +13,12 @@ import { COLORS } from '../../constants';
 
 import TextButton from '../TextButton';
 
+import type { Dispatch } from '../../types';
+
 type Props = {
   projectHome: string,
   projectName: string,
-  changeProjectHomePath: (path: string) => void,
+  changeProjectHomePath: Dispatch<typeof changeProjectHomePath>,
 };
 
 class ProjectPath extends PureComponent<Props> {

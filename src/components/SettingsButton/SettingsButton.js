@@ -9,6 +9,8 @@ import { COLORS } from '../../constants';
 
 import * as actions from '../../actions';
 
+import type { Dispatch } from '../../types';
+
 type Props = {
   size: number,
   color: ?string,
@@ -16,7 +18,7 @@ type Props = {
   // Currently, only a 'project-configuration' modal exists, but we may
   // support an 'app' modal in the future
   settingsFor: 'project',
-  showProjectSettings: () => void,
+  showProjectSettings: Dispatch<typeof actions.showProjectSettings>,
   action: () => void,
 };
 

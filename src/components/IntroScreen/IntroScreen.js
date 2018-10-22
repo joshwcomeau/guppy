@@ -12,9 +12,11 @@ import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
 
+import type { Dispatch } from '../../types';
+
 type Props = {
   shouldHideContent: boolean,
-  createNewProjectStart: () => any,
+  createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
 };
 
 class IntroScreen extends Component<Props> {

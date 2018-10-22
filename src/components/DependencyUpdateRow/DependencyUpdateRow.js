@@ -14,7 +14,7 @@ import Spinner from '../Spinner';
 import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 
-import type { Dependency } from '../../types';
+import type { Dependency, Dispatch } from '../../types';
 
 type Props = {
   projectId: string,
@@ -22,11 +22,7 @@ type Props = {
   isLoadingNpmInfo: boolean,
   latestVersion: ?string,
   // From redux:
-  updateDependency: (
-    projectId: string,
-    dependencyName: string,
-    latestVersion: string
-  ) => void,
+  updateDependency: Dispatch<typeof actions.updateDependency>,
 };
 
 class DependencyUpdateRow extends Component<Props> {

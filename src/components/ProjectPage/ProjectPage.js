@@ -22,11 +22,13 @@ import {
 } from '../../services/shell.service';
 import { getCopyForOpeningFolder } from '../../services/platform.service';
 
-import type { Project } from '../../types';
+import type { Project, Dispatch } from '../../types';
 
 type Props = {
   project: Project,
-  loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
+  loadDependencyInfoFromDisk: Dispatch<
+    typeof actions.loadDependencyInfoFromDisk
+  >,
 };
 
 class ProjectPage extends PureComponent<Props> {

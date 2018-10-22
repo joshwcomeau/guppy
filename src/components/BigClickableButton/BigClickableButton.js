@@ -13,7 +13,7 @@ type Props = {
   colors: Array<string>,
   children?: React$Node,
   isOn: boolean,
-  onClick: () => void,
+  onClick: (ev: SyntheticMouseEvent<*>) => void,
 };
 
 type State = {

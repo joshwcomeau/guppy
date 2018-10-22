@@ -207,10 +207,15 @@ export const clearConsole = (task: Task) => ({
   task,
 });
 
-export const addDependency = (projectId: string, dependencyName: string) => ({
+export const addDependency = (
+  projectId: string,
+  dependencyName: string,
+  version: string
+) => ({
   type: ADD_DEPENDENCY,
   projectId,
   dependencyName,
+  version,
 });
 
 export const updateDependency = (

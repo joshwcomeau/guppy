@@ -21,7 +21,7 @@ import EjectButton from '../EjectButton';
 import TerminalOutput from '../TerminalOutput';
 import WindowDimensions from '../WindowDimensions';
 
-import type { Task } from '../../types';
+import type { Task, Dispatch } from '../../types';
 
 type Props = {
   projectId: string,
@@ -31,8 +31,8 @@ type Props = {
   onDismiss: () => void,
   // From Redux:
   task: Task,
-  runTask: (task: Task, timestamp: Date) => any,
-  abortTask: (task: Task, timestamp: Date) => any,
+  runTask: Dispatch<typeof actions.runTask>,
+  abortTask: Dispatch<typeof actions.abortTask>,
 };
 
 class TaskDetailsModal extends PureComponent<Props> {
