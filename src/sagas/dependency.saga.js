@@ -1,5 +1,6 @@
 // @flow
 import { select, call, put, take, takeEvery } from 'redux-saga/effects';
+import { END } from 'redux-saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
@@ -125,13 +126,13 @@ export function* handleReinstallDependenciesStart({
     // EventChannel for progress updating on loadingSrceen.
     try {
       while (true) {
-        let message = yield take(channel);
-        const progress = showProgress(message);
-        console.log('will set progress', progress);
+        let output = yield take.maybe(channel);
+        const progress = showProgress(output.data);
+        console.log('will set progress', progress, output);
         yield put(setStatusText(progress));
       }
     } catch (err) {
-      console.log('error', err);
+      console.log('error in channel handling', err);
     }
 
     // reinstall finished --> hide waiting spinner
@@ -185,6 +186,10 @@ export function* handleLoadDependencyInfoFromDiskStart({
 
 // helpers
 export function showProgress(message: string) {
+  if (!message) {
+    return '';
+  }
+
   const [text, progressStr, totalStr] = /\[(\d+)\/(\d+)\]/.exec(message);
   const progress = parseInt(progressStr);
   const total = parseInt(totalStr);

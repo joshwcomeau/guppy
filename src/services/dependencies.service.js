@@ -34,25 +34,25 @@ export const spawnProcessChannel = (
   cmdArgs: string[],
   projectPath: string
 ) => {
-  return eventChannel(emitter => {
-    const output = {
-      stdout: '',
-      stderr: '',
-    };
-    let child = childProcess.spawn(cmd, cmdArgs, {
-      cwd: projectPath,
-    });
+  const output = {
+    stdout: '',
+    stderr: '',
+  };
+  const child = childProcess.spawn(cmd, cmdArgs, {
+    cwd: projectPath,
+  });
 
+  return eventChannel(emitter => {
     processLogger(child, 'DEPENDENCY');
 
     child.stdout.on('data', data => {
       output.stdout += data.toString();
-      emitter(data.toString());
+      emitter({ data: data.toString() });
     });
     // todo also emit errors --> maybe by emitting an object
     child.stderr.on('data', data => {
       output.stderr += data.toString();
-      emitter(data.toString());
+      emitter({ error: data.toString() });
     });
 
     child.on('exit', code => {
