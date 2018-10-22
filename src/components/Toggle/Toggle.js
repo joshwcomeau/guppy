@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated } from 'react-spring';
 
 import { COLORS } from '../../constants';
 
@@ -22,23 +22,25 @@ class Toggle extends PureComponent<Props> {
   lastTranslateVal: ?number = null;
   lastFrameTime: ?number = null;
 
-  renderBall = ({ translate }: { translate: number }) => {
+  renderBall = (interpolated: { translate: number }) => {
     const { size } = this.props;
 
     const { lastTranslateVal, lastFrameTime } = this;
 
     if (lastTranslateVal == null || lastFrameTime == null) {
-      this.lastTranslateVal = translate;
+      this.lastTranslateVal = interpolated.translate;
       this.lastFrameTime = performance.now();
-      return <Ball size={size} translate={translate} stretch={1} />;
+      return (
+        <Ball size={size} translate={interpolated.translate} stretch={1} />
+      );
     }
 
     const now = performance.now();
 
-    const translateDelta = Math.abs(lastTranslateVal - translate);
+    const translateDelta = Math.abs(lastTranslateVal - interpolated.translate);
     const timeDelta = now - lastFrameTime;
 
-    this.lastTranslateVal = translate;
+    this.lastTranslateVal = interpolated.translate;
     this.lastFrameTime = now;
 
     const timeAdjustment = 1 / (timeDelta / 16.666);
@@ -48,7 +50,7 @@ class Toggle extends PureComponent<Props> {
     return (
       <Ball
         size={size}
-        translate={translate}
+        translate={interpolated.translate}
         stretch={1 + stretch * timeAdjustment}
       />
     );
@@ -69,16 +71,13 @@ class Toggle extends PureComponent<Props> {
         <OnBackground isVisible={isToggled}>
           <Pulsing />
         </OnBackground>
-        <Motion
-          style={{
-            translate: spring(isToggled ? 100 : 0, {
-              stiffness: 220,
-              damping: 19,
-            }),
-          }}
+        <Spring
+          from={{ translate: isToggled ? 0 : 100 }}
+          to={{ translate: isToggled ? 100 : 0 }}
+          config={{ tension: 220, friction: 19 }}
         >
           {this.renderBall}
-        </Motion>
+        </Spring>
       </Wrapper>
     );
   }
@@ -139,7 +138,7 @@ const Pulsing = styled.div`
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
 
-const Ball = styled.div.attrs({
+const Ball = animated(styled.div.attrs({
   style: props => ({
     transform: `
       translateX(${props.translate}%)
@@ -156,6 +155,6 @@ const Ball = styled.div.attrs({
 
   transform-origin: center center;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
-`;
+`);
 
 export default Toggle;

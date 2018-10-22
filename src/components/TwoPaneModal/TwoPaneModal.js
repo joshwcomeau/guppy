@@ -132,7 +132,6 @@ class TwoPaneModal extends PureComponent<Props, State> {
           transitOpacity: transitOpacity.to,
         }}
         config={springConfig}
-        animated
       >
         {interpolated => (
           <Wrapper opacity={interpolated.transitOpacity} clickable={!inTransit}>

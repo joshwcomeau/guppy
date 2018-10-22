@@ -30,7 +30,7 @@ class ProgressBar extends Component<Props> {
         <Spring
           to={{ progress }}
           config={{ tension: stiffness, friction: damping }}
-          animated
+          native
         >
           {interpolated => (
             <ProgressGradient
