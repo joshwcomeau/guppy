@@ -32,13 +32,7 @@ class Initialization extends PureComponent<Props, State> {
       const nodeVersion = await getNodeJsVersion();
 
       if (!nodeVersion) {
-        dialog.showErrorBox(
-          'Node missing',
-          'It looks like Node.js isn\'t installed. Node is required to use Guppy.\nWhen you click "OK", you\'ll be directed to instructions to download and install Node.'
-        );
-        shell.openExternal(
-          `${GUPPY_REPO_URL}/blob/master/README.md#installation`
-        );
+        throw new Error('node-not-found');
       }
 
       this.setState({ wasSuccessfullyInitialized: !!nodeVersion });
@@ -49,8 +43,22 @@ class Initialization extends PureComponent<Props, State> {
 
       ipcRenderer.on('app-will-close', this.appWillClose);
     } catch (e) {
-      // Path initialization can reject if no valid Node version is found.
-      // This isn't really an error, though, so we can swallow it.
+      switch (e) {
+        case 'node-not-found': {
+          dialog.showErrorBox(
+            'Node missing',
+            'It looks like Node.js isn\'t installed. Node is required to use Guppy.\nWhen you click "OK", you\'ll be directed to instructions to download and install Node.'
+          );
+          shell.openExternal(
+            `${GUPPY_REPO_URL}/blob/master/README.md#installation`
+          );
+          break;
+        }
+        default: {
+          // Path initialization can reject if no valid Node version is found.
+          // This isn't really an error, though, so we can swallow it.
+        }
+      }
     }
   }
 

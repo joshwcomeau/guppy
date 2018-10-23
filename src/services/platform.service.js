@@ -72,8 +72,6 @@ export const getBaseProjectEnvironment = (
   };
 };
 
-window.childProcess = childProcess;
-
 // HACK: With electron-builder, we're having some issues on mac finding Node.
 // This is because for some reason, the PATH is not updated properly :(
 // 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
