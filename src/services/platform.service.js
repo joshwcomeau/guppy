@@ -79,26 +79,33 @@ window.childProcess = childProcess;
 // 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
 // reasons.
 export const initializePath = () => {
-  childProcess.exec('which node', { env: window.process.env }, (_, version) => {
-    if (!version && isMac) {
-      // For users with a standard Node installation, node will be in
-      // /usr/local/bin
-      // For users using NVM, the path to Node will be added to `.bashrc`.
-      // Add both to the PATH.
-      try {
-        childProcess.exec(
-          'source ~/.bashrc && echo $PATH',
-          (err, updatedPath) => {
-            if (updatedPath) {
-              window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
-            }
+  return new Promise((resolve, reject) => {
+    childProcess.exec(
+      'which node',
+      { env: window.process.env },
+      (_, version) => {
+        if (!version && isMac) {
+          // For users with a standard Node installation, node will be in
+          // /usr/local/bin
+          // For users using NVM, the path to Node will be added to `.bashrc`.
+          // Add both to the PATH.
+          try {
+            childProcess.exec(
+              'source ~/.bashrc && echo $PATH',
+              (err, updatedPath) => {
+                if (updatedPath) {
+                  window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
+                }
+
+                resolve();
+              }
+            );
+          } catch (e) {
+            reject(e);
           }
-        );
-      } catch (e) {
-        // If no `.bashrc` exists, we have no work to do.
-        // The PATH should already be set correctly.
+        }
       }
-    }
+    );
   });
 };
 
