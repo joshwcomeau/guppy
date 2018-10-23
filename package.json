@@ -41,7 +41,7 @@
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,jsx,mjs}": [
       "npm run prettier",
       "eslint",
       "git add"
