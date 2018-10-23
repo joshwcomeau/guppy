@@ -57,6 +57,8 @@ export const getBaseProjectEnvironment = (
   projectPath: string,
   currentEnvironment: Object = window.process.env
 ) => {
+  const pathKey = isWin ? 'Path' : 'PATH';
+
   return {
     ...currentEnvironment,
     // NOTE: `FORCE_COLOR` adds control characters to the output.
@@ -64,8 +66,8 @@ export const getBaseProjectEnvironment = (
     // should move this out into a "wrapping" function, and update current
     // callsites to use it.
     FORCE_COLOR: true,
-    PATH:
-      currentEnvironment.PATH +
+    [pathKey]:
+      currentEnvironment[pathKey] +
       path.join(projectPath, 'node_modules', '.bin', path.delimiter),
   };
 };

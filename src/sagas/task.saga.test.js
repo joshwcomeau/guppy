@@ -26,6 +26,7 @@ import findAvailablePort from '../services/find-available-port.service';
 import {
   getBaseProjectEnvironment,
   PACKAGE_MANAGER_CMD,
+  isWin,
 } from '../services/platform.service';
 import { ipcRenderer } from 'electron';
 
@@ -418,8 +419,9 @@ describe('task saga', () => {
         '.bin'
       );
       const generatedEnv = getBaseProjectEnvironment(projectPath);
+      const pathKey = isWin ? 'Path' : 'PATH';
 
-      expect(generatedEnv.PATH).toContain(projectBinDirectory);
+      expect(generatedEnv[pathKey]).toContain(projectBinDirectory);
     });
   });
 });
