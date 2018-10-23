@@ -63,6 +63,7 @@ export function* handleLaunchDevServer({
       {
         cwd: projectPath,
         env: { ...getBaseProjectEnvironment(projectPath), ...env },
+        shell: true,
       }
     );
 
@@ -189,6 +190,7 @@ export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
     {
       cwd: projectPath,
       env: getBaseProjectEnvironment(projectPath),
+      shell: true,
     }
   );
 

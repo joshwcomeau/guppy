@@ -7,6 +7,7 @@ import logger from '../../services/analytics.service';
 import { getNodeJsVersion } from '../../services/shell.service';
 import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 import { getProjectsArray } from '../../reducers/projects.reducer';
+import { initializePath } from '../../services/platform.service';
 
 import type { Project } from '../../types';
 import type { State as Queue, QueueEntry } from '../../reducers/queue.reducer';
@@ -43,6 +44,7 @@ class Initialization extends PureComponent<Props, State> {
       );
     }
 
+    initializePath();
     this.setState({ wasSuccessfullyInitialized: !!nodeVersion });
     logger.logEvent('load-application', {
       node_version: nodeVersion,
