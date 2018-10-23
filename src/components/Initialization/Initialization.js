@@ -8,6 +8,8 @@ import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 import { getProjectsArray } from '../../reducers/projects.reducer';
 import { initializePath } from '../../services/platform.service';
 
+import { GUPPY_REPO_URL } from '../../constants';
+
 const { dialog, shell } = remote;
 
 type Props = {
@@ -32,7 +34,7 @@ class Initialization extends PureComponent<Props, State> {
         'It looks like Node.js isn\'t installed. Node is required to use Guppy.\nWhen you click "OK", you\'ll be directed to instructions to download and install Node.'
       );
       shell.openExternal(
-        'https://github.com/joshwcomeau/guppy/blob/master/README.md#installation'
+        `${GUPPY_REPO_URL}/blob/master/README.md#installation`
       );
     }
 
