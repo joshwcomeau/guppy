@@ -293,7 +293,9 @@ export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
           // otherwise the next tasks (UI related) run too early before `yarn install`
           // is finished
           yield call(waitForChildProcessToComplete, installProcess);
-          yield put(loadDependencyInfoFromDiskStart(project.id, project.path));
+          yield put(
+            loadDependencyInfoFromDiskStart(task.projectId, projectPath)
+          );
         }
 
         yield call(displayTaskComplete, task, message.wasSuccessful);

@@ -6,7 +6,7 @@ import * as path from 'path';
 import chalkRaw from 'chalk';
 
 import {
-  launchDevServer,
+  handleLaunchDevServer,
   taskRun,
   taskAbort,
   displayTaskComplete,
@@ -18,7 +18,7 @@ import {
   attachTaskMetadata,
   receiveDataFromTaskExecution,
   completeTask,
-  loadDependencyInfoFromDisk,
+  loadDependencyInfoFromDiskStart,
 } from '../actions';
 import killProcessId from '../services/kill-process-id.service';
 import { getProjectById } from '../reducers/projects.reducer';
@@ -65,13 +65,13 @@ describe('task saga', () => {
     }
   });
 
-  describe('launchDevServer saga', () => {
+  describe('handleLaunchDevServer saga', () => {
     it('should throw if no task is provided', () => {
-      expect(() => launchDevServer()).toThrow();
+      expect(() => handleLaunchDevServer()).toThrow();
     });
 
     const task = { projectId: 'pickled-tulip' };
-    const saga = cloneableGenerator(launchDevServer)({ task });
+    const saga = cloneableGenerator(handleLaunchDevServer)({ task });
     const project = { type: 'create-react-app' };
     const projectPath = '/path/to/project';
     const port = 3000;
@@ -297,14 +297,8 @@ describe('task saga', () => {
           call(waitForChildProcessToComplete, installProcessDescription)
         );
 
-        // The next call is to `loadDependencyInfoFromDisk`, which is a thunk.
-        // Thunks produce anonymous functions, which means we can't easily
-        // test it. For now, just verify that it produces a function.
-        // TODO: remove `JSON.stringify` once `redux-thunk` is removed
-        expect(JSON.stringify(saga.next().value)).toEqual(
-          JSON.stringify(
-            put(loadDependencyInfoFromDisk(task.projectId, projectPath))
-          )
+        expect(saga.next().value).toEqual(
+          put(loadDependencyInfoFromDiskStart(task.projectId, projectPath))
         );
 
         expect(
@@ -391,12 +385,9 @@ describe('task saga', () => {
       expect(saga.next().value).toEqual(
         select(getProjectById, { projectId: task.projectId })
       );
-      // stringify to avoid deep equal inconsistencies from thunk
-      // TODO: remove `JSON.stringify` once `redux-thunk` is removed
-      expect(JSON.stringify(saga.next(project).value)).toEqual(
-        JSON.stringify(
-          put(loadDependencyInfoFromDisk(project.id, project.path))
-        )
+
+      expect(saga.next(project).value).toEqual(
+        put(loadDependencyInfoFromDiskStart(project.id, project.path))
       );
     });
   });
