@@ -8,7 +8,10 @@ import * as uuid from 'uuid/v1';
 
 import { COLORS } from '../constants';
 
-import { formatCommandForPlatform } from './platform.service';
+import {
+  formatCommandForPlatform,
+  getBaseProjectEnvironment,
+} from './platform.service';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 
@@ -72,7 +75,10 @@ export default (
 
   const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
 
-  const process = childProcess.spawn(instruction, args);
+  const process = childProcess.spawn(instruction, args, {
+    env: getBaseProjectEnvironment(projectPath),
+    shell: true,
+  });
 
   process.stdout.on('data', onStatusUpdate);
   process.stderr.on('data', onError);

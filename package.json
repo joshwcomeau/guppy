@@ -1,10 +1,20 @@
 {
   "name": "guppy",
   "productName": "Guppy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "main": "src/main.js",
+  "main": "src/electron.js",
   "homepage": "./",
+  "build": {
+    "appId": "com.electron.guppy",
+    "files": [
+      "build/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/yarn/"
+    ],
+    "publish": "github"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/joshwcomeau/guppy.git"
@@ -14,12 +24,10 @@
     "start": "cross-env NODE_ENV=development npm run start:react",
     "start:react": "cross-env BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
-    "package:linux": "electron-packager . --platform=linux --prune=true --out=release-builds --overwrite",
-    "package:mac": "electron-packager . --platform=darwin --arch=x64 --icon=src/assets/icons/mac/logo.icns --prune=true --out=release-builds --overwrite",
-    "package:win": "electron-packager . --platform=win32 --arch=x64 --icon=src/assets/icons/win/logo.ico --prune=true --out=release-builds --overwrite",
-    "dist:linux": "cross-env GENERATE_SOURCEMAP=false npm run build && npm run package:linux",
-    "dist:mac": "cross-env GENERATE_SOURCEMAP=false npm run build && npm run package:mac",
-    "dist:win": "cross-env GENERATE_SOURCEMAP=false npm run build && npm run package:win",
+    "dist": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -c.extraMetadata.main=build/electron.js",
+    "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl -c.extraMetadata.main=build/electron.js",
+    "publish": "yarn dist --publish always",
+    "publish:all": "yarn dist:all --publish always",
     "test": "node scripts/test.js --env=node",
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
@@ -44,6 +52,7 @@
     "electron-debug": "2.0.0",
     "electron-devtools-installer": "2.2.4",
     "electron-store": "2.0.0",
+    "electron-updater": "3.1.2",
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
     "ps-tree": "1.1.0",
@@ -65,6 +74,7 @@
     "babel-loader": "8.0.0-beta.0",
     "babel-plugin-named-asset-import": "1.0.0-next.66cc7a90",
     "babel-plugin-react-docgen": "2.0.0-babel7.0",
+    "babel-polyfill": "6.26.0",
     "babel-preset-react-app": "4.0.0-next.66cc7a90",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.4.1",
@@ -75,7 +85,8 @@
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
     "electron": "2.0.1",
-    "electron-packager": "12.1.0",
+    "electron-builder": "20.28.4",
+    "electron-log": "^2.2.17",
     "eslint": "4.15.0",
     "eslint-config-react-app": "3.0.0-next.66cc7a90",
     "eslint-loader": "1.9.0",

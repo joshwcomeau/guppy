@@ -2,6 +2,9 @@
 # `electron-packager` comes with intentionally-bad JSON, and Flow trips over it
 .*/node_modules/electron-packager/test/fixtures/infer-malformed-json/package.json
 
+# Graphql contains a typing error --> ignore it
+.*/node_modules/graphql/**/*.js
+
 # Release builds are git-ignored, and thus can cause problems when checking out
 # new branches, and have Flow run on old files without the same dependencies.
 .*/release-builds/*

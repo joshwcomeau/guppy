@@ -26,6 +26,7 @@ import findAvailablePort from '../services/find-available-port.service';
 import {
   getBaseProjectEnvironment,
   PACKAGE_MANAGER_CMD,
+  isWin,
 } from '../services/platform.service';
 import { ipcRenderer } from 'electron';
 
@@ -113,10 +114,16 @@ describe('task saga', () => {
       expect(saga.next(port).value).toEqual(
         call(getDevServerCommand, task, project.type, port)
       );
-      expect(saga.next({ args, env }).value).toEqual(
+      expect(
+        saga.next({
+          args,
+          env,
+        }).value
+      ).toEqual(
         call([childProcess, childProcess.spawn], PACKAGE_MANAGER_CMD, args, {
           cwd: projectPath,
           env: { ...getBaseProjectEnvironment(projectPath), ...env },
+          shell: true,
         })
       );
     });
@@ -192,6 +199,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -211,6 +219,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -230,6 +239,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -409,8 +419,9 @@ describe('task saga', () => {
         '.bin'
       );
       const generatedEnv = getBaseProjectEnvironment(projectPath);
+      const pathKey = isWin ? 'Path' : 'PATH';
 
-      expect(generatedEnv.PATH).toContain(projectBinDirectory);
+      expect(generatedEnv[pathKey]).toContain(projectBinDirectory);
     });
   });
 });

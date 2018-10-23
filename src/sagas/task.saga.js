@@ -56,6 +56,7 @@ export function* launchDevServer({ task }: Action): Saga<void> {
       {
         cwd: projectPath,
         env: { ...getBaseProjectEnvironment(projectPath), ...env },
+        shell: true,
       }
     );
 
@@ -182,6 +183,7 @@ export function* taskRun({ task }: Action): Saga<void> {
     {
       cwd: projectPath,
       env: getBaseProjectEnvironment(projectPath),
+      shell: true,
     }
   );
 
