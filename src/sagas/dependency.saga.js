@@ -1,6 +1,5 @@
 // @flow
 import { select, call, put, take, takeEvery } from 'redux-saga/effects';
-import { END } from 'redux-saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
@@ -39,6 +38,7 @@ import {
   loadDependencyInfoFromDiskStart,
   refreshProjectsStart,
   setStatusText,
+  resetStatusText,
 } from '../actions';
 
 import type { Saga } from 'redux-saga';
@@ -123,20 +123,17 @@ export function* handleReinstallDependenciesStart({
     // reinstall dependencies
     const channel = yield call(reinstallDependencies, projectPath);
 
-    // EventChannel for progress updating on loadingSrceen.
-    try {
-      while (true) {
-        let output = yield take.maybe(channel);
-        const progress = showProgress(output.data);
-        console.log('will set progress', progress, output);
-        yield put(setStatusText(progress));
-      }
-    } catch (err) {
-      console.log('error in channel handling', err);
-    }
+    // The channel is used to pass every termianl output to loadingScreen status text
+    // todo: Check if we need to pass a progress value so we can display a progress bar as well.
+    const result = yield call(watchInstallMessages, channel);
 
     // reinstall finished --> hide waiting spinner
+    console.log(result);
+    // todo: do we need an error handling here? We could check result.exit === 1 for an error.
     yield put(reinstallDependenciesFinish());
+
+    // reset status text of loading screen
+    yield put(resetStatusText());
 
     yield put(refreshProjectsStart());
   } catch (err) {
@@ -185,17 +182,26 @@ export function* handleLoadDependencyInfoFromDiskStart({
 }
 
 // helpers
-export function showProgress(message: string) {
-  if (!message) {
-    return '';
+export function* watchInstallMessages(channel) {
+  let output;
+  try {
+    while (true) {
+      output = yield take(channel);
+      if (!output.hasOwnProperty('exit')) {
+        // Not the final message
+        yield put(setStatusText(output.data));
+      } else {
+        // Yield exit code and complete stdout
+        yield output;
+
+        console.log('exit', output);
+        // Close channel manually --> emitter(END) inside spwanProcessChannel would exit too early
+        channel.close();
+      }
+    }
+  } finally {
+    /* Normal exit of channel. No need to do anything here */
   }
-
-  const [text, progressStr, totalStr] = /\[(\d+)\/(\d+)\]/.exec(message);
-  const progress = parseInt(progressStr);
-  const total = parseInt(totalStr);
-
-  console.log('progress', text, progress, total);
-  return `Please wait. Installation Status ${(progress / total) * 100}%`;
 }
 
 // Installs/uninstalls fail silently - the only notice of a failed action

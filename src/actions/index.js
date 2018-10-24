@@ -447,3 +447,7 @@ export const setStatusText = (statusText: string) => ({
   type: SET_STATUS_TEXT,
   statusText,
 });
+
+export const resetStatusText = () => ({
+  type: RESET_STATUS_TEXT,
+});

@@ -48,8 +48,13 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-const InfoText = styled.p`
+const InfoText = styled.pre`
   text-align: center;
+  border-radius: 10px;
+  background: ${COLORS.teal[500]};
+  width: 300px;
+  height: 100px;
+  padding: 5px;
 `;
 
 const FishSpinner = styled.img`

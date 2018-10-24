@@ -49,17 +49,21 @@ export const spawnProcessChannel = (
       output.stdout += data.toString();
       emitter({ data: data.toString() });
     });
-    // todo also emit errors --> maybe by emitting an object
+
     child.stderr.on('data', data => {
       output.stderr += data.toString();
       emitter({ error: data.toString() });
     });
 
     child.on('exit', code => {
-      console.log('exiting', code);
-      // emitter(code ? output.stderr : output.stdout);
-      emitter(END);
-      // return code ? reject(output.stderr) : resolve(output.stdout);
+      // emit exit code & complete data/err --> not used yet but maybe useful later
+      emitter({
+        exit: code,
+        data: {
+          data: output.stdout,
+          error: output.stderr,
+        },
+      });
     });
 
     // The subscriber must return an unsubscribe function
