@@ -31,19 +31,19 @@ class Initialization extends PureComponent<Props, State> {
 
       const nodeVersion = await getNodeJsVersion();
 
-      if (!nodeVersion) {
-        throw new Error('node-not-found');
-      }
-
       this.setState({ wasSuccessfullyInitialized: !!nodeVersion });
 
       logger.logEvent('load-application', {
         node_version: nodeVersion,
       });
 
+      if (!nodeVersion) {
+        throw new Error('node-not-found');
+      }
+
       ipcRenderer.on('app-will-close', this.appWillClose);
     } catch (e) {
-      switch (e) {
+      switch (e.message) {
         case 'node-not-found': {
           dialog.showErrorBox(
             'Node missing',
