@@ -89,7 +89,7 @@ export const initializePath = () => {
       (_, nodePath) => {
         if (nodePath) {
           // Node found
-          return resolve(nodePath);
+          return resolve();
         }
 
         // For users with a standard Node installation, node will be in
