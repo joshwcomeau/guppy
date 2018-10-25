@@ -21,6 +21,6 @@ export const getNodeJsVersion = () =>
         return resolve();
       }
 
-      resolve(stdout.trim());
+      resolve(stdout.toString().trim());
     })
   );
