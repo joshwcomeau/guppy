@@ -216,7 +216,7 @@ const Projects = styled.div.attrs({
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 40px;
+  padding: 40px 0;
 `;
 
 const mapStateToProps = state => ({
