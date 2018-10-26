@@ -2,6 +2,7 @@
 import { remote } from 'electron';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 import rimraf from 'rimraf';
+import * as fs from 'fs';
 import * as path from 'path';
 
 import {
@@ -11,6 +12,7 @@ import {
   deleteProjectError,
   selectProject,
   createNewProjectStart,
+  loadDependencyInfoFromDisk,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
@@ -106,6 +108,12 @@ export function* deleteProject({ project }: Action): Saga<void> {
 
       // delete project folder
       yield call([shell, shell.moveItemToTrash], project.path);
+
+      // Check if project folder is removed
+      const exists = yield call([fs, fs.existsSync], project.path);
+      if (exists) {
+        throw new Error('deleting-failed');
+      }
     } catch (err) {
       // If for some reason it was _not_ successfully deleted, show error and return,
       // so project isn't removed from Guppy state. Failure to delete from disk
@@ -122,6 +130,8 @@ export function* deleteProject({ project }: Action): Saga<void> {
         detail:
           'Please make sure no tasks are running and no applications are using files in that directory.',
       });
+
+      yield put(loadDependencyInfoFromDisk(project.id, project.path));
 
       return;
     }
