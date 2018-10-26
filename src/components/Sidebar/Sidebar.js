@@ -127,7 +127,6 @@ class Sidebar extends PureComponent<Props, State> {
             <Wrapper offset={`${sidebarOffsetPercentage}%`}>
               <ScrollbarOnlyVertical
                 autoHide
-                hideTracksWhenNotNeeded
                 renderTrackHorizontal={props => (
                   <div {...props} style={{ display: 'none' }} />
                 )}
