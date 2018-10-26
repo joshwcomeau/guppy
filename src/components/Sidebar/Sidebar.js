@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import { COLORS, Z_INDICES } from '../../constants';
 import * as actions from '../../actions';
@@ -124,35 +125,46 @@ class Sidebar extends PureComponent<Props, State> {
         {({ sidebarOffsetPercentage, firstProjectPosition }) => (
           <Fragment>
             <Wrapper offset={`${sidebarOffsetPercentage}%`}>
-              <IntroductionBlurb
-                isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
-              />
-
-              <Projects offset={`${firstProjectPosition}px`}>
-                {projects.map(project => (
-                  <Fragment key={project.id}>
-                    <Tooltip title={project.name} position="right">
-                      <SidebarProjectIcon
-                        size={SIDEBAR_ICON_SIZE}
-                        id={project.id}
-                        name={project.name}
-                        color={project.color}
-                        iconSrc={project.icon}
-                        isSelected={
-                          finishedOnboarding && project.id === selectedProjectId
-                        }
-                        handleSelect={() => selectProject(project.id)}
-                      />
-                    </Tooltip>
-                    <Spacer size={18} />
-                  </Fragment>
-                ))}
-                <AddProjectButton
-                  size={SIDEBAR_ICON_SIZE}
-                  onClick={createNewProjectStart}
-                  isVisible={finishedOnboarding || introSequenceStepIndex >= 2}
+              <ScrollbarOnlyVertical
+                autoHide
+                hideTracksWhenNotNeeded
+                renderTrackHorizontal={props => (
+                  <div {...props} style={{ display: 'none' }} />
+                )}
+              >
+                <IntroductionBlurb
+                  isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
                 />
-              </Projects>
+
+                <Projects offset={`${firstProjectPosition}px`}>
+                  {projects.map(project => (
+                    <Fragment key={project.id}>
+                      <Tooltip title={project.name} position="right">
+                        <SidebarProjectIcon
+                          size={SIDEBAR_ICON_SIZE}
+                          id={project.id}
+                          name={project.name}
+                          color={project.color}
+                          iconSrc={project.icon}
+                          isSelected={
+                            finishedOnboarding &&
+                            project.id === selectedProjectId
+                          }
+                          handleSelect={() => selectProject(project.id)}
+                        />
+                      </Tooltip>
+                      <Spacer size={18} />
+                    </Fragment>
+                  ))}
+                  <AddProjectButton
+                    size={SIDEBAR_ICON_SIZE}
+                    onClick={createNewProjectStart}
+                    isVisible={
+                      finishedOnboarding || introSequenceStepIndex >= 2
+                    }
+                  />
+                </Projects>
+              </ScrollbarOnlyVertical>
             </Wrapper>
             {isVisible && <SidebarSpacer />}
           </Fragment>
@@ -173,7 +185,6 @@ const Wrapper = styled.nav.attrs({
   left: -${SIDEBAR_OVERFLOW}px;
   bottom: 0;
   width: ${SIDEBAR_WIDTH + SIDEBAR_OVERFLOW}px;
-  padding-top: 40px;
   padding-left: ${SIDEBAR_OVERFLOW}px;
   background-image: linear-gradient(
     85deg,
@@ -182,12 +193,19 @@ const Wrapper = styled.nav.attrs({
   );
   transform: translateX(${props => props.offset});
   will-change: transform;
+  height: 100vh;
 `;
 
 const SidebarSpacer = styled.div`
   position: relative;
   height: 100vh;
   width: ${SIDEBAR_WIDTH}px;
+`;
+
+const ScrollbarOnlyVertical = styled(Scrollbars)`
+  > div:first-child {
+    overflow-x: hidden !important;
+  }
 `;
 
 const Projects = styled.div.attrs({
@@ -198,6 +216,7 @@ const Projects = styled.div.attrs({
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 40px;
 `;
 
 const mapStateToProps = state => ({
