@@ -127,6 +127,19 @@ class Sidebar extends PureComponent<Props, State> {
             <Wrapper offset={`${sidebarOffsetPercentage}%`}>
               <ScrollbarOnlyVertical
                 autoHide
+                renderThumbVertical={({ style, ...props }) => (
+                  // Info: Styled-components not working here yet
+                  //       --> PR 286 @ react-custom-scrollbars will fix this
+                  <div
+                    {...props}
+                    style={{
+                      ...style,
+                      background: COLORS.transparentWhite[700],
+                      borderRadius: '6px',
+                    }}
+                    className="thumb-vertical"
+                  />
+                )}
                 renderTrackHorizontal={props => (
                   <div {...props} style={{ display: 'none' }} />
                 )}
@@ -138,7 +151,11 @@ class Sidebar extends PureComponent<Props, State> {
                 <Projects offset={`${firstProjectPosition}px`}>
                   {projects.map(project => (
                     <Fragment key={project.id}>
-                      <Tooltip title={project.name} position="right">
+                      <Tooltip
+                        title={project.name}
+                        position="right"
+                        transitionFlip={false}
+                      >
                         <SidebarProjectIcon
                           size={SIDEBAR_ICON_SIZE}
                           id={project.id}
@@ -202,6 +219,7 @@ const SidebarSpacer = styled.div`
 `;
 
 const ScrollbarOnlyVertical = styled(Scrollbars)`
+  // hide overflow-x so left/right scrolling is disabled
   > div:first-child {
     overflow-x: hidden !important;
   }
