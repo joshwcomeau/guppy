@@ -120,7 +120,7 @@ export function* deleteProject({ project }: Action): Saga<void> {
       // can happen if the filesystem can't delete it (maybe if file is open?).
       yield put(deleteProjectError());
 
-      dialog.showMessageBox({
+      yield call([dialog, dialog.showMessageBox], {
         type: 'warning',
         buttons: ['Ok'],
         defaultId: 0,
