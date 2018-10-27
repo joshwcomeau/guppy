@@ -1,6 +1,7 @@
 import electron from 'electron'; // Mocked
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 import rimraf from 'rimraf';
+import * as fs from 'fs';
 import * as path from 'path';
 
 import rootSaga, {
@@ -75,7 +76,11 @@ describe('delete-project saga', () => {
         )
       );
 
-      expect(saga.next(true).value).toEqual(
+      expect(saga.next(projects).value).toEqual(
+        call([fs, fs.existsSync], project.path)
+      );
+
+      expect(saga.next(false).value).toEqual(
         put(finishDeletingProject(project.id))
       );
 
