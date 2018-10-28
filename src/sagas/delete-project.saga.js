@@ -2,14 +2,17 @@
 import { remote } from 'electron';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 import rimraf from 'rimraf';
+import * as fs from 'fs';
 import * as path from 'path';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
   startDeletingProject,
   finishDeletingProject,
+  deleteProjectError,
   selectProject,
   createNewProjectStart,
+  loadDependencyInfoFromDisk,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
@@ -95,29 +98,41 @@ export function* deleteProject({ project }: Action): Saga<void> {
   const nextSelectedProjectId = getNextProjectId(projects, project.id);
 
   if (shouldDeleteFromDisk) {
-    // Delete from disk tasks some time, so show a loading screen
-    yield put(startDeletingProject());
+    try {
+      // Delete from disk tasks some time, so show a loading screen
+      yield put(startDeletingProject());
 
-    // Run the deletion from disk
-    // first delete node_modules folder permanently (faster than moving to trash)
-    yield call(waitForAsyncRimraf, project.path);
+      // Run the deletion from disk
+      // first delete node_modules folder permanently (faster than moving to trash)
+      yield call(waitForAsyncRimraf, project.path);
 
-    // delete project folder
-    const successfullyDeletedFromDisk = yield call(
-      [shell, shell.moveItemToTrash],
-      project.path
-    );
+      // delete project folder
+      yield call([shell, shell.moveItemToTrash], project.path);
 
-    // If for some reason it was _not_ successfully deleted, bail early and log
-    // an error. This can happen if the filesystem can't delete it (maybe if
-    // a file is open?)
-    // TODO: Actually show something in the UI in this case.
-    if (!successfullyDeletedFromDisk) {
-      yield call(
-        [console, console.error],
-        'Project could not be deleted. Please make sure no tasks are running, ' +
-          'and no applications are using files in that directory.'
-      );
+      // Check if project folder is removed
+      const exists = yield call([fs, fs.existsSync], project.path);
+      if (exists) {
+        throw new Error('deleting-failed');
+      }
+    } catch (err) {
+      // If for some reason it was _not_ successfully deleted, show error and return,
+      // so project isn't removed from Guppy state. Failure to delete from disk
+      // can happen if the filesystem can't delete it (maybe if file is open?).
+      yield put(deleteProjectError());
+
+      yield call([dialog, dialog.showMessageBox], {
+        type: 'warning',
+        buttons: ['Ok'],
+        defaultId: 0,
+        cancelId: 0,
+        title: 'Error!',
+        message: `Could not delete ${project.name}`,
+        detail:
+          'Please make sure no tasks are running and no applications are using files in that directory.',
+      });
+
+      yield put(loadDependencyInfoFromDisk(project.id, project.path));
+
       return;
     }
   }
