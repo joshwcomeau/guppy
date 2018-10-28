@@ -12,6 +12,7 @@ import {
   SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
   RESET_ALL_STATE,
+  REARRANGE_PROJECTS_IN_SIDEBAR,
 } from '../actions';
 import { getTasks, getTasksForProjectId } from './tasks.reducer';
 import {
@@ -37,6 +38,7 @@ type State = {
 export const initialState = {
   byId: {},
   selectedId: null,
+  order: [],
 };
 
 const byIdReducer = (state: ById = initialState.byId, action: Action = {}) => {
@@ -150,9 +152,51 @@ const selectedIdReducer = (
   }
 };
 
+const orderReducer = (state = initialState.order, action: Action = {}) => {
+  console.log('state', state, action);
+  switch (action.type) {
+    case REFRESH_PROJECTS_FINISH: {
+      return Object.keys(action.projects);
+    }
+
+    case ADD_PROJECT:
+    case IMPORT_EXISTING_PROJECT_FINISH: {
+      return [action.project.guppy.id, ...state];
+    }
+
+    case FINISH_DELETING_PROJECT: {
+      const { projectId } = action;
+      const orderIndex = state.indexOf(projectId);
+      console.log(orderIndex);
+
+      return produce(state, draftState => {
+        draftState.splice(orderIndex, 1);
+      });
+    }
+
+    case REARRANGE_PROJECTS_IN_SIDEBAR: {
+      const { originalIndex, newIndex } = action;
+
+      console.log({ originalIndex, newIndex });
+
+      return produce(state, draftState => {
+        const [removed] = draftState.splice(originalIndex, 1);
+        draftState.splice(newIndex, 0, removed);
+      });
+    }
+
+    case RESET_ALL_STATE:
+      return initialState.order;
+
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   byId: byIdReducer,
   selectedId: selectedIdReducer,
+  order: orderReducer,
 });
 
 //
@@ -200,6 +244,7 @@ const prepareProjectForConsumption = (
 };
 
 export const getById = (state: GlobalState) => state.projects.byId;
+export const getOrder = (state: GlobalState) => state.projects.order;
 export const getSelectedProjectId = (state: GlobalState) =>
   state.projects.selectedId;
 
@@ -209,8 +254,8 @@ export const getInternalProjectById = (
 ) => getById(state)[props.projectId];
 
 export const getProjectsArray = createSelector(
-  [getById, getTasks, getDependencies, getPaths],
-  (byId, tasks, dependencies, paths) => {
+  [getById, getTasks, getDependencies, getPaths, getOrder],
+  (byId, tasks, dependencies, paths, order) => {
     return Object.keys(byId)
       .map(projectId => {
         const project = byId[projectId];
@@ -222,7 +267,7 @@ export const getProjectsArray = createSelector(
           paths[projectId]
         );
       })
-      .sort((p1, p2) => (p1.createdAt < p2.createdAt ? 1 : -1));
+      .sort((p1, p2) => order.indexOf(p1.id) > order.indexOf(p2.id));
   }
 );
 

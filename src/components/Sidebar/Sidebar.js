@@ -5,6 +5,7 @@ import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { COLORS, Z_INDICES } from '../../constants';
 import * as actions from '../../actions';
@@ -33,6 +34,7 @@ type Props = {
   isVisible: boolean,
   createNewProjectStart: () => void,
   selectProject: (projectId: string) => Action,
+  rearrangeProjects: (projectId: string, newIndex: number) => Action,
 };
 
 type State = {
@@ -94,6 +96,15 @@ class Sidebar extends PureComponent<Props, State> {
     }
   }
 
+  onDragEnd = result => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    this.props.rearrangeProjects(result.source.index, result.destination.index);
+  };
+
   render() {
     const {
       projects,
@@ -125,45 +136,80 @@ class Sidebar extends PureComponent<Props, State> {
         {({ sidebarOffsetPercentage, firstProjectPosition }) => (
           <Fragment>
             <Wrapper offset={`${sidebarOffsetPercentage}%`}>
-              <ScrollbarOnlyVertical
-                autoHide
-                renderTrackHorizontal={props => (
-                  <div {...props} style={{ display: 'none' }} />
-                )}
-              >
-                <IntroductionBlurb
-                  isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
-                />
-
-                <Projects offset={`${firstProjectPosition}px`}>
-                  {projects.map(project => (
-                    <Fragment key={project.id}>
-                      <Tooltip title={project.name} position="right">
-                        <SidebarProjectIcon
-                          size={SIDEBAR_ICON_SIZE}
-                          id={project.id}
-                          name={project.name}
-                          color={project.color}
-                          iconSrc={project.icon}
-                          isSelected={
-                            finishedOnboarding &&
-                            project.id === selectedProjectId
+              <DragDropContext onDragEnd={this.onDragEnd}>
+                <ScrollbarOnlyVertical
+                  autoHide
+                  renderTrackHorizontal={props => (
+                    <div {...props} style={{ display: 'none' }} />
+                  )}
+                >
+                  <Droppable droppableId="droppable">
+                    {provided => (
+                      <div ref={provided.innerRef}>
+                        <IntroductionBlurb
+                          isVisible={
+                            !finishedOnboarding && introSequenceStepIndex >= 1
                           }
-                          handleSelect={() => selectProject(project.id)}
                         />
-                      </Tooltip>
-                      <Spacer size={18} />
-                    </Fragment>
-                  ))}
-                  <AddProjectButton
-                    size={SIDEBAR_ICON_SIZE}
-                    onClick={createNewProjectStart}
-                    isVisible={
-                      finishedOnboarding || introSequenceStepIndex >= 2
-                    }
-                  />
-                </Projects>
-              </ScrollbarOnlyVertical>
+
+                        <Projects offset={`${firstProjectPosition}px`}>
+                          {projects.map((project, index) => (
+                            <Draggable
+                              key={project.id}
+                              draggableId={project.id}
+                              index={index}
+                              disableInteractiveElementBlocking
+                            >
+                              {providedInn => (
+                                <div
+                                  ref={providedInn.innerRef}
+                                  {...providedInn.draggableProps}
+                                  {...providedInn.dragHandleProps}
+                                  style={{
+                                    userSelect: 'none',
+                                    ...providedInn.draggableProps.style,
+                                  }}
+                                >
+                                  <Fragment key={project.id}>
+                                    <Tooltip
+                                      title={project.name}
+                                      position="right"
+                                    >
+                                      <SidebarProjectIcon
+                                        size={SIDEBAR_ICON_SIZE}
+                                        id={project.id}
+                                        name={project.name}
+                                        color={project.color}
+                                        iconSrc={project.icon}
+                                        isSelected={
+                                          finishedOnboarding &&
+                                          project.id === selectedProjectId
+                                        }
+                                        handleSelect={() =>
+                                          selectProject(project.id)
+                                        }
+                                      />
+                                    </Tooltip>
+                                    <Spacer size={18} />
+                                  </Fragment>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          <AddProjectButton
+                            size={SIDEBAR_ICON_SIZE}
+                            onClick={createNewProjectStart}
+                            isVisible={
+                              finishedOnboarding || introSequenceStepIndex >= 2
+                            }
+                          />
+                        </Projects>
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </ScrollbarOnlyVertical>
+              </DragDropContext>
             </Wrapper>
             {isVisible && <SidebarSpacer />}
           </Fragment>
@@ -228,6 +274,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   createNewProjectStart: actions.createNewProjectStart,
   selectProject: actions.selectProject,
+  rearrangeProjects: actions.rearrangeProjectsInSidebar,
 };
 
 export default connect(
