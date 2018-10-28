@@ -33,9 +33,10 @@ type Props = {
   selectedProjectId: ?string,
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
+  isOnline: boolean,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   selectProject: Dispatch<typeof actions.selectProject>,
-  isOnline: boolean,
+  rearrangeProjects: (originalIndex: number, newIndex: number) => Action,
 };
 
 type State = {

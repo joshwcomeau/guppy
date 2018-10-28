@@ -33,6 +33,7 @@ type SelectedId = ?string;
 type State = {
   byId: ById,
   selectedId: SelectedId,
+  order: string[],
 };
 
 export const initialState = {
@@ -160,6 +161,50 @@ const selectedIdReducer = (
   }
 };
 
+const orderReducer = (state = initialState.order, action: Action = {}) => {
+  switch (action.type) {
+    case REFRESH_PROJECTS_FINISH: {
+      // It is possible that projects changed so we have to update but maintain the order
+      const previousOrder = state;
+      const projectsArray = Object.keys(action.projects);
+
+      return projectsArray.sort(
+        (p1, p2) =>
+          previousOrder.indexOf(p1) > previousOrder.indexOf(p2) ? 1 : -1
+      );
+    }
+
+    case ADD_PROJECT:
+    case IMPORT_EXISTING_PROJECT_FINISH: {
+      return [action.project.guppy.id, ...state];
+    }
+
+    case FINISH_DELETING_PROJECT: {
+      const { projectId } = action;
+      const orderIndex = state.indexOf(projectId);
+
+      return produce(state, draftState => {
+        draftState.splice(orderIndex, 1);
+      });
+    }
+
+    case REARRANGE_PROJECTS_IN_SIDEBAR: {
+      const { originalIndex, newIndex } = action;
+
+      return produce(state, draftState => {
+        const [removed] = draftState.splice(originalIndex, 1);
+        draftState.splice(newIndex, 0, removed);
+      });
+    }
+
+    case RESET_ALL_STATE:
+      return initialState.order;
+
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   byId: byIdReducer,
   selectedId: selectedIdReducer,
@@ -232,7 +277,7 @@ export const getProjectsArray = createSelector(
           paths[projectId]
         );
       })
-      .sort((p1, p2) => (p1.createdAt < p2.createdAt ? 1 : -1));
+      .sort((p1, p2) => (order.indexOf(p1.id) > order.indexOf(p2.id) ? 1 : -1));
   }
 );
 
