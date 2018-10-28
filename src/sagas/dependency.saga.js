@@ -187,6 +187,7 @@ export function* watchInstallMessages(channel) {
   try {
     while (true) {
       output = yield take(channel);
+      console.log('watch', output, !output.hasOwnProperty('exit'));
       if (!output.hasOwnProperty('exit')) {
         // Not the final message
         yield put(setStatusText(output.data));

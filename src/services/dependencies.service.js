@@ -1,5 +1,5 @@
 // @flow
-import { eventChannel, END } from 'redux-saga';
+import { eventChannel } from 'redux-saga';
 import { PACKAGE_MANAGER_CMD } from './platform.service';
 import { processLogger } from './process-logger.service';
 import * as childProcess from 'child_process';
