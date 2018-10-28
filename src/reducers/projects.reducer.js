@@ -33,6 +33,7 @@ type SelectedId = ?string;
 type State = {
   byId: ById,
   selectedId: SelectedId,
+  order: string[],
 };
 
 export const initialState = {
@@ -153,10 +154,16 @@ const selectedIdReducer = (
 };
 
 const orderReducer = (state = initialState.order, action: Action = {}) => {
-  console.log('state', state, action);
   switch (action.type) {
     case REFRESH_PROJECTS_FINISH: {
-      return Object.keys(action.projects);
+      // It is possible that projects changed so we have to update but maintain the order
+      const previousOrder = state;
+      const projectsArray = Object.keys(action.projects);
+
+      return projectsArray.sort(
+        (p1, p2) =>
+          previousOrder.indexOf(p1) > previousOrder.indexOf(p2) ? 1 : -1
+      );
     }
 
     case ADD_PROJECT:
@@ -167,7 +174,6 @@ const orderReducer = (state = initialState.order, action: Action = {}) => {
     case FINISH_DELETING_PROJECT: {
       const { projectId } = action;
       const orderIndex = state.indexOf(projectId);
-      console.log(orderIndex);
 
       return produce(state, draftState => {
         draftState.splice(orderIndex, 1);
@@ -176,8 +182,6 @@ const orderReducer = (state = initialState.order, action: Action = {}) => {
 
     case REARRANGE_PROJECTS_IN_SIDEBAR: {
       const { originalIndex, newIndex } = action;
-
-      console.log({ originalIndex, newIndex });
 
       return produce(state, draftState => {
         const [removed] = draftState.splice(originalIndex, 1);
@@ -267,7 +271,7 @@ export const getProjectsArray = createSelector(
           paths[projectId]
         );
       })
-      .sort((p1, p2) => order.indexOf(p1.id) > order.indexOf(p2.id));
+      .sort((p1, p2) => (order.indexOf(p1.id) > order.indexOf(p2.id) ? 1 : -1));
   }
 );
 

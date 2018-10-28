@@ -34,7 +34,7 @@ type Props = {
   isVisible: boolean,
   createNewProjectStart: () => void,
   selectProject: (projectId: string) => Action,
-  rearrangeProjects: (projectId: string, newIndex: number) => Action,
+  rearrangeProjects: (originalIndex: number, newIndex: number) => Action,
 };
 
 type State = {
