@@ -42,7 +42,6 @@ class Initialization extends PureComponent<Props, State> {
         ipcRenderer.on('app-will-close', this.appWillClose);
       })
       .catch(e => {
-        console.log('Caught', e);
         switch (e.message) {
           case 'node-not-found': {
             dialog.showErrorBox(
