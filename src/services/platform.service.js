@@ -72,33 +72,46 @@ export const getBaseProjectEnvironment = (
   };
 };
 
-window.childProcess = childProcess;
-
 // HACK: With electron-builder, we're having some issues on mac finding Node.
 // This is because for some reason, the PATH is not updated properly :(
 // 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
 // reasons.
 export const initializePath = () => {
-  childProcess.exec('which node', { env: window.process.env }, (_, version) => {
-    if (!version && isMac) {
-      // For users with a standard Node installation, node will be in
-      // /usr/local/bin
-      // For users using NVM, the path to Node will be added to `.bashrc`.
-      // Add both to the PATH.
-      try {
-        childProcess.exec(
-          'source ~/.bashrc && echo $PATH',
-          (err, updatedPath) => {
-            if (updatedPath) {
-              window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
-            }
-          }
-        );
-      } catch (e) {
-        // If no `.bashrc` exists, we have no work to do.
-        // The PATH should already be set correctly.
-      }
+  return new Promise(resolve => {
+    if (!isMac) {
+      return resolve();
     }
+
+    // Check if we need to fix the Path (Mac only)
+    childProcess.exec(
+      'which node',
+      { env: window.process.env },
+      (_, nodePath) => {
+        if (nodePath) {
+          // Node found
+          return resolve();
+        }
+
+        // For users with a standard Node installation, node will be in
+        // /usr/local/bin
+        // For users using NVM, the path to Node will be added to `.bashrc`.
+        // Add both to the PATH.
+        try {
+          childProcess.exec(
+            'source ~/.bashrc && echo $PATH',
+            (err, updatedPath) => {
+              if (updatedPath) {
+                window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
+              }
+
+              resolve();
+            }
+          );
+        } catch (e) {
+          resolve(e);
+        }
+      }
+    );
   });
 };
 
