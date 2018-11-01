@@ -15,9 +15,10 @@ import Spacer from '../Spacer';
 import { FillButton } from '../Button';
 import FormField from '../FormField';
 import Toggle from '../Toggle';
-
+import PixelShifter from '../PixelShifter';
 import DirectoryPicker from '../DirectoryPicker';
 import ProjectTypeSelection from '../ProjectTypeSelection';
+import Heading from '../Heading';
 
 import type { AppSettings } from '../../types';
 
@@ -30,11 +31,13 @@ type Props = {
 
 type State = {
   newSettings: AppSettings,
+  activeField: string, // todo: Add possible strings to type def. for now string is OK as we're having only one field
 };
 
 class AppSettingsModal extends PureComponent<Props, State> {
   state = {
     newSettings: this.props.settings,
+    activeField: 'directoryPicker',
   };
 
   saveSettings = (ev: SyntheticEvent<*>) => {
@@ -57,9 +60,16 @@ class AppSettingsModal extends PureComponent<Props, State> {
     );
   };
 
+  setActive = (field: string) => {
+    this.setState({
+      activeField: field,
+    });
+  };
+
   render() {
     const { hideModal, isVisible } = this.props;
-    const newSettings = this.state.newSettings;
+    const { newSettings, activeField } = this.state;
+
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
         <ModalHeader title="Preferences" />
@@ -72,18 +82,24 @@ class AppSettingsModal extends PureComponent<Props, State> {
                             settings 
             */}
             <SectionTitle>General</SectionTitle>
-            <FormField label="Default Project Path" focusOnClick={false}>
-              <Spacer size={5} />
-              <DirectoryPicker
-                path={newSettings.general.defaultProjectPath}
-                onSelect={path =>
-                  this.updateSetting('general.defaultProjectPath', path)
-                }
-              />
-            </FormField>
-
+            <PixelShifter x={5} reason="Slightly intend in section">
+              <FormField label="Default Project Path" focusOnClick={false}>
+                <Spacer size={5} />
+                <DirectoryPicker
+                  onFocus={() => this.setActive('directoryPicker')}
+                  inputEditable={true}
+                  path={newSettings.general.defaultProjectPath}
+                  onSelect={path =>
+                    this.updateSetting('general.defaultProjectPath', path)
+                  }
+                  isFoccussed={activeField === 'directoryPicker'}
+                />
+              </FormField>
+            </PixelShifter>
             <ProjectTypeSelection
               label="Default Project Type"
+              onFocus={() => this.setActive('projectType')}
+              activeField={activeField}
               projectType={newSettings.general.defaultProjectType}
               onSelect={projectType =>
                 this.updateSetting('general.defaultProjectType', projectType)
@@ -91,17 +107,19 @@ class AppSettingsModal extends PureComponent<Props, State> {
             />
 
             <SectionTitle>Privacy</SectionTitle>
-            <FormField
-              label="Enable anonymous usage tracking"
-              focusOnClick={false}
-            >
-              <Toggle
-                isToggled={newSettings.privacy.enableUsageTracking}
-                onToggle={value =>
-                  this.updateSetting('privacy.enableUsageTracking', value)
-                }
-              />
-            </FormField>
+            <PixelShifter x={5} reason="Slightly intend in section">
+              <FormField
+                label="Enable anonymous usage tracking"
+                focusOnClick={false}
+              >
+                <Toggle
+                  isToggled={newSettings.privacy.enableUsageTracking}
+                  onToggle={value =>
+                    this.updateSetting('privacy.enableUsageTracking', value)
+                  }
+                />
+              </FormField>
+            </PixelShifter>
 
             <Spacer size={10} />
             <Actions>
@@ -123,7 +141,9 @@ const MainContent = styled.section`
   padding: 25px;
 `;
 
-const SectionTitle = styled.h2`
+const SectionTitle = styled(Heading).attrs({
+  size: 'small',
+})`
   padding-bottom: 20px;
 `;
 

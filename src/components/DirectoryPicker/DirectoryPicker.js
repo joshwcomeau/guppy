@@ -1,15 +1,19 @@
 // @flow
 import { remote } from 'electron';
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
+import IconBase from 'react-icons-kit';
+import { folder } from 'react-icons-kit/feather/folder';
 
 import { COLORS } from '../../constants';
 
 import TextButton from '../TextButton';
+import TextInput from '../TextInput';
 
 type Props = {
   path: string,
   pathToSelectMessage: ?string,
+  inputEditable: ?boolean,
   onSelect: string => void,
 };
 
@@ -39,18 +43,33 @@ class DirectoryPicker extends PureComponent<Props> {
     );
   };
 
+  getFullProjectPath(path: string) {
+    return path.replace(/^\//, '');
+  }
+
   render() {
-    const { path } = this.props;
+    const { path, inputEditable, onSelect } = this.props;
 
     // Join the projectHome with the prospective project ID
     // Hide the leading forward-slash, on Mac/Linux
-    const fullProjectPath = path.replace(/^\//, '');
+    const fullProjectPath = this.getFullProjectPath(path);
 
     return (
       <Wrapper>
-        <DirectoryButton onClick={this.updatePath} hideCursor={true}>
-          {fullProjectPath}
-        </DirectoryButton>
+        {!inputEditable ? (
+          <DirectoryButton onClick={this.updatePath} hideCursor={true}>
+            {fullProjectPath}
+          </DirectoryButton>
+        ) : (
+          <FlexRow>
+            <DirectoryInput
+              value={fullProjectPath}
+              onChange={ev => onSelect(ev.target.value)}
+              // isFocused={true}
+            />
+            <FolderIcon size={32} icon={folder} onClick={this.updatePath} />
+          </FlexRow>
+        )}
       </Wrapper>
     );
   }
@@ -76,6 +95,20 @@ const DirectoryButton = styled(TextButton)`
     display: block;
     border-bottom: 2px solid ${COLORS.purple[700]};
   }
+`;
+
+const DirectoryInput = styled(TextInput)``;
+
+const FolderIcon = styled(IconBase)`
+  color: ${COLORS.gray[400]};
+  cursor: pointer;
+  padding-left: 10px;
+  :hover {
+    color: ${COLORS.purple[500]};
+  }
+`;
+const FlexRow = styled.div`
+  display: flex;
 `;
 
 export default DirectoryPicker;
