@@ -3,6 +3,8 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import produce from 'immer';
+import fs from 'fs';
+import { remote } from 'electron';
 
 import * as actions from '../../actions';
 import { getDefaultProjectPath } from '../../reducers/app-settings.reducer';
@@ -21,6 +23,8 @@ import ProjectTypeSelection from '../ProjectTypeSelection';
 import Heading from '../Heading';
 
 import type { AppSettings } from '../../types';
+
+const { dialog } = remote;
 
 type Props = {
   isVisible: boolean,
@@ -43,10 +47,19 @@ class AppSettingsModal extends PureComponent<Props, State> {
   };
 
   saveSettings = (ev: SyntheticEvent<*>) => {
-    ev.preventDefault();
-
     const { saveAppSettings } = this.props;
     const { newSettings } = this.state;
+    ev.preventDefault();
+
+    // Check if project folder exists
+    // todo: Later check not exact path as one directory level is allowed to create. For now it has to exist completely.
+    if (!fs.existsSync(newSettings.general.defaultProjectPath)) {
+      // Path not found. Show dialog and bail early
+      return dialog.showErrorBox(
+        "Path doesn't exist.",
+        'Please check your default project path or use the directory picker to select the path.'
+      );
+    }
 
     saveAppSettings(newSettings);
   };
