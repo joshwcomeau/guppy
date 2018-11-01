@@ -182,12 +182,11 @@ export function* handleLoadDependencyInfoFromDiskStart({
 }
 
 // helpers
-export function* watchInstallMessages(channel) {
+export function* watchInstallMessages(channel: any): Saga<void> {
   let output;
   try {
     while (true) {
       output = yield take(channel);
-      console.log('watch', output, !output.hasOwnProperty('exit'));
       if (!output.hasOwnProperty('exit')) {
         // Not the final message
         yield put(setStatusText(output.data));

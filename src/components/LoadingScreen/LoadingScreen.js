@@ -49,7 +49,7 @@ class LoadingScreen extends PureComponent<Props, State> {
     const [progressInc = 0, total = 1] = (/\d+\/\d+/.exec(statusText) || [
       '',
     ])[0].split('/');
-    const progress = progressInc / total;
+    const progress = parseInt(progressInc) / parseInt(total);
     return (
       <Window isVisible={showLoadingScreen}>
         <ProgressBar position="top" progress={progress} />

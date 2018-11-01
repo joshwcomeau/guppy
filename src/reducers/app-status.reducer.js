@@ -13,6 +13,7 @@ import type { Action } from '../actions/types';
 
 type State = {
   blockingActionActive: boolean,
+  statusText: string,
 };
 
 export const initialState = {
