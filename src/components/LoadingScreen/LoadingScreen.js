@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
@@ -46,9 +46,13 @@ class LoadingScreen extends PureComponent<Props, State> {
         .split('')
         .splice(0, 220)
         .join('') + ellipsis;
-    // const [progress, total] = /\[%d\/%d\]/.exec(statusText);
+    const [progressInc = 0, total = 1] = (/\d+\/\d+/.exec(statusText) || [
+      '',
+    ])[0].split('/');
+    const progress = progressInc / total;
     return (
       <Window isVisible={showLoadingScreen}>
+        <ProgressBar position="top" progress={progress} />
         {showStatus && <InfoText>{shortenedText}</InfoText>}
         <Spacer size={10} />
         <StatusButton icon={info} onClick={this.toggleStatus} size={16} />

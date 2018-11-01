@@ -11,10 +11,12 @@ type Props = {
   stiffness: number,
   damping: number,
   colors: Array<string>,
+  position: 'top' | 'inline',
 };
 
 class ProgressBar extends Component<Props> {
   static defaultProps = {
+    position: 'inline',
     height: 8,
     stiffness: 32,
     damping: 32,
@@ -22,10 +24,17 @@ class ProgressBar extends Component<Props> {
   };
 
   render() {
-    const { height, progress, stiffness, damping, colors } = this.props;
+    const {
+      height,
+      progress,
+      stiffness,
+      damping,
+      colors,
+      position,
+    } = this.props;
 
     return (
-      <Wrapper height={height}>
+      <Wrapper height={height} position={position}>
         <Motion
           style={{
             interpolatedProgress: spring(progress, {
@@ -45,9 +54,10 @@ class ProgressBar extends Component<Props> {
 }
 
 const Wrapper = styled.div`
-  position: relative;
+  position: ${props => (props.position === 'top' ? 'absolute' : 'relative')};
   height: ${props => props.height}px;
   width: 100%;
+  ${props => props.position === 'top' && 'top: 0;'};
 `;
 
 const ProgressGradient = styled.div.attrs({
