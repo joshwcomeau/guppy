@@ -43,10 +43,8 @@ export default {
       args: ['run', 'dev', '-p', '$port'],
     },
     create: {
-      // not sure if we need that nesting but I think there could be more to configure
       args: projectPath => [
-        // used for project creation previous getBuildInstructions
-        'github:awolf81/create-next-app', // later will be 'create-next-app' --> issue not filed yet
+        'github:awolf81/create-next-app', // later will be 'create-next-app' --> added a comment to the following issue https://github.com/segmentio/create-next-app/issues/30
         projectPath,
       ],
     },

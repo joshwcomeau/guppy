@@ -390,7 +390,7 @@ export const substituteConfigVariables = (
           );
         }
       }
-      // todo: add top level substiution - not used yet but maybe needed later e.g. { env: $port } won't be replaced.
+      // todo: add top level substitution - not used yet but maybe needed later e.g. { env: $port } won't be replaced.
       //       Bad example but just to have it as reminder.
       return config;
     },
