@@ -124,7 +124,7 @@ const MainContent = styled.section`
 `;
 
 const SectionTitle = styled.h2`
-  padding-bottom: 8px;
+  padding-bottom: 20px;
 `;
 
 const Actions = styled.div`
