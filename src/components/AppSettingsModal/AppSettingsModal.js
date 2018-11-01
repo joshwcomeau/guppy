@@ -29,9 +29,11 @@ type Props = {
   saveAppSettings: (newSettings: AppSettings) => void,
 };
 
+type FormFields = 'directoryPicker' | 'projectType' | 'tracking';
+
 type State = {
   newSettings: AppSettings,
-  activeField: 'directoryPicker' | 'projectType' | 'tracking',
+  activeField: FormFields,
 };
 
 class AppSettingsModal extends PureComponent<Props, State> {
@@ -60,7 +62,7 @@ class AppSettingsModal extends PureComponent<Props, State> {
     );
   };
 
-  setActive = (field: string) => {
+  setActive = (field: FormFields) => {
     this.setState({
       activeField: field,
     });
