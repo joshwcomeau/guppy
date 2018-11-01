@@ -14,6 +14,8 @@ type Props = {
   path: string,
   pathToSelectMessage: ?string,
   inputEditable: ?boolean,
+  isFocused: ?boolean,
+  onFocus: string => void,
   onSelect: string => void,
 };
 
@@ -48,7 +50,7 @@ class DirectoryPicker extends PureComponent<Props> {
   }
 
   render() {
-    const { path, inputEditable, onSelect } = this.props;
+    const { path, inputEditable, onFocus, onSelect, isFocused } = this.props;
 
     // Join the projectHome with the prospective project ID
     // Hide the leading forward-slash, on Mac/Linux
@@ -63,9 +65,11 @@ class DirectoryPicker extends PureComponent<Props> {
         ) : (
           <FlexRow>
             <DirectoryInput
+              onFocus={onFocus}
+              isFocused={isFocused}
               value={fullProjectPath}
               onChange={ev => onSelect(ev.target.value)}
-              // isFocused={true}
+              autoFocus
             />
             <FolderIcon size={32} icon={folder} onClick={this.updatePath} />
           </FlexRow>

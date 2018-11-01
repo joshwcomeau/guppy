@@ -31,7 +31,7 @@ type Props = {
 
 type State = {
   newSettings: AppSettings,
-  activeField: string, // todo: Add possible strings to type def. for now string is OK as we're having only one field
+  activeField: 'directoryPicker' | 'projectType' | 'tracking',
 };
 
 class AppSettingsModal extends PureComponent<Props, State> {
@@ -92,35 +92,35 @@ class AppSettingsModal extends PureComponent<Props, State> {
                   onSelect={path =>
                     this.updateSetting('general.defaultProjectPath', path)
                   }
-                  isFoccussed={activeField === 'directoryPicker'}
+                  isFocused={activeField === 'directoryPicker'}
                 />
               </FormField>
+              <ProjectTypeSelection
+                label="Default Project Type"
+                activeField={activeField}
+                projectType={newSettings.general.defaultProjectType}
+                onSelect={projectType => {
+                  this.setActive('projectType');
+                  this.updateSetting('general.defaultProjectType', projectType);
+                }}
+              />
             </PixelShifter>
-            <ProjectTypeSelection
-              label="Default Project Type"
-              onFocus={() => this.setActive('projectType')}
-              activeField={activeField}
-              projectType={newSettings.general.defaultProjectType}
-              onSelect={projectType =>
-                this.updateSetting('general.defaultProjectType', projectType)
-              }
-            />
-
             <SectionTitle>Privacy</SectionTitle>
             <PixelShifter x={5} reason="Slightly intend in section">
               <FormField
                 label="Enable anonymous usage tracking"
                 focusOnClick={false}
+                isFocused={activeField === 'tracking'}
               >
                 <Toggle
                   isToggled={newSettings.privacy.enableUsageTracking}
-                  onToggle={value =>
-                    this.updateSetting('privacy.enableUsageTracking', value)
-                  }
+                  onToggle={value => {
+                    this.setActive('tracking');
+                    this.updateSetting('privacy.enableUsageTracking', value);
+                  }}
                 />
               </FormField>
             </PixelShifter>
-
             <Spacer size={10} />
             <Actions>
               <FillButton
