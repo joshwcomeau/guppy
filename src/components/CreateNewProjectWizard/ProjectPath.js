@@ -7,7 +7,6 @@ import { Tooltip } from 'react-tippy';
 import styled from 'styled-components';
 
 import { changeDefaultProjectPath } from '../../actions';
-// import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getDefaultProjectPath } from '../../reducers/app-settings.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { COLORS } from '../../constants';

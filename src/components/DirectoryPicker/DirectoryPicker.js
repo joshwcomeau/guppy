@@ -61,7 +61,6 @@ const Wrapper = styled.div`
 `;
 
 const DirectoryButton = styled(TextButton)`
-  // text-align: left;
   color: ${COLORS.gray[600]};
   text-decoration: none;
 
