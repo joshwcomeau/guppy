@@ -3,6 +3,7 @@ import reducer, {
   getDefaultProjectPath,
   getDefaultProjectType,
   getPrivacySettings,
+  getAppSettings,
 } from './app-settings.reducer';
 import {
   SAVE_APP_SETTINGS_START,
@@ -74,5 +75,11 @@ Object {
     expect(getDefaultProjectPath(prevState)).toEqual('/some/path');
     expect(getDefaultProjectType(prevState)).toEqual('create-react-app');
     expect(getPrivacySettings(prevState)).toBeTruthy();
+  });
+
+  it('should return the appSettings state', () => {
+    const prevState = reducer();
+
+    expect(getAppSettings({ appSettings: prevState })).toEqual(initialState);
   });
 });
