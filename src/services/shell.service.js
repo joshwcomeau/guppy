@@ -16,11 +16,11 @@ export const openProjectInEditor = (project: Project) =>
 
 export const getNodeJsVersion = () =>
   new Promise(resolve =>
-    exec('node -v', (error, stdout) => {
+    exec('node -v', { env: window.process.env }, (error, stdout) => {
       if (error) {
         return resolve();
       }
 
-      resolve(stdout.trim());
+      resolve(stdout.toString().trim());
     })
   );

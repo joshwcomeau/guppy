@@ -111,6 +111,7 @@ export const BREAKPOINTS = {
 export const Z_INDICES = {
   sidebar: 100,
   modal: 1000,
+  loadingScreen: 2000,
   titlebar: 10000,
 };
 

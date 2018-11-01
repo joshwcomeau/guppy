@@ -79,11 +79,7 @@ class BuildPane extends PureComponent<Props, State> {
   }
 
   buildProject = () => {
-    const {
-      projectName,
-      projectType,
-      projectIcon,
-    } = this.props;
+    const { projectName, projectType, projectIcon } = this.props;
 
     if (!projectName || !projectType || !projectIcon) {
       console.error('Missing one of:', {

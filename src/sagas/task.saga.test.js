@@ -26,6 +26,7 @@ import findAvailablePort from '../services/find-available-port.service';
 import {
   getBaseProjectEnvironment,
   PACKAGE_MANAGER_CMD,
+  isWin,
 } from '../services/platform.service';
 import { ipcRenderer } from 'electron';
 
@@ -113,10 +114,16 @@ describe('task saga', () => {
       expect(saga.next(port).value).toEqual(
         call(getDevServerCommand, task, project.type, port)
       );
-      expect(saga.next({ args, env }).value).toEqual(
+      expect(
+        saga.next({
+          args,
+          env,
+        }).value
+      ).toEqual(
         call([childProcess, childProcess.spawn], PACKAGE_MANAGER_CMD, args, {
           cwd: projectPath,
           env: { ...getBaseProjectEnvironment(projectPath), ...env },
+          shell: true,
         })
       );
     });
@@ -192,6 +199,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -211,6 +219,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -230,6 +239,7 @@ describe('task saga', () => {
           {
             cwd: projectPath,
             env: getBaseProjectEnvironment(projectPath),
+            shell: true,
           }
         )
       );
@@ -284,7 +294,12 @@ describe('task saga', () => {
         );
 
         expect(
-          saga.next({ channel: 'exit', timestamp, wasSuccessful: true }).value
+          saga.next({
+            channel: 'exit',
+            timestamp,
+            wasSuccessful: true,
+            uncleanRepo: false,
+          }).value
         ).toEqual(installProcessDescription);
 
         expect(saga.next(installProcessDescription).value).toEqual(
@@ -315,7 +330,10 @@ describe('task saga', () => {
   describe('taskAbort saga', () => {
     it('should kill process and notify renderer', () => {
       const processId = 12345;
-      const saga = taskAbort({ task: { name: 'start', processId } });
+      const saga = taskAbort({
+        task: { name: 'start', processId },
+        projectType: 'create-react-app',
+      });
 
       expect(saga.next().value).toEqual(call(killProcessId, processId));
       expect(saga.next().value).toEqual(
@@ -325,7 +343,7 @@ describe('task saga', () => {
 
     it('should display correct message for dev server task', () => {
       const task = { name: 'start', processId: 12345 }; // react
-      let saga = taskAbort({ task });
+      let saga = taskAbort({ task, projectType: 'create-react-app' });
       saga.next();
       saga.next();
 
@@ -336,7 +354,18 @@ describe('task saga', () => {
       );
 
       task.name = 'develop'; // gatsby
-      saga = taskAbort({ task });
+      saga = taskAbort({ task, projectType: 'gatsby' });
+      saga.next();
+      saga.next();
+
+      expect(saga.next().value).toEqual(
+        put(
+          receiveDataFromTaskExecution(task, chalk.bold.red('Server stopped'))
+        )
+      );
+
+      task.name = 'dev'; // nextjs
+      saga = taskAbort({ task, projectType: 'nextjs' });
       saga.next();
       saga.next();
 
@@ -349,7 +378,7 @@ describe('task saga', () => {
 
     it('should display correct message for non dev server task', () => {
       const task = { name: 'test', processId: 12345 };
-      const saga = taskAbort({ task });
+      const saga = taskAbort({ task, projectType: 'create-react-app' });
       saga.next();
       saga.next();
 
@@ -404,8 +433,9 @@ describe('task saga', () => {
         '.bin'
       );
       const generatedEnv = getBaseProjectEnvironment(projectPath);
+      const pathKey = isWin ? 'Path' : 'PATH';
 
-      expect(generatedEnv.PATH).toContain(projectBinDirectory);
+      expect(generatedEnv[pathKey]).toContain(projectBinDirectory);
     });
   });
 });

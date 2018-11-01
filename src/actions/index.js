@@ -60,7 +60,9 @@ export const IMPORT_EXISTING_PROJECT_START = 'IMPORT_EXISTING_PROJECT_START';
 export const IMPORT_EXISTING_PROJECT_ERROR = 'IMPORT_EXISTING_PROJECT_ERROR';
 export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 export const SHOW_DELETE_PROJECT_PROMPT = 'SHOW_DELETE_PROJECT_PROMPT';
+export const START_DELETING_PROJECT = 'START_DELETING_PROJECT';
 export const FINISH_DELETING_PROJECT = 'FINISH_DELETING_PROJECT';
+export const DELETE_PROJECT_ERROR = 'DELETE_PROJECT_ERROR';
 export const SHOW_RESET_STATE_PROMPT = 'SHOW_RESET_STATE_PROMPT';
 export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 
@@ -169,9 +171,14 @@ export const attachTaskMetadata = (
   port,
 });
 
-export const abortTask = (task: Task, timestamp: Date) => ({
+export const abortTask = (
+  task: Task,
+  projectType: string,
+  timestamp: Date
+) => ({
   type: ABORT_TASK,
   task,
+  projectType,
   timestamp,
 });
 
@@ -388,9 +395,17 @@ export const saveProjectSettingsFinish = (
   projectPath,
 });
 
+export const startDeletingProject = () => ({
+  type: START_DELETING_PROJECT,
+});
+
 export const finishDeletingProject = (projectId: string) => ({
   type: FINISH_DELETING_PROJECT,
   projectId,
+});
+
+export const deleteProjectError = () => ({
+  type: DELETE_PROJECT_ERROR,
 });
 
 export const showResetStatePrompt = () => ({

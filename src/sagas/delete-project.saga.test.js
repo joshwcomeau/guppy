@@ -1,11 +1,13 @@
 import electron from 'electron'; // Mocked
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 import rimraf from 'rimraf';
+import * as fs from 'fs';
 import * as path from 'path';
 
 import rootSaga, {
   deleteProject,
   getNextProjectId,
+  waitForAsyncRimraf,
 } from './delete-project.saga';
 
 import {
@@ -13,8 +15,15 @@ import {
   finishDeletingProject,
   selectProject,
   createNewProjectStart,
+  startDeletingProject,
+  deleteProjectError,
+  loadDependencyInfoFromDisk,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
+
+jest.mock('fs', () => ({
+  existsSync: jest.fn(() => false),
+}));
 
 describe('delete-project saga', () => {
   describe('root delete-project saga', () => {
@@ -59,8 +68,11 @@ describe('delete-project saga', () => {
       // (`1` is the ID of the "Delete from Disk" option).
       expect(saga.next(1).value).toEqual(select(getProjectsArray));
 
+      // Show fish spinner (loading) screen
+      expect(saga.next(projects).value).toEqual(put(startDeletingProject()));
+
       expect(saga.next(projects).value).toEqual(
-        call([rimraf, rimraf.sync], path.join(project.path, 'node_modules'))
+        call(waitForAsyncRimraf, project.path)
       );
 
       expect(saga.next(projects).value).toEqual(
@@ -70,7 +82,11 @@ describe('delete-project saga', () => {
         )
       );
 
-      expect(saga.next(true).value).toEqual(
+      expect(saga.next(projects).value).toEqual(
+        call([fs, fs.existsSync], project.path)
+      );
+
+      expect(saga.next(false).value).toEqual(
         put(finishDeletingProject(project.id))
       );
 
@@ -144,7 +160,7 @@ describe('delete-project saga', () => {
       expect(saga.next().done).toEqual(true);
     });
 
-    it("logs an error when the project can't be deleted", () => {
+    it("displays an error when the project can't be deleted", () => {
       const project = {
         id: 'a',
         name: 'apple',
@@ -162,16 +178,30 @@ describe('delete-project saga', () => {
       saga.next();
       // Confirm dialog
       saga.next(1);
-      // Pass in the projects to the select call
-      saga.next(projects); // node_modules
-      saga.next(projects); // project folder
 
-      // Return `false` to `successfullyDeleted`
-      expect(saga.next(false).value).toEqual(
-        call(
-          [console, console.error],
-          'Project could not be deleted. Please make sure no tasks are running, ' +
-            'and no applications are using files in that directory.'
+      // Pass in the projects to the select call
+      saga.next(projects); // Fish spinner (loading) screen
+      saga.next(projects); // node_modules
+      saga.next(projects); // moveItemToTrash - project folder
+
+      expect(saga.throw().value).toEqual(put(deleteProjectError()));
+
+      expect(saga.next().value).toEqual(
+        call([electron.remote.dialog, electron.remote.dialog.showMessageBox], {
+          type: 'warning',
+          buttons: ['Ok'],
+          defaultId: 0,
+          cancelId: 0,
+          title: 'Error!',
+          message: `Could not delete ${project.name}`,
+          detail:
+            'Please make sure no tasks are running and no applications are using files in that directory.',
+        })
+      );
+
+      expect(JSON.stringify(saga.next().value)).toEqual(
+        JSON.stringify(
+          put(loadDependencyInfoFromDisk(project.id, project.path))
         )
       );
 

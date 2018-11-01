@@ -1,7 +1,7 @@
 // @flow
 import { select, call, put, take, takeEvery } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import * as childProcess from 'child_process';
 import chalkRaw from 'chalk';
 
@@ -15,6 +15,7 @@ import {
   receiveDataFromTaskExecution,
   loadDependencyInfoFromDisk,
 } from '../actions';
+import projectConfigs from '../config/project-types';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
@@ -25,10 +26,17 @@ import {
   getBaseProjectEnvironment,
   PACKAGE_MANAGER_CMD,
 } from '../services/platform.service';
+import { processLogger } from '../services/process-logger.service';
 
 import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { Task, ProjectType } from '../types';
+const { dialog } = remote;
+
+// Mapping type for config template variables '$port'
+export type VariableMap = {
+  $port: string,
+};
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
@@ -54,8 +62,11 @@ export function* launchDevServer({ task }: Action): Saga<void> {
       {
         cwd: projectPath,
         env: { ...getBaseProjectEnvironment(projectPath), ...env },
+        shell: true,
       }
     );
+
+    processLogger(child, 'DEVSERVER');
 
     // Now that we have a port/processId for the server, attach it to
     // the task. The port is used for opening the app, the pid is used
@@ -178,8 +189,11 @@ export function* taskRun({ task }: Action): Saga<void> {
     {
       cwd: projectPath,
       env: getBaseProjectEnvironment(projectPath),
+      shell: true,
     }
   );
+
+  processLogger(child, 'TASK');
 
   // TODO: Does the renderer process still need to know about the child
   // processId?
@@ -213,7 +227,17 @@ export function* taskRun({ task }: Action): Saga<void> {
     stderr: emitter => data => {
       const text = stripUnusableControlCharacters(data.toString());
 
-      emitter({ channel: 'stderr', text });
+      // When trying to eject, there will be an error from CRA if git state
+      // isn't clean. We can use this.
+      const uncleanRepo = text.includes(
+        'git repository has untracked files or uncommitted changes'
+      );
+
+      emitter({
+        channel: uncleanRepo ? 'exit' : 'stderr',
+        text,
+        uncleanRepo,
+      });
     },
     exit: emitter => code => {
       const timestamp = new Date();
@@ -225,6 +249,7 @@ export function* taskRun({ task }: Action): Saga<void> {
 
   while (true) {
     const message = yield take(stdioChannel);
+    const { uncleanRepo } = message;
 
     switch (message.channel) {
       case 'stdout':
@@ -237,6 +262,20 @@ export function* taskRun({ task }: Action): Saga<void> {
 
       case 'exit':
         if (task.name === 'eject') {
+          // If ejecting failed due to unclean repo, then throw up a dialog
+          if (uncleanRepo) {
+            dialog.showMessageBox({
+              type: 'warning',
+              buttons: ['Ok'],
+              defaultId: 0,
+              cancelId: 0,
+              title: 'Oops!',
+              message: 'Dirty git state detected',
+              detail:
+                'Oh no! In order to eject, git state must be clean. Please commit your changes and retry ejecting.',
+            });
+          }
+
           // Run a fresh install of dependencies after ejecting to get around issue
           // documented here https://github.com/facebook/create-react-app/issues/4433
           const installProcess = yield call(
@@ -248,6 +287,8 @@ export function* taskRun({ task }: Action): Saga<void> {
               env: getBaseProjectEnvironment(projectPath),
             }
           );
+
+          processLogger(installProcess, 'EJECT_INSTALL');
 
           // `waitForChildProcessToComplete` waits for proper exit before moving on
           // otherwise the next tasks (UI related) run too early before `yarn install`
@@ -266,7 +307,7 @@ export function* taskRun({ task }: Action): Saga<void> {
   }
 }
 
-export function* taskAbort({ task }: Action): Saga<void> {
+export function* taskAbort({ task, projectType }: Action): Saga<void> {
   const { processId, name } = task;
 
   yield call(killProcessId, processId);
@@ -278,7 +319,7 @@ export function* taskAbort({ task }: Action): Saga<void> {
   // but given that we're treating `start` as its own special thing,
   // I'm realizing that it should vary depending on the task type.
   // TODO: Find a better place for this to live.
-  const abortMessage = isDevServerTask(name)
+  const abortMessage = isDevServerTask(name, projectType)
     ? 'Server stopped'
     : 'Task aborted';
 
@@ -349,27 +390,64 @@ const createStdioChannel = (
   });
 };
 
+// We're using "template" variables inside the project type configuration file (config/project-types.js)
+// so with the following function we can replace the string $port with the real port number e.g. 3000
+// (see type VariableMap for used mapping strings)
+export const substituteConfigVariables = (
+  configObject: any,
+  variableMap: VariableMap
+) => {
+  // e.g. $port inside args will be replaced with variable reference from variabeMap obj. {$port: port}
+  return Object.keys(configObject).reduce(
+    (config, key) => {
+      if (config[key] instanceof Array) {
+        // replace $port inside args array
+        config[key] = config[key].map(arg => variableMap[arg] || arg);
+      } else {
+        // check config[key] e.g. is {env: { PORT: '$port'} }
+        if (config[key] instanceof Object) {
+          // config[key] = {PORT: '$port'}, key = 'env'
+          config[key] = Object.keys(config[key]).reduce(
+            (newObj, nestedKey) => {
+              // use replacement value if available
+              newObj[nestedKey] =
+                variableMap[newObj[nestedKey]] || newObj[nestedKey];
+              return newObj;
+            },
+            { ...config[key] }
+          );
+        }
+      }
+      // todo: add top level substitution - not used yet but maybe needed later e.g. { env: $port } won't be replaced.
+      //       Bad example but just to have it as reminder.
+      return config;
+    },
+    { ...configObject }
+  );
+};
+
 export const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
   port: string
 ) => {
-  switch (projectType) {
-    case 'create-react-app':
-      return {
-        args: ['run', task.name],
-        env: {
-          PORT: port,
-        },
-      };
-    case 'gatsby':
-      return {
-        args: ['run', task.name, '-p', port],
-        env: {},
-      };
-    default:
-      throw new Error('Unrecognized project type: ' + projectType);
+  const config = projectConfigs[projectType];
+
+  if (!config) {
+    throw new Error('Unrecognized project type: ' + projectType);
   }
+
+  // Substitution is needed as we'd like to have $port as args or in env
+  // we can use it in either position and it will be subsituted with the port value here
+  const devServer = substituteConfigVariables(config.devServer, {
+    // pass every value that is needed in the commands here
+    $port: port,
+  });
+
+  return {
+    args: devServer.args,
+    env: devServer.env || {},
+  };
 };
 
 export const stripUnusableControlCharacters = (text: string) =>
