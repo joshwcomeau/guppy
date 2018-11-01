@@ -1,9 +1,9 @@
 // @flow
 import { remote } from 'electron';
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
-import { folder } from 'react-icons-kit/feather/folder';
+import { folderPlus } from 'react-icons-kit/feather/folderPlus';
 
 import { COLORS } from '../../constants';
 
@@ -63,16 +63,19 @@ class DirectoryPicker extends PureComponent<Props> {
             {fullProjectPath}
           </DirectoryButton>
         ) : (
-          <FlexRow>
-            <DirectoryInput
-              onFocus={onFocus}
-              isFocused={isFocused}
-              value={fullProjectPath}
-              onChange={ev => onSelect(ev.target.value)}
-              autoFocus
-            />
-            <FolderIcon size={32} icon={folder} onClick={this.updatePath} />
-          </FlexRow>
+          <TextInput
+            onFocus={onFocus}
+            isFocused={isFocused}
+            value={fullProjectPath}
+            onChange={ev => onSelect(ev.target.value)}
+            autoFocus
+          >
+            <ButtonPositionAdjuster>
+              <IconWrapper onClick={this.updatePath}>
+                <IconBase size={22} icon={folderPlus} />
+              </IconWrapper>
+            </ButtonPositionAdjuster>
+          </TextInput>
         )}
       </Wrapper>
     );
@@ -81,6 +84,10 @@ class DirectoryPicker extends PureComponent<Props> {
 
 const Wrapper = styled.div`
   color: ${COLORS.gray[400]};
+`;
+
+const ButtonPositionAdjuster = styled.div`
+  transform: translateY(-2px);
 `;
 
 const DirectoryButton = styled(TextButton)`
@@ -101,18 +108,21 @@ const DirectoryButton = styled(TextButton)`
   }
 `;
 
-const DirectoryInput = styled(TextInput)``;
-
-const FolderIcon = styled(IconBase)`
+const IconWrapper = styled.div`
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid ${COLORS.gray[400]};
+  border-radius: 50%;
   color: ${COLORS.gray[400]};
   cursor: pointer;
-  padding-left: 10px;
-  :hover {
+
+  &:hover {
     color: ${COLORS.purple[500]};
+    border-color: ${COLORS.purple[500]};
   }
-`;
-const FlexRow = styled.div`
-  display: flex;
 `;
 
 export default DirectoryPicker;
