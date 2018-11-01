@@ -125,10 +125,9 @@ export function* handleReinstallDependenciesStart({
 
     // The channel is used to pass every termianl output to loadingScreen status text
     // todo: Check if we need to pass a progress value so we can display a progress bar as well.
-    const result = yield call(watchInstallMessages, channel);
+    yield call(watchInstallMessages, channel);
 
     // reinstall finished --> hide waiting spinner
-    console.log(result);
     // todo: do we need an error handling here? We could check result.exit === 1 for an error.
     yield put(reinstallDependenciesFinish());
 

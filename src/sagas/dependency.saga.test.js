@@ -7,7 +7,11 @@ import rootSaga, {
   handleInstallDependenciesStart,
   handleReinstallDependenciesStart,
   handleUninstallDependenciesStart,
+<<<<<<< HEAD
   handleLoadDependencyInfoFromDiskStart,
+=======
+  watchInstallMessages,
+>>>>>>> fixed test & removed console.log
 } from './dependency.saga';
 import { waitForAsyncRimraf } from './delete-project.saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
@@ -35,7 +39,9 @@ import {
   reinstallDependencies,
   reinstallDependenciesFinish,
   refreshProjectsStart,
+  resetStatusText,
 } from '../actions';
+import { capitalizeAll } from '../utils';
 
 describe('Dependency sagas', () => {
   const projectId = 'foo';
@@ -278,7 +284,16 @@ describe('Dependency sagas', () => {
       expect(JSON.stringify(saga.next().value)).toEqual(
         JSON.stringify(call(reinstallDependencies, 'project/path'))
       );
+      // cechk watchInstallMessages called
+      expect(saga.next().value).toEqual(call(watchInstallMessages, undefined));
+
+      // check reinstall dependency finish dispatch
       expect(saga.next().value).toEqual(put(reinstallDependenciesFinish()));
+
+      // check dispatch of resetStatusText
+      expect(saga.next().value).toEqual(put(resetStatusText()));
+
+      // Finally it should dispatch refreshProjectStart
       expect(saga.next().value).toEqual(put(refreshProjectsStart()));
     });
 
