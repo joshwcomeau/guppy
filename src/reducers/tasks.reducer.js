@@ -32,6 +32,7 @@ import {
   CLEAR_CONSOLE,
   RESET_ALL_STATE,
 } from '../actions';
+import projectConfigs from '../config/project-types';
 
 import type { Action } from 'redux';
 import type { Task, ProjectType } from '../types';
@@ -220,6 +221,30 @@ export default (state: State = initialState, action: Action = {}) => {
 //
 //
 // Helpers
+//
+// devServerTaskNameMap is a mapping Object
+// Needed because next.js also contains a script named 'start' which is not the devServer task.
+// So we can test if name is a devServerName by simply accessing map['create-react-app'][testString] which will return true or undefined.
+// Mapping Object structure:
+// {
+//   'create-react-app': {
+//     'start': true
+//    },
+//   ...
+// }
+// Notice: We could simplify this by using projectConfigs[projectType].devServer.taskName === name in isDevServer check but
+//         we also need it in getTaskType which runs before the reducer so we don't have access to projectType.
+export const devServerTaskNameMap = Object.keys(projectConfigs).reduce(
+  (devServerNamesObj, projectType) => {
+    const name = projectConfigs[projectType].devServer.taskName;
+    devServerNamesObj[projectType] = {
+      [name]: true,
+    };
+    return devServerNamesObj;
+  },
+  {}
+);
+
 export const getTaskDescription = (name: string) => {
   // NOTE: This information is currently derivable, and it's bad to store
   // derivable data in the reducer... but, I expect soon this info will be
@@ -247,9 +272,9 @@ export const getTaskDescription = (name: string) => {
   }
 };
 
-export const isDevServerTask = (name: string) =>
-  // Gatsby and create-react-app use different names for the same task.
-  name === 'start' || name === 'develop';
+export const isDevServerTask = (name: string, projectType: string) =>
+  // Each framework uses a different name for the task that starts the development server
+  projectConfigs[projectType].devServer.taskName === name;
 
 // https://docs.npmjs.com/misc/scripts
 const preExistingTasks = [
@@ -289,8 +314,19 @@ const getTaskType = name => {
   // For a dev server, "running" is a successful status - it means there are
   // no errors - while for a short-term task, "running" is essentially the same
   // as "loading", it's a yellow-light kind of thing.
-  const sustainedTasks = ['start', 'develop'];
+  // Todo: We need to re-work this as next.js has two long-running tasks dev & start.
+  //       How do we handle it? This needs to be discussed in an issue - will be create soon.
 
+  // {create-react-app: { start: true } } --> ["start", ...]
+  const sustainedTasks = Object.keys(devServerTaskNameMap).reduce(
+    (devServerTaskNames, projectType) => {
+      devServerTaskNames.push(
+        Object.keys(devServerTaskNameMap[projectType])[0]
+      );
+      return devServerTaskNames;
+    },
+    []
+  );
   return sustainedTasks.includes(name) ? 'sustained' : 'short-term';
 };
 
@@ -350,14 +386,20 @@ export const getTasksForProjectId = (
   return state.tasks[props.projectId];
 };
 
+// Todo: Why is it not possible to move getTypeOfSelectedProject to projects.reducer.js? Always getting an error from reselect that it is undefined.
+const getTypeOfSelectedProject = (state: any, props) => {
+  return state.projects.byId[props.projectId].guppy.type;
+};
+
 export const getTasksInTaskListForProjectId = createSelector(
-  [getTasksForProjectId],
-  tasks =>
+  [getTasksForProjectId, getTypeOfSelectedProject],
+  (tasks, projectType) =>
     Object.keys(tasks)
       .map(taskId => tasks[taskId])
       .filter(
         (task, i, tasksArray) =>
-          !isDevServerTask(task.name) && !isLifeCycleHook(task.name, tasksArray)
+          !isDevServerTask(task.name, projectType) &&
+          !isLifeCycleHook(task.name, tasksArray)
       )
 );
 
@@ -368,16 +410,10 @@ export const getDevServerTaskForProjectId = (
     projectType: ProjectType,
   }
 ) => {
-  switch (props.projectType) {
-    case 'create-react-app': {
-      return state.tasks[props.projectId].start;
-    }
-
-    case 'gatsby': {
-      return state.tasks[props.projectId].develop;
-    }
-
-    default:
-      throw new Error('Unrecognized project type: ' + props.projectType);
+  const config = projectConfigs[props.projectType];
+  const { taskName } = config.devServer;
+  if (!config) {
+    throw new Error('Unrecognized project type: ' + props.projectType);
   }
+  return state.tasks[props.projectId][taskName];
 };

@@ -168,9 +168,14 @@ export const attachTaskMetadata = (
   port,
 });
 
-export const abortTask = (task: Task, timestamp: Date) => ({
+export const abortTask = (
+  task: Task,
+  projectType: string,
+  timestamp: Date
+) => ({
   type: ABORT_TASK,
   task,
+  projectType,
   timestamp,
 });
 
