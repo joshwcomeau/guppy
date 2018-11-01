@@ -9,13 +9,13 @@ import nextjsIconSrc from '../../assets/images/nextjs_small.png';
 
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
-import ButtonWithIcon from '../ButtonWithIcon';
-import Spacer from '../Spacer';
 import FadeIn from '../FadeIn';
 
 import ProjectName from './ProjectName';
 import ProjectPath from './ProjectPath';
 import SubmitButton from './SubmitButton';
+import ButtonWithIcon from '../ButtonWithIcon';
+import Spacer from '../Spacer';
 
 import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';

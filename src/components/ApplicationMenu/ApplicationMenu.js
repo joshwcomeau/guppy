@@ -36,6 +36,7 @@ type Props = {
   showDeleteProjectPrompt: (project: any) => any,
   showResetStatePrompt: () => any,
   showProjectSettings: () => any,
+  showAppSettings: () => any,
   selectProject: (projectId: string) => any,
 };
 
@@ -66,6 +67,7 @@ class ApplicationMenu extends Component<Props> {
       showDeleteProjectPrompt,
       showResetStatePrompt,
       showProjectSettings,
+      showAppSettings,
       selectProject,
       projects,
     } = props;
@@ -158,6 +160,16 @@ class ApplicationMenu extends Component<Props> {
       },
     ];
 
+    // Add preferences menu item for Linux/Windows
+    if (!isMac) {
+      template[0].submenu.push({
+        // Linux & Windows only
+        label: '&Preferences...',
+        click: showAppSettings,
+        accelerator: 'Ctrl+,',
+      });
+    }
+
     // MacOS menus start with the app name (Guppy) and offer some standard
     // options:
     if (process.platform === 'darwin') {
@@ -170,6 +182,11 @@ class ApplicationMenu extends Component<Props> {
           { role: 'hide' },
           { role: 'hideothers' },
           { role: 'unhide' },
+          {
+            label: 'Preferences...',
+            click: showAppSettings,
+            accelerator: 'Ctrl+,',
+          },
           { type: 'separator' },
           { role: 'quit' },
         ],
@@ -286,6 +303,7 @@ const mapDispatchToProps = {
   showDeleteProjectPrompt: actions.showDeleteProjectPrompt,
   showResetStatePrompt: actions.showResetStatePrompt,
   showProjectSettings: actions.showProjectSettings,
+  showAppSettings: actions.showAppSettings,
   selectProject: actions.selectProject,
 };
 

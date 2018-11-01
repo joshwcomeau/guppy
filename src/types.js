@@ -129,3 +129,13 @@ export type Project = {
 };
 
 export type ProjectsMap = { [id: string]: Project };
+
+export type AppSettings = {
+  general: {
+    defaultProjectPath: string,
+    defaultProjectType: ProjectType,
+  },
+  privacy: {
+    enableUsageTracking: boolean,
+  },
+};
