@@ -31,11 +31,30 @@ class LoadingScreen extends PureComponent<Props, State> {
     showStatus: false,
   };
 
+  progress: number = 0;
+
   toggleStatus = () => {
     this.setState(state => ({
       showStatus: !state.showStatus,
     }));
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.statusText !== this.props.statusText) {
+      // new status
+      const [_, total] = (/\d+\/\d+/.exec(nextProps.statusText) || [
+        '',
+      ])[0].split('/');
+      if (total) {
+        this.progress += 1 / parseInt(total);
+        // limit progress to 1
+        this.progress = Math.min(1, this.progress);
+      }
+    }
+    if (!this.props.showLoadingScreen) {
+      this.progress = 0;
+    }
+  }
 
   render() {
     const { showLoadingScreen, statusText } = this.props;
@@ -46,14 +65,9 @@ class LoadingScreen extends PureComponent<Props, State> {
         .split('')
         .splice(0, 220)
         .join('') + ellipsis;
-    const [progressInc = 0, total = 1] = (/\d+\/\d+/.exec(statusText) || [
-      '',
-    ])[0].split('/');
-    const progress = parseInt(progressInc || 0) / parseInt(total);
-    console.log('progress', progress);
     return (
       <Window isVisible={showLoadingScreen}>
-        <ProgressBar position="top" progress={progress} />
+        <ProgressBar position="top" progress={this.progress} />
         {showStatus && <InfoText>{shortenedText}</InfoText>}
         <Spacer size={10} />
         <StatusButton icon={info} onClick={this.toggleStatus} size={16} />
