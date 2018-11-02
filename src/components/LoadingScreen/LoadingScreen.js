@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
@@ -31,6 +31,10 @@ class LoadingScreen extends PureComponent<Props, State> {
     showStatus: false,
   };
 
+  static defaultProps = {
+    statusText: '',
+  };
+
   progress: number = 0;
 
   toggleStatus = () => {
@@ -42,9 +46,9 @@ class LoadingScreen extends PureComponent<Props, State> {
   componentWillReceiveProps(nextProps) {
     if (nextProps.statusText !== this.props.statusText) {
       // new status
-      const [_, total] = (/\d+\/\d+/.exec(nextProps.statusText) || [
-        '',
-      ])[0].split('/');
+      // e.g. progressResult = ["1/4", ...]
+      const progressResult = /\d+\/\d+/.exec(nextProps.statusText);
+      const total = progressResult && progressResult[0].split('/')[1];
       if (total) {
         this.progress += 1 / parseInt(total);
         // limit progress to 1
