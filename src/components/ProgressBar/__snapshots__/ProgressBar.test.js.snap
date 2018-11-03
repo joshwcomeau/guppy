@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProgressBar component should render with 0% 1`] = `
+<styled.div
+  height={8}
+>
+  <Motion
+    style={
+      Object {
+        "interpolatedProgress": Object {
+          "damping": 32,
+          "precision": 0.0001,
+          "stiffness": 32,
+          "val": 0,
+        },
+      }
+    }
+  >
+    <Component />
+  </Motion>
+</styled.div>
+`;
+
+exports[`ProgressBar component should render with 50% 1`] = `
+<styled.div
+  height={8}
+>
+  <Motion
+    style={
+      Object {
+        "interpolatedProgress": Object {
+          "damping": 32,
+          "precision": 0.0001,
+          "stiffness": 32,
+          "val": 0.5,
+        },
+      }
+    }
+  >
+    <Component />
+  </Motion>
+</styled.div>
+`;
+
+exports[`ProgressBar component should render with 100% 1`] = `
+<styled.div
+  height={8}
+>
+  <Motion
+    style={
+      Object {
+        "interpolatedProgress": Object {
+          "damping": 32,
+          "precision": 0.0001,
+          "stiffness": 32,
+          "val": 1,
+        },
+      }
+    }
+  >
+    <Component />
+  </Motion>
+</styled.div>
+`;
