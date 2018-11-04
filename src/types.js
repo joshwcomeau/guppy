@@ -91,6 +91,8 @@ export type ProjectInternal = {
     color: string,
     icon: string,
     createdAt: number,
+    // codesandbox props
+    codesandboxUrl: string,
   },
 };
 
@@ -126,6 +128,8 @@ export type Project = {
   tasks: Array<Task>,
   // `path` is the project's on-disk location.
   path: string,
+  // url to codesandbox
+  codesandboxUrl: string,
 };
 
 export type ProjectsMap = { [id: string]: Project };

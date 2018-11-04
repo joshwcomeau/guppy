@@ -12,6 +12,7 @@ import {
   SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
   RESET_ALL_STATE,
+  SET_CODESANDBOX_URL,
 } from '../actions';
 import { getTasks, getTasksForProjectId } from './tasks.reducer';
 import {
@@ -80,6 +81,13 @@ const byIdReducer = (state: ById = initialState.byId, action: Action = {}) => {
 
       return produce(state, draftState => {
         draftState[id] = project;
+      });
+    }
+
+    case SET_CODESANDBOX_URL: {
+      const { projectId, codesandboxUrl } = action;
+      return produce(state, draftState => {
+        draftState[projectId].guppy.codesandboxUrl = codesandboxUrl;
       });
     }
 
@@ -186,6 +194,7 @@ const prepareProjectForConsumption = (
     color: project.guppy.color,
     icon: project.guppy.icon,
     createdAt: project.guppy.createdAt,
+    codesandboxUrl: project.guppy.codesandboxUrl,
     // prettier-ignore
     tasks: tasks
       ? Object.keys(tasks).map(taskId => tasks[taskId])

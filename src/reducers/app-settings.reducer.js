@@ -17,6 +17,7 @@
 import {
   SAVE_APP_SETTINGS_START,
   CHANGE_DEFAULT_PROJECT_PATH,
+  UPDATE_CODESANDBOX_TOKEN,
 } from '../actions';
 import produce from 'immer';
 import * as os from 'os';
@@ -42,6 +43,9 @@ export const initialState: AppSettings = {
   privacy: {
     enableUsageTracking: true,
   },
+  export: {
+    codesandboxToken: '',
+  },
 };
 
 export default (state: AppSettings = initialState, action: Action = {}) => {
@@ -56,6 +60,10 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
         draftState.general.defaultProjectPath = action.defaultProjectPath;
       });
 
+    case UPDATE_CODESANDBOX_TOKEN:
+      return produce(state, draftState => {
+        draftState.export.codesandboxToken = action.codesandboxToken;
+      });
     default:
       return state;
   }

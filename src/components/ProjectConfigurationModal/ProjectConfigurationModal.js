@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -11,12 +11,14 @@ import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
+import Heading from '../Heading';
 import Spacer from '../Spacer';
 import { FillButton } from '../Button';
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
 import TextInput from '../TextInput';
-
+import ExportToCodesandbox from '../ExportToCodesandbox';
+import DisabledText from '../DisabledText';
 import type { Project } from '../../types';
 
 type Props = {
@@ -94,9 +96,13 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
   };
 
   render() {
-    const { hideModal, isVisible, dependenciesChangingForProject } = this.props;
-    const { activeField } = this.state;
-    const { projectIcon } = this.state;
+    const {
+      hideModal,
+      isVisible,
+      dependenciesChangingForProject,
+      project,
+    } = this.props;
+    const { activeField, projectIcon } = this.state;
 
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
@@ -127,6 +133,17 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
                 onSelectIcon={this.updateProjectIcon}
               />
             </FormField>
+
+            {project &&
+              project.type === 'create-react-app' && (
+                <Fragment>
+                  {/* Codesandbox export only supported for create-react-apps at the moment. */}
+                  <SectionTitle>Export</SectionTitle>
+                  <ExportToCodesandbox />
+                </Fragment>
+              )}
+
+            <Spacer size={10} />
 
             <Actions>
               <FillButton
@@ -159,9 +176,10 @@ const Actions = styled.div`
   padding-bottom: 16px;
 `;
 
-const DisabledText = styled.div`
-  padding-top: 16px;
-  color: ${COLORS.gray[500]};
+const SectionTitle = styled(Heading).attrs({
+  size: 'small',
+})`
+  padding-bottom: 10px;
 `;
 
 const mapStateToProps = state => {

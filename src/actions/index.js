@@ -71,11 +71,14 @@ export const SHOW_PROJECT_SETTINGS = 'SHOW_PROJECT_SETTINGS';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
+export const SET_CODESANDBOX_URL = 'SET_CODESANDBOX_URL';
 
 // app settings
 export const SHOW_APP_SETTINGS = 'SHOW_APP_SETTINGS';
 export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
 export const CHANGE_DEFAULT_PROJECT_PATH = 'CHANGE_DEFAULT_PROJECT_PATH';
+export const UPDATE_CODESANDBOX_TOKEN = 'UPDATE_CODESANDBOX_TOKEN';
+
 //
 //
 // Action Creators
@@ -372,6 +375,20 @@ export const saveAppSettingsStart = (settings: AppSettings) => ({
 export const changeDefaultProjectPath = (defaultProjectPath: string) => ({
   type: CHANGE_DEFAULT_PROJECT_PATH,
   defaultProjectPath,
+});
+
+export const updateCodesandboxToken = (codesandboxToken: string) => ({
+  type: UPDATE_CODESANDBOX_TOKEN,
+  codesandboxToken,
+});
+
+export const setCodesandboxUrl = (
+  projectId: string,
+  codesandboxUrl: string
+) => ({
+  type: SET_CODESANDBOX_URL,
+  projectId,
+  codesandboxUrl,
 });
 
 // project settings related actions

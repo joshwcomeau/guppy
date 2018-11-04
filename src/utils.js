@@ -335,3 +335,10 @@ export const setNested = (obj, path, value) => {
   pointer[key] = value;
   return obj;
 };
+
+// todo: Check usage of stripEscapeChars & use this function
+export const stripEscapeChars = text => {
+  const regex = new RegExp('\x1B[[0-?]*[ -/]*[@-~]', 'gim'); // eslint-disable-line
+
+  return text.replace(regex, '');
+};
