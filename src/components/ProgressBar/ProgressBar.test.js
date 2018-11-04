@@ -26,8 +26,8 @@ describe('ProgressBar component', () => {
     const { container, debug } = render(
       <ProgressBar height={10} progress={0.5} />
     );
-    //debug(container);
-    //expect(container.querySelector('div').getAttribute('height')).toEqual('10');
+    debug();
+    expect(container.querySelector('div').getAttribute('height')).toEqual('10');
     //expect(getByTestId('wrapper')).toEqual('test'); //toHaveStyleRule('height', '10px');
   });
 });
