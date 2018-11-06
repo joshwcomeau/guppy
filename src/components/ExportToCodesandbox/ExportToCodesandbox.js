@@ -21,7 +21,7 @@ import { sendCommandToProcess } from '../../sagas/task.saga'; // todo move comma
 import ExternalLink from '../ExternalLink';
 // import Heading from '../Heading';
 import FormField from '../FormField';
-import TextInput from '../TextInput';
+import TokenInput from '../TokenInput';
 import FillButton from '../Button/FillButton';
 import DisabledText from '../DisabledText';
 
@@ -120,9 +120,9 @@ class ExportToCodesandbox extends PureComponent {
     processLogger(child, 'EXPORT_CODESANDBOX');
   };
 
-  updateToken = evt => {
-    evt.preventDefault();
-    this.props.updateCodesandboxToken(evt.target.value);
+  updateToken = token => {
+    // evt.preventDefault();
+    this.props.updateCodesandboxToken(token); //evt.target.value);
   };
 
   // todo: Change flow:
@@ -147,7 +147,7 @@ class ExportToCodesandbox extends PureComponent {
         </FormField>
 
         <FormField label="Codesandbox token">
-          <TextInput value={codesandboxToken} onChange={this.updateToken} />
+          <TokenInput value={codesandboxToken} onBlur={this.updateToken} />
         </FormField>
         <Action>
           <FillButton
