@@ -15,6 +15,7 @@ import ProjectName from './ProjectName';
 import ProjectPath from './ProjectPath';
 import SubmitButton from './SubmitButton';
 import ButtonWithIcon from '../ButtonWithIcon';
+import ProjectTypeSelection from '../ProjectTypeSelection';
 import Spacer from '../Spacer';
 
 import type { Field, Status } from './types';
@@ -79,34 +80,12 @@ class MainPane extends PureComponent<Props> {
                     label="Project Type"
                     isFocused={activeField === 'projectType'}
                   >
-                    <ProjectTypeTogglesWrapper>
-                      {/* Todo: Make it easier to add new flows - e.g. map over an array to generate the UI*/}
-                      <ButtonWithIcon
-                        showStroke={projectType === 'create-react-app'}
-                        icon={<ReactIcon src={reactIconSrc} />}
-                        onClick={() =>
-                          this.updateProjectType('create-react-app')
-                        }
-                      >
-                        Vanilla React
-                      </ButtonWithIcon>
-                      <Spacer inline size={10} />
-                      <ButtonWithIcon
-                        showStroke={projectType === 'gatsby'}
-                        icon={<GatsbyIcon src={gatsbyIconSrc} />}
-                        onClick={() => this.updateProjectType('gatsby')}
-                      >
-                        Gatsby
-                      </ButtonWithIcon>
-                      <Spacer inline size={10} />
-                      <ButtonWithIcon
-                        showStroke={projectType === 'nextjs'}
-                        icon={<NextjsIcon src={nextjsIconSrc} />}
-                        onClick={() => this.updateProjectType('nextjs')}
-                      >
-                        Next.js
-                      </ButtonWithIcon>
-                    </ProjectTypeTogglesWrapper>
+                    <ProjectTypeSelection
+                      projectType={projectType}
+                      onProjectTypeSelect={selectedProjectType =>
+                        this.updateProjectType(selectedProjectType)
+                      }
+                    />
                   </FormField>
                 </FadeIn>
               )}

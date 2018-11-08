@@ -1,58 +1,45 @@
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import styled from 'styled-components';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
+import nextjsIconSrc from '../../assets/images/nextjs_small.png';
 
-import FormField from '../FormField';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
-import FadeIn from '../FadeIn';
 
 import { ProjectType } from '../../types';
 type Props = {
   activeField: string,
-  label?: string,
   projectType: string,
-  onSelect: string => void,
+  onProjectTypeSelect: string => void,
 };
 
 class ProjectTypeSelection extends PureComponent<Props> {
-  static defaultProps = {
-    label: 'Project Type',
-  };
-
   select = (ev: SyntheticEvent<*>, projectType: ProjectType) => {
     ev.preventDefault();
-    this.props.onSelect(projectType);
+    this.props.onProjectTypeSelect(projectType);
   };
 
   render() {
-    const { activeField, projectType, label } = this.props;
+    const { projectType } = this.props;
     return (
-      <FadeIn>
-        <FormField label={label} isFocused={activeField === 'projectType'}>
-          <ProjectTypeTogglesWrapper>
+      <ProjectTypeTogglesWrapper>
+        {mapProjectTypeToComponent.map((curProjectType, index) => (
+          <Fragment key={index}>
             <ButtonWithIcon
-              showStroke={projectType === 'create-react-app'}
-              icon={<ReactIcon src={reactIconSrc} />}
+              showStroke={projectType === curProjectType.type}
+              icon={curProjectType.Component}
               onClick={(ev: SyntheticEvent<*>) =>
-                this.select(ev, 'create-react-app')
+                this.select(ev, curProjectType.type)
               }
             >
-              Vanilla React
+              {curProjectType.caption}
             </ButtonWithIcon>
             <Spacer inline size={10} />
-            <ButtonWithIcon
-              showStroke={projectType === 'gatsby'}
-              icon={<GatsbyIcon src={gatsbyIconSrc} />}
-              onClick={(ev: SyntheticEvent<*>) => this.select(ev, 'gatsby')}
-            >
-              Gatsby
-            </ButtonWithIcon>
-          </ProjectTypeTogglesWrapper>
-        </FormField>
-      </FadeIn>
+          </Fragment>
+        ))}
+      </ProjectTypeTogglesWrapper>
     );
   }
 }
@@ -67,9 +54,32 @@ const GatsbyIcon = styled.img`
   height: 22px;
 `;
 
+const NextjsIcon = styled.img`
+  width: 22px;
+  height: 22px;
+`;
+
 const ProjectTypeTogglesWrapper = styled.div`
   margin-top: 8px;
   margin-left: -8px;
 `;
+
+const mapProjectTypeToComponent = [
+  {
+    type: 'create-react-app',
+    Component: <ReactIcon src={reactIconSrc} />,
+    caption: 'Vanilla React',
+  },
+  {
+    type: 'gatsby',
+    Component: <GatsbyIcon src={gatsbyIconSrc} />,
+    caption: 'Gatsby',
+  },
+  {
+    type: 'nextjs',
+    Component: <NextjsIcon src={nextjsIconSrc} />,
+    caption: 'Next.js',
+  },
+];
 
 export default ProjectTypeSelection;
