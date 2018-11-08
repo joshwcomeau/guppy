@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import styled from 'styled-components';
 
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
+import nextjsIconSrc from '../../assets/images/nextjs_small.png';
 
 import FormField from '../FormField';
 import ButtonWithIcon from '../ButtonWithIcon';
@@ -33,23 +34,20 @@ class ProjectTypeSelection extends PureComponent<Props> {
       <FadeIn>
         <FormField label={label} isFocused={activeField === 'projectType'}>
           <ProjectTypeTogglesWrapper>
-            <ButtonWithIcon
-              showStroke={projectType === 'create-react-app'}
-              icon={<ReactIcon src={reactIconSrc} />}
-              onClick={(ev: SyntheticEvent<*>) =>
-                this.select(ev, 'create-react-app')
-              }
-            >
-              Vanilla React
-            </ButtonWithIcon>
-            <Spacer inline size={10} />
-            <ButtonWithIcon
-              showStroke={projectType === 'gatsby'}
-              icon={<GatsbyIcon src={gatsbyIconSrc} />}
-              onClick={(ev: SyntheticEvent<*>) => this.select(ev, 'gatsby')}
-            >
-              Gatsby
-            </ButtonWithIcon>
+            {mapProjectTypeToComponent.map((curProjectType, index) => (
+              <Fragment key={index}>
+                <ButtonWithIcon
+                  showStroke={projectType === curProjectType.type}
+                  icon={curProjectType.Component}
+                  onClick={(ev: SyntheticEvent<*>) =>
+                    this.select(ev, curProjectType.type)
+                  }
+                >
+                  {curProjectType.caption}
+                </ButtonWithIcon>
+                <Spacer inline size={10} />
+              </Fragment>
+            ))}
           </ProjectTypeTogglesWrapper>
         </FormField>
       </FadeIn>
@@ -67,9 +65,32 @@ const GatsbyIcon = styled.img`
   height: 22px;
 `;
 
+const NextjsIcon = styled.img`
+  width: 22px;
+  height: 22px;
+`;
+
 const ProjectTypeTogglesWrapper = styled.div`
   margin-top: 8px;
   margin-left: -8px;
 `;
+
+const mapProjectTypeToComponent = [
+  {
+    type: 'create-react-app',
+    Component: <ReactIcon src={reactIconSrc} />,
+    caption: 'Vanilla React',
+  },
+  {
+    type: 'gatsby',
+    Component: <GatsbyIcon src={gatsbyIconSrc} />,
+    caption: 'Gatsby',
+  },
+  {
+    type: 'nextjs',
+    Component: <NextjsIcon src={nextjsIconSrc} />,
+    caption: 'Next.js',
+  },
+];
 
 export default ProjectTypeSelection;
