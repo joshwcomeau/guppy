@@ -76,12 +76,17 @@ class MainPane extends PureComponent<Props> {
 
               {currentStepIndex > 0 && (
                 <FadeIn>
-                  <ProjectTypeSelection
-                    projectType={projectType}
-                    onSelect={selectedProjectType =>
-                      this.updateProjectType(selectedProjectType)
-                    }
-                  />
+                  <FormField
+                    label="Project Type"
+                    isFocused={activeField === 'projectType'}
+                  >
+                    <ProjectTypeSelection
+                      projectType={projectType}
+                      onProjectTypeSelect={selectedProjectType =>
+                        this.updateProjectType(selectedProjectType)
+                      }
+                    />
+                  </FormField>
                 </FadeIn>
               )}
 

@@ -5,52 +5,41 @@ import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
 import nextjsIconSrc from '../../assets/images/nextjs_small.png';
 
-import FormField from '../FormField';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
-import FadeIn from '../FadeIn';
 
 import { ProjectType } from '../../types';
 type Props = {
   activeField: string,
-  label?: string,
   projectType: string,
-  onSelect: string => void,
+  onProjectTypeSelect: string => void,
 };
 
 class ProjectTypeSelection extends PureComponent<Props> {
-  static defaultProps = {
-    label: 'Project Type',
-  };
-
   select = (ev: SyntheticEvent<*>, projectType: ProjectType) => {
     ev.preventDefault();
-    this.props.onSelect(projectType);
+    this.props.onProjectTypeSelect(projectType);
   };
 
   render() {
-    const { activeField, projectType, label } = this.props;
+    const { projectType } = this.props;
     return (
-      <FadeIn>
-        <FormField label={label} isFocused={activeField === 'projectType'}>
-          <ProjectTypeTogglesWrapper>
-            {mapProjectTypeToComponent.map((curProjectType, index) => (
-              <Fragment key={index}>
-                <ButtonWithIcon
-                  showStroke={projectType === curProjectType.type}
-                  icon={curProjectType.Component}
-                  onClick={(ev: SyntheticEvent<*>) =>
-                    this.select(ev, curProjectType.type)
-                  }
-                >
-                  {curProjectType.caption}
-                </ButtonWithIcon>
-                <Spacer inline size={10} />
-              </Fragment>
-            ))}
-          </ProjectTypeTogglesWrapper>
-        </FormField>
-      </FadeIn>
+      <ProjectTypeTogglesWrapper>
+        {mapProjectTypeToComponent.map((curProjectType, index) => (
+          <Fragment key={index}>
+            <ButtonWithIcon
+              showStroke={projectType === curProjectType.type}
+              icon={curProjectType.Component}
+              onClick={(ev: SyntheticEvent<*>) =>
+                this.select(ev, curProjectType.type)
+              }
+            >
+              {curProjectType.caption}
+            </ButtonWithIcon>
+            <Spacer inline size={10} />
+          </Fragment>
+        ))}
+      </ProjectTypeTogglesWrapper>
     );
   }
 }
