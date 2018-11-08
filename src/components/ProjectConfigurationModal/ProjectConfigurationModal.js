@@ -2,6 +2,7 @@
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import * as actions from '../../actions';
 
@@ -19,6 +20,7 @@ import ProjectIconSelection from '../ProjectIconSelection';
 import TextInput from '../TextInput';
 import ExportToCodesandbox from '../ExportToCodesandbox';
 import DisabledText from '../DisabledText';
+
 import type { Project } from '../../types';
 
 type Props = {
@@ -134,16 +136,15 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
               />
             </FormField>
 
-            {project &&
+            {/* {project &&
               project.type === 'create-react-app' && (
-                <Fragment>
-                  {/* Codesandbox export only supported for create-react-apps at the moment. */}
-                  <SectionTitle>Export</SectionTitle>
-                  <ExportToCodesandbox />
-                </Fragment>
-              )}
+              )} */}
 
-            <Spacer size={10} />
+            <FormField label="Export" focusOnClick={false} />
+            <ExportToCodesandbox />
+            {/* <Fragment>
+            {/* Codesandbox export only supported for create-react-apps at the moment. */}
+            {/* </Fragment> */}
 
             <Actions>
               <FillButton
@@ -167,8 +168,14 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
   }
 }
 
-const MainContent = styled.section`
+const MainContent = styled(Scrollbars).attrs({
+  autoHeight: true,
+  autoHeightMax: '500px', //'80vh',
+})`
   padding: 25px;
+  // > div:first-child {
+  //   overflow: auto !important;
+  // }
 `;
 
 const Actions = styled.div`
@@ -176,10 +183,10 @@ const Actions = styled.div`
   padding-bottom: 16px;
 `;
 
-const SectionTitle = styled(Heading).attrs({
+const SectionTitle = styled.h1.attrs({
   size: 'small',
 })`
-  padding-bottom: 10px;
+  //padding-bottom: 10px;
 `;
 
 const mapStateToProps = state => {

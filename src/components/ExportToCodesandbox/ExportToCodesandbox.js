@@ -177,8 +177,8 @@ class ExportToCodesandbox extends PureComponent {
 }
 
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  //display: grid;
+  //grid-template-columns: 1fr 1fr;
 `;
 
 const Action = styled.div``;

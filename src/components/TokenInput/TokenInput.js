@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { checkCircle } from 'react-icons-kit/feather/checkCircle';
 import { xCircle } from 'react-icons-kit/feather/xCircle';
-import { Transition, Spring } from 'react-spring';
+import { config, Spring } from 'react-spring';
+
+import TextInput from '../TextInput';
 
 // Note: Async validation not working.
 //       Would be great to allow an async tokenValidator function.
 
-class TokenInputField extends Component {
+class TokenInputField extends PureComponent {
   static defaultProps = {
     oneTimeDisplay: true, // if true only displayed on next enter will clear the field
+    hideDuringTyping: true, // todo need to save both in token weakmap
     value: '',
     onChange: token => {},
     onBlur: () => {},
-    tokenValidator: token => token, // we're checking only if it's not '' but with this we could modify validation
+    tokenValidator: token => token, // we're checking only if it's not '' but with a backend we could check if it's a valid token
   };
 
   state = {
-    focused: false,
+    focused: true,
     untouched: true,
   };
 
@@ -45,8 +48,8 @@ class TokenInputField extends Component {
   valid = false;
   REPLACEMENT_CHAR = '\u2022';
 
-  updateToken = () => {
-    const tokenVal = this.tokenInput.value;
+  updateToken = evt => {
+    const tokenVal = evt.target.value;
     this.setToken(tokenVal);
     this.props.onChange(tokenVal);
   };
@@ -55,7 +58,7 @@ class TokenInputField extends Component {
     const { focused } = this.state;
     const token = this.getToken();
 
-    return focused
+    return focused // && !hideDuringTyping
       ? token
       : token
           .split('')
@@ -108,34 +111,22 @@ class TokenInputField extends Component {
     const valid = this.props.tokenValidator(token);
     return (
       <Wrapper>
-        {/* <pre>
-          Debug of input:
-          {JSON.stringify(this.state, null, 2)}
-          {'\n'}
-          Token: {this.getToken()}
-        </pre> */}
-        <Transition
-          items={showInput}
-          from={{ width: 0 }}
-          enter={{ width: 1.0 }}
-          leave={{ width: 0 }}
-        >
-          {toggle => props =>
-            toggle && (
-              <Input
-                width={props.width}
-                onFocus={this.focus}
-                onBlur={this.blur}
-                ref={ref => (this.tokenInput = ref)}
-                value={this.displayedValue()}
-                onChange={this.updateToken}
-                autoFocus
-              />
-            )}
-        </Transition>
-
+        {showInput && (
+          <TextInput
+            isFocused={focused}
+            onFocus={this.focus}
+            onBlur={this.blur}
+            value={this.displayedValue()}
+            onChange={this.updateToken}
+            autoFocus
+          />
+        )}
         {showValidation && (
-          <Spring from={{ opacity: 0 }} to={{ opacity: 1 }} delay={700}>
+          <Spring
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+            config={config.slow}
+          >
             {({ opacity }) => this.renderIcon(token, valid, opacity)}
           </Spring>
         )}
@@ -144,25 +135,7 @@ class TokenInputField extends Component {
   }
 }
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 160px;
-`;
-
-const Input = styled.input.attrs({
-  style: ({ width }) => ({
-    width: `${width * 100}%`,
-  }),
-})`
-  border: 0;
-  outline: none;
-  padding: 6px 0;
-  border-bottom: 3px solid #aaa;
-  :focus {
-    border-color: blue;
-  }
-`;
+const Wrapper = styled.div``;
 
 const ValidationIcon = styled(IconBase).attrs({
   style: ({ valid, opacity }) => ({
@@ -170,9 +143,8 @@ const ValidationIcon = styled(IconBase).attrs({
     opacity,
   }),
 })`
-  flex-direction: row;
   cursor: pointer;
-  width: 32px;
+  height: 47px;
 `;
 
 export default TokenInputField;

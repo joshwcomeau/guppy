@@ -94,7 +94,6 @@ class Modal extends PureComponent<Props, State> {
                 {({ interpolatedTranslateY, opacity }) => (
                   <Wrapper opacity={opacity} clickable={!inTransit}>
                     <Backdrop onClick={onDismiss} />
-
                     <PaneWrapper
                       width={width}
                       height={height}
