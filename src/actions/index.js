@@ -2,6 +2,7 @@
 import uuid from 'uuid/v1';
 
 import type {
+  AppSettings,
   Project,
   ProjectInternal,
   ProjectType,
@@ -59,6 +60,7 @@ export const IMPORT_EXISTING_PROJECT_FINISH = 'IMPORT_EXISTING_PROJECT_FINISH';
 export const SHOW_DELETE_PROJECT_PROMPT = 'SHOW_DELETE_PROJECT_PROMPT';
 export const START_DELETING_PROJECT = 'START_DELETING_PROJECT';
 export const FINISH_DELETING_PROJECT = 'FINISH_DELETING_PROJECT';
+export const DELETE_PROJECT_ERROR = 'DELETE_PROJECT_ERROR';
 export const SHOW_RESET_STATE_PROMPT = 'SHOW_RESET_STATE_PROMPT';
 export const RESET_ALL_STATE = 'RESET_ALL_STATE';
 
@@ -67,17 +69,24 @@ export const SHOW_PROJECT_SETTINGS = 'SHOW_PROJECT_SETTINGS';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
+
+// app settings
+export const SHOW_APP_SETTINGS = 'SHOW_APP_SETTINGS';
+export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
+export const CHANGE_DEFAULT_PROJECT_PATH = 'CHANGE_DEFAULT_PROJECT_PATH';
 //
 //
 // Action Creators
 //
 export const addProject = (
   project: ProjectInternal,
+  projectHomePath: string,
   projectType: ProjectType,
   isOnboardingCompleted: boolean
 ) => ({
   type: ADD_PROJECT,
   project,
+  projectHomePath,
   projectType,
   isOnboardingCompleted,
 });
@@ -136,11 +145,6 @@ export const createNewProjectFinish = () => ({
   type: CREATE_NEW_PROJECT_FINISH,
 });
 
-export const changeProjectHomePath = (homePath: string) => ({
-  type: CHANGE_PROJECT_HOME_PATH,
-  homePath,
-});
-
 export const dismissSidebarIntro = () => ({
   type: DISMISS_SIDEBAR_INTRO,
 });
@@ -167,9 +171,14 @@ export const attachTaskMetadata = (
   port,
 });
 
-export const abortTask = (task: Task, timestamp: Date) => ({
+export const abortTask = (
+  task: Task,
+  projectType: ProjectType,
+  timestamp: Date
+) => ({
   type: ABORT_TASK,
   task,
+  projectType,
   timestamp,
 });
 
@@ -355,6 +364,21 @@ export const hideModal = () => ({
   type: HIDE_MODAL,
 });
 
+// app settings
+export const showAppSettings = () => ({
+  type: SHOW_APP_SETTINGS,
+});
+
+export const saveAppSettingsStart = (settings: AppSettings) => ({
+  type: SAVE_APP_SETTINGS_START,
+  settings,
+});
+
+export const changeDefaultProjectPath = (defaultProjectPath: string) => ({
+  type: CHANGE_DEFAULT_PROJECT_PATH,
+  defaultProjectPath,
+});
+
 // project settings related actions
 export const saveProjectSettingsStart = (
   name: string,
@@ -383,6 +407,10 @@ export const startDeletingProject = () => ({
 export const finishDeletingProject = (projectId: string) => ({
   type: FINISH_DELETING_PROJECT,
   projectId,
+});
+
+export const deleteProjectError = () => ({
+  type: DELETE_PROJECT_ERROR,
 });
 
 export const showResetStatePrompt = () => ({

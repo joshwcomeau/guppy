@@ -1,5 +1,9 @@
 // @flow
-import { START_DELETING_PROJECT, FINISH_DELETING_PROJECT } from '../actions';
+import {
+  START_DELETING_PROJECT,
+  FINISH_DELETING_PROJECT,
+  DELETE_PROJECT_ERROR,
+} from '../actions';
 
 import type { Action } from '../actions/types';
 
@@ -19,6 +23,7 @@ export default (state: State = initialState, action: Action = {}) => {
       };
 
     case FINISH_DELETING_PROJECT:
+    case DELETE_PROJECT_ERROR:
       return {
         blockingActionActive: false,
       };

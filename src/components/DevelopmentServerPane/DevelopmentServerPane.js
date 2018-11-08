@@ -30,7 +30,7 @@ type Props = {
 
 class DevelopmentServerPane extends PureComponent<Props> {
   handleToggle = (isToggled: boolean) => {
-    const { task, launchDevServer, abortTask } = this.props;
+    const { task, launchDevServer, abortTask, project } = this.props;
 
     if (!task) {
       // Should be impossible, since the Toggle control won't render without
@@ -43,7 +43,7 @@ class DevelopmentServerPane extends PureComponent<Props> {
     if (isToggled) {
       launchDevServer(task, timestamp);
     } else {
-      abortTask(task, timestamp);
+      abortTask(task, project.type, timestamp);
     }
   };
 

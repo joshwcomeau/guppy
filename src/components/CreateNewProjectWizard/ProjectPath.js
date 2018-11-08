@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import styled from 'styled-components';
 
-import { changeProjectHomePath } from '../../actions';
-import { getProjectHomePath } from '../../reducers/paths.reducer';
+import { changeDefaultProjectPath } from '../../actions';
+import { getDefaultProjectPath } from '../../reducers/app-settings.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { COLORS } from '../../constants';
 
@@ -18,7 +18,7 @@ import type { Dispatch } from '../../actions/types';
 type Props = {
   projectHome: string,
   projectName: string,
-  changeProjectHomePath: Dispatch<typeof changeProjectHomePath>,
+  changeDefaultProjectPath: Dispatch<typeof changeDefaultProjectPath>,
 };
 
 class ProjectPath extends PureComponent<Props> {
@@ -37,7 +37,7 @@ class ProjectPath extends PureComponent<Props> {
 
         // Only a single path should be selected
         const [firstPath] = paths;
-        this.props.changeProjectHomePath(firstPath);
+        this.props.changeDefaultProjectPath(firstPath);
       }
     );
   };
@@ -88,14 +88,12 @@ const DirectoryButton = styled(TextButton)`
   text-decoration: none;
 `;
 
-const mapStateToProps = state => {
-  return {
-    projectHome: getProjectHomePath(state),
-  };
-};
+const mapStateToProps = state => ({
+  projectHome: getDefaultProjectPath(state),
+});
 
 const mapDispatchToProps = {
-  changeProjectHomePath,
+  changeDefaultProjectPath,
 };
 
 export default connect(

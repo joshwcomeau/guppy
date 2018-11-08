@@ -9,6 +9,8 @@ import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 import { getProjectsArray } from '../../reducers/projects.reducer';
 import { initializePath } from '../../services/platform.service';
 
+import { GUPPY_REPO_URL } from '../../constants';
+
 import type { Project } from '../../types';
 import type { State as Queue, QueueEntry } from '../../reducers/queue.reducer';
 
@@ -31,26 +33,40 @@ class Initialization extends PureComponent<Props, State> {
     wasSuccessfullyInitialized: false,
   };
 
-  async componentDidMount() {
-    const nodeVersion = await getNodeJsVersion();
+  componentDidMount() {
+    initializePath()
+      .then(getNodeJsVersion)
+      .then(nodeVersion => {
+        this.setState({ wasSuccessfullyInitialized: !!nodeVersion });
 
-    if (!nodeVersion) {
-      dialog.showErrorBox(
-        'Node missing',
-        'It looks like Node.js isn\'t installed. Node is required to use Guppy.\nWhen you click "OK", you\'ll be directed to instructions to download and install Node.'
-      );
-      shell.openExternal(
-        'https://github.com/joshwcomeau/guppy/blob/master/README.md#installation'
-      );
-    }
+        logger.logEvent('load-application', {
+          node_version: nodeVersion,
+        });
 
-    initializePath();
-    this.setState({ wasSuccessfullyInitialized: !!nodeVersion });
-    logger.logEvent('load-application', {
-      node_version: nodeVersion,
-    });
+        if (!nodeVersion) {
+          throw new Error('node-not-found');
+        }
 
-    ipcRenderer.on('app-will-close', this.appWillClose);
+        ipcRenderer.on('app-will-close', this.appWillClose);
+      })
+      .catch(e => {
+        switch (e.message) {
+          case 'node-not-found': {
+            dialog.showErrorBox(
+              'Node missing',
+              'It looks like Node.js isn\'t installed. Node is required to use Guppy.\nWhen you click "OK", you\'ll be directed to instructions to download and install Node.'
+            );
+            shell.openExternal(
+              `${GUPPY_REPO_URL}/blob/master/README.md#installation`
+            );
+            break;
+          }
+          default: {
+            // Path initialization can reject if no valid Node version is found.
+            // This isn't really an error, though, so we can swallow it.
+          }
+        }
+      });
   }
 
   appWillClose = () => {

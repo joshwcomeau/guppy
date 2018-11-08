@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import mixpanel from 'mixpanel-browser'; // Mocked
-import { call, takeEvery } from 'redux-saga/effects';
+import { call, takeEvery, select } from 'redux-saga/effects';
 
 import {
   ADD_PROJECT,
@@ -15,6 +15,7 @@ import {
   FINISH_DELETING_PROJECT,
 } from '../actions';
 import logger from '../services/analytics.service';
+import { getPrivacySettings } from '../reducers/app-settings.reducer';
 import {
   createTask,
   createProject,
@@ -47,6 +48,11 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      saga.next({
+        enableUsageTracking: true,
+      });
+
       expect(saga.next().done).toBe(true);
       expect(mixpanel.track.mock.calls).toEqual([]);
     });
@@ -62,8 +68,16 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
-        call(logger.logEvent, 'create-project', { type: 'create-react-app' })
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(
+        call(logger.logEvent, 'create-project', {
+          type: 'create-react-app',
+        })
       );
 
       expect(saga.next().done).toBe(true);
@@ -80,9 +94,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
-        call(logger.logEvent, 'import-project', { type: 'gatsby' })
-      );
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(call(logger.logEvent, 'import-project', { type: 'gatsby' }));
 
       expect(saga.next().done).toBe(true);
     });
@@ -95,9 +112,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
-        call(logger.logEvent, 'select-project', {})
-      );
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(call(logger.logEvent, 'select-project', {}));
 
       expect(saga.next().done).toBe(true);
     });
@@ -111,9 +131,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
-        call(logger.logEvent, 'launch-dev-server', {})
-      );
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(call(logger.logEvent, 'launch-dev-server', {}));
 
       expect(saga.next().done).toBe(true);
     });
@@ -127,9 +150,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
-        call(logger.logEvent, 'run-task', { name: 'build' })
-      );
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(call(logger.logEvent, 'run-task', { name: 'build' }));
 
       expect(saga.next().done).toBe(true);
     });
@@ -142,9 +168,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
-        call(logger.logEvent, 'clear-console', {})
-      );
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(call(logger.logEvent, 'clear-console', {}));
 
       expect(saga.next().done).toBe(true);
     });
@@ -158,7 +187,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(
         call(logger.logEvent, 'add-dependency', { dependencyName: 'redux' })
       );
 
@@ -175,7 +209,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(
         call(logger.logEvent, 'update-dependency', { dependencyName: 'redux' })
       );
 
@@ -191,7 +230,12 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(
         call(logger.logEvent, 'delete-dependency', { dependencyName: 'redux' })
       );
 
@@ -206,9 +250,35 @@ describe('analytics saga', () => {
 
       const saga = handleAction(action);
 
-      expect(saga.next().value).toEqual(
-        call(logger.logEvent, 'delete-project', {})
-      );
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+      expect(
+        saga.next({
+          enableUsageTracking: true,
+        }).value
+      ).toEqual(call(logger.logEvent, 'delete-project', {}));
+
+      expect(saga.next().done).toBe(true);
+    });
+
+    it('should diable tracking', () => {
+      // test with ADD_PROJECT
+      const projectInternal = createProjectInternal();
+
+      const action = {
+        type: ADD_PROJECT,
+        project: projectInternal,
+        projectType: 'create-react-app',
+      };
+
+      const saga = handleAction(action);
+
+      expect(saga.next().value).toEqual(select(getPrivacySettings));
+
+      expect(
+        saga.next({
+          enableUsageTracking: false,
+        }).value
+      ).toEqual(undefined);
 
       expect(saga.next().done).toBe(true);
     });

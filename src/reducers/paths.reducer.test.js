@@ -1,10 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import reducer, { initialState } from './paths.reducer';
+
 import {
   IMPORT_EXISTING_PROJECT_FINISH,
   ADD_PROJECT,
   SAVE_PROJECT_SETTINGS_FINISH,
-  CHANGE_PROJECT_HOME_PATH,
   FINISH_DELETING_PROJECT,
   RESET_ALL_STATE,
 } from '../actions';
@@ -13,11 +13,10 @@ import {
 // To avoid dealing with all that, we'll just supply an initial state in
 // all tests
 const platformSafeInitialState = {
-  homePath: 'path/to/projects',
   byId: {},
 };
 
-describe('Tasks reducer', () => {
+describe('Paths reducer', () => {
   it('should return initial state', () => {
     expect(reducer()).toEqual(initialState);
   });
@@ -35,6 +34,7 @@ describe('Tasks reducer', () => {
             start: 'react-scripts start',
           },
         },
+        projectHomePath: 'path/to/projects/',
       };
 
       expect(reducer(prevState, action)).toMatchInlineSnapshot(`
@@ -42,7 +42,6 @@ Object {
   "byId": Object {
     "fds8fd7s97f": "path/to/projects/hello-world",
   },
-  "homePath": "path/to/projects",
 }
 `);
     });
@@ -69,7 +68,6 @@ Object {
   "byId": Object {
     "abc123456789": "Users/john_doe/work",
   },
-  "homePath": "path/to/projects",
 }
 `);
     });
@@ -101,32 +99,6 @@ Object {
   "byId": Object {
     "xyz789": "Users/john_doe/work",
   },
-  "homePath": "path/to/projects",
-}
-`);
-    });
-  });
-
-  describe(CHANGE_PROJECT_HOME_PATH, () => {
-    it('updates the `homePath` field', () => {
-      const prevState = {
-        byId: {
-          abcxyz: 'this/is/home',
-        },
-        homePath: 'this/is/home',
-      };
-
-      const action = {
-        type: CHANGE_PROJECT_HOME_PATH,
-        homePath: 'Users/john_doe/work',
-      };
-
-      expect(reducer(prevState, action)).toMatchInlineSnapshot(`
-Object {
-  "byId": Object {
-    "abcxyz": "this/is/home",
-  },
-  "homePath": "Users/john_doe/work",
 }
 `);
     });
@@ -152,7 +124,6 @@ Object {
   "byId": Object {
     "abcxyz": "this/is/home",
   },
-  "homePath": "path/to/projects",
 }
 `);
     });
