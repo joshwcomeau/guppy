@@ -136,22 +136,14 @@ class Sidebar extends PureComponent<Props, State> {
         {({ sidebarOffsetPercentage, firstProjectPosition }) => (
           <Fragment>
             <Wrapper offset={`${sidebarOffsetPercentage}%`}>
+              <IntroductionBlurb
+                isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
+              />
               <DragDropContext onDragEnd={this.onDragEnd}>
-                <ScrollbarOnlyVertical
-                  autoHide
-                  renderTrackHorizontal={props => (
-                    <div {...props} style={{ display: 'none' }} />
-                  )}
-                >
+                <Scrollbars autoHide>
                   <Droppable droppableId="droppable">
                     {provided => (
                       <div ref={provided.innerRef}>
-                        <IntroductionBlurb
-                          isVisible={
-                            !finishedOnboarding && introSequenceStepIndex >= 1
-                          }
-                        />
-
                         <Projects offset={`${firstProjectPosition}px`}>
                           {projects.map((project, index) => (
                             <Draggable
@@ -208,7 +200,7 @@ class Sidebar extends PureComponent<Props, State> {
                       </div>
                     )}
                   </Droppable>
-                </ScrollbarOnlyVertical>
+                </Scrollbars>
               </DragDropContext>
             </Wrapper>
             {isVisible && <SidebarSpacer />}
@@ -245,12 +237,6 @@ const SidebarSpacer = styled.div`
   position: relative;
   height: 100vh;
   width: ${SIDEBAR_WIDTH}px;
-`;
-
-const ScrollbarOnlyVertical = styled(Scrollbars)`
-  > div:first-child {
-    overflow-x: hidden !important;
-  }
 `;
 
 const Projects = styled.div.attrs({
