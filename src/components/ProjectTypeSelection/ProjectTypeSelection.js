@@ -1,3 +1,4 @@
+// @flow
 import React, { Fragment, PureComponent } from 'react';
 import styled from 'styled-components';
 
@@ -8,11 +9,10 @@ import nextjsIconSrc from '../../assets/images/nextjs_small.png';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 
-import { ProjectType } from '../../types';
+import type { ProjectType } from '../../types';
 type Props = {
-  activeField: string,
-  projectType: string,
-  onProjectTypeSelect: string => void,
+  projectType: ?ProjectType,
+  onProjectTypeSelect: (projectType: ProjectType) => void,
 };
 
 class ProjectTypeSelection extends PureComponent<Props> {

@@ -1,6 +1,5 @@
 // @flow
 import { call, put, takeEvery } from 'redux-saga/effects';
-import type { Saga } from 'redux-saga';
 import slug from 'slug';
 import {
   loadPackageJson,
@@ -14,7 +13,11 @@ import { remote } from 'electron';
 import {
   saveProjectSettingsFinish,
   SAVE_PROJECT_SETTINGS_START,
+  saveProjectSettingsStart,
 } from '../actions';
+
+import type { Saga } from 'redux-saga';
+import type { ReturnType } from '../actions/types';
 
 const { dialog } = remote;
 const { showErrorBox } = dialog;
@@ -60,7 +63,9 @@ export function* handleProjectSaveError(err: Error): Saga<void> {
   }
 }
 
-export function* handleSaveSettings(action: any): Saga<void> {
+export function* handleSaveSettings(
+  action: ReturnType<typeof saveProjectSettingsStart>
+): Saga<void> {
   const { project, name, icon } = action;
   const { path: projectPath, name: oldName } = project;
   const newNameSlug = slug(name).toLowerCase();

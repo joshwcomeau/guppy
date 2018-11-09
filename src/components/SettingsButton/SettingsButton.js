@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Spring, animated, interpolate } from 'react-spring';
@@ -8,6 +9,8 @@ import { COLORS } from '../../constants';
 
 import * as actions from '../../actions';
 
+import type { Dispatch } from '../../actions/types';
+
 type Props = {
   size: number,
   color: ?string,
@@ -15,13 +18,11 @@ type Props = {
   // Currently, only a 'project-configuration' modal exists, but we may
   // support an 'app' modal in the future
   settingsFor: 'project',
-  showProjectSettings: () => void,
+  showProjectSettings: Dispatch<typeof actions.showProjectSettings>,
+  action: () => void,
 };
 
 type State = {
-  rotations: number,
-  scale: number,
-  color: number,
   hovered: boolean,
 };
 

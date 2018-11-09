@@ -1,1 +1,2 @@
-export { default } from "./CircularOutline";
+// @flow
+export { default } from './CircularOutline';

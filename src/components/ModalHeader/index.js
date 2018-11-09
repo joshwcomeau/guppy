@@ -1,1 +1,2 @@
-export { default } from "./ModalHeader";
+// @flow
+export { default } from './ModalHeader';

@@ -18,13 +18,14 @@ import ProjectIconSelection from '../ProjectIconSelection';
 import TextInput from '../TextInput';
 
 import type { Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project | null,
   isVisible: boolean,
   dependenciesChangingForProject: boolean,
-  hideModal: () => void,
-  saveProjectSettings: (string, string, Project) => void,
+  hideModal: Dispatch<typeof actions.hideModal>,
+  saveProjectSettings: Dispatch<typeof actions.saveProjectSettingsStart>,
 };
 
 type State = {

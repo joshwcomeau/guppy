@@ -1,3 +1,4 @@
+// @flow
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { ipcRenderer, remote } from 'electron';
@@ -10,10 +11,17 @@ import { initializePath } from '../../services/platform.service';
 
 import { GUPPY_REPO_URL } from '../../constants';
 
+import type { Project } from '../../types';
+import type { State as Queue, QueueEntry } from '../../reducers/queue.reducer';
+
 const { dialog, shell } = remote;
 
 type Props = {
   isAppLoaded: boolean,
+  isQueueEmpty: boolean,
+  queue: Queue,
+  projects: Array<Project>,
+  children: (wasSuccessfullyInitialized: boolean) => React$Node,
 };
 
 type State = {
@@ -64,10 +72,17 @@ class Initialization extends PureComponent<Props, State> {
   appWillClose = () => {
     const { isQueueEmpty, queue, projects } = this.props;
 
-    const activeActions = Object.keys(queue).map(projectId => ({
-      name: projects.find(project => project.id === projectId).name,
-      pending: queue[projectId],
-    }));
+    const activeActions = Object.keys(queue).reduce((prev, projectId) => {
+      const project = projects.find(p => p.id === projectId);
+      if (!project) {
+        return prev;
+      }
+      prev.push({
+        name: project.name,
+        pending: queue[projectId],
+      });
+      return prev;
+    }, []);
 
     if (!isQueueEmpty) {
       // warn user
@@ -104,7 +119,7 @@ export const actionCaption = {
   uninstall: 'Uninstalling',
 };
 
-export const mapTasksPerProjectToString = task => {
+export const mapTasksPerProjectToString = (task: QueueEntry) => {
   const pluralizedTask = task.dependencies.length > 1 ? 'tasks' : 'task';
   const actionName = task.active
     ? actionCaption[task.action] || task.action
@@ -115,7 +130,9 @@ export const mapTasksPerProjectToString = task => {
 // Map actions to the following string format (multiple projects & multiple queued tasks). For each project it will be a string like:
 // Task in project <project.name>:\n
 // - <Installing or Queued> <count> task(s)\n
-export const mapActionsToString = (activeActions: Array<any>) =>
+export const mapActionsToString = (
+  activeActions: Array<{ name: string, pending: Array<QueueEntry> }>
+) =>
   activeActions
     .map(actionItem =>
       [

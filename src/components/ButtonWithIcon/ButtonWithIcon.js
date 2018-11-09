@@ -1,9 +1,16 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 
 import { StrokeButton } from '../Button';
 
-const ButtonWithIcon = ({ icon, children, ...delegated }) => (
+import type { StrokeButtonProps } from '../Button';
+
+type Props = StrokeButtonProps & {
+  icon: React$Node,
+};
+
+const ButtonWithIcon = ({ icon, children, ...delegated }: Props) => (
   // TODO: Support other sizes
   <StrokeButton noPadding {...delegated}>
     <InnerWrapper>

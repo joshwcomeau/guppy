@@ -1,1 +1,2 @@
-export { default } from "./Logo";
+// @flow
+export { default } from './Logo';

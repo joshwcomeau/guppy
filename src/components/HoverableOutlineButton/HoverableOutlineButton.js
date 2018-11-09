@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { StrokeButton } from '../Button';
 
 type Props = {
-  handleMouseEnter: () => void,
-  handleMouseLeave: () => void,
+  handleMouseEnter?: () => void,
+  handleMouseLeave?: () => void,
   children: React$Node,
 };
 

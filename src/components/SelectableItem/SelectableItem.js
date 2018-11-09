@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import CircularOutline from '../CircularOutline';
 import DetectActive from '../DetectActive';
 
-type Status = 'default' | 'highlighted' | 'faded';
+export type Status = 'default' | 'highlighted' | 'faded';
 
-type Props = {
+export type Props = {
   size: number,
   colors: Array<string>,
   status: Status,

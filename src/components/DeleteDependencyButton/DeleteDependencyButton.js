@@ -10,6 +10,8 @@ import { FillButton } from '../Button';
 import Spinner from '../Spinner';
 import PixelShifter from '../PixelShifter';
 
+import type { Dispatch } from '../../actions/types';
+
 const { dialog } = remote;
 
 const DEPENDENCY_DELETE_COPY = {
@@ -22,7 +24,7 @@ type Props = {
   dependencyName: string,
   dependencyStatus: string,
   // From redux:
-  deleteDependency: (projectId: string, dependencyName: string) => any,
+  deleteDependency: Dispatch<typeof actions.deleteDependency>,
 };
 
 // TODO: Wouldn't it be neat if it parsed your project to see if it was being

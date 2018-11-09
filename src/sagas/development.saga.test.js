@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { SHOW_RESET_STATE_PROMPT, resetAllState } from '../actions';

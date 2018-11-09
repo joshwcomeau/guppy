@@ -13,7 +13,10 @@ import {
   completeTask,
   attachTaskMetadata,
   receiveDataFromTaskExecution,
-  loadDependencyInfoFromDisk,
+  loadDependencyInfoFromDiskStart,
+  launchDevServer,
+  runTask,
+  abortTask,
 } from '../actions';
 import projectConfigs from '../config/project-types';
 import { getProjectById } from '../reducers/projects.reducer';
@@ -28,9 +31,11 @@ import {
 } from '../services/platform.service';
 import { processLogger } from '../services/process-logger.service';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
+import type { ChildProcess } from 'child_process';
 import type { Task, ProjectType } from '../types';
+import type { ReturnType } from '../actions/types';
+
 const { dialog } = remote;
 
 // Mapping type for config template variables '$port'
@@ -40,7 +45,9 @@ export type VariableMap = {
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
-export function* launchDevServer({ task }: Action): Saga<void> {
+export function* handleLaunchDevServer({
+  task,
+}: ReturnType<typeof launchDevServer>): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, {
     projectId: task.projectId,
@@ -146,7 +153,7 @@ export function* launchDevServer({ task }: Action): Saga<void> {
 }
 
 export function waitForChildProcessToComplete(
-  installProcess: any
+  installProcess: ChildProcess
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     installProcess.on('exit', (code: number) => {
@@ -159,7 +166,7 @@ export function waitForChildProcessToComplete(
   });
 }
 
-export function* taskRun({ task }: Action): Saga<void> {
+export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, {
     projectId: task.projectId,
@@ -294,7 +301,9 @@ export function* taskRun({ task }: Action): Saga<void> {
           // otherwise the next tasks (UI related) run too early before `yarn install`
           // is finished
           yield call(waitForChildProcessToComplete, installProcess);
-          yield put(loadDependencyInfoFromDisk(project.id, project.path));
+          yield put(
+            loadDependencyInfoFromDiskStart(task.projectId, projectPath)
+          );
         }
 
         yield call(displayTaskComplete, task, message.wasSuccessful);
@@ -307,7 +316,10 @@ export function* taskRun({ task }: Action): Saga<void> {
   }
 }
 
-export function* taskAbort({ task, projectType }: Action): Saga<void> {
+export function* taskAbort({
+  task,
+  projectType,
+}: ReturnType<typeof abortTask>): Saga<void> {
   const { processId, name } = task;
 
   yield call(killProcessId, processId);
@@ -340,7 +352,9 @@ export function* displayTaskComplete(
   yield put(receiveDataFromTaskExecution(task, message));
 }
 
-export function* taskComplete({ task }: Action): Saga<void> {
+export function* taskComplete({
+  task,
+}: ReturnType<typeof completeTask>): Saga<void> {
   if (task.processId) {
     yield call(
       [ipcRenderer, ipcRenderer.send],
@@ -356,12 +370,12 @@ export function* taskComplete({ task }: Action): Saga<void> {
   if (task.name === 'eject') {
     const project = yield select(getProjectById, { projectId: task.projectId });
 
-    yield put(loadDependencyInfoFromDisk(project.id, project.path));
+    yield put(loadDependencyInfoFromDiskStart(project.id, project.path));
   }
 }
 
 const createStdioChannel = (
-  child: any,
+  child: ChildProcess,
   handlers: {
     stdout: (emitter: any) => (data: string) => void,
     stderr: (emitter: any) => (data: string) => void,
@@ -456,14 +470,14 @@ export const stripUnusableControlCharacters = (text: string) =>
   // up in the output as "G".
   text.replace(/\[1G/g, '');
 
-export const sendCommandToProcess = (child: any, command: string) => {
+export const sendCommandToProcess = (child: ChildProcess, command: string) => {
   // Commands have to be suffixed with '\n' to signal that the command is
   // ready to be sent. Same as a regular command + hitting the enter key.
   child.stdin.write(`${command}\n`);
 };
 
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(LAUNCH_DEV_SERVER, launchDevServer);
+  yield takeEvery(LAUNCH_DEV_SERVER, handleLaunchDevServer);
   // these saga handlers are named in reverse order (RUN_TASK => taskRun, etc.)
   // to avoid naming conflicts with their related actions (completeTask is
   // already an action creator).

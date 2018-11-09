@@ -57,7 +57,7 @@ class FadeOnChange extends PureComponent<Props, State> {
   }
 
   setStatePromise = (newState: State) =>
-    new Promise(resolve => this.setState(newState, resolve));
+    new Promise<void>(resolve => this.setState(newState, resolve));
 
   render() {
     const { duration } = this.props;

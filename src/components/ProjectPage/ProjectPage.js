@@ -24,10 +24,13 @@ import {
 import { getCopyForOpeningFolder } from '../../services/platform.service';
 
 import type { Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
-  loadDependencyInfoFromDisk: (projectId: string, projectPath: string) => any,
+  loadDependencyInfoFromDisk: Dispatch<
+    typeof actions.loadDependencyInfoFromDiskStart
+  >,
 };
 
 class ProjectPage extends PureComponent<Props> {
@@ -152,6 +155,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDisk,
+    loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDiskStart,
   }
 )(ProjectPage);
