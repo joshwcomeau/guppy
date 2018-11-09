@@ -97,7 +97,7 @@ const ChildWrapper = styled.div`
 `;
 
 const Checkmark = styled(IconBase)`
-  color: ${COLORS.green[500]};
+  color: ${COLORS.lightSuccess};
 `;
 
 const MainCopy = styled.div`

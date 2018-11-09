@@ -10,7 +10,7 @@ import React, { PureComponent } from 'react';
 import { Spring, animated, config } from 'react-spring';
 import styled from 'styled-components';
 
-import { COLORS, Z_INDICES } from '../../constants';
+import { RAW_COLORS, COLORS, Z_INDICES } from '../../constants';
 
 type Props = {
   leftPane: React$Node,
@@ -210,13 +210,13 @@ const LeftHalf = styled.div.attrs({
 
 const LeftPaneWrapper = styled.div`
   height: 100%;
-  color: ${COLORS.white};
+  color: ${COLORS.textOnBackground};
   background-image: linear-gradient(
     70deg,
-    ${COLORS.blue[700]},
-    ${COLORS.teal[500]}
+    ${RAW_COLORS.blue[700]},
+    ${RAW_COLORS.teal[500]}
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  border: 4px solid ${COLORS.white};
+  border: 4px solid ${COLORS.textOnBackground};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px 0 0 8px;
 `;
@@ -225,7 +225,7 @@ const RightPaneWrapper = styled.div`
   position: relative;
   z-index: 1;
   flex: 1;
-  background: ${COLORS.white};
+  background: ${COLORS.lightBackground};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 0 8px 8px 0;
 `;

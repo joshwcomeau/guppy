@@ -13,7 +13,7 @@ class Wrapper extends Component<Props> {
     const { children } = this.props;
     return (
       <OuterWrapper>
-        <InnerWrapper>{children}</InnerWrapper>
+        <InnerWrapper> {children} </InnerWrapper>{' '}
       </OuterWrapper>
     );
   }
@@ -27,7 +27,7 @@ const OuterWrapper = styled.div`
   bottom: 0;
 `;
 const InnerWrapper = styled.div`
-  background: ${COLORS.white};
+  background: ${COLORS.lightBackground};
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   margin: 2rem;
   padding: 1.5rem;

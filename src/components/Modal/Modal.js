@@ -175,7 +175,7 @@ const PaneWrapper = animated(styled.div.attrs({
   max-height: 95%;
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.2), 0px 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  background: ${COLORS.white};
+  background: ${COLORS.lightBackground};
   will-change: transform;
 `);
 

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Spring, animated } from 'react-spring';
 
-import { COLORS } from '../../constants';
+import { GRADIENTS } from '../../constants';
 
 // TODO: consider renaming stiffness and damping to tension and friction
 type Props = {
@@ -20,7 +20,7 @@ class ProgressBar extends Component<Props> {
     height: 8,
     stiffness: 32,
     damping: 32,
-    colors: [COLORS.blue[700], COLORS.teal[500], COLORS.lightGreen[500]],
+    colors: GRADIENTS.progress,
     reset: false,
   };
 

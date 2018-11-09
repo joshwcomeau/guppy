@@ -7,7 +7,7 @@ import { plus } from 'react-icons-kit/feather/plus';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getOnlineState } from '../../reducers/app-status.reducer';
-import { COLORS, GUPPY_REPO_URL } from '../../constants';
+import { RAW_COLORS, COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
 import AddDependencyModal from './AddDependencyModal';
@@ -117,7 +117,10 @@ export class DependencyManagementPane extends PureComponent<Props, State> {
       dependency.status.match(/^queued-/)
     ) {
       return (
-        <Spinner size={20} color={isSelected ? COLORS.white : undefined} />
+        <Spinner
+          size={20}
+          color={isSelected ? COLORS.textOnBackground : undefined}
+        />
       );
     }
 
@@ -262,9 +265,11 @@ export const DependencyButton = styled.button`
   border: none;
   background: ${props =>
     props.isSelected
-      ? `linear-gradient(10deg, ${COLORS.blue[700]}, ${COLORS.blue[500]})`
-      : COLORS.gray[100]};
-  color: ${props => (props.isSelected ? COLORS.white : COLORS.gray[900])};
+      ? `linear-gradient(10deg, ${RAW_COLORS.blue[700]}, ${
+          RAW_COLORS.blue[500]
+        })`
+      : RAW_COLORS.gray[100]};
+  color: ${props => (props.isSelected ? COLORS.textOnBackground : COLORS.text)};
   border-radius: 4px;
   border-bottom: ${props =>
     props.isSelected
@@ -276,8 +281,10 @@ export const DependencyButton = styled.button`
     outline: none;
     background: ${props =>
       props.isSelected
-        ? `linear-gradient(10deg, ${COLORS.blue[700]}, ${COLORS.blue[500]})`
-        : COLORS.gray[200]};
+        ? `linear-gradient(10deg, ${RAW_COLORS.blue[700]}, ${
+            RAW_COLORS.blue[500]
+          })`
+        : RAW_COLORS.gray[200]};
   }
 
   &:active,
@@ -285,8 +292,10 @@ export const DependencyButton = styled.button`
     outline: none;
     background: ${props =>
       props.isSelected
-        ? `linear-gradient(10deg, ${COLORS.blue[700]}, ${COLORS.blue[500]})`
-        : COLORS.gray[300]};
+        ? `linear-gradient(10deg, ${RAW_COLORS.blue[700]}, ${
+            RAW_COLORS.blue[500]
+          })`
+        : RAW_COLORS.gray[300]};
   }
 
   &:first-of-type {
@@ -303,9 +312,9 @@ export const AddDependencyButton = styled.button`
   height: 42px;
   padding: 8px 10px;
   margin-top: 10px;
-  border: 2px dashed ${COLORS.gray[300]};
+  border: 2px dashed ${RAW_COLORS.gray[300]};
   border-radius: 6px;
-  color: ${COLORS.gray[500]};
+  color: ${RAW_COLORS.gray[500]};
   background: none;
   display: flex;
   justify-content: center;
@@ -317,8 +326,8 @@ export const AddDependencyButton = styled.button`
   opacity: ${props => (props.isOnline ? 1 : 0.5)};
   pointer-events: ${props => (props.isOnline ? 'auto' : 'none')};
   &:hover {
-    border: 2px dashed ${COLORS.gray[400]};
-    color: ${COLORS.gray[600]};
+    border: 2px dashed ${RAW_COLORS.gray[400]};
+    color: ${COLORS.text};
   }
 `;
 
@@ -336,8 +345,8 @@ const DependencyVersion = styled.span`
   font-size: 16px;
   color: ${props =>
     props.isSelected
-      ? COLORS.transparentWhite[400]
-      : COLORS.transparentBlack[400]}};
+      ? RAW_COLORS.transparentWhite[400]
+      : RAW_COLORS.transparentBlack[400]}};
 `;
 
 export const MainContent = Card.extend`

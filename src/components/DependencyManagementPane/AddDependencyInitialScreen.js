@@ -35,7 +35,7 @@ class AddDependencyInitialScreen extends Component<Props> {
 
 export const InstructionsParagraph = Paragraph.extend`
   font-size: 1.4rem;
-  color: ${COLORS.gray[600]};
+  color: ${COLORS.lightText};
 `;
 
 const EmptyState = styled.div`
@@ -60,7 +60,7 @@ const LinkText = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: ${COLORS.gray[600]};
+  color: ${COLORS.lightText};
 `;
 
 export default AddDependencyInitialScreen;
