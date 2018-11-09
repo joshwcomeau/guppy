@@ -5,7 +5,7 @@ import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
 import { chevronRight } from 'react-icons-kit/feather/chevronRight';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, GRADIENTS } from '../../constants';
 
 import { FillButton } from '../Button';
 import Spinner from '../Spinner';
@@ -33,10 +33,11 @@ const SubmitButton = ({
     <FillButton
       disabled={isDisabled || hasBeenSubmitted}
       size="large"
-      colors={[
-        readyToBeSubmitted ? COLORS.green[700] : COLORS.blue[700],
-        readyToBeSubmitted ? COLORS.lightGreen[500] : COLORS.blue[500],
-      ]}
+      colors={
+        readyToBeSubmitted
+          ? GRADIENTS.success
+          : [RAW_COLORS.blue[700], RAW_COLORS.blue[500]]
+      }
       style={{ width: 200 }}
       onClick={onSubmit}
     >

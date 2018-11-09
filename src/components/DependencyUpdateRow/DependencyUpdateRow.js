@@ -6,7 +6,7 @@ import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
 
 import * as actions from '../../actions';
-import { COLORS } from '../../constants';
+import { COLORS, GRADIENTS } from '../../constants';
 
 import { FillButton } from '../Button';
 import Label from '../Label';
@@ -49,20 +49,28 @@ class DependencyUpdateRow extends Component<Props> {
 
     return isUpToDate ? (
       <UpToDate>
-        <IconBase icon={check} size={24} style={{ color: COLORS.green[500] }} />
+        <IconBase
+          icon={check}
+          size={24}
+          style={{ color: COLORS.lightSuccess }}
+        />
         <Spacer size={6} />
         Up-to-date
       </UpToDate>
     ) : (
       <FillButton
         size="small"
-        colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+        colors={GRADIENTS.success}
         style={{ width: 80 }}
         onClick={() =>
           updateDependency(projectId, dependency.name, latestVersion)
         }
       >
-        {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}
+        {isUpdating ? (
+          <Spinner size={16} color={COLORS.textOnBackground} />
+        ) : (
+          'Update'
+        )}
       </FillButton>
     );
   }
@@ -100,7 +108,7 @@ const Col = styled.div`
 `;
 
 const VersionLabel = styled(Label)`
-  color: ${COLORS.gray[600]};
+  color: ${COLORS.lightText};
 `;
 
 const VersionNum = styled.div`
@@ -116,7 +124,7 @@ const UpToDate = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 15px;
-  color: ${COLORS.green[700]};
+  color: ${COLORS.success};
   font-weight: 500;
 `;
 

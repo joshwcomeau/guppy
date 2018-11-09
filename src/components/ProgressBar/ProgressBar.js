@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Motion, spring } from 'react-motion';
 
-import { COLORS } from '../../constants';
+import { GRADIENTS } from '../../constants';
 
 type Props = {
   height: number,
@@ -18,7 +18,7 @@ class ProgressBar extends Component<Props> {
     height: 8,
     stiffness: 32,
     damping: 32,
-    colors: [COLORS.blue[700], COLORS.teal[500], COLORS.lightGreen[500]],
+    colors: GRADIENTS.progress,
   };
 
   render() {

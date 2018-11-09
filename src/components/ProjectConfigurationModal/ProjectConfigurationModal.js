@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import * as actions from '../../actions';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, GRADIENTS } from '../../constants';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
@@ -132,7 +132,7 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
             <Actions>
               <FillButton
                 size="large"
-                colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+                colors={GRADIENTS.success}
                 disabled={dependenciesChangingForProject}
               >
                 Save Project
@@ -162,7 +162,7 @@ const Actions = styled.div`
 
 const DisabledText = styled.div`
   padding-top: 16px;
-  color: ${COLORS.gray[500]};
+  color: ${RAW_COLORS.gray[500]};
 `;
 
 const mapStateToProps = state => {

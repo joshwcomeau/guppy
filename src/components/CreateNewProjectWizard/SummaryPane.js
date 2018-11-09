@@ -95,8 +95,8 @@ class SummaryPane extends PureComponent<Props> {
                 </Paragraph>
                 <Paragraph>
                   <ExternalLink
-                    color={COLORS.white}
-                    hoverColor={COLORS.white}
+                    color={COLORS.textOnBackground}
+                    hoverColor={COLORS.textOnBackground}
                     href="https://github.com/facebook/create-react-app"
                   >
                     <strong>Learn more about create-react-app.</strong>
@@ -122,8 +122,8 @@ class SummaryPane extends PureComponent<Props> {
                 </Paragraph>
                 <Paragraph>
                   <ExternalLink
-                    color={COLORS.white}
-                    hoverColor={COLORS.white}
+                    color={COLORS.textOnBackground}
+                    hoverColor={COLORS.textOnBackground}
                     href="https://www.gatsbyjs.org/"
                   >
                     <strong>Learn more about Gatsby.</strong>
@@ -150,8 +150,8 @@ class SummaryPane extends PureComponent<Props> {
                 </Paragraph>
                 <Paragraph>
                   <ExternalLink
-                    color={COLORS.white}
-                    hoverColor={COLORS.white}
+                    color={COLORS.textOnBackground}
+                    hoverColor={COLORS.textOnBackground}
                     href="https://nextjs.org/learn/"
                   >
                     <strong>Learn more about Next.js.</strong>

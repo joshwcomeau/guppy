@@ -4,7 +4,7 @@ import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 import Color from 'color';
 
-import { COLORS } from '../../constants';
+import { COLORS, GRADIENTS } from '../../constants';
 
 type Props = {
   width: number,
@@ -25,7 +25,7 @@ class BigClickableButton extends Component<Props, State> {
     width: 64,
     height: 64,
     thickness: 6,
-    colors: ['#2142ff', COLORS.blue[500]],
+    colors: GRADIENTS.darkPrimary,
   };
 
   state = {
@@ -147,7 +147,7 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  color: ${COLORS.white};
+  color: ${COLORS.textOnBackground};
   font-size: 18px;
 
   border: none;

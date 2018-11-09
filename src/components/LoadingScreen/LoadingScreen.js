@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { getBlockingStatus } from '../../reducers/app-status.reducer';
 
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
-import { COLORS, Z_INDICES } from '../../constants';
+import { RAW_COLORS, Z_INDICES } from '../../constants';
 
 type Props = {
   showLoadingScreen: boolean,
@@ -25,7 +25,7 @@ class LoadingScreen extends PureComponent<Props> {
 
 const Window = styled.div`
   align-items: center;
-  background: ${COLORS.transparentWhite[300]};
+  background: ${RAW_COLORS.transparentWhite[300]};
   display: ${props => (props.isVisible ? 'flex' : 'none')};
   height: 100vh;
   justify-content: center;

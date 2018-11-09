@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { COLORS, GRADIENTS } from '../../constants';
 
 import DetectActive from '../DetectActive';
 import ButtonBase from './ButtonBase';
@@ -16,8 +16,8 @@ export type Props = {
 
 class StrokeButton extends Component<Props> {
   static defaultProps = {
-    fillColor: COLORS.white,
-    strokeColors: [COLORS.purple[500], COLORS.violet[500]],
+    fillColor: COLORS.lightBackground,
+    strokeColors: GRADIENTS.primary,
     showStroke: true,
   };
 

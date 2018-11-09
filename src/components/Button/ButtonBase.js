@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 type Size = 'xsmall' | 'small' | 'medium' | 'large';
 
@@ -20,8 +20,8 @@ type Props = {
 class ButtonBase extends Component<Props> {
   static defaultProps = {
     size: 'medium',
-    background: COLORS.gray[200],
-    textColor: COLORS.gray[900],
+    background: RAW_COLORS.gray[200],
+    textColor: COLORS.text,
   };
 
   getButtonElem = (size: Size) => {

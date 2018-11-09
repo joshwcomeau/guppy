@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import { COLORS, Z_INDICES } from '../../constants';
+import { RAW_COLORS, Z_INDICES } from '../../constants';
 import * as actions from '../../actions';
 import {
   getProjectsArray,
@@ -134,7 +134,7 @@ class Sidebar extends PureComponent<Props, State> {
                     {...props}
                     style={{
                       ...style,
-                      background: COLORS.transparentWhite[700],
+                      background: RAW_COLORS.transparentWhite[700],
                       borderRadius: '6px',
                     }}
                     className="thumb-vertical"
@@ -204,8 +204,8 @@ const Wrapper = styled.nav.attrs({
   padding-left: ${SIDEBAR_OVERFLOW}px;
   background-image: linear-gradient(
     85deg,
-    ${COLORS.blue[900]},
-    ${COLORS.blue[700]}
+    ${RAW_COLORS.blue[900]},
+    ${RAW_COLORS.blue[700]}
   );
   transform: translateX(${props => props.offset});
   will-change: transform;

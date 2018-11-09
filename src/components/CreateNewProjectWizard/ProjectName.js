@@ -220,7 +220,7 @@ class ProjectName extends PureComponent<Props, State> {
 
 const ErrorMessage = styled.div`
   margin-top: 6px;
-  color: ${COLORS.pink[700]};
+  color: ${COLORS.error};
 `;
 
 const ButtonPositionAdjuster = styled.div`

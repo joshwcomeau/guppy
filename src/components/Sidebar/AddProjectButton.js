@@ -15,7 +15,11 @@ type Props = {
 const AddProjectButton = ({ size, isVisible, onClick }: Props) => (
   <Button size={size} isVisible={isVisible} onClick={onClick}>
     <IconWrapper>
-      <IconBase size={30} icon={plus} style={{ color: COLORS.white }} />
+      <IconBase
+        size={30}
+        icon={plus}
+        style={{ color: COLORS.textOnBackground }}
+      />
     </IconWrapper>
     <Background />
   </Button>
@@ -38,7 +42,7 @@ const Background = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${COLORS.white};
+  background: ${COLORS.lightBackground};
   opacity: 0.1;
   transition: opacity 300ms;
   border-radius: 100%;
