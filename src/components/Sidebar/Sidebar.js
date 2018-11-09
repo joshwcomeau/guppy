@@ -141,68 +141,74 @@ export class Sidebar extends PureComponent<Props, State> {
       >
         {interpolated => (
           <Fragment>
-            <Wrapper offset={`${interpolated.sidebarOffsetPercentage}%`}>
-              <ScrollbarOnlyVertical
-                autoHide
-                renderThumbVertical={({ style, ...props }) => (
-                  // Info: Styled-components not working here yet
-                  //       --> PR 286 @ react-custom-scrollbars will fix this
-                  <div
-                    {...props}
-                    style={{
-                      ...style,
-                      background: COLORS.transparentWhite[700],
-                      borderRadius: '6px',
-                    }}
-                    className="thumb-vertical"
-                  />
-                )}
-                renderTrackHorizontal={props => (
-                  <div
-                    {...props}
-                    style={{
-                      display: 'none',
-                    }}
-                  />
-                )}
-              >
-                <IntroductionBlurb
-                  isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
-                />
-                <Projects offset={`${interpolated.firstProjectPosition}px`}>
-                  {projects.map(project => (
-                    <Fragment key={project.id}>
-                      <Tooltip
-                        title={project.name}
-                        position="right"
-                        transitionFlip={false}
-                      >
-                        <SidebarProjectIcon
-                          size={SIDEBAR_ICON_SIZE}
-                          id={project.id}
-                          name={project.name}
-                          color={project.color}
-                          iconSrc={project.icon}
-                          isSelected={
-                            finishedOnboarding &&
-                            project.id === selectedProjectId
-                          }
-                          handleSelect={() => selectProject(project.id)}
-                        />
-                      </Tooltip>
-                      <Spacer size={18} />
-                    </Fragment>
-                  ))}
-                  <AddProjectButton
-                    size={SIDEBAR_ICON_SIZE}
-                    onClick={createNewProjectStart}
-                    isVisible={
-                      finishedOnboarding || introSequenceStepIndex >= 2
-                    }
-                    isOnline={isOnline}
-                  />
-                </Projects>
-              </ScrollbarOnlyVertical>
+            <Wrapper offset={`${sidebarOffsetPercentage}%`}>
+              <IntroductionBlurb
+                isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
+              />
+              <DragDropContext onDragEnd={this.onDragEnd}>
+                <Scrollbars autoHide>
+                  <Droppable droppableId="droppable">
+                    {provided => (
+                      <div ref={provided.innerRef}>
+                        <Projects offset={`${firstProjectPosition}px`}>
+                          {projects.map((project, index) => (
+                            <Draggable
+                              key={project.id}
+                              draggableId={project.id}
+                              index={index}
+                              disableInteractiveElementBlocking
+                            >
+                              {providedInn => (
+                                <div
+                                  ref={providedInn.innerRef}
+                                  {...providedInn.draggableProps}
+                                  {...providedInn.dragHandleProps}
+                                  style={{
+                                    userSelect: 'none',
+                                    ...providedInn.draggableProps.style,
+                                  }}
+                                >
+                                  <Fragment key={project.id}>
+                                    <Tooltip
+                                      title={project.name}
+                                      position="right"
+                                    >
+                                      <SidebarProjectIcon
+                                        size={SIDEBAR_ICON_SIZE}
+                                        id={project.id}
+                                        name={project.name}
+                                        color={project.color}
+                                        iconSrc={project.icon}
+                                        isSelected={
+                                          finishedOnboarding &&
+                                          project.id === selectedProjectId
+                                        }
+                                        handleSelect={() =>
+                                          selectProject(project.id)
+                                        }
+                                      />
+                                    </Tooltip>
+                                    <Spacer size={18} />
+                                  </Fragment>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          <AddProjectButton
+                            size={SIDEBAR_ICON_SIZE}
+                            onClick={createNewProjectStart}
+                            isVisible={
+                              finishedOnboarding || introSequenceStepIndex >= 2
+                            }
+                            isOnline={isOnline}
+                          />
+                        </Projects>
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </Scrollbars>
+              </DragDropContext>
             </Wrapper>
             {isVisible && <SidebarSpacer />}
           </Fragment>
@@ -237,13 +243,6 @@ const SidebarSpacer = styled.div`
   position: relative;
   height: 100vh;
   width: ${SIDEBAR_WIDTH}px;
-`;
-
-const ScrollbarOnlyVertical = styled(Scrollbars)`
-  // hide overflow-x so left/right scrolling is disabled
-  > div:first-child {
-    overflow-x: hidden !important;
-  }
 `;
 
 const Projects = styled.div.attrs({
