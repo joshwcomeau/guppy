@@ -1,5 +1,5 @@
 // @flow
-export type ProjectType = 'create-react-app' | 'gatsby';
+export type ProjectType = 'create-react-app' | 'gatsby' | 'nextjs';
 
 export type SubmittedProject = {
   projectName: string,
@@ -128,4 +128,14 @@ export type Project = {
   path: string,
 };
 
-export type ProjectsMap = { [id: string]: Project };
+export type ProjectInternalsMap = { [id: string]: ProjectInternal };
+
+export type AppSettings = {
+  general: {
+    defaultProjectPath: string,
+    defaultProjectType: ProjectType,
+  },
+  privacy: {
+    enableUsageTracking: boolean,
+  },
+};

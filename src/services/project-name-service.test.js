@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { generateRandomName, prefixes, suffixes } from './project-name.service';
 
 describe('generateRandomName', () => {

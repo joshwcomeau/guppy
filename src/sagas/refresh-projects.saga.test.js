@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import rootSaga, { refreshProjects } from './refresh-projects.saga';

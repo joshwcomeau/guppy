@@ -2,12 +2,17 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
+import { remote } from 'electron';
 
 import * as actions from '../../actions';
+import {
+  getAppSettings,
+  getDefaultProjectPath,
+} from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
-import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
+import { checkIfProjectExists } from '../../services/create-project.service';
 
 import TwoPaneModal from '../TwoPaneModal';
 import Debounced from '../Debounced';
@@ -18,22 +23,21 @@ import BuildPane from './BuildPane';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, ProjectInternal } from '../../types';
+import type { ProjectType, ProjectInternal, AppSettings } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
+const { dialog } = remote;
 
 type Props = {
+  settings: AppSettings,
   projects: { [projectId: string]: ProjectInternal },
   projectHomePath: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
-  addProject: (
-    project: ProjectInternal,
-    projectType: ProjectType,
-    isOnboardingCompleted: boolean
-  ) => void,
-  createNewProjectCancel: () => void,
-  createNewProjectFinish: () => void,
+  addProject: Dispatch<typeof actions.addProject>,
+  createNewProjectCancel: Dispatch<typeof actions.createNewProjectCancel>,
+  createNewProjectFinish: Dispatch<typeof actions.createNewProjectFinish>,
 };
 
 type State = {
@@ -41,6 +45,7 @@ type State = {
   projectType: ?ProjectType,
   projectIcon: ?string,
   activeField: ?Field,
+  settings: ?AppSettings,
   status: Status,
   currentStep: Step,
   isProjectNameTaken: boolean,
@@ -54,11 +59,16 @@ const initialState = {
   status: 'filling-in-form',
   currentStep: 'projectName',
   isProjectNameTaken: false,
+  settings: null,
 };
 
 class CreateNewProjectWizard extends PureComponent<Props, State> {
   state = initialState;
   timeoutId: number;
+
+  componentDidMount() {
+    this.reinitialize(); // needed to load app settings
+  }
 
   componentWillUnmount() {
     window.clearTimeout(this.timeoutId);
@@ -96,16 +106,48 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     }
   };
 
+  checkProjectLocationUsage = () => {
+    return new Promise((resolve, reject) => {
+      const projectName = getProjectNameSlug(this.state.projectName);
+      if (checkIfProjectExists(this.props.projectHomePath, projectName)) {
+        // show warning that the project folder already exists & stop creation
+        dialog.showMessageBox(
+          {
+            type: 'warning',
+            title: 'Project directory exists',
+            message:
+              "Looks like there's already a project with that name. Did you mean to import it instead?",
+            buttons: ['OK'],
+          },
+          result => {
+            if (result === 0) {
+              return reject();
+            }
+
+            resolve();
+          }
+        );
+      } else {
+        resolve();
+      }
+    });
+  };
   handleSubmit = () => {
     const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
     const nextStep = FORM_STEPS[currentStepIndex + 1];
 
     if (!nextStep) {
-      this.setState({
-        activeField: null,
-        status: 'building-project',
-      });
-      return;
+      return this.checkProjectLocationUsage()
+        .then(() => {
+          // not in use
+          this.setState({
+            activeField: null,
+            status: 'building-project',
+          });
+        })
+        .catch(() => {
+          // Swallow any errors, as the promise above will have shown the appropriate dialog on error
+        });
     }
 
     this.setState({
@@ -115,7 +157,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: ProjectInternal) => {
-    const { isOnboardingCompleted } = this.props;
+    const { isOnboardingCompleted, projectHomePath } = this.props;
     const { projectType } = this.state;
 
     // Should be impossible
@@ -126,14 +168,24 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     this.props.createNewProjectFinish();
 
     this.timeoutId = window.setTimeout(() => {
-      this.props.addProject(project, projectType, isOnboardingCompleted);
+      this.props.addProject(
+        project,
+        projectHomePath,
+        projectType,
+        isOnboardingCompleted
+      );
 
       this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);
   };
 
   reinitialize = () => {
-    this.setState(initialState);
+    const { settings } = this.props;
+
+    this.setState({
+      ...initialState,
+      projectType: settings.general.defaultProjectType,
+    });
   };
 
   render() {
@@ -183,17 +235,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
               />
             }
             backface={
-              readyToBeBuilt && (
-                <BuildPane
-                  // Ugh. For some reason, even when I conditionally render
-                  // this <BuildPane> when `project` is complete, Flow doesn't
-                  // like it.
-                  // $FlowFixMe
-                  project={project}
-                  projectHomePath={projectHomePath}
-                  handleCompleteBuild={this.finishBuilding}
-                />
-              )
+              <BuildPane
+                {...project}
+                status={status}
+                projectHomePath={projectHomePath}
+                handleCompleteBuild={this.finishBuilding}
+              />
             }
           />
         )}
@@ -204,9 +251,10 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
 const mapStateToProps = state => ({
   projects: getById(state),
-  projectHomePath: getProjectHomePath(state),
+  projectHomePath: getDefaultProjectPath(state),
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
+  settings: getAppSettings(state),
 });
 
 const mapDispatchToProps = {

@@ -123,14 +123,22 @@ class TwoPaneModal extends PureComponent<Props, State> {
               translateY={interpolatedTransitTranslate}
             >
               <LeftHalf foldDegrees={foldDegrees}>
-                <LeftPaneWrapper>
+                <LeftPaneWrapper
+                  style={{
+                    pointerEvents: isFolded ? 'none' : 'auto',
+                  }}
+                >
                   <PaneChildren>{leftPane}</PaneChildren>
                 </LeftPaneWrapper>
 
                 <BackfaceWrapper>{backface}</BackfaceWrapper>
               </LeftHalf>
 
-              <RightPaneWrapper>
+              <RightPaneWrapper
+                style={{
+                  pointerEvents: isFolded ? 'none' : 'auto',
+                }}
+              >
                 <PaneChildren>{rightPane}</PaneChildren>
               </RightPaneWrapper>
             </PaneWrapper>
@@ -156,6 +164,7 @@ const Wrapper = styled.div.attrs({
   display: flex;
   justify-content: center;
   align-items: center;
+  will-change: opacity;
 `;
 
 const Backdrop = styled.div`
@@ -187,6 +196,7 @@ const PaneWrapper = styled.div.attrs({
 const LeftHalf = styled.div.attrs({
   style: props => ({
     transform: `perspective(2000px) rotateY(${props.foldDegrees}deg)`,
+    pointerEvents: props.isFolded ? 'none' : 'auto',
   }),
 })`
   position: relative;
@@ -208,7 +218,6 @@ const LeftPaneWrapper = styled.div`
   border: 4px solid ${COLORS.white};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px 0 0 8px;
-  backface-visibility: hidden;
 `;
 
 const RightPaneWrapper = styled.div`
@@ -229,7 +238,6 @@ const BackfaceWrapper = styled.div`
   bottom: 0;
   transform: rotateY(180deg);
   transform-origin: center center;
-  backface-visibility: hidden;
 `;
 
 const PaneChildren = styled.div`

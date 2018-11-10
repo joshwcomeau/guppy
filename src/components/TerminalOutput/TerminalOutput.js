@@ -11,6 +11,7 @@ import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 
 import type { Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 var Convert = require('ansi-to-html');
 var convert = new Convert();
@@ -20,7 +21,7 @@ type Props = {
   height?: number,
   title: string,
   task: Task,
-  clearConsole: (task: Task) => void,
+  clearConsole: Dispatch<typeof actions.clearConsole>,
 };
 
 class TerminalOutput extends PureComponent<Props> {
@@ -79,7 +80,7 @@ class TerminalOutput extends PureComponent<Props> {
           >
             <FillButton
               size="xsmall"
-              colors={[COLORS.red[700], COLORS.red[500]]}
+              colors={[COLORS.pink[300], COLORS.red[500]]}
               onClick={this.handleClear}
             >
               Clear

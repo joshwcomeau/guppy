@@ -1,1 +1,2 @@
-export { default } from "./CreateNewProjectWizard";
+// @flow
+export { default } from './CreateNewProjectWizard';

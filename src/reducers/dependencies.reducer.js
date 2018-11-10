@@ -2,7 +2,7 @@
 import produce from 'immer';
 
 import {
-  LOAD_DEPENDENCY_INFO_FROM_DISK,
+  LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH,
   ADD_DEPENDENCY,
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
@@ -12,10 +12,11 @@ import {
   UNINSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_ERROR,
   UNINSTALL_DEPENDENCIES_FINISH,
+  REFRESH_PROJECTS_FINISH,
   RESET_ALL_STATE,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 import type { Dependency } from '../types';
 
 type DependencyMap = {
@@ -30,7 +31,7 @@ export const initialState = {};
 
 export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
-    case LOAD_DEPENDENCY_INFO_FROM_DISK: {
+    case LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH: {
       const { projectId, dependencies } = action;
 
       return {
@@ -138,6 +139,21 @@ export default (state: State = initialState, action: Action = {}) => {
       return produce(state, draftState => {
         dependencies.forEach(dependency => {
           delete draftState[projectId][dependency.name];
+        });
+      });
+    }
+
+    case REFRESH_PROJECTS_FINISH: {
+      const { projects } = action;
+      // If a project was removed, clear out its associated dependencies.
+      return produce(state, draftState => {
+        const depIds = Object.keys(draftState);
+        const projectIds = Object.keys(projects);
+
+        depIds.forEach(id => {
+          if (!projectIds.includes(id)) {
+            delete draftState[id];
+          }
         });
       });
     }

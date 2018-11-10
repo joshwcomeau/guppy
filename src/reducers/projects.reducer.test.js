@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import {
   IMPORT_EXISTING_PROJECT_FINISH,
   INSTALL_DEPENDENCIES_FINISH,

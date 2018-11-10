@@ -24,6 +24,7 @@ import { StrokeButton } from '../Button';
 import CustomHighlight from '../CustomHighlight';
 
 import type { DependencyStatus } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const DEPENDENCY_ACTIONS_COPY = {
   idle: 'Installed',
@@ -38,11 +39,7 @@ const DEPENDENCY_ACTIONS_COPY = {
 type Props = {
   projectId: string,
   currentStatus: ?DependencyStatus,
-  addDependency: (
-    projectId: string,
-    dependencyName: string,
-    version: string
-  ) => any,
+  addDependency: Dispatch<typeof actions.addDependency>,
   hit: {
     name: string,
     description: string,
@@ -115,8 +112,7 @@ class AddDependencySearchResult extends PureComponent<Props> {
     return (
       <StrokeButton
         size="small"
-        color1={COLORS.green[700]}
-        color2={COLORS.lightGreen[500]}
+        strokeColors={[COLORS.green[700], COLORS.lightGreen[500]]}
         textColor={COLORS.green[700]}
         onClick={() => addDependency(projectId, hit.name, hit.version)}
       >

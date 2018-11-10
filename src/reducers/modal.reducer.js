@@ -11,15 +11,16 @@ import {
   IMPORT_EXISTING_PROJECT_START,
   SAVE_PROJECT_SETTINGS_FINISH,
   SHOW_PROJECT_SETTINGS,
+  SHOW_APP_SETTINGS,
   HIDE_MODAL,
   RESET_ALL_STATE,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 
 type State = 'new-project-wizard' | 'project-settings' | null;
 
-const initialState = null;
+export const initialState = null;
 
 export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
@@ -28,6 +29,9 @@ export default (state: State = initialState, action: Action = {}) => {
 
     case SHOW_PROJECT_SETTINGS:
       return 'project-settings';
+
+    case SHOW_APP_SETTINGS:
+      return 'app-settings';
 
     case CREATE_NEW_PROJECT_CANCEL:
     case CREATE_NEW_PROJECT_FINISH:

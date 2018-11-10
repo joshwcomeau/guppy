@@ -35,11 +35,13 @@ export const windowsHomeDir = isWin ? path.join(os.homedir(), winDocPath) : '';
 export const formatCommandForPlatform = (command: string): string =>
   isWin ? `${command}.cmd` : command;
 
-export const PACKAGE_MANAGER_CMD = path.join(
-  remote.app.getAppPath(),
-  'node_modules/yarn/bin',
-  formatCommandForPlatform(PACKAGE_MANAGER)
-);
+export const PACKAGE_MANAGER_CMD = path
+  .join(
+    remote.app.getAppPath(),
+    'node_modules/yarn/bin',
+    formatCommandForPlatform(PACKAGE_MANAGER)
+  )
+  .replace('app.asar', 'app.asar.unpacked');
 
 // Forward the host env, and append the
 // project's .bin directory to PATH to allow
@@ -54,18 +56,64 @@ export const PACKAGE_MANAGER_CMD = path.join(
 export const getBaseProjectEnvironment = (
   projectPath: string,
   currentEnvironment: Object = window.process.env
-) => ({
-  ...currentEnvironment,
-  // NOTE: this option adds control characters to the output.
-  // If at some point we need "raw" output with no control characters, we
-  // should move this out into a "wrapping" function, and update current
-  // callsites to use it.
-  FORCE_COLOR: true,
-  PATH:
-    currentEnvironment.PATH +
-    path.delimiter +
-    path.join(projectPath, 'node_modules', '.bin'),
-});
+) => {
+  const pathKey = isWin ? 'Path' : 'PATH';
+
+  return {
+    ...currentEnvironment,
+    // NOTE: `FORCE_COLOR` adds control characters to the output.
+    // If at some point we need "raw" output with no control characters, we
+    // should move this out into a "wrapping" function, and update current
+    // callsites to use it.
+    FORCE_COLOR: true,
+    [pathKey]:
+      currentEnvironment[pathKey] +
+      path.join(projectPath, 'node_modules', '.bin', path.delimiter),
+  };
+};
+
+// HACK: With electron-builder, we're having some issues on mac finding Node.
+// This is because for some reason, the PATH is not updated properly :(
+// 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
+// reasons.
+export const initializePath = () => {
+  return new Promise<void>(resolve => {
+    if (!isMac) {
+      return resolve();
+    }
+
+    // Check if we need to fix the Path (Mac only)
+    childProcess.exec(
+      'which node',
+      { env: window.process.env },
+      (_, nodePath) => {
+        if (nodePath) {
+          // Node found
+          return resolve();
+        }
+
+        // For users with a standard Node installation, node will be in
+        // /usr/local/bin
+        // For users using NVM, the path to Node will be added to `.bashrc`.
+        // Add both to the PATH.
+        try {
+          childProcess.exec(
+            'source ~/.bashrc && echo $PATH',
+            (err, updatedPath) => {
+              if (updatedPath) {
+                window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
+              }
+
+              resolve();
+            }
+          );
+        } catch (e) {
+          resolve(e);
+        }
+      }
+    );
+  });
+};
 
 export const getCopyForOpeningFolder = () =>
   // For Mac users, use the more-common term 'Finder'.

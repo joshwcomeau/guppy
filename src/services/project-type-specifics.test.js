@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { getDocumentationLink } from './project-type-specifics';
 
 describe('getDocumentationLink', () => {

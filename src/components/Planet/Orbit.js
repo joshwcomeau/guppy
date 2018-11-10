@@ -52,15 +52,6 @@ class PlanetCloud extends Component<Props> {
   }
 }
 
-const Wrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: ${props => props.opacity};
-  transform: translateY(${props => props.offset}px)
-    rotate(${props => props.rotation}deg);
-`;
-
 const Orbiter = styled.div`
   display: inline-block;
 `;

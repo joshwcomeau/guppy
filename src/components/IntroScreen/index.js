@@ -1,1 +1,2 @@
-export { default } from "./IntroScreen";
+// @flow
+export { default } from './IntroScreen';

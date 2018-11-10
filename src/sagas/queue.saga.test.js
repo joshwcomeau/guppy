@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { select, put, takeEvery } from 'redux-saga/effects';
 import rootSaga, {
   handleQueueActionCompleted,
