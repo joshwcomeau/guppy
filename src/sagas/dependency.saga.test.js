@@ -7,11 +7,8 @@ import rootSaga, {
   handleInstallDependenciesStart,
   handleReinstallDependenciesStart,
   handleUninstallDependenciesStart,
-<<<<<<< HEAD
   handleLoadDependencyInfoFromDiskStart,
-=======
   watchInstallMessages,
->>>>>>> fixed test & removed console.log
 } from './dependency.saga';
 import { waitForAsyncRimraf } from './delete-project.saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
@@ -36,12 +33,11 @@ import {
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
-  reinstallDependencies,
+  reinstallDependenciesStart,
   reinstallDependenciesFinish,
   refreshProjectsStart,
   resetStatusText,
 } from '../actions';
-import { capitalizeAll } from '../utils';
 
 describe('Dependency sagas', () => {
   const projectId = 'foo';
@@ -282,7 +278,7 @@ describe('Dependency sagas', () => {
       // TODO: Why is JSON.stringify needed for the next expect?
       //       With-out it we're getting 'Compared values have no visual difference.'
       expect(JSON.stringify(saga.next().value)).toEqual(
-        JSON.stringify(call(reinstallDependencies, 'project/path'))
+        JSON.stringify(call(reinstallDependenciesStart, 'project/path'))
       );
       // cechk watchInstallMessages called
       expect(saga.next().value).toEqual(call(watchInstallMessages, undefined));

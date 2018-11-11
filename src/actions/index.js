@@ -282,7 +282,7 @@ export const installDependenciesFinish = (
   dependencies,
 });
 
-export const reinstallDependencies = (projectId: string) => ({
+export const reinstallDependenciesStart = (projectId: string) => ({
   type: REINSTALL_DEPENDENCIES_START,
   projectId,
 });

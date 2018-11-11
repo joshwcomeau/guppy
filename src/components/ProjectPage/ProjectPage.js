@@ -31,7 +31,7 @@ type Props = {
   loadDependencyInfoFromDisk: Dispatch<
     typeof actions.loadDependencyInfoFromDiskStart
   >,
-  reinstallDependencies: Dispatch<typeof actions.reinstallDependencies>,
+  reinstallDependencies: Dispatch<typeof actions.reinstallDependenciesStart>,
 };
 
 class ProjectPage extends PureComponent<Props> {
@@ -181,6 +181,6 @@ export default connect(
   mapStateToProps,
   {
     loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDiskStart,
-    reinstallDependencies: actions.reinstallDependencies,
+    reinstallDependencies: actions.reinstallDependenciesStart,
   }
 )(ProjectPage);

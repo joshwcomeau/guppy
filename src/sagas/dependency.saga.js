@@ -37,6 +37,7 @@ import {
   uninstallDependenciesStart,
   loadDependencyInfoFromDiskStart,
   refreshProjectsStart,
+  reinstallDependenciesStart,
   setStatusText,
   resetStatusText,
 } from '../actions';
@@ -110,12 +111,14 @@ export function* handleInstallDependenciesStart({
 
 export function* handleReinstallDependenciesStart({
   projectId,
-}: Action): Saga<void> {
+}: ReturnType<typeof reinstallDependenciesStart>): Saga<void> {
   if (!projectId) {
     // don't trigger a reinstall if we're not having a projectId --> fail silently
     return;
   }
-  const projectPath = yield select(getPathForProjectId, { projectId });
+  const projectPath = yield select(getPathForProjectId, {
+    projectId,
+  });
   try {
     // delete node_modules folder
     yield call(waitForAsyncRimraf, projectPath);

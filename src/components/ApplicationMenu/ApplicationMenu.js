@@ -41,7 +41,7 @@ type Props = {
   showProjectSettings: Dispatch<typeof actions.showProjectSettings>,
   showAppSettings: Dispatch<typeof actions.showAppSettings>,
   selectProject: Dispatch<typeof actions.selectProject>,
-  reinstallDependencies: Dispatch<typeof actions.reinstallDependencies>,
+  reinstallDependencies: Dispatch<typeof actions.reinstallDependenciesStart>,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -315,7 +315,7 @@ const mapDispatchToProps = {
   showProjectSettings: actions.showProjectSettings,
   showAppSettings: actions.showAppSettings,
   selectProject: actions.selectProject,
-  reinstallDependencies: actions.reinstallDependencies,
+  reinstallDependencies: actions.reinstallDependenciesStart,
 };
 
 export default connect(
