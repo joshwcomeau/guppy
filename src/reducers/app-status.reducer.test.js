@@ -26,7 +26,7 @@ describe('App status reducer', () => {
       REINSTALL_DEPENDENCIES_FINISH,
     ];
 
-    blockingStartActions.forEach(actionName => {
+    blockingStartActions.forEach((actionName: string) => {
       it(`should handle start action ${actionName}`, () => {
         const prevState = initialState;
 
@@ -38,9 +38,10 @@ describe('App status reducer', () => {
       });
     });
 
-    blockingFinishActions.forEach(actionName => {
+    blockingFinishActions.forEach((actionName: string) => {
       it(`should handle finish action ${actionName}`, () => {
         const prevState = {
+          ...initialState,
           blockingActionActive: true,
         };
 
