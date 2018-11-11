@@ -1,1 +1,2 @@
-export { default } from "./Spacer";
+// @flow
+export { default } from './Spacer';

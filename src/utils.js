@@ -1,61 +1,28 @@
+// @flow
 import Color from 'color';
 
 // TODO: Modernize
-/* eslint-disable */
-export const range = function(start, end, step) {
-  var range = [];
-  var typeofStart = typeof start;
-  var typeofEnd = typeof end;
+export const range = function(start: number, end: number, step: number = 1) {
+  // eslint-disable-next-line no-shadow
+  const range = [];
 
   if (step === 0) {
     throw TypeError('Step cannot be zero.');
   }
 
-  if (typeof end === 'undefined' && typeof 'step' === 'undefined') {
-    end = start;
-    start = 0;
-    typeofStart = typeof start;
-    typeofEnd = typeof end;
-  }
-
-  if (typeofStart == 'undefined' || typeofEnd == 'undefined') {
-    throw TypeError('Must pass start and end arguments.');
-  } else if (typeofStart != typeofEnd) {
-    throw TypeError('Start and end arguments must be of same type.');
-  }
-
-  typeof step == 'undefined' && (step = 1);
-
   if (end < start) {
     step = -step;
   }
 
-  if (typeofStart == 'number') {
-    while (step > 0 ? end >= start : end <= start) {
-      range.push(start);
-      start += step;
-    }
-  } else if (typeofStart == 'string') {
-    if (start.length != 1 || end.length != 1) {
-      throw TypeError('Only strings with one character are supported.');
-    }
-
-    start = start.charCodeAt(0);
-    end = end.charCodeAt(0);
-
-    while (step > 0 ? end >= start : end <= start) {
-      range.push(String.fromCharCode(start));
-      start += step;
-    }
-  } else {
-    throw TypeError('Only string and number types are supported');
+  while (step > 0 ? end >= start : end <= start) {
+    range.push(start);
+    start += step;
   }
 
   return range;
 };
-/* eslint-enable */
 
-export const shuffle = arr => {
+export const shuffle = <T>(arr: Array<T>): Array<T> => {
   var shuffled = arr.slice(0),
     i = arr.length,
     temp,
@@ -69,23 +36,29 @@ export const shuffle = arr => {
   return shuffled;
 };
 
-export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
-export const sampleMany = (arr, size) => shuffle(arr).slice(0, size);
+export const sample = <T>(arr: Array<T>): T =>
+  arr[Math.floor(Math.random() * arr.length)];
+export const sampleMany = <T>(arr: Array<T>, size: number): Array<T> =>
+  shuffle(arr).slice(0, size);
 
-export const random = (min, max) =>
+export const random = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min)) + min;
 
-// eslint-disable-next-line no-shadow
-export const sum = values => values.reduce((sum, value) => sum + value, 0);
-export const mean = values => sum(values) / values.length;
+export const sum = (values: Array<number>) =>
+  values.reduce((acc, value) => acc + value, 0);
+export const mean = (values: Array<number>) => sum(values) / values.length;
 
-export const clamp = (val, min = 0, max = 1) =>
+export const clamp = (val: number, min: number = 0, max: number = 1) =>
   Math.max(min, Math.min(max, val));
 
-export const roundTo = (number, places = 0) =>
+export const roundTo = (number: number, places: number = 0) =>
   Math.round(number * 10 ** places) / 10 ** places;
 
-export const debounce = (callback, wait, timeoutId = null) => (...args) => {
+export const debounce = (
+  callback: (...args: any) => void,
+  wait?: number,
+  timeoutId?: TimeoutID
+) => (...args: any) => {
   window.clearTimeout(timeoutId);
 
   timeoutId = setTimeout(() => {
@@ -93,7 +66,7 @@ export const debounce = (callback, wait, timeoutId = null) => (...args) => {
   }, wait);
 };
 
-export const throttle = (func, limit) => {
+export const throttle = (func: (...args: any) => void, limit: number) => {
   let lastFunc;
   let lastRan;
   return function() {
@@ -114,9 +87,9 @@ export const throttle = (func, limit) => {
   };
 };
 
-export const isEmpty = obj => Object.keys(obj).length === 0;
+export const isEmpty = (obj: {}) => Object.keys(obj).length === 0;
 
-export const getInterpolatedValue = (y1, y2, ratio) => {
+export const getInterpolatedValue = (y1: number, y2: number, ratio: number) => {
   // We're assuming that `ratio` is a value between 0 and 1.
   // If this were a graph, it'd be our `x`, and we're trying to solve for `y`.
   // First, find the slope of our line.
@@ -125,7 +98,7 @@ export const getInterpolatedValue = (y1, y2, ratio) => {
   return slope * ratio + y1;
 };
 
-export const pick = (obj, keys) => {
+export const pick = <T: {}>(obj: T, keys: Array<$Keys<T>>) => {
   var o = {};
   var i = 0;
   var key;
@@ -140,7 +113,7 @@ export const pick = (obj, keys) => {
   return o;
 };
 
-export const omit = function(obj, key) {
+export const omit = <T: {}>(obj: T, key: $Keys<T>) => {
   var newObj = {};
 
   for (var name in obj) {
@@ -152,7 +125,9 @@ export const omit = function(obj, key) {
   return newObj;
 };
 
-export const convertArrayToMap = list =>
+export const convertArrayToMap = <T: { id: string }>(
+  list: Array<T>
+): { [id: string]: T } =>
   list.reduce(
     (acc, item) => ({
       ...acc,
@@ -164,42 +139,47 @@ export const convertArrayToMap = list =>
 // Either removes or adds an item to an array
 // EXAMPLE: toggleInArray([1, 2], 3) -> [1, 2, 3]
 // EXAMPLE: toggleInArray([1, 2], 2) -> [1]
-export const toggleInArray = (arr, item) =>
+export const toggleInArray = <T>(arr: Array<T>, item: T): Array<T> =>
   arr.includes(item) ? arr.filter(i => i !== item) : [...arr, item];
 
 // Combines 2 arrays, removing duplicates.
 // EXAMPLE: mergeUnique([1, 2], [2, 3]) -> [1, 2, 3]
-export const mergeUnique = (arr1, arr2) =>
-  arr1.concat(arr2.filter(item => arr1.indexOf(item) === -1));
+export const mergeUnique = <T, U>(
+  arr1: Array<T>,
+  arr2: Array<U>
+): Array<T | U> => arr1.concat(arr2.filter(item => arr1.indexOf(item) === -1));
 
-export const findRight = (arr, predicate) =>
+export const findRight = <T>(
+  arr: Array<T>,
+  predicate: (item: T, index: number, array: Array<T>) => boolean
+) =>
   arr
     .slice()
     .reverse()
     .find(predicate);
 
 export function requestAnimationFramePromise() {
-  return new Promise(resolve => window.requestAnimationFrame(resolve));
+  return new Promise<void>(resolve => window.requestAnimationFrame(resolve));
 }
 
-export function setTimeoutPromise(duration) {
-  return new Promise(resolve => window.setTimeout(resolve, duration));
+export function setTimeoutPromise(duration?: number) {
+  return new Promise<void>(resolve => window.setTimeout(resolve, duration));
 }
 
-export const capitalize = str => str[0].toUpperCase() + str.slice(1);
-export const capitalizeAll = str =>
+export const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1);
+export const capitalizeAll = (str: string) =>
   str
     .split(' ')
     .map(capitalize)
     .join(' ');
 
-export const deleteCookie = key => {
+export const deleteCookie = (key: string) => {
   document.cookie = `${encodeURIComponent(
     key
   )}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 };
 
-export const convertHexToRGBA = (hex, alpha = 1) => {
+export const convertHexToRGBA = (hex: string, alpha: number = 1) => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
@@ -207,10 +187,8 @@ export const convertHexToRGBA = (hex, alpha = 1) => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-export const hyphenate = str => str.replace(/([A-Z])/g, '-$1').toLowerCase();
-
-export const delay = duration =>
-  new Promise(resolve => window.setTimeout(resolve, duration));
+export const hyphenate = (str: string) =>
+  str.replace(/([A-Z])/g, '-$1').toLowerCase();
 
 export const getTimeOfDay = () => {
   const now = new Date();
@@ -229,11 +207,13 @@ export const getTimeOfDay = () => {
   }
 };
 
-export const hasPropChanged = (oldProps, newProps, key) => {
+export const hasPropChanged = <T: {}>(
+  oldProps: T,
+  newProps: T,
+  key: string
+) => {
   return oldProps[key] !== newProps[key];
 };
-
-export const flatten = arr => Array.prototype.concat(...arr);
 
 // This function takes a string input and parses the output
 // to ensure to all html is rendered safely to the dom,
@@ -309,8 +289,8 @@ const getEffectiveRgb = color => {
 };
 
 export const contrastingColor = (
-  backgroundColor,
-  threshold = LUMA_THRESHOLD
+  backgroundColor: string,
+  threshold: number = LUMA_THRESHOLD
 ) => {
   try {
     return luma(getEffectiveRgb(backgroundColor)) >= LUMA_THRESHOLD
@@ -320,4 +300,18 @@ export const contrastingColor = (
     console.warn(e + ', defaulting to #fff');
     return '#fff';
   }
+};
+
+// Set value on nested object
+// based on answer from webjay here https://stackoverflow.com/questions/18936915/dynamically-set-property-of-nested-object#38616729
+// e.g. path = 'general.defaultProjectType', value="create-react-app"
+export const setNested = <T: {}>(obj: T, path: string, value: any): T => {
+  const pList = path.split('.');
+  const key = pList.pop();
+  const pointer = pList.reduce((accumulator, currentValue) => {
+    if (accumulator[currentValue] === undefined) accumulator[currentValue] = {};
+    return accumulator[currentValue];
+  }, obj);
+  pointer[key] = value;
+  return obj;
 };

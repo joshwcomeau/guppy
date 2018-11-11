@@ -1,1 +1,2 @@
-export { default } from "./FormField";
+// @flow
+export { default } from './FormField';

@@ -133,6 +133,34 @@ class SummaryPane extends PureComponent<Props> {
             );
             break;
           }
+          case 'nextjs': {
+            details = (
+              <Fragment>
+                <Paragraph>
+                  <strong>Next.js</strong>
+                </Paragraph>
+                <Paragraph>
+                  Next.js is a lightweight framework for static and
+                  server-rendered applications.
+                </Paragraph>
+                <Paragraph>
+                  Server-rendered by default. No need to worry about routing. A
+                  great choice for quickly getting products built with
+                  server-side rendering by a Node.js server.
+                </Paragraph>
+                <Paragraph>
+                  <ExternalLink
+                    color={COLORS.white}
+                    hoverColor={COLORS.white}
+                    href="https://nextjs.org/learn/"
+                  >
+                    <strong>Learn more about Next.js.</strong>
+                  </ExternalLink>
+                </Paragraph>
+              </Fragment>
+            );
+            break;
+          }
         }
         return (
           <Fragment>

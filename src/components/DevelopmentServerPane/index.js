@@ -1,1 +1,2 @@
-export { default } from "./DevelopmentServerPane";
+// @flow
+export { default } from './DevelopmentServerPane';

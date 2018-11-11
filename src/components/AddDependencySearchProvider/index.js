@@ -1,1 +1,2 @@
-export { default } from "./AddDependencySearchProvider";
+// @flow
+export { default } from './AddDependencySearchProvider';

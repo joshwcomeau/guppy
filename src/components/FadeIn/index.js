@@ -1,1 +1,2 @@
-export { default } from "./FadeIn";
+// @flow
+export { default } from './FadeIn';

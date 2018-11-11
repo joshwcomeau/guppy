@@ -9,7 +9,7 @@ type Props = {
   isToggled: boolean,
   size: number,
   padding: number,
-  isDisabled: boolean,
+  isDisabled?: boolean,
   onToggle: (isToggled: boolean) => void,
 };
 

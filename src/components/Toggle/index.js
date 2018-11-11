@@ -1,1 +1,2 @@
-export { default } from "./Toggle";
+// @flow
+export { default } from './Toggle';

@@ -1,1 +1,2 @@
-export { default } from "./Middot";
+// @flow
+export { default } from './Middot';

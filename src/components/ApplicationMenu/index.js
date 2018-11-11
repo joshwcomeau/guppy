@@ -1,1 +1,2 @@
-export { default } from "./ApplicationMenu";
+// @flow
+export { default } from './ApplicationMenu';

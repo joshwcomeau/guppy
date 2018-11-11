@@ -1,1 +1,2 @@
-export { default } from "./SelectableImage";
+// @flow
+export { default } from './SelectableImage';

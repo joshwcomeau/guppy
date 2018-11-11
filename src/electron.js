@@ -1,8 +1,11 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 /**
  * This is our main Electron process.
  * It handles opening our app window, and quitting the application.
  */
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
 const path = require('path');
 const url = require('url');
 const fixPath = require('fix-path');
@@ -12,11 +15,13 @@ const killProcessId = require('./services/kill-process-id.service');
 const electronStore = require('./services/electron-store.service');
 
 const chalk = new chalkRaw.constructor({ level: 3 });
+let icon256Path = '../public/256x256.png';
 
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
 // everything.
 if (process.env.NODE_ENV !== 'development') {
+  icon256Path = '../build/256x256.png';
   fixPath();
 }
 
@@ -30,9 +35,39 @@ let mainWindow;
 // before the app quits.
 let processIds = [];
 
+// Used for renderer tasks on close (emitting event app-will-close once)
+let emitAppWillClose = true;
+
 const MOVE_TO_APP_FOLDER_KEY = 'leave-application-in-original-location';
 
+// This logging setup is not required for auto-updates to work,
+// but it sure makes debugging easier :)
+//-------------------------------------------------------------------
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+
+// default logs from electron-updater are
+// 'Checking for update', 'Found verison ...', 'Downloading update ...'
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.',
+  };
+
+  dialog.showMessageBox(dialogOpts, response => {
+    if (response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
 function createWindow() {
+  // Check if there is a newer version
+  autoUpdater.checkForUpdatesAndNotify();
+
   // Verifies if Guppy is already in the Applications folder
   // and prompts the user to move it if it isn't
   manageApplicationLocation();
@@ -43,11 +78,11 @@ function createWindow() {
     height: 768,
     minWidth: 777,
     titleBarStyle: 'hidden',
-    icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
+    icon: path.join(__dirname, icon256Path),
   });
 
   // set up some chrome extensions
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV === 'development') {
     const {
       default: installExtension,
       REACT_DEVELOPER_TOOLS,
@@ -83,6 +118,14 @@ function createWindow() {
     });
   mainWindow.loadURL(startUrl);
 
+  mainWindow.on('close', e => {
+    if (emitAppWillClose) {
+      emitAppWillClose = false;
+      mainWindow.webContents.send('app-will-close');
+      e.preventDefault();
+    }
+  });
+
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -106,14 +149,6 @@ app.on('window-all-closed', function() {
   }
 });
 
-app.on('before-quit', ev => {
-  if (processIds.length) {
-    ev.preventDefault();
-    killAllRunningProcesses();
-    app.quit();
-  }
-});
-
 app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -131,7 +166,21 @@ ipcMain.on('removeProcessId', (event, processId) => {
 });
 
 ipcMain.on('killAllRunningProcesses', event => {
-  killAllRunningProcesses();
+  if (processIds.length) {
+    event.preventDefault();
+    killAllRunningProcesses();
+  }
+  app.quit();
+});
+
+ipcMain.on('triggerClose', (e, proceed) => {
+  if (!proceed) {
+    // user aborted
+    emitAppWillClose = true; // reset flag
+    return;
+  }
+
+  mainWindow.close();
 });
 
 const killAllRunningProcesses = () => {
@@ -186,7 +235,7 @@ const manageApplicationLocation = () => {
         message: 'Move to Applications folder?',
         detail:
           "I see that I'm not in the Applications folder. I can move myself there if you'd like!",
-        icon: path.join(__dirname, 'assets/icons/png/256x256.png'),
+        icon: path.join(__dirname, icon256Path),
         cancelId: 1,
         defaultId: 0,
         checkboxLabel: 'Do not show this message again',

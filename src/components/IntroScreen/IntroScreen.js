@@ -1,3 +1,4 @@
+// @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -11,9 +12,11 @@ import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
 
+import type { Dispatch } from '../../actions/types';
+
 type Props = {
   shouldHideContent: boolean,
-  createNewProjectStart: () => any,
+  createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
 };
 
 class IntroScreen extends Component<Props> {

@@ -6,13 +6,17 @@ import {
   installDependencies,
   uninstallDependencies,
 } from '../services/dependencies.service';
-import { loadProjectDependencies } from '../services/read-from-disk.service';
+import {
+  loadProjectDependencies,
+  loadAllProjectDependencies,
+} from '../services/read-from-disk.service';
 import {
   ADD_DEPENDENCY,
   UPDATE_DEPENDENCY,
   DELETE_DEPENDENCY,
   INSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_START,
+  LOAD_DEPENDENCY_INFO_FROM_DISK_START,
   queueDependencyInstall,
   queueDependencyUninstall,
   installDependenciesError,
@@ -20,16 +24,23 @@ import {
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
+  loadDependencyInfoFromDiskFinish,
+  addDependency,
+  updateDependency,
+  deleteDependency,
+  installDependenciesStart,
+  uninstallDependenciesStart,
+  loadDependencyInfoFromDiskStart,
 } from '../actions';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
+import type { ReturnType } from '../actions/types';
 
 export function* handleAddDependency({
   projectId,
   dependencyName,
   version,
-}: Action): Saga<void> {
+}: ReturnType<typeof addDependency>): Saga<void> {
   const queuedAction = yield select(getNextActionForProjectId, { projectId });
 
   yield put(queueDependencyInstall(projectId, dependencyName, version));
@@ -44,7 +55,7 @@ export function* handleUpdateDependency({
   projectId,
   dependencyName,
   latestVersion,
-}: Action): Saga<void> {
+}: ReturnType<typeof updateDependency>): Saga<void> {
   const queuedAction = yield select(getNextActionForProjectId, { projectId });
 
   yield put(
@@ -59,7 +70,7 @@ export function* handleUpdateDependency({
 export function* handleDeleteDependency({
   projectId,
   dependencyName,
-}: Action): Saga<void> {
+}: ReturnType<typeof deleteDependency>): Saga<void> {
   const queuedAction = yield select(getNextActionForProjectId, { projectId });
 
   yield put(queueDependencyUninstall(projectId, dependencyName));
@@ -72,7 +83,7 @@ export function* handleDeleteDependency({
 export function* handleInstallDependenciesStart({
   projectId,
   dependencies,
-}: Action): Saga<void> {
+}: ReturnType<typeof installDependenciesStart>): Saga<void> {
   const projectPath = yield select(getPathForProjectId, { projectId });
 
   try {
@@ -92,7 +103,7 @@ export function* handleInstallDependenciesStart({
 export function* handleUninstallDependenciesStart({
   projectId,
   dependencies,
-}: Action): Saga<void> {
+}: ReturnType<typeof uninstallDependenciesStart>): Saga<void> {
   const projectPath = yield select(getPathForProjectId, { projectId });
 
   try {
@@ -105,6 +116,22 @@ export function* handleUninstallDependenciesStart({
       err
     );
     yield put(uninstallDependenciesError(projectId, dependencies));
+  }
+}
+
+export function* handleLoadDependencyInfoFromDiskStart({
+  projectId,
+  projectPath,
+}: ReturnType<typeof loadDependencyInfoFromDiskStart>): Saga<void> {
+  try {
+    const dependencies = yield call(loadAllProjectDependencies, projectPath);
+    yield put(loadDependencyInfoFromDiskFinish(projectId, dependencies));
+  } catch (err) {
+    yield call(
+      [console, console.error],
+      'Failed to load dependencies from disk',
+      err
+    );
   }
 }
 
@@ -121,5 +148,9 @@ export default function* rootSaga(): Saga<void> {
   yield takeEvery(
     UNINSTALL_DEPENDENCIES_START,
     handleUninstallDependenciesStart
+  );
+  yield takeEvery(
+    LOAD_DEPENDENCY_INFO_FROM_DISK_START,
+    handleLoadDependencyInfoFromDiskStart
   );
 }

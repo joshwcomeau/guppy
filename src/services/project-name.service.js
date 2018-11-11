@@ -1,3 +1,4 @@
+// @flow
 import { sample, capitalizeAll } from '../utils';
 
 export const generateRandomName = () =>
