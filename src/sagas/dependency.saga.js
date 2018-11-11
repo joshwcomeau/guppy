@@ -196,7 +196,6 @@ export function* watchInstallMessages(channel: any): Saga<void> {
         // Yield exit code and complete stdout
         yield output;
 
-        console.log('exit', output);
         // Close channel manually --> emitter(END) inside spwanProcessChannel would exit too early
         channel.close();
       }

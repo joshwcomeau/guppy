@@ -5,6 +5,7 @@ import styled, { keyframes } from 'styled-components';
 import { Tooltip } from 'react-tippy';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getReinstallingActive } from '../../reducers/app-status.reducer';
 import { COLORS } from '../../constants';
 import * as actions from '../../actions';
 
@@ -28,6 +29,7 @@ import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
+  isReinstallingActive: boolean,
   loadDependencyInfoFromDisk: Dispatch<
     typeof actions.loadDependencyInfoFromDiskStart
   >,
@@ -59,10 +61,10 @@ class ProjectPage extends PureComponent<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { project } = this.props;
+    const { project, isReinstallingActive } = this.props;
     if (
       project.id !== nextProps.project.id ||
-      project.dependencies.length === 0
+      (project.dependencies.length === 0 && !isReinstallingActive)
     ) {
       this.props.loadDependencyInfoFromDisk(
         nextProps.project.id,
@@ -175,6 +177,7 @@ const FadeIn = styled.div`
 
 const mapStateToProps = state => ({
   project: getSelectedProject(state),
+  isReinstallingActive: getReinstallingActive(state),
 });
 
 export default connect(
