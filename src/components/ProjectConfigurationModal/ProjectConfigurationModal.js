@@ -111,71 +111,69 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
         <ModalHeader title="Project settings" />
 
         <MainContent>
-          <form onSubmit={this.saveSettings}>
-            <FormField label="Project name" focusOnClick={false}>
-              <TextInput
-                onFocus={() => this.setActive('projectName')}
-                onChange={this.changeProjectName}
-                onKeyPress={this.handleKeyPress}
-                value={this.state.newName}
-                isFocused={activeField === 'projectName'}
-                autoFocus
-              />
-            </FormField>
+          <Scrollbars autoHeight={true} autoHeightMax={'80vh'} autoHide>
+            <form onSubmit={this.saveSettings}>
+              <FormField label="Project name" focusOnClick={false}>
+                <TextInput
+                  onFocus={() => this.setActive('projectName')}
+                  onChange={this.changeProjectName}
+                  onKeyPress={this.handleKeyPress}
+                  value={this.state.newName}
+                  isFocused={activeField === 'projectName'}
+                  autoFocus
+                />
+              </FormField>
 
-            <Spacer size={10} />
+              <Spacer size={10} />
 
-            <FormField
-              label="Project Icon"
-              focusOnClick={false}
-              isFocused={activeField === 'projectIcon'}
-            >
-              <ProjectIconSelection
-                selectedIcon={projectIcon}
-                onSelectIcon={this.updateProjectIcon}
-              />
-            </FormField>
+              <FormField
+                label="Project Icon"
+                focusOnClick={false}
+                isFocused={activeField === 'projectIcon'}
+              >
+                <ProjectIconSelection
+                  selectedIcon={projectIcon}
+                  onSelectIcon={this.updateProjectIcon}
+                />
+              </FormField>
 
-            {/* {project &&
+              {/* {project &&
               project.type === 'create-react-app' && (
               )} */}
 
-            <FormField label="Export" focusOnClick={false} />
-            <ExportToCodesandbox />
-            {/* <Fragment>
+              <FormField label="Export" focusOnClick={false} />
+              <ExportToCodesandbox />
+              {/* <Fragment>
             {/* Codesandbox export only supported for create-react-apps at the moment. */}
-            {/* </Fragment> */}
+              {/* </Fragment> */}
 
-            <Actions>
-              <FillButton
-                size="large"
-                colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-                disabled={dependenciesChangingForProject}
-              >
-                Save Project
-              </FillButton>
+              <Actions>
+                <FillButton
+                  size="large"
+                  colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+                  disabled={dependenciesChangingForProject}
+                >
+                  Save Project
+                </FillButton>
 
-              {dependenciesChangingForProject && (
-                <DisabledText>
-                  Waiting for pending tasks to finish…
-                </DisabledText>
-              )}
-            </Actions>
-          </form>
+                {dependenciesChangingForProject && (
+                  <DisabledText>
+                    Waiting for pending tasks to finish…
+                  </DisabledText>
+                )}
+              </Actions>
+            </form>
+          </Scrollbars>
         </MainContent>
       </Modal>
     );
   }
 }
 
-const MainContent = styled(Scrollbars).attrs({
-  autoHeight: true,
-  autoHeightMax: '500px', //'80vh',
-})`
+const MainContent = styled.div`
   padding: 25px;
-  // > div:first-child {
-  //   overflow: auto !important;
-  // }
+  // height: 95vh;
+  // overflow: hidden;
 `;
 
 const Actions = styled.div`

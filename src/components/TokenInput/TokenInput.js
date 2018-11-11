@@ -12,6 +12,7 @@ import TextInput from '../TextInput';
 
 class TokenInputField extends PureComponent {
   static defaultProps = {
+    focused: false,
     oneTimeDisplay: true, // if true only displayed on next enter will clear the field
     hideDuringTyping: true, // todo need to save both in token weakmap
     value: '',
@@ -21,7 +22,7 @@ class TokenInputField extends PureComponent {
   };
 
   state = {
-    focused: true,
+    focused: false,
     untouched: true,
   };
 
@@ -40,6 +41,11 @@ class TokenInputField extends PureComponent {
       this.state = {
         untouched: false,
         focused: false,
+      };
+    } else {
+      this.state = {
+        untouched: true,
+        focused: props.focused,
       };
     }
   }
@@ -118,7 +124,6 @@ class TokenInputField extends PureComponent {
             onBlur={this.blur}
             value={this.displayedValue()}
             onChange={this.updateToken}
-            autoFocus
           />
         )}
         {showValidation && (

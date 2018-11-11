@@ -133,7 +133,7 @@ class ExportToCodesandbox extends PureComponent {
   render() {
     const { codesandboxToken, project } = this.props;
     const { codesandboxUrl } = project;
-    console.log('export project', project);
+
     return (
       <Wrapper>
         <FormField size="small" label="Export to Codesandbox.io">
@@ -177,8 +177,8 @@ class ExportToCodesandbox extends PureComponent {
 }
 
 const Wrapper = styled.div`
-  //display: grid;
-  //grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 `;
 
 const Action = styled.div``;
