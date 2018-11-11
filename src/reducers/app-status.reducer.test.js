@@ -1,8 +1,5 @@
-import reducer, {
-  getStatusText,
-  getBlockingStatus,
-  initialState,
-} from './app-status.reducer';
+// @flow
+import reducer, { initialState } from './app-status.reducer';
 
 import {
   START_DELETING_PROJECT,
