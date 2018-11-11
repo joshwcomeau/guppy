@@ -17,6 +17,19 @@ const electronStore = require('./services/electron-store.service');
 const chalk = new chalkRaw.constructor({ level: 3 });
 let icon256Path = '../public/256x256.png';
 
+// In development, check if babel is compiling down to the right Chromium version
+if (process.env.NODE_ENV === 'development') {
+  const currentChromeVersion = process.versions.chrome.split('.')[0];
+  const chromeVersionWeBuildFor = require('../package.json').browserslist.split(
+    'chrome '
+  )[1];
+  if (currentChromeVersion !== chromeVersionWeBuildFor) {
+    log.warn(
+      `The Chromium version that Guppy is compiled for does not match the Chromium version used by Electron. You should update the \`browserslist\` field in the package.json to \`"chrome ${currentChromeVersion}"\`.`
+    );
+  }
+}
+
 // In production, we need to use `fixPath` to let Guppy use NPM.
 // For reasons unknown, the opposite is true in development; adding this breaks
 // everything.
