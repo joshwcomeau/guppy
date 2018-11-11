@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { call, put, select } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
 import * as childProcess from 'child_process';
@@ -5,7 +6,7 @@ import * as path from 'path';
 import chalkRaw from 'chalk';
 
 import {
-  launchDevServer,
+  handleLaunchDevServer,
   taskRun,
   taskAbort,
   displayTaskComplete,
@@ -17,7 +18,7 @@ import {
   attachTaskMetadata,
   receiveDataFromTaskExecution,
   completeTask,
-  loadDependencyInfoFromDisk,
+  loadDependencyInfoFromDiskStart,
 } from '../actions';
 import killProcessId from '../services/kill-process-id.service';
 import { getProjectById } from '../reducers/projects.reducer';
@@ -65,13 +66,13 @@ describe('task saga', () => {
     }
   });
 
-  describe('launchDevServer saga', () => {
+  describe('handleLaunchDevServer saga', () => {
     it('should throw if no task is provided', () => {
-      expect(() => launchDevServer()).toThrow();
+      expect(() => handleLaunchDevServer()).toThrow();
     });
 
     const task = { projectId: 'pickled-tulip' };
-    const saga = cloneableGenerator(launchDevServer)({ task });
+    const saga = cloneableGenerator(handleLaunchDevServer)({ task });
     const project = { type: 'create-react-app' };
     const projectPath = '/path/to/project';
     const port = 3000;
@@ -306,14 +307,8 @@ describe('task saga', () => {
           call(waitForChildProcessToComplete, installProcessDescription)
         );
 
-        // The next call is to `loadDependencyInfoFromDisk`, which is a thunk.
-        // Thunks produce anonymous functions, which means we can't easily
-        // test it. For now, just verify that it produces a function.
-        // TODO: remove `JSON.stringify` once `redux-thunk` is removed
-        expect(JSON.stringify(saga.next().value)).toEqual(
-          JSON.stringify(
-            put(loadDependencyInfoFromDisk(task.projectId, projectPath))
-          )
+        expect(saga.next().value).toEqual(
+          put(loadDependencyInfoFromDiskStart(task.projectId, projectPath))
         );
 
         expect(
@@ -330,7 +325,10 @@ describe('task saga', () => {
   describe('taskAbort saga', () => {
     it('should kill process and notify renderer', () => {
       const processId = 12345;
-      const saga = taskAbort({ task: { name: 'start', processId } });
+      const saga = taskAbort({
+        task: { name: 'start', processId },
+        projectType: 'create-react-app',
+      });
 
       expect(saga.next().value).toEqual(call(killProcessId, processId));
       expect(saga.next().value).toEqual(
@@ -340,7 +338,7 @@ describe('task saga', () => {
 
     it('should display correct message for dev server task', () => {
       const task = { name: 'start', processId: 12345 }; // react
-      let saga = taskAbort({ task });
+      let saga = taskAbort({ task, projectType: 'create-react-app' });
       saga.next();
       saga.next();
 
@@ -351,7 +349,18 @@ describe('task saga', () => {
       );
 
       task.name = 'develop'; // gatsby
-      saga = taskAbort({ task });
+      saga = taskAbort({ task, projectType: 'gatsby' });
+      saga.next();
+      saga.next();
+
+      expect(saga.next().value).toEqual(
+        put(
+          receiveDataFromTaskExecution(task, chalk.bold.red('Server stopped'))
+        )
+      );
+
+      task.name = 'dev'; // nextjs
+      saga = taskAbort({ task, projectType: 'nextjs' });
       saga.next();
       saga.next();
 
@@ -364,7 +373,7 @@ describe('task saga', () => {
 
     it('should display correct message for non dev server task', () => {
       const task = { name: 'test', processId: 12345 };
-      const saga = taskAbort({ task });
+      const saga = taskAbort({ task, projectType: 'create-react-app' });
       saga.next();
       saga.next();
 
@@ -400,12 +409,9 @@ describe('task saga', () => {
       expect(saga.next().value).toEqual(
         select(getProjectById, { projectId: task.projectId })
       );
-      // stringify to avoid deep equal inconsistencies from thunk
-      // TODO: remove `JSON.stringify` once `redux-thunk` is removed
-      expect(JSON.stringify(saga.next(project).value)).toEqual(
-        JSON.stringify(
-          put(loadDependencyInfoFromDisk(project.id, project.path))
-        )
+
+      expect(saga.next(project).value).toEqual(
+        put(loadDependencyInfoFromDiskStart(project.id, project.path))
       );
     });
   });

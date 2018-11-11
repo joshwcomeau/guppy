@@ -1,3 +1,4 @@
+// @flow
 const isFirstHalf = (index, totalNum) => {
   return index <= totalNum / 2;
 };

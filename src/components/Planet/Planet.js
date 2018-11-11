@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 type Props = {
-  x: number,
-  y: number,
   size: number,
   angle: number,
   background: string,

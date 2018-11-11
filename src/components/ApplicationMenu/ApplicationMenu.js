@@ -23,6 +23,7 @@ import {
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 
 import type { Project, Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const { app, process, Menu } = remote;
 
@@ -30,13 +31,16 @@ type Props = {
   projects: Array<Project>,
   selectedProject: ?Project,
   devServerTask: ?Task,
-  createNewProjectStart: () => any,
-  showImportExistingProjectPrompt: () => any,
-  clearConsole: (task: Task) => any,
-  showDeleteProjectPrompt: (project: any) => any,
-  showResetStatePrompt: () => any,
-  showProjectSettings: () => any,
-  selectProject: (projectId: string) => any,
+  createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
+  showImportExistingProjectPrompt: Dispatch<
+    typeof actions.showImportExistingProjectPrompt
+  >,
+  clearConsole: Dispatch<typeof actions.clearConsole>,
+  showDeleteProjectPrompt: Dispatch<typeof actions.showDeleteProjectPrompt>,
+  showResetStatePrompt: Dispatch<typeof actions.showResetStatePrompt>,
+  showProjectSettings: Dispatch<typeof actions.showProjectSettings>,
+  showAppSettings: Dispatch<typeof actions.showAppSettings>,
+  selectProject: Dispatch<typeof actions.selectProject>,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -66,6 +70,7 @@ class ApplicationMenu extends Component<Props> {
       showDeleteProjectPrompt,
       showResetStatePrompt,
       showProjectSettings,
+      showAppSettings,
       selectProject,
       projects,
     } = props;
@@ -158,6 +163,16 @@ class ApplicationMenu extends Component<Props> {
       },
     ];
 
+    // Add preferences menu item for Linux/Windows
+    if (!isMac) {
+      template[0].submenu.push({
+        // Linux & Windows only
+        label: '&Preferences...',
+        click: showAppSettings,
+        accelerator: 'CmdOrCtrl+,',
+      });
+    }
+
     // MacOS menus start with the app name (Guppy) and offer some standard
     // options:
     if (process.platform === 'darwin') {
@@ -170,6 +185,11 @@ class ApplicationMenu extends Component<Props> {
           { role: 'hide' },
           { role: 'hideothers' },
           { role: 'unhide' },
+          {
+            label: 'Preferences...',
+            click: showAppSettings,
+            accelerator: 'CmdOrCtrl+,',
+          },
           { type: 'separator' },
           { role: 'quit' },
         ],
@@ -286,6 +306,7 @@ const mapDispatchToProps = {
   showDeleteProjectPrompt: actions.showDeleteProjectPrompt,
   showResetStatePrompt: actions.showResetStatePrompt,
   showProjectSettings: actions.showProjectSettings,
+  showAppSettings: actions.showAppSettings,
   selectProject: actions.selectProject,
 };
 

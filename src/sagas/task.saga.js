@@ -13,8 +13,12 @@ import {
   completeTask,
   attachTaskMetadata,
   receiveDataFromTaskExecution,
-  loadDependencyInfoFromDisk,
+  loadDependencyInfoFromDiskStart,
+  launchDevServer,
+  runTask,
+  abortTask,
 } from '../actions';
+import projectConfigs from '../config/project-types';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { isDevServerTask } from '../reducers/tasks.reducer';
@@ -27,14 +31,23 @@ import {
 } from '../services/platform.service';
 import { processLogger } from '../services/process-logger.service';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
+import type { ChildProcess } from 'child_process';
 import type { Task, ProjectType } from '../types';
+import type { ReturnType } from '../actions/types';
+
 const { dialog } = remote;
+
+// Mapping type for config template variables '$port'
+export type VariableMap = {
+  $port: string,
+};
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
-export function* launchDevServer({ task }: Action): Saga<void> {
+export function* handleLaunchDevServer({
+  task,
+}: ReturnType<typeof launchDevServer>): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, {
     projectId: task.projectId,
@@ -140,7 +153,7 @@ export function* launchDevServer({ task }: Action): Saga<void> {
 }
 
 export function waitForChildProcessToComplete(
-  installProcess: any
+  installProcess: ChildProcess
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     installProcess.on('exit', (code: number) => {
@@ -153,7 +166,7 @@ export function waitForChildProcessToComplete(
   });
 }
 
-export function* taskRun({ task }: Action): Saga<void> {
+export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
   const project = yield select(getProjectById, { projectId: task.projectId });
   const projectPath = yield select(getPathForProjectId, {
     projectId: task.projectId,
@@ -288,7 +301,9 @@ export function* taskRun({ task }: Action): Saga<void> {
           // otherwise the next tasks (UI related) run too early before `yarn install`
           // is finished
           yield call(waitForChildProcessToComplete, installProcess);
-          yield put(loadDependencyInfoFromDisk(project.id, project.path));
+          yield put(
+            loadDependencyInfoFromDiskStart(task.projectId, projectPath)
+          );
         }
 
         yield call(displayTaskComplete, task, message.wasSuccessful);
@@ -301,7 +316,10 @@ export function* taskRun({ task }: Action): Saga<void> {
   }
 }
 
-export function* taskAbort({ task }: Action): Saga<void> {
+export function* taskAbort({
+  task,
+  projectType,
+}: ReturnType<typeof abortTask>): Saga<void> {
   const { processId, name } = task;
 
   yield call(killProcessId, processId);
@@ -313,7 +331,7 @@ export function* taskAbort({ task }: Action): Saga<void> {
   // but given that we're treating `start` as its own special thing,
   // I'm realizing that it should vary depending on the task type.
   // TODO: Find a better place for this to live.
-  const abortMessage = isDevServerTask(name)
+  const abortMessage = isDevServerTask(name, projectType)
     ? 'Server stopped'
     : 'Task aborted';
 
@@ -334,7 +352,9 @@ export function* displayTaskComplete(
   yield put(receiveDataFromTaskExecution(task, message));
 }
 
-export function* taskComplete({ task }: Action): Saga<void> {
+export function* taskComplete({
+  task,
+}: ReturnType<typeof completeTask>): Saga<void> {
   if (task.processId) {
     yield call(
       [ipcRenderer, ipcRenderer.send],
@@ -350,12 +370,12 @@ export function* taskComplete({ task }: Action): Saga<void> {
   if (task.name === 'eject') {
     const project = yield select(getProjectById, { projectId: task.projectId });
 
-    yield put(loadDependencyInfoFromDisk(project.id, project.path));
+    yield put(loadDependencyInfoFromDiskStart(project.id, project.path));
   }
 }
 
 const createStdioChannel = (
-  child: any,
+  child: ChildProcess,
   handlers: {
     stdout: (emitter: any) => (data: string) => void,
     stderr: (emitter: any) => (data: string) => void,
@@ -384,27 +404,64 @@ const createStdioChannel = (
   });
 };
 
+// We're using "template" variables inside the project type configuration file (config/project-types.js)
+// so with the following function we can replace the string $port with the real port number e.g. 3000
+// (see type VariableMap for used mapping strings)
+export const substituteConfigVariables = (
+  configObject: any,
+  variableMap: VariableMap
+) => {
+  // e.g. $port inside args will be replaced with variable reference from variabeMap obj. {$port: port}
+  return Object.keys(configObject).reduce(
+    (config, key) => {
+      if (config[key] instanceof Array) {
+        // replace $port inside args array
+        config[key] = config[key].map(arg => variableMap[arg] || arg);
+      } else {
+        // check config[key] e.g. is {env: { PORT: '$port'} }
+        if (config[key] instanceof Object) {
+          // config[key] = {PORT: '$port'}, key = 'env'
+          config[key] = Object.keys(config[key]).reduce(
+            (newObj, nestedKey) => {
+              // use replacement value if available
+              newObj[nestedKey] =
+                variableMap[newObj[nestedKey]] || newObj[nestedKey];
+              return newObj;
+            },
+            { ...config[key] }
+          );
+        }
+      }
+      // todo: add top level substitution - not used yet but maybe needed later e.g. { env: $port } won't be replaced.
+      //       Bad example but just to have it as reminder.
+      return config;
+    },
+    { ...configObject }
+  );
+};
+
 export const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
   port: string
 ) => {
-  switch (projectType) {
-    case 'create-react-app':
-      return {
-        args: ['run', task.name],
-        env: {
-          PORT: port,
-        },
-      };
-    case 'gatsby':
-      return {
-        args: ['run', task.name, '-p', port],
-        env: {},
-      };
-    default:
-      throw new Error('Unrecognized project type: ' + projectType);
+  const config = projectConfigs[projectType];
+
+  if (!config) {
+    throw new Error('Unrecognized project type: ' + projectType);
   }
+
+  // Substitution is needed as we'd like to have $port as args or in env
+  // we can use it in either position and it will be subsituted with the port value here
+  const devServer = substituteConfigVariables(config.devServer, {
+    // pass every value that is needed in the commands here
+    $port: port,
+  });
+
+  return {
+    args: devServer.args,
+    env: devServer.env || {},
+  };
 };
 
 export const stripUnusableControlCharacters = (text: string) =>
@@ -413,14 +470,14 @@ export const stripUnusableControlCharacters = (text: string) =>
   // up in the output as "G".
   text.replace(/\[1G/g, '');
 
-export const sendCommandToProcess = (child: any, command: string) => {
+export const sendCommandToProcess = (child: ChildProcess, command: string) => {
   // Commands have to be suffixed with '\n' to signal that the command is
   // ready to be sent. Same as a regular command + hitting the enter key.
   child.stdin.write(`${command}\n`);
 };
 
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(LAUNCH_DEV_SERVER, launchDevServer);
+  yield takeEvery(LAUNCH_DEV_SERVER, handleLaunchDevServer);
   // these saga handlers are named in reverse order (RUN_TASK => taskRun, etc.)
   // to avoid naming conflicts with their related actions (completeTask is
   // already an action creator).

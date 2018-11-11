@@ -20,7 +20,7 @@ import {
 } from './dependencies.reducer';
 import { getPaths, getPathForProjectId } from './paths.reducer';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 import type { ProjectInternal, Project } from '../types';
 
 type ById = {

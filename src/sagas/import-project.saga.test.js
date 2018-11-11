@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import electron from 'electron'; // Mocked
 import { call, put, cancel, select, takeEvery } from 'redux-saga/effects';
 import rootSaga, {

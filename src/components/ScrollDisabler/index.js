@@ -1,1 +1,2 @@
-export { default } from "./ScrollDisabler";
+// @flow
+export { default } from './ScrollDisabler';

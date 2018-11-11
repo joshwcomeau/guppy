@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 /**
  * This is our main Electron process.
  * It handles opening our app window, and quitting the application.

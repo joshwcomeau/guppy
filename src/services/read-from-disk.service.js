@@ -5,13 +5,18 @@ import * as path from 'path';
 
 import { pick } from '../utils';
 
-import type { QueuedDependency, DependencyLocation } from '../types';
+import type {
+  QueuedDependency,
+  DependencyLocation,
+  Dependency,
+  ProjectInternal,
+} from '../types';
 
 /**
  * Load a project's package.json
  */
 export const loadPackageJson = (projectPath: string) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<any>((resolve, reject) => {
     return fs.readFile(
       path.join(projectPath, 'package.json'),
       'utf8',
@@ -32,7 +37,7 @@ export const loadPackageJson = (projectPath: string) => {
 export const writePackageJson = (projectPath: string, json: any) => {
   const prettyPrintedPackageJson = JSON.stringify(json, null, 2);
 
-  return new Promise((resolve, reject) => {
+  return new Promise<any>((resolve, reject) => {
     fs.writeFile(
       path.join(projectPath, 'package.json'),
       prettyPrintedPackageJson,
@@ -52,7 +57,7 @@ export const writePackageJson = (projectPath: string, json: any) => {
  * Parses the `package.json` to find Guppy's saved info.
  */
 export const loadGuppyProjects = (projectPaths: Array<string>) =>
-  new Promise((resolve, reject) => {
+  new Promise<{ [projectId: string]: ProjectInternal }>((resolve, reject) => {
     // Each project in a Guppy directory should have a package.json.
     // We'll read all the project info we need from this file.
     // TODO: Maybe use asyncReduce to handle the output format in 1 neat step?
@@ -126,7 +131,7 @@ export function loadProjectDependency(
   // prettier-ignore
   const dependencyPath = path.join(projectPath, 'node_modules', dependencyName, 'package.json');
 
-  return new Promise((resolve, reject) => {
+  return new Promise<Dependency | null>((resolve, reject) => {
     fs.readFile(dependencyPath, 'utf8', (err, data) => {
       if (err) {
         if (err.code === 'ENOENT') {
@@ -160,6 +165,7 @@ export function loadProjectDependency(
         location: dependencyLocation,
       };
 
+      // $FlowFixMe
       return resolve(dependency);
     });
   });
@@ -173,7 +179,7 @@ export function loadProjectDependencies(
   projectPath: string,
   dependencies: Array<QueuedDependency>
 ) {
-  return new Promise((resolve, reject) => {
+  return new Promise<Array<Dependency>>((resolve, reject) => {
     asyncMap(
       dependencies,
       function({ name, location }, callback) {

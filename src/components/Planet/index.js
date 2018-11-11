@@ -1,3 +1,4 @@
+// @flow
 export { default as Planet } from './Planet';
 export { default as PlanetCloud } from './PlanetCloud';
 export { default as PlanetGlow } from './PlanetGlow';

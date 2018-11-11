@@ -1,1 +1,2 @@
-export { default } from "./Spinner";
+// @flow
+export { default } from './Spinner';

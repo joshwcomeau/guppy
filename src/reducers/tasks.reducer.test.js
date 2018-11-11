@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import {
   REFRESH_PROJECTS_FINISH,
   ADD_PROJECT,
