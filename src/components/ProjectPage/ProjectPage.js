@@ -67,7 +67,6 @@ class ProjectPage extends PureComponent<Props> {
       project.id !== nextProps.project.id ||
       project.dependencies.length === 0
     ) {
-      console.log('oh no');
       this.props.loadDependencyInfoFromDisk(
         nextProps.project.id,
         nextProps.project.path
