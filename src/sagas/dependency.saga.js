@@ -99,7 +99,6 @@ export function* handleInstallDependenciesStart({
   try {
     yield call(installDependencies, projectPath, dependencies);
 
-    console.log('install deps', dependencies);
     const storedDependencies = yield call(
       loadProjectDependencies,
       projectPath,

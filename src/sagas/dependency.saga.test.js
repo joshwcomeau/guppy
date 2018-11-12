@@ -30,6 +30,7 @@ import {
   queueDependencyUninstall,
   installDependenciesError,
   installDependenciesFinish,
+  loadDependencyInfoFromDiskStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
@@ -271,26 +272,31 @@ describe('Dependency sagas', () => {
           projectId,
         })
       );
-      expect(saga.next('project/path').value).toEqual(
-        call(waitForAsyncRimraf, 'project/path')
+      expect(saga.next(projectPath).value).toEqual(
+        call(waitForAsyncRimraf, projectPath)
       );
 
       // TODO: Why is JSON.stringify needed for the next expect?
       //       With-out it we're getting 'Compared values have no visual difference.'
       expect(JSON.stringify(saga.next().value)).toEqual(
-        JSON.stringify(call(reinstallDependenciesStart, 'project/path'))
+        JSON.stringify(call(reinstallDependenciesStart, projectPath))
       );
       // cechk watchInstallMessages called
       expect(saga.next().value).toEqual(call(watchInstallMessages, undefined));
 
-      // check reinstall dependency finish dispatch
-      expect(saga.next().value).toEqual(put(reinstallDependenciesFinish()));
-
       // check dispatch of resetStatusText
       expect(saga.next().value).toEqual(put(resetStatusText()));
 
+      // reload dependencies
+      expect(saga.next().value).toEqual(
+        put(loadDependencyInfoFromDiskStart(projectId, projectPath))
+      );
+
       // Finally it should dispatch refreshProjectStart
       expect(saga.next().value).toEqual(put(refreshProjectsStart()));
+
+      // check reinstall dependency finish dispatch
+      expect(saga.next().value).toEqual(put(reinstallDependenciesFinish()));
     });
 
     it('should fail silently with-out projectId', () => {
