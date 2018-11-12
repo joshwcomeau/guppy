@@ -134,16 +134,6 @@ export function loadProjectDependency(
   return new Promise<Dependency | null>((resolve, reject) => {
     fs.readFile(dependencyPath, 'utf8', (err, data) => {
       if (err) {
-        // if (err.code === 'ENOENT') {
-        //   // Interestingly, freshly-ejected packages have `babel-loader`
-        //   // as a dependency, but no such NPM module installed o_O.
-        //   // Maybe it isn't a safe bet to assume that dependency name
-        //   // always matches folder name inside `node_modules`?
-        //   // TODO: For now I'm just going to ignore these cases, but I should
-        //   // really figure this out!
-        //   return resolve(null);
-        // }
-
         return reject(err);
       }
 

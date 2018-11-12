@@ -30,7 +30,6 @@ import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
-  isReinstallingActive: boolean,
   dependenciesLoadingStatus: boolean,
   loadDependencyInfoFromDisk: Dispatch<
     typeof actions.loadDependencyInfoFromDiskStart
