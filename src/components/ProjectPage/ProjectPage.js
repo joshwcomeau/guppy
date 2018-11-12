@@ -136,9 +136,9 @@ class ProjectPage extends PureComponent<Props> {
             <Fragment>
               <Spacer size={30} />
               <Paragraph>
-                Please install the dependencies so you can use the scripts that
-                are needed by your project. This is OK and happens if you're
-                freshly cloning a project from Github.
+                Please install dependencies so you can use the scripts that are
+                needed by your project. This is OK and happens if you're freshly
+                cloning a project from Github.
               </Paragraph>
               <Spacer size={30} />
               <InstallWrapper>
