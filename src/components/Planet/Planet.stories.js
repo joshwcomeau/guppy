@@ -17,7 +17,7 @@ storiesOf('Planet', module)
   ))
   .add('Earth', () => (
     <Space>
-      <Earth />
+      <Earth size={100} />
     </Space>
   ));
 

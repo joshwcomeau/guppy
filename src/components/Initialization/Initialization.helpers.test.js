@@ -12,8 +12,8 @@ describe('Initialization helpers', () => {
       dependencies: [
         {
           name: 'test',
-          version: null,
-          updating: null,
+          version: '1.0',
+          updating: false,
         },
       ],
     };
@@ -22,8 +22,8 @@ describe('Initialization helpers', () => {
 
     task.dependencies.push({
       name: 'test2',
-      version: null,
-      updating: null,
+      version: '1.0',
+      updating: false,
     });
     expect(mapTasksPerProjectToString(task)).toEqual('- Installing 2 tasks');
   });
@@ -35,8 +35,8 @@ describe('Initialization helpers', () => {
       dependencies: [
         {
           name: 'test',
-          version: null,
-          updating: null,
+          version: '1.0',
+          updating: false,
         },
       ],
     };
@@ -55,8 +55,8 @@ describe('Initialization helpers', () => {
             dependencies: [
               {
                 name: 'test',
-                version: null,
-                updating: null,
+                version: '1.0',
+                updating: false,
               },
             ],
           },
@@ -66,8 +66,8 @@ describe('Initialization helpers', () => {
             dependencies: [
               {
                 name: 'test2',
-                version: null,
-                updating: null,
+                version: '1.0',
+                updating: false,
               },
             ],
           },
@@ -82,8 +82,8 @@ describe('Initialization helpers', () => {
             dependencies: [
               {
                 name: 'test',
-                version: null,
-                updating: null,
+                version: '1.0',
+                updating: false,
               },
             ],
           },
@@ -93,13 +93,13 @@ describe('Initialization helpers', () => {
             dependencies: [
               {
                 name: 'test2',
-                version: null,
-                updating: null,
+                version: '1.0',
+                updating: false,
               },
               {
                 name: 'test3',
-                version: null,
-                updating: null,
+                version: '1.0',
+                updating: false,
               },
             ],
           },
