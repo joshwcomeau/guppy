@@ -13,29 +13,21 @@ import type { Action } from '../actions/types';
 
 type State = {
   blockingActionActive: boolean,
-  reinstallingActive: boolean,
   statusText: string,
 };
 
 export const initialState = {
   blockingActionActive: false,
   statusText: 'Please wait...',
-  reinstallingActive: false,
 };
 
 export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case START_DELETING_PROJECT:
-      return {
-        ...state,
-        blockingActionActive: true,
-      };
-
     case REINSTALL_DEPENDENCIES_START:
       return {
         ...state,
         blockingActionActive: true,
-        reinstallingActive: true,
       };
 
     case FINISH_DELETING_PROJECT:
@@ -44,7 +36,6 @@ export default (state: State = initialState, action: Action = {}) => {
       return {
         ...state,
         blockingActionActive: false,
-        reinstallingActive: false,
       };
 
     case SET_STATUS_TEXT:

@@ -37,8 +37,11 @@ export const LAUNCH_DEV_SERVER = 'LAUNCH_DEV_SERVER';
 export const CLEAR_CONSOLE = 'CLEAR_CONSOLE';
 export const LOAD_DEPENDENCY_INFO_FROM_DISK_START =
   'LOAD_DEPENDENCY_INFO_FROM_DISK_START';
+export const LOAD_DEPENDENCY_INFO_FROM_DISK_ERROR =
+  'LOAD_DEPENDENCY_INFO_FROM_DISK_ERROR';
 export const LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH =
   'LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH';
+
 export const ADD_DEPENDENCY = 'ADD_DEPENDENCY';
 export const UPDATE_DEPENDENCY = 'UPDATE_DEPENDENCY';
 export const DELETE_DEPENDENCY = 'DELETE_DEPENDENCY';
@@ -139,6 +142,11 @@ export const loadDependencyInfoFromDiskFinish = (
   type: LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH,
   projectId,
   dependencies,
+});
+
+export const loadDependencyInfoFromDiskError = (projectId: string) => ({
+  type: LOAD_DEPENDENCY_INFO_FROM_DISK_ERROR,
+  projectId,
 });
 
 export const createNewProjectStart = () => ({

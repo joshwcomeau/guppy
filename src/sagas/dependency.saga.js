@@ -36,6 +36,7 @@ import {
   installDependenciesStart,
   uninstallDependenciesStart,
   loadDependencyInfoFromDiskStart,
+  loadDependencyInfoFromDiskError,
   refreshProjectsStart,
   reinstallDependenciesStart,
   setStatusText,
@@ -97,6 +98,8 @@ export function* handleInstallDependenciesStart({
 
   try {
     yield call(installDependencies, projectPath, dependencies);
+
+    console.log('install deps', dependencies);
     const storedDependencies = yield call(
       loadProjectDependencies,
       projectPath,
@@ -130,14 +133,18 @@ export function* handleReinstallDependenciesStart({
     // todo: Check if we need to pass a progress value so we can display a progress bar as well.
     yield call(watchInstallMessages, channel);
 
-    // reinstall finished --> hide waiting spinner
-    // todo: do we need an error handling here? We could check result.exit === 1 for an error.
-    yield put(reinstallDependenciesFinish());
-
     // reset status text of loading screen
     yield put(resetStatusText());
 
+    // load dependencies to refresh state
+    yield put(loadDependencyInfoFromDiskStart(projectId, projectPath));
+
+    // refresh projects
     yield put(refreshProjectsStart());
+
+    // reinstall finished --> hide waiting spinner
+    // todo: do we need an error handling here? We could check result.exit === 1 for an error.
+    yield put(reinstallDependenciesFinish());
   } catch (err) {
     yield call(
       [console, console.error],
@@ -175,11 +182,12 @@ export function* handleLoadDependencyInfoFromDiskStart({
     const dependencies = yield call(loadAllProjectDependencies, projectPath);
     yield put(loadDependencyInfoFromDiskFinish(projectId, dependencies));
   } catch (err) {
-    yield call(
-      [console, console.error],
-      'Failed to load dependencies from disk',
-      err
-    );
+    // yield call(
+    //   [console, console.error],
+    //   'Failed to load dependencies from disk',
+    //   err
+    // );
+    yield put(loadDependencyInfoFromDiskError(projectId));
   }
 }
 

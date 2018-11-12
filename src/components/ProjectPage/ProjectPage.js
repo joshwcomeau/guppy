@@ -5,7 +5,7 @@ import styled, { keyframes } from 'styled-components';
 import { Tooltip } from 'react-tippy';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
-import { getReinstallingActive } from '../../reducers/app-status.reducer';
+import { getDependenciesLoadingStatus } from '../../reducers/dependencies.reducer';
 import { COLORS } from '../../constants';
 import * as actions from '../../actions';
 
@@ -18,6 +18,7 @@ import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
 import SettingsButton from '../SettingsButton';
+import Paragraph from '../Paragraph';
 import {
   openProjectInEditor,
   openProjectInFolder,
@@ -61,11 +62,12 @@ class ProjectPage extends PureComponent<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { project, isReinstallingActive } = this.props;
+    const { project } = this.props;
     if (
       project.id !== nextProps.project.id ||
-      (project.dependencies.length === 0 && !isReinstallingActive)
+      project.dependencies.length === 0
     ) {
+      console.log('oh no');
       this.props.loadDependencyInfoFromDisk(
         nextProps.project.id,
         nextProps.project.path
@@ -74,7 +76,11 @@ class ProjectPage extends PureComponent<Props> {
   }
 
   render() {
-    const { project, reinstallDependencies } = this.props;
+    const {
+      project,
+      reinstallDependencies,
+      dependenciesLoadingStatus,
+    } = this.props;
     const { path } = project;
 
     return (
@@ -116,14 +122,24 @@ class ProjectPage extends PureComponent<Props> {
             </FillButton>
           </ProjectActionBar>
 
-          <Spacer size={30} />
-          <DevelopmentServerPane leftSideWidth={300} />
-
-          <Spacer size={30} />
-          <TaskRunnerPane leftSideWidth={200} />
-
-          {project.dependencies.length === 0 && (
+          {dependenciesLoadingStatus === 'done' && (
             <Fragment>
+              <Spacer size={30} />
+              <DevelopmentServerPane leftSideWidth={300} />
+
+              <Spacer size={30} />
+              <TaskRunnerPane leftSideWidth={200} />
+            </Fragment>
+          )}
+
+          {dependenciesLoadingStatus === 'fail' && (
+            <Fragment>
+              <Spacer size={30} />
+              <Paragraph>
+                Please install the dependencies so you can use the scripts that
+                are needed by your project. This is OK and happens if you're
+                freshly cloning a project from Github.
+              </Paragraph>
               <Spacer size={30} />
               <InstallWrapper>
                 <FillButton
@@ -137,7 +153,7 @@ class ProjectPage extends PureComponent<Props> {
             </Fragment>
           )}
 
-          {project.dependencies.length > 0 && (
+          {dependenciesLoadingStatus === 'done' && (
             <Fragment>
               <Spacer size={30} />
               <DependencyManagementPane />
@@ -175,10 +191,17 @@ const FadeIn = styled.div`
   animation: ${fadeIn} 400ms;
 `;
 
-const mapStateToProps = state => ({
-  project: getSelectedProject(state),
-  isReinstallingActive: getReinstallingActive(state),
-});
+const mapStateToProps = state => {
+  const project = getSelectedProject(state);
+  const props = {
+    projectId: project.id,
+  };
+
+  return {
+    project,
+    dependenciesLoadingStatus: getDependenciesLoadingStatus(state, props),
+  };
+};
 
 export default connect(
   mapStateToProps,

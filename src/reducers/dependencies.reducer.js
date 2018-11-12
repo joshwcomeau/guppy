@@ -1,7 +1,10 @@
 // @flow
 import produce from 'immer';
+import { combineReducers } from 'redux';
 
 import {
+  LOAD_DEPENDENCY_INFO_FROM_DISK_START,
+  LOAD_DEPENDENCY_INFO_FROM_DISK_ERROR,
   LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH,
   ADD_DEPENDENCY,
   UPDATE_DEPENDENCY,
@@ -23,13 +26,26 @@ type DependencyMap = {
   [dependencyName: string]: Dependency,
 };
 
+type LoadingStatus = 'done' | 'fail' | 'loading';
+
 type State = {
-  [projectId: string]: DependencyMap,
+  loadedDependencies: {
+    [projectId: string]: DependencyMap,
+  },
+  loadingStatus: {
+    [projectId: string]: LoadingStatus,
+  },
 };
 
-export const initialState = {};
+export const initialState = {
+  loadedDependencies: {},
+  loadingStatus: {},
+};
 
-export default (state: State = initialState, action: Action = {}) => {
+const loadedDependenciesReducer = (
+  state: State = initialState.loadedDependencies,
+  action: Action = {}
+) => {
   switch (action.type) {
     case LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH: {
       const { projectId, dependencies } = action;
@@ -159,20 +175,75 @@ export default (state: State = initialState, action: Action = {}) => {
     }
 
     case RESET_ALL_STATE:
-      return initialState;
+      return initialState.loadedDependencies;
+
+    case LOAD_DEPENDENCY_INFO_FROM_DISK_ERROR:
+    default:
+      return state;
+  }
+};
+
+const loadingStatusReducer = (
+  state: State = initialState.loadingStatus,
+  action: Action = {}
+) => {
+  switch (action.type) {
+    case LOAD_DEPENDENCY_INFO_FROM_DISK_START:
+      return produce(state, draftState => {
+        draftState[action.projectId] = 'loading';
+      });
+
+    case LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH:
+      return produce(state, draftState => {
+        draftState[action.projectId] = 'done';
+      });
+
+    case LOAD_DEPENDENCY_INFO_FROM_DISK_ERROR:
+      return produce(state, draftState => {
+        draftState[action.projectId] = 'fail';
+      });
+
+    case REFRESH_PROJECTS_FINISH: {
+      const { projects } = action;
+      // If a project was removed, clear out its associated dependencies.
+      // Duplicate code - same as in loadedDependencies. Could be refactored but two locations are OK for duplication.
+      return produce(state, draftState => {
+        const depIds = Object.keys(draftState);
+        const projectIds = Object.keys(projects);
+
+        depIds.forEach(id => {
+          if (!projectIds.includes(id)) {
+            delete draftState[id];
+          }
+        });
+      });
+    }
+
+    case RESET_ALL_STATE:
+      return initialState.loadingStatus;
 
     default:
       return state;
   }
 };
 
+export default combineReducers({
+  loadingStatus: loadingStatusReducer,
+  loadedDependencies: loadedDependenciesReducer,
+});
 //
 //
 //
 // Selectors
-export const getDependencies = (state: any) => state.dependencies;
+export const getDependencies = (state: any) =>
+  state.dependencies.loadedDependencies;
 
 export const getDependenciesForProjectId = (
   state: any,
   props: { projectId: string }
-): DependencyMap => state.dependencies[props.projectId];
+): DependencyMap => state.dependencies.loadedDependencies[props.projectId];
+
+export const getDependenciesLoadingStatus = (
+  state: any,
+  props: { projectId: string }
+): LoadingStatus => state.dependencies.loadingStatus[props.projectId];
