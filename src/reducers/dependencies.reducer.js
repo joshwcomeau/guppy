@@ -28,23 +28,28 @@ type DependencyMap = {
 
 type LoadingStatus = 'done' | 'fail' | 'loading';
 
-type State = {
-  loadedDependencies: {
-    [projectId: string]: DependencyMap,
-  },
-  loadingStatus: {
-    [projectId: string]: LoadingStatus,
-  },
+type LoadedDependenciesState = {
+  [projectId: string]: DependencyMap,
 };
+
+type LoadingStatusState = {
+  [projectId: string]: LoadingStatus,
+};
+
+// type State = {
+//   loadedDependencies: LoadedDependenciesState,
+//   loadingStatus: LoadingStatus,
+// };
 
 export const initialState = {
   loadedDependencies: {},
   loadingStatus: {},
 };
 
+// Todo: Why do we need to use any instead of Action here?
 const loadedDependenciesReducer = (
-  state: State = initialState.loadedDependencies,
-  action: Action = {}
+  state: LoadedDependenciesState = initialState.loadedDependencies,
+  action: any = {}
 ) => {
   switch (action.type) {
     case LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH: {
@@ -184,8 +189,8 @@ const loadedDependenciesReducer = (
 };
 
 const loadingStatusReducer = (
-  state: State = initialState.loadingStatus,
-  action: Action = {}
+  state: LoadingStatusState = initialState.loadingStatus,
+  action: any = {}
 ) => {
   switch (action.type) {
     case LOAD_DEPENDENCY_INFO_FROM_DISK_START:
@@ -245,5 +250,5 @@ export const getDependenciesForProjectId = (
 
 export const getDependenciesLoadingStatus = (
   state: any,
-  props: { projectId: string }
+  props: { projectId: ?string }
 ): LoadingStatus => state.dependencies.loadingStatus[props.projectId];

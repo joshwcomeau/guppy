@@ -31,6 +31,7 @@ import type { Dispatch } from '../../actions/types';
 type Props = {
   project: Project,
   isReinstallingActive: boolean,
+  dependenciesLoadingStatus: boolean,
   loadDependencyInfoFromDisk: Dispatch<
     typeof actions.loadDependencyInfoFromDiskStart
   >,
@@ -194,7 +195,7 @@ const FadeIn = styled.div`
 const mapStateToProps = state => {
   const project = getSelectedProject(state);
   const props = {
-    projectId: project.id,
+    projectId: project && project.id,
   };
 
   return {
