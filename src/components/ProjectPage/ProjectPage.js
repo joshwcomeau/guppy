@@ -36,7 +36,7 @@ import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
-  dependenciesLoadingStatus: boolean,
+  dependenciesLoadingStatus: string,
   loadDependencyInfoFromDisk: Dispatch<
     typeof actions.loadDependencyInfoFromDiskStart
   >,
