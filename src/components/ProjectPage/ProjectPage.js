@@ -3,6 +3,8 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import { Tooltip } from 'react-tippy';
+import IconBase from 'react-icons-kit';
+import { packageIcon } from 'react-icons-kit/feather/packageIcon';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDependenciesLoadingStatus } from '../../reducers/dependencies.reducer';
@@ -19,6 +21,10 @@ import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
 import SettingsButton from '../SettingsButton';
 import Paragraph from '../Paragraph';
+import MountAfter from '../MountAfter';
+import Spinner from '../Spinner';
+import Card from '../Card';
+
 import {
   openProjectInEditor,
   openProjectInFolder,
@@ -63,10 +69,7 @@ class ProjectPage extends PureComponent<Props> {
 
   componentWillReceiveProps(nextProps: Props) {
     const { project } = this.props;
-    if (
-      project.id !== nextProps.project.id ||
-      project.dependencies.length === 0
-    ) {
+    if (project.id !== nextProps.project.id) {
       this.props.loadDependencyInfoFromDisk(
         nextProps.project.id,
         nextProps.project.path
@@ -121,44 +124,59 @@ class ProjectPage extends PureComponent<Props> {
             </FillButton>
           </ProjectActionBar>
 
-          {dependenciesLoadingStatus === 'done' && (
-            <Fragment>
-              <Spacer size={30} />
-              <DevelopmentServerPane leftSideWidth={300} />
-
-              <Spacer size={30} />
-              <TaskRunnerPane leftSideWidth={200} />
-            </Fragment>
-          )}
-
-          {dependenciesLoadingStatus === 'fail' && (
-            <Fragment>
-              <Spacer size={30} />
-              <Paragraph>
-                Please install dependencies so you can use the scripts that are
-                needed by your project. This is OK and happens if you're freshly
-                cloning a project from Github.
-              </Paragraph>
-              <Spacer size={30} />
-              <InstallWrapper>
-                <FillButton
-                  size="large"
-                  colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-                  onClick={() => reinstallDependencies(project.id)}
+          <Spacer size={30} />
+          {
+            // Conditionally render depending on dependenciesLoadingStatus
+            {
+              loading: (
+                <MountAfter
+                  delay={100}
+                  reason={`Don't show spinner if we're really fast.`}
                 >
-                  Install Dependencies
-                </FillButton>
-              </InstallWrapper>
-            </Fragment>
-          )}
+                  <SpinnerWrapper>
+                    <Spinner size={50} />
+                  </SpinnerWrapper>
+                </MountAfter>
+              ),
+              done: (
+                <Fragment>
+                  <DevelopmentServerPane leftSideWidth={300} />
 
-          {dependenciesLoadingStatus === 'done' && (
-            <Fragment>
-              <Spacer size={30} />
-              <DependencyManagementPane />
-            </Fragment>
-          )}
+                  <Spacer size={30} />
+                  <TaskRunnerPane leftSideWidth={200} />
+                  <Spacer size={30} />
+                  <DependencyManagementPane />
+                </Fragment>
+              ),
+              fail: (
+                <Card>
+                  <BaseWrapper>
+                    <DependencyMissingIcon />
+                  </BaseWrapper>
 
+                  <Paragraph>
+                    <strong>Oh no!</strong> Looks like your project dependencies
+                    are missing.
+                  </Paragraph>
+                  <Paragraph>
+                    This can happen if you've freshly cloned a project from
+                    Github. In order to run scripts in Guppy, you'll need to
+                    install them now.
+                  </Paragraph>
+                  <Spacer size={30} />
+                  <InstallWrapper>
+                    <FillButton
+                      size="large"
+                      colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+                      onClick={() => reinstallDependencies(project.id)}
+                    >
+                      Install Dependencies
+                    </FillButton>
+                  </InstallWrapper>
+                </Card>
+              ),
+            }[dependenciesLoadingStatus]
+          }
           <Spacer size={60} />
         </MainContentWrapper>
       </FadeIn>
@@ -176,9 +194,20 @@ const ProjectActionBar = styled.div`
   display: flex;
 `;
 
-const InstallWrapper = styled.div`
+const BaseWrapper = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const InstallWrapper = styled(BaseWrapper)``;
+const SpinnerWrapper = styled(BaseWrapper)``;
+
+const DependencyMissingIcon = styled(IconBase).attrs({
+  icon: packageIcon,
+  size: 100,
+})`
+  color: ${COLORS.gray[300]};
+  padding: 30px;
 `;
 
 const fadeIn = keyframes`

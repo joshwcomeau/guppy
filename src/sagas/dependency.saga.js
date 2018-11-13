@@ -129,7 +129,6 @@ export function* handleReinstallDependenciesStart({
     const channel = yield call(reinstallDependencies, projectPath);
 
     // The channel is used to pass every termianl output to loadingScreen status text
-    // todo: Check if we need to pass a progress value so we can display a progress bar as well.
     yield call(watchInstallMessages, channel);
 
     // reset status text of loading screen
