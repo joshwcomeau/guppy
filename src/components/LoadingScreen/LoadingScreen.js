@@ -24,11 +24,13 @@ type Props = {
 
 type State = {
   showStatus: boolean,
+  reset: boolean,
 };
 
 class LoadingScreen extends PureComponent<Props, State> {
   state = {
     showStatus: false,
+    reset: false,
   };
 
   static defaultProps = {
@@ -55,8 +57,15 @@ class LoadingScreen extends PureComponent<Props, State> {
         this.progress = Math.min(1, this.progress);
       }
     }
-    if (!this.props.showLoadingScreen) {
+
+    if (!this.props.showLoadingScreen && nextProps.showLoadingScreen) {
+      // About to display
+      this.setState({ reset: false });
+    }
+    if (this.props.showLoadingScreen && !nextProps.showLoadingScreen) {
+      // Will hide after a delay
       this.progress = 0;
+      this.setState({ reset: true });
     }
   }
 
@@ -71,7 +80,9 @@ class LoadingScreen extends PureComponent<Props, State> {
         .join('') + ellipsis;
     return (
       <Window isVisible={showLoadingScreen}>
-        <ProgressBar position="top" progress={this.progress} />
+        <ProgressBarWrapper>
+          <ProgressBar progress={this.progress} reset={this.state.reset} />
+        </ProgressBarWrapper>
         {showStatus && <InfoText>{shortenedText}</InfoText>}
         <Spacer size={10} />
         <StatusButton icon={info} onClick={this.toggleStatus} size={16} />
@@ -141,6 +152,13 @@ const StatusButton = styled(IconBase)`
 
 const FishSpinner = styled.img`
   width: 150px;
+`;
+
+const ProgressBarWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 `;
 
 const mapStateToProps = state => ({

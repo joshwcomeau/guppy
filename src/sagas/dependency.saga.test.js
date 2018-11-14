@@ -284,9 +284,6 @@ describe('Dependency sagas', () => {
       // cechk watchInstallMessages called
       expect(saga.next().value).toEqual(call(watchInstallMessages, undefined));
 
-      // check dispatch of resetStatusText
-      expect(saga.next().value).toEqual(put(resetStatusText()));
-
       // reload dependencies
       expect(saga.next().value).toEqual(
         put(loadDependencyInfoFromDiskStart(projectId, projectPath))
@@ -294,6 +291,9 @@ describe('Dependency sagas', () => {
 
       // Finally it should dispatch refreshProjectStart
       expect(saga.next().value).toEqual(put(refreshProjectsStart()));
+
+      // check dispatch of resetStatusText
+      expect(saga.next().value).toEqual(put(resetStatusText()));
 
       // check reinstall dependency finish dispatch
       expect(saga.next().value).toEqual(put(reinstallDependenciesFinish()));

@@ -1,66 +1,60 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated } from 'react-spring';
 
 import { COLORS } from '../../constants';
 
+// TODO: consider renaming stiffness and damping to tension and friction
 type Props = {
   height: number,
   progress: number,
   stiffness: number,
   damping: number,
   colors: Array<string>,
-  position: 'top' | 'inline',
+  reset: boolean,
 };
 
 class ProgressBar extends Component<Props> {
   static defaultProps = {
-    position: 'inline',
     height: 8,
     stiffness: 32,
     damping: 32,
     colors: [COLORS.blue[700], COLORS.teal[500], COLORS.lightGreen[500]],
+    reset: false,
   };
 
   render() {
-    const {
-      height,
-      progress,
-      stiffness,
-      damping,
-      colors,
-      position,
-    } = this.props;
+    const { height, progress, stiffness, damping, colors, reset } = this.props;
 
     return (
-      <Wrapper height={height} position={position}>
-        <Motion
-          style={{
-            interpolatedProgress: spring(progress, {
-              stiffness,
-              damping,
-              precision: 0.0001,
-            }),
-          }}
+      <Wrapper height={height}>
+        <Spring
+          from={{ progress: 0 }}
+          to={{ progress }}
+          config={{ tension: stiffness, friction: damping }}
+          //native
+          reset={reset}
         >
-          {({ interpolatedProgress }) => (
-            <ProgressGradient colors={colors} progress={interpolatedProgress} />
+          {interpolated => (
+            <ProgressGradient
+              colors={colors}
+              progress={interpolated.progress}
+            />
           )}
-        </Motion>
+        </Spring>
       </Wrapper>
     );
   }
 }
 
 const Wrapper = styled.div`
-  position: ${props => (props.position === 'top' ? 'absolute' : 'relative')};
+  position: relative;
   height: ${props => props.height}px;
   width: 100%;
-  ${props => props.position === 'top' && 'top: 0;'};
 `;
 
-const ProgressGradient = styled.div.attrs({
+const ProgressGradient = animated(styled.div.attrs({
   style: props => ({
     clipPath: `polygon(
       0% 0%,
@@ -76,6 +70,6 @@ const ProgressGradient = styled.div.attrs({
   right: 0;
   bottom: 0;
   background: linear-gradient(to right, ${props => props.colors.join(', ')});
-`;
+`);
 
 export default ProgressBar;
