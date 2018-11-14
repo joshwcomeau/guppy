@@ -30,6 +30,7 @@ import {
   PACKAGE_MANAGER_CMD,
 } from '../services/platform.service';
 import { processLogger } from '../services/process-logger.service';
+import { waitForAsyncRimraf } from './delete-project.saga';
 
 import type { Saga } from 'redux-saga';
 import type { ChildProcess } from 'child_process';
@@ -282,6 +283,9 @@ export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
                 'Oh no! In order to eject, git state must be clean. Please commit your changes and retry ejecting.',
             });
           }
+
+          // delete node_modules folder
+          yield call(waitForAsyncRimraf, projectPath);
 
           // Run a fresh install of dependencies after ejecting to get around issue
           // documented here https://github.com/facebook/create-react-app/issues/4433
