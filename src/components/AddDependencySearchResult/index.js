@@ -1,1 +1,2 @@
-export { default } from "./AddDependencySearchResult";
+// @flow
+export { default } from './AddDependencySearchResult';

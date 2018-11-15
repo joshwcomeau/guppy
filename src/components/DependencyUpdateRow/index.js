@@ -1,1 +1,2 @@
-export { default } from "./DependencyUpdateRow";
+// @flow
+export { default } from './DependencyUpdateRow';

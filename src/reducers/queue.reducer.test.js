@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import reducer, { getNextActionForProjectId } from './queue.reducer';
 import {
   QUEUE_DEPENDENCY_INSTALL,

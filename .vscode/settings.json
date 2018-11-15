@@ -10,6 +10,5 @@
   "eslint.enable": true,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "es5",
-  "prettier.parser": "flow",
-  "editor.formatOnSave": true
+  "prettier.parser": "flow"
 }

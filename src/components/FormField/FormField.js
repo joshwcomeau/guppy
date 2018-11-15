@@ -8,9 +8,9 @@ import Label from '../Label';
 
 type Props = {
   label: string,
-  useLabelTag: boolean,
-  isFocused: boolean,
-  hasError: boolean,
+  useLabelTag?: boolean,
+  isFocused?: boolean,
+  hasError?: boolean,
   children: React$Node,
 };
 

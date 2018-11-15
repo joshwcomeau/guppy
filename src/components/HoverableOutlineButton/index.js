@@ -1,1 +1,2 @@
-export { default } from "./HoverableOutlineButton";
+// @flow
+export { default } from './HoverableOutlineButton';

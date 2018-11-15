@@ -1,6 +1,5 @@
 // @flow
 import { createStore, compose, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import * as storage from 'redux-storage';
 import debounce from 'redux-storage-decorator-debounce';
@@ -35,7 +34,7 @@ export default function configureStore() {
 
   const wrappedReducer = storage.reducer(rootReducer);
 
-  const middlewares = [thunk, storageMiddleware, sagaMiddleware];
+  const middlewares = [storageMiddleware, sagaMiddleware];
 
   const enhancers =
     process.env.NODE_ENV === 'production'

@@ -1,1 +1,2 @@
-export { default } from "./Paragraph";
+// @flow
+export { default } from './Paragraph';

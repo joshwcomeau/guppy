@@ -7,10 +7,10 @@ import { COLORS } from '../../constants';
 import DetectActive from '../DetectActive';
 import ButtonBase from './ButtonBase';
 
-type Props = {
-  fillColor: string,
-  strokeColors: Array<string>,
-  showStroke: boolean,
+export type Props = {
+  fillColor?: string,
+  strokeColors?: Array<string>,
+  showStroke?: boolean,
   children: React$Node,
 };
 

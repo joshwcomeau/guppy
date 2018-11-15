@@ -1,3 +1,4 @@
+// @flow
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -13,6 +14,10 @@ import './global-styles';
 const store = configureStore();
 
 const root = document.getElementById('root');
+
+if (!root) {
+  throw new Error('Missing root container');
+}
 
 ReactDOM.render(
   <Provider store={store}>

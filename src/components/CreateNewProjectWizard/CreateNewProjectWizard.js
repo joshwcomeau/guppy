@@ -5,8 +5,11 @@ import Transition from 'react-transition-group/Transition';
 import { remote } from 'electron';
 
 import * as actions from '../../actions';
+import {
+  getAppSettings,
+  getDefaultProjectPath,
+} from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
-import { getProjectHomePath } from '../../reducers/paths.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { checkIfProjectExists } from '../../services/create-project.service';
@@ -20,23 +23,21 @@ import BuildPane from './BuildPane';
 
 import type { Field, Status, Step } from './types';
 
-import type { ProjectType, ProjectInternal } from '../../types';
+import type { ProjectType, ProjectInternal, AppSettings } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
 const { dialog } = remote;
 
 type Props = {
+  settings: AppSettings,
   projects: { [projectId: string]: ProjectInternal },
   projectHomePath: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
-  addProject: (
-    project: ProjectInternal,
-    projectType: ProjectType,
-    isOnboardingCompleted: boolean
-  ) => void,
-  createNewProjectCancel: () => void,
-  createNewProjectFinish: () => void,
+  addProject: Dispatch<typeof actions.addProject>,
+  createNewProjectCancel: Dispatch<typeof actions.createNewProjectCancel>,
+  createNewProjectFinish: Dispatch<typeof actions.createNewProjectFinish>,
 };
 
 type State = {
@@ -44,6 +45,7 @@ type State = {
   projectType: ?ProjectType,
   projectIcon: ?string,
   activeField: ?Field,
+  settings: ?AppSettings,
   status: Status,
   currentStep: Step,
   isProjectNameTaken: boolean,
@@ -57,11 +59,16 @@ const initialState = {
   status: 'filling-in-form',
   currentStep: 'projectName',
   isProjectNameTaken: false,
+  settings: null,
 };
 
 class CreateNewProjectWizard extends PureComponent<Props, State> {
   state = initialState;
   timeoutId: number;
+
+  componentDidMount() {
+    this.reinitialize(); // needed to load app settings
+  }
 
   componentWillUnmount() {
     window.clearTimeout(this.timeoutId);
@@ -150,7 +157,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: ProjectInternal) => {
-    const { isOnboardingCompleted } = this.props;
+    const { isOnboardingCompleted, projectHomePath } = this.props;
     const { projectType } = this.state;
 
     // Should be impossible
@@ -161,14 +168,24 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     this.props.createNewProjectFinish();
 
     this.timeoutId = window.setTimeout(() => {
-      this.props.addProject(project, projectType, isOnboardingCompleted);
+      this.props.addProject(
+        project,
+        projectHomePath,
+        projectType,
+        isOnboardingCompleted
+      );
 
       this.timeoutId = window.setTimeout(this.reinitialize, 500);
     }, 500);
   };
 
   reinitialize = () => {
-    this.setState(initialState);
+    const { settings } = this.props;
+
+    this.setState({
+      ...initialState,
+      projectType: settings.general.defaultProjectType,
+    });
   };
 
   render() {
@@ -234,9 +251,10 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
 const mapStateToProps = state => ({
   projects: getById(state),
-  projectHomePath: getProjectHomePath(state),
+  projectHomePath: getDefaultProjectPath(state),
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
+  settings: getAppSettings(state),
 });
 
 const mapDispatchToProps = {

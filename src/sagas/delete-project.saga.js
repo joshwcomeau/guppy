@@ -2,20 +2,24 @@
 import { remote } from 'electron';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 import rimraf from 'rimraf';
+import * as fs from 'fs';
 import * as path from 'path';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
+  showDeleteProjectPrompt,
   startDeletingProject,
   finishDeletingProject,
+  deleteProjectError,
   selectProject,
   createNewProjectStart,
+  loadDependencyInfoFromDiskStart,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { Project } from '../types';
+import type { ReturnType } from '../actions/types';
 
 const { dialog, shell } = remote;
 
@@ -60,7 +64,9 @@ export function waitForAsyncRimraf(projectPath: string): Promise<void> {
   );
 }
 
-export function* deleteProject({ project }: Action): Saga<void> {
+export function* deleteProject({
+  project,
+}: ReturnType<typeof showDeleteProjectPrompt>): Saga<void> {
   // NOTE: we're using this form of `call` because it appears to work best
   // with Flow. Once https://github.com/joshwcomeau/guppy/pull/154 is merged,
   // we should try changing this to:
@@ -95,29 +101,41 @@ export function* deleteProject({ project }: Action): Saga<void> {
   const nextSelectedProjectId = getNextProjectId(projects, project.id);
 
   if (shouldDeleteFromDisk) {
-    // Delete from disk tasks some time, so show a loading screen
-    yield put(startDeletingProject());
+    try {
+      // Delete from disk tasks some time, so show a loading screen
+      yield put(startDeletingProject());
 
-    // Run the deletion from disk
-    // first delete node_modules folder permanently (faster than moving to trash)
-    yield call(waitForAsyncRimraf, project.path);
+      // Run the deletion from disk
+      // first delete node_modules folder permanently (faster than moving to trash)
+      yield call(waitForAsyncRimraf, project.path);
 
-    // delete project folder
-    const successfullyDeletedFromDisk = yield call(
-      [shell, shell.moveItemToTrash],
-      project.path
-    );
+      // delete project folder
+      yield call([shell, shell.moveItemToTrash], project.path);
 
-    // If for some reason it was _not_ successfully deleted, bail early and log
-    // an error. This can happen if the filesystem can't delete it (maybe if
-    // a file is open?)
-    // TODO: Actually show something in the UI in this case.
-    if (!successfullyDeletedFromDisk) {
-      yield call(
-        [console, console.error],
-        'Project could not be deleted. Please make sure no tasks are running, ' +
-          'and no applications are using files in that directory.'
-      );
+      // Check if project folder is removed
+      const exists = yield call([fs, fs.existsSync], project.path);
+      if (exists) {
+        throw new Error('deleting-failed');
+      }
+    } catch (err) {
+      // If for some reason it was _not_ successfully deleted, show error and return,
+      // so project isn't removed from Guppy state. Failure to delete from disk
+      // can happen if the filesystem can't delete it (maybe if file is open?).
+      yield put(deleteProjectError());
+
+      yield call([dialog, dialog.showMessageBox], {
+        type: 'warning',
+        buttons: ['Ok'],
+        defaultId: 0,
+        cancelId: 0,
+        title: 'Error!',
+        message: `Could not delete ${project.name}`,
+        detail:
+          'Please make sure no tasks are running and no applications are using files in that directory.',
+      });
+
+      yield put(loadDependencyInfoFromDiskStart(project.id, project.path));
+
       return;
     }
   }

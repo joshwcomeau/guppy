@@ -1,1 +1,2 @@
-export { default } from "./TwoPaneModal";
+// @flow
+export { default } from './TwoPaneModal';

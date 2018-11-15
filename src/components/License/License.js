@@ -12,7 +12,7 @@ import Spacer from '../Spacer';
 
 type Props = {
   license: ?string,
-  withIcon: boolean,
+  withIcon?: boolean,
 };
 
 class License extends Component<Props> {

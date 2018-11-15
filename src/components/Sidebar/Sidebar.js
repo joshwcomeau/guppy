@@ -23,8 +23,8 @@ import SidebarProjectIcon from './SidebarProjectIcon';
 import AddProjectButton from './AddProjectButton';
 import IntroductionBlurb from './IntroductionBlurb';
 
-import type { Action } from 'redux';
 import type { Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
 
 type Props = {
@@ -32,9 +32,9 @@ type Props = {
   selectedProjectId: ?string,
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
-  createNewProjectStart: () => void,
-  selectProject: (projectId: string) => Action,
-  rearrangeProjects: (originalIndex: number, newIndex: number) => Action,
+  createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
+  selectProject: Dispatch<typeof actions.selectProject>,
+  rearrangeProjects: Dispatch<typeof actions.rearrangeProjectsInSidebar>,
 };
 
 type State = {
@@ -140,7 +140,22 @@ class Sidebar extends PureComponent<Props, State> {
                 isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
               />
               <DragDropContext onDragEnd={this.onDragEnd}>
-                <Scrollbars autoHide>
+                <Scrollbars
+                  autoHide
+                  renderThumbVertical={({ style, ...props }) => (
+                    // Info: Styled-components not working here yet
+                    //       --> PR 286 @ react-custom-scrollbars will fix this
+                    <div
+                      {...props}
+                      style={{
+                        ...style,
+                        background: COLORS.transparentWhite[700],
+                        borderRadius: '6px',
+                      }}
+                      className="thumb-vertical"
+                    />
+                  )}
+                >
                   <Droppable droppableId="droppable">
                     {provided => (
                       <div ref={provided.innerRef}>
@@ -166,6 +181,7 @@ class Sidebar extends PureComponent<Props, State> {
                                     <Tooltip
                                       title={project.name}
                                       position="right"
+                                      transitionFlip={false}
                                     >
                                       <SidebarProjectIcon
                                         size={SIDEBAR_ICON_SIZE}

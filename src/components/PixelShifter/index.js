@@ -1,1 +1,2 @@
-export { default } from "./PixelShifter";
+// @flow
+export { default } from './PixelShifter';

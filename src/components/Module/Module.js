@@ -8,7 +8,7 @@ import HelpButton from '../HelpButton';
 type Props = {
   title: string,
   moreInfoHref: string,
-  primaryActionChildren: React$Node,
+  primaryActionChildren?: React$Node,
   children: React$Node,
 };
 
