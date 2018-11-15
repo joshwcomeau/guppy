@@ -27,7 +27,14 @@ import DisabledText from '../DisabledText';
 
 const { dialog } = remote;
 
-class ExportToCodesandbox extends PureComponent {
+type State = {
+  focusTokenInput: boolean,
+};
+
+class ExportToCodesandbox extends PureComponent<State> {
+  state = {
+    focusTokenInput: false,
+  };
   export = async evt => {
     const {
       project: { path: projectPath, codesandboxUrl },
@@ -113,11 +120,57 @@ class ExportToCodesandbox extends PureComponent {
       }
     });
 
-    child.stderr.on('error', out => {
+    child.stderr.on('data', out => {
       dialog.showErrorMessage('Error', 'Please check your token and try again');
     });
 
     processLogger(child, 'EXPORT_CODESANDBOX');
+  };
+
+  logout = evt => {
+    const {
+      project: { path: projectPath },
+    } = this.props;
+
+    evt.preventDefault();
+
+    // todo: Move this to a saga
+    const child = spawn('codesandbox', ['logout'], {
+      cwd: projectPath,
+      env: { ...getBaseProjectEnvironment(projectPath) },
+      shell: true,
+    });
+    processLogger(child);
+
+    const output = {
+      stdout: '',
+      stderr: '',
+    };
+
+    child.stdout.on('data', async out => {
+      const data = out.toString();
+      if (data.includes('log out?')) {
+        sendCommandToProcess(child, 'Y');
+      }
+      output.stdout += data;
+    });
+
+    child.stderr.on('data', data => {
+      output.stderr += data.toString();
+    });
+
+    child.on('exit', code => {
+      console.log('exit', output);
+      if (
+        output.stdout.includes('Succesfully logged out') ||
+        output.stdout.includes('already signed out')
+      ) {
+        // clear token
+        this.updateToken('');
+
+        // focusing input not working yet --> would be good, so the checkmark will be removed
+      }
+    });
   };
 
   updateToken = token => {
@@ -147,7 +200,16 @@ class ExportToCodesandbox extends PureComponent {
         </FormField>
 
         <FormField label="Codesandbox token">
-          <TokenInput value={codesandboxToken} onBlur={this.updateToken} />
+          <TokenInput
+            value={codesandboxToken}
+            onBlur={this.updateToken}
+            focused={this.state.focusTokenInput}
+          />
+          {codesandboxToken && (
+            <FillButton onClick={this.logout} size="small">
+              Logout
+            </FillButton>
+          )}
         </FormField>
         <Action>
           <FillButton
