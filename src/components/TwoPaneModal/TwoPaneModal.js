@@ -53,27 +53,12 @@ const springConfig = key => {
 };
 
 class TwoPaneModal extends PureComponent<Props, State> {
-  state = {
-    isBeingDismissed: false,
-  };
-
-  componentDidUpdate(prevProps: Props) {
-    if (
-      prevProps.transitionState === 'exiting' &&
-      this.props.transitionState === 'exited'
-    ) {
-      this.setState({ isBeingDismissed: false });
-    }
-  }
-
   dismiss = () => {
     const { isDismissable } = this.props;
 
     if (!isDismissable) {
       return;
     }
-
-    this.setState({ isBeingDismissed: true });
 
     this.props.onDismiss();
   };
@@ -86,7 +71,6 @@ class TwoPaneModal extends PureComponent<Props, State> {
       rightPane,
       backface,
     } = this.props;
-    const { isBeingDismissed } = this.state;
 
     if (transitionState === 'exited') {
       return null;
@@ -95,21 +79,17 @@ class TwoPaneModal extends PureComponent<Props, State> {
     const inTransit =
       transitionState === 'entering' || transitionState === 'exiting';
 
-    const transitTranslateOptions = [0, 50, -50];
-    const transitTranslateToIndex =
-      transitionState === 'entering' || isBeingDismissed
-        ? 1
-        : transitionState === 'exiting'
-          ? 2
-          : 0;
-    const transitTranslateFromIndex =
-      transitTranslateToIndex === 0 ? 2 : transitTranslateToIndex - 1;
+    const transitTranslate = {
+      from: transitionState === 'entering' ? 50 : 0,
+      to: transitionState === 'exiting' ? 50 : 0,
+    };
+
     const foldDegrees = {
-      from: isFolded ? 0 : 180,
+      from: 0,
       to: isFolded ? 180 : 0,
     };
     const foldCenteringTranslate = {
-      from: isFolded ? 0 : -25,
+      from: 0,
       to: isFolded ? -25 : 0,
     };
     const transitOpacity = {
@@ -122,13 +102,13 @@ class TwoPaneModal extends PureComponent<Props, State> {
         from={{
           foldDegrees: foldDegrees.from,
           foldCenteringTranslate: foldCenteringTranslate.from,
-          transitTranslate: transitTranslateOptions[transitTranslateFromIndex],
+          transitTranslate: transitTranslate.from,
           transitOpacity: transitOpacity.from,
         }}
         to={{
           foldDegrees: foldDegrees.to,
           foldCenteringTranslate: foldCenteringTranslate.to,
-          transitTranslate: transitTranslateOptions[transitTranslateToIndex],
+          transitTranslate: transitTranslate.to,
           transitOpacity: transitOpacity.to,
         }}
         config={springConfig}

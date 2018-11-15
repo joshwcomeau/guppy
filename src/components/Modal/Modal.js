@@ -90,16 +90,11 @@ class Modal extends PureComponent<Props, State> {
             const inTransit =
               transitionState === 'entering' || transitionState === 'exiting';
 
-            const translateY =
-              transitionState === 'entered'
-                ? {
-                    from: 50,
-                    to: 0,
-                  }
-                : {
-                    from: 0,
-                    to: 50,
-                  };
+            const translateY = {
+              from: transitionState === 'entering' ? 50 : 0,
+              to: transitionState === 'exiting' ? 50 : 0,
+            };
+
             return (
               <Spring
                 from={{
