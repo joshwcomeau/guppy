@@ -5,9 +5,6 @@
 # Graphql contains a typing error --> ignore it
 .*/node_modules/graphql/**/**/*.js
 
-# React-beautiful-dnd contains a typing error --> ignore it
-./node_modules/react-beautiful-dnd/src/debug/**/*.js
-
 # Release builds are git-ignored, and thus can cause problems when checking out
 # new branches, and have Flow run on old files without the same dependencies.
 .*/release-builds/*
@@ -25,3 +22,7 @@
 [options]
 
 [strict]
+
+[untyped]
+# React-beautiful-dnd contains a typing error --> ignore it
+.*/node_modules/react-beautiful-dnd/.*
