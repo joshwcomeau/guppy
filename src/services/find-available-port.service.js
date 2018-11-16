@@ -17,7 +17,7 @@ import { isWin } from './platform.service';
 const MAX_ATTEMPTS = 15;
 
 export default () =>
-  new Promise()<number>((resolve, reject) => {
+  new Promise<number>((resolve, reject) => {
     const checkPort = (port = 3000, attemptNum = 0) => {
       // For Windows Support
       // Similar command to lsof
