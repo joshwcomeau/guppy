@@ -282,6 +282,10 @@ export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
               detail:
                 'Oh no! In order to eject, git state must be clean. Please commit your changes and retry ejecting.',
             });
+
+            // Update the UI to failed
+            yield put(completeTask(task, message.timestamp, false));
+            return;
           }
 
           // delete node_modules folder
