@@ -414,7 +414,7 @@ describe('task saga', () => {
       const processId = 12345;
       const project = { id: 'tangy-blueberry', path: '/path/to/project' };
       const task = { processId, name: 'eject', projectId: project.id };
-      const saga = taskComplete({ task });
+      const saga = taskComplete({ task, wasSuccessful: true });
       saga.next();
 
       expect(saga.next().value).toEqual(
