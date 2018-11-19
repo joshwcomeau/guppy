@@ -121,9 +121,9 @@ class MainPane extends PureComponent<Props, State> {
     }
   }
 
-  renderConditionalSteps(currentStepIndex) {
+  renderConditionalSteps(currentStepIndex: number) {
     const { activeField, projectType, projectIcon } = this.props;
-    const buildSteps = [
+    const buildSteps: Array<?React$component> = [
       // currentStepIndex > 0 -- > 1
       <FadeIn key="step-type">
         <FormField
@@ -155,7 +155,7 @@ class MainPane extends PureComponent<Props, State> {
       </FadeIn>,
     ];
 
-    const renderedSteps = buildSteps
+    const renderedSteps: Array<React$component> = buildSteps
       .filter(step => !!step)
       .slice(0, currentStepIndex);
 
@@ -165,7 +165,7 @@ class MainPane extends PureComponent<Props, State> {
       steps: renderedSteps,
     };
   }
-  validateField(currentStepIndex) {
+  validateField(currentStepIndex: number) {
     // todo: Refactor - Move buildsteps to component scope & use an array method to check current validation
     //       --> For now we're doing a different check for Gatsby flow
     const { projectIcon, projectStarter, projectType } = this.props;

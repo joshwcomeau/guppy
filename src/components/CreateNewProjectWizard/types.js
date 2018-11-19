@@ -1,6 +1,10 @@
 // @flow
 
-export type Field = 'projectName' | 'projectType' | 'projectIcon';
+export type Field =
+  | 'projectName'
+  | 'projectType'
+  | 'projectIcon'
+  | 'projectStarter';
 export type BuildStep =
   | 'installingCliTool'
   | 'creatingProjectDirectory'

@@ -33,7 +33,7 @@ type ProjectInfo = {
 };
 
 type BuildOptions = {
-  projectStarter: ?string, // used for gatsby
+  projectStarter?: string, // used for gatsby
 };
 
 export const checkIfProjectExists = (dir: string, projectName: string) =>
@@ -82,9 +82,12 @@ export default (
   const projectPath = path.join(projectHomePath, projectDirectoryName);
 
   // Add starter for Gatsby. Check is optional as it can't be entered in the build steps for other project types.
-  const buildOptions = projectType === 'gatsby' && {
-    projectStarter,
-  };
+  const buildOptions =
+    projectType === 'gatsby'
+      ? {
+          projectStarter,
+        }
+      : null;
 
   const [instruction, ...args] = getBuildInstructions(
     projectType,
@@ -201,7 +204,7 @@ export const getColorForProject = (projectName: string) => {
 export const getBuildInstructions = (
   projectType: ProjectType,
   projectPath: string,
-  options: BuildOptions
+  options: ?BuildOptions
 ) => {
   // For Windows Support
   // Windows tries to run command as a script rather than on a cmd
@@ -215,13 +218,9 @@ export const getBuildInstructions = (
     projectConfigs[projectType].create,
     {
       $projectPath: projectPath,
-      $projectStarter: options.projectStarter,
+      $projectStarter: (options && options.projectStarter) || '',
     }
   );
-  console.log('creact command', createCommand, {
-    $projectPath: projectPath,
-    $projectStarter: options.projectStarter,
-  });
 
   return [command, ...createCommand.args];
 };

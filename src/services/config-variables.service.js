@@ -1,4 +1,12 @@
 // @flow
+
+// Mapping type for config template variables '$port'
+export type VariableMap = {
+  $port?: string,
+  $projectPath?: string,
+  $projectStarter?: ?string,
+};
+
 // We're using "template" variables inside the project type configuration file (config/project-types.js)
 // so with the following function we can replace the string $port with the real port number e.g. 3000
 // (see type VariableMap for used mapping strings)
