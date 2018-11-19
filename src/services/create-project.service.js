@@ -29,11 +29,11 @@ type ProjectInfo = {
   projectName: string,
   projectType: ProjectType,
   projectIcon: string,
-  projectStarter?: string,
+  projectStarter: ?string,
 };
 
 type BuildOptions = {
-  projectStarter?: string, // used for gatsby
+  projectStarter: ?string, // used for gatsby
 };
 
 export const checkIfProjectExists = (dir: string, projectName: string) =>

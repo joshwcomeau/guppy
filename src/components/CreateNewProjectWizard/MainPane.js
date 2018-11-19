@@ -56,7 +56,7 @@ class MainPane extends PureComponent<Props, State> {
   updateGatsbyStarter = (selectedStarter: string) =>
     this.props.updateFieldValue('projectStarter', selectedStarter);
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     console.log('MainPane new props', nextProps, prevState);
     return prevState;
   }
@@ -74,8 +74,8 @@ class MainPane extends PureComponent<Props, State> {
     );
   };
 
-  projectSpecificSteps(projectType: ProjectType) {
-    const { activeField, projectStarter } = this.props;
+  projectSpecificSteps() {
+    const { activeField, projectType, projectStarter } = this.props;
     switch (projectType) {
       case 'gatsby':
         return (
@@ -123,7 +123,7 @@ class MainPane extends PureComponent<Props, State> {
 
   renderConditionalSteps(currentStepIndex: number) {
     const { activeField, projectType, projectIcon } = this.props;
-    const buildSteps: Array<?React$component> = [
+    const buildSteps: Array<?React$Node> = [
       // currentStepIndex > 0 -- > 1
       <FadeIn key="step-type">
         <FormField
@@ -138,7 +138,7 @@ class MainPane extends PureComponent<Props, State> {
           />
         </FormField>
       </FadeIn>,
-      this.projectSpecificSteps(projectType), // currentStepIndex > 1
+      this.projectSpecificSteps(), // currentStepIndex > 1
       <FadeIn key="step-icon">
         <FormField
           label="Project Icon"
@@ -155,7 +155,7 @@ class MainPane extends PureComponent<Props, State> {
       </FadeIn>,
     ];
 
-    const renderedSteps: Array<React$component> = buildSteps
+    const renderedSteps: Array<React$Node> = buildSteps
       .filter(step => !!step)
       .slice(0, currentStepIndex);
 

@@ -36,6 +36,7 @@ type Props = {
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
+  projectStarter: string,
   status: Status,
   projectHomePath: string,
   handleCompleteBuild: (project: ProjectInternal) => void,
@@ -98,8 +99,8 @@ class BuildPane extends PureComponent<Props, State> {
     }
 
     // Add url to starter if not passed
-    // Todo: We need error handling to show a notification that it failed to use the starter
-    //       --> Just needed if we allow the user to enter an url to a starter.
+    // Todo: We need error handling to show a notification that it failed to use the starter (e.g. starter doesn't exists or wrong url/name)
+    //       --> Probably just needed if we allow the user to enter an url to a starter.
     const projectStarter = !projectStarterInput.includes('http')
       ? 'https://github.com/gatsbyjs/' + projectStarterInput
       : projectStarterInput;

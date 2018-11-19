@@ -38,6 +38,7 @@ type Props = {
   settings: AppSettings,
   projects: { [projectId: string]: ProjectInternal },
   projectHomePath: string,
+  projectStarter: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
   addProject: Dispatch<typeof actions.addProject>,
@@ -49,7 +50,7 @@ type State = {
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
-  projectStarter: ?string,
+  projectStarter: string,
   activeField: ?Field,
   settings: ?AppSettings,
   status: Status,
@@ -164,11 +165,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: ProjectInternal) => {
-    const {
-      isOnboardingCompleted,
-      projectHomePath,
-      projectStarter,
-    } = this.props;
+    const { isOnboardingCompleted, projectHomePath } = this.props;
     const { projectType } = this.state;
 
     // Should be impossible
@@ -183,7 +180,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
         project,
         projectHomePath,
         projectType,
-        projectStarter, // todo: check project reducer, if it's available on state
         isOnboardingCompleted
       );
 
