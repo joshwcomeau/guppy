@@ -4,6 +4,8 @@ import fetch from 'node-fetch'; // Note: This is using net.request from Node. Br
 import styled from 'styled-components';
 import yaml from 'js-yaml';
 import Scrollbars from 'react-custom-scrollbars';
+import ExternalLink from '../../ExternalLink';
+
 // import { SearchBox } from 'react-instantsearch/dom';
 // import {
 //   InstantSearch,
@@ -17,7 +19,7 @@ import Heading from '../../Heading';
 // import { ALGOLIA_KEYS } from '../../../constants';
 
 type Props = {
-  onSelect: string => string,
+  onSelect: string => ?string,
   selectedStarter: string,
 };
 
@@ -50,7 +52,7 @@ class SelectStarterDialog extends PureComponent<Props, State> {
     starters: [],
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     console.log('new props', nextProps, prevState);
     return prevState;
   }
@@ -67,6 +69,16 @@ class SelectStarterDialog extends PureComponent<Props, State> {
           starters,
         });
       });
+  }
+
+  prepareUrlForCodesandbox(repoUrl) {
+    // Remove http protocol
+    const sandboxUrl = `https://codesandbox.io/s/${repoUrl.replace(
+      /(^\w+:|^)\/\//,
+      ''
+    )}`;
+    // Remove .com from github.com --> to have /s/github/repo
+    return sandboxUrl.replace(/\.com/, '');
   }
 
   render() {
@@ -91,6 +103,11 @@ class SelectStarterDialog extends PureComponent<Props, State> {
                 {starter.description !== 'n/a' && (
                   <Paragraph>{starter.description}</Paragraph>
                 )}
+                <ExternalLink
+                  href={this.prepareUrlForCodesandbox(starter.repo)}
+                >
+                  Preview in Codesandbox
+                </ExternalLink>
               </StarterItem>
             ))}
           </StarterList>
