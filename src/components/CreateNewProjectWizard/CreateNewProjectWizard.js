@@ -26,7 +26,12 @@ import type { Field, Status, Step } from './types';
 import type { ProjectType, ProjectInternal, AppSettings } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
-const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
+const FORM_STEPS: Array<Field> = [
+  'projectName',
+  'projectType',
+  'projectStarter',
+  'projectIcon',
+];
 const { dialog } = remote;
 
 type Props = {
@@ -44,6 +49,7 @@ type State = {
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
+  projectStarter: ?string,
   activeField: ?Field,
   settings: ?AppSettings,
   status: Status,
@@ -55,6 +61,7 @@ const initialState = {
   projectName: '',
   projectType: null,
   projectIcon: null,
+  projectStarter: '',
   activeField: 'projectName',
   status: 'filling-in-form',
   currentStep: 'projectName',
@@ -157,7 +164,11 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   finishBuilding = (project: ProjectInternal) => {
-    const { isOnboardingCompleted, projectHomePath } = this.props;
+    const {
+      isOnboardingCompleted,
+      projectHomePath,
+      projectStarter,
+    } = this.props;
     const { projectType } = this.state;
 
     // Should be impossible
@@ -172,6 +183,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
         project,
         projectHomePath,
         projectType,
+        projectStarter, // todo: check project reducer, if it's available on state
         isOnboardingCompleted
       );
 
@@ -194,13 +206,14 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       projectName,
       projectType,
       projectIcon,
+      projectStarter,
       activeField,
       status,
       currentStep,
       isProjectNameTaken,
     } = this.state;
 
-    const project = { projectName, projectType, projectIcon };
+    const project = { projectName, projectType, projectIcon, projectStarter };
 
     const readyToBeBuilt = status !== 'filling-in-form';
 

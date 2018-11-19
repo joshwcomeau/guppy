@@ -79,7 +79,12 @@ class BuildPane extends PureComponent<Props, State> {
   }
 
   buildProject = () => {
-    const { projectName, projectType, projectIcon } = this.props;
+    const {
+      projectName,
+      projectType,
+      projectIcon,
+      projectStarter: projectStarterInput,
+    } = this.props;
 
     if (!projectName || !projectType || !projectIcon) {
       console.error('Missing one of:', {
@@ -92,8 +97,15 @@ class BuildPane extends PureComponent<Props, State> {
       );
     }
 
+    // Add url to starter if not passed
+    // Todo: We need error handling to show a notification that it failed to use the starter
+    //       --> Just needed if we allow the user to enter an url to a starter.
+    const projectStarter = !projectStarterInput.includes('http')
+      ? 'https://github.com/gatsbyjs/' + projectStarterInput
+      : projectStarterInput;
+
     createProject(
-      { projectName, projectType, projectIcon },
+      { projectName, projectType, projectIcon, projectStarter },
       this.props.projectHomePath,
       this.handleStatusUpdate,
       this.handleError,

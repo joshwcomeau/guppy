@@ -185,6 +185,23 @@ class SummaryPane extends PureComponent<Props> {
           </Fragment>
         );
       }
+      case 'projectStarter': {
+        // todo: why is a key needed on FadeIn? Was s3t.
+        // todo: should we rename projectStarter to be mores specific as this is Gatbsy only.
+        return (
+          <Fragment>
+            <FadeIn>
+              <StepTitle>Gatsby Starter</StepTitle>
+
+              <Paragraph>
+                Please enter a starter for your project (e.g.
+                gatsby-starter-blog). Later we'll have a starter search modal
+                here.
+              </Paragraph>
+            </FadeIn>
+          </Fragment>
+        );
+      }
 
       default:
         throw new Error('Unrecognized `focusField`: ' + focusField);
