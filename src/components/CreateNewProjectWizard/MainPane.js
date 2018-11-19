@@ -155,7 +155,7 @@ class MainPane extends PureComponent<Props, State> {
       </FadeIn>,
     ];
 
-    const renderedSteps: Array<React$Node> = buildSteps
+    const renderedSteps: Array<?React$Node> = buildSteps
       .filter(step => !!step)
       .slice(0, currentStepIndex);
 

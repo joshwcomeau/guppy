@@ -71,7 +71,7 @@ class SelectStarterDialog extends PureComponent<Props, State> {
       });
   }
 
-  prepareUrlForCodesandbox(repoUrl) {
+  prepareUrlForCodesandbox(repoUrl: string) {
     // Remove http protocol
     const sandboxUrl = `https://codesandbox.io/s/${repoUrl.replace(
       /(^\w+:|^)\/\//,
