@@ -23,6 +23,8 @@ export const CREATE_NEW_PROJECT_CANCEL = 'CREATE_NEW_PROJECT_CANCEL';
 export const CREATE_NEW_PROJECT_FINISH = 'CREATE_NEW_PROJECT_FINISH';
 export const ADD_PROJECT = 'ADD_PROJECT';
 export const SHOW_MODAL = 'SHOW_MODAL';
+export const SHOW_STARTER_SELECTION = 'SHOW_STARTER_SELECTION';
+export const HIDE_STARTER_SELECTION = 'HIDE_STARTER_SELECTION';
 export const CHANGE_PROJECT_HOME_PATH = 'CHANGE_PROJECT_HOME_PATH';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
@@ -415,6 +417,14 @@ export const deleteProjectError = () => ({
 
 export const showResetStatePrompt = () => ({
   type: SHOW_RESET_STATE_PROMPT,
+});
+
+export const showStarterSelectionModal = () => ({
+  type: SHOW_STARTER_SELECTION,
+});
+
+export const hideStarterSelectionModal = () => ({
+  type: HIDE_STARTER_SELECTION,
 });
 
 export const resetAllState = () => ({ type: RESET_ALL_STATE });

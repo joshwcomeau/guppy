@@ -2,7 +2,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
-import { toastr } from 'react-redux-toastr';
 
 import FormField from '../FormField';
 import FadeIn from '../FadeIn';
@@ -14,7 +13,7 @@ import ProjectPath from './ProjectPath';
 import SubmitButton from './SubmitButton';
 import ProjectIconSelection from '../ProjectIconSelection';
 import ProjectTypeSelection from '../ProjectTypeSelection';
-import SelectStarterDialog from './Gatsby/SelectStarterDialog';
+import ProjectStarterSelection from './Gatsby/ProjectStarterSelection';
 
 import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
@@ -61,19 +60,6 @@ class MainPane extends PureComponent<Props, State> {
     return prevState;
   }
 
-  // Change method needed so we can dismiss the selection on close click of toastr
-  changeGatsbyStarter = (selectedStarter: string) => {
-    console.log('change starter', selectedStarter, this);
-    this.setState(
-      {
-        gatsbyStarter: selectedStarter,
-      },
-      () => {
-        console.log('updated', this.state);
-      }
-    );
-  };
-
   projectSpecificSteps() {
     const { activeField, projectType, projectStarter } = this.props;
     switch (projectType) {
@@ -84,35 +70,11 @@ class MainPane extends PureComponent<Props, State> {
               label="Project Starter"
               isFocused={activeField === 'projectStarter'}
             >
-              {/* <ProjectTypeSelection
-                projectType={projectType}
-                onProjectTypeSelect={selectedProjectType =>
-                  this.updateProjectType(selectedProjectType)
-                }
-              /> */}
-              <TextInput
-                onChange={evt => this.updateGatsbyStarter(evt.target.value)}
-                value={projectStarter}
-                onFocus={this.handleFocusStarter}
-                placeholder="Enter a starter"
+              <ProjectStarterSelection
+                isFocused={activeField === 'projectStarter'}
+                onSelect={this.updateGatsbyStarter}
+                projectStarter={projectStarter}
               />
-              <FillButton
-                onClick={() =>
-                  toastr.confirm('Select starter', {
-                    component: () => (
-                      <SelectStarterDialog
-                        onSelect={this.changeGatsbyStarter}
-                        selectedStarter={this.state.gatsbyStarter}
-                      />
-                    ),
-                    okText: 'Use selected',
-                    onOk: () =>
-                      this.updateGatsbyStarter(this.state.gatsbyStarter),
-                  })
-                }
-              >
-                Select Starter
-              </FillButton>
             </FormField>
           </FadeIn>
         );

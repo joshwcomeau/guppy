@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 import { remote } from 'electron';
@@ -20,6 +20,7 @@ import Debounced from '../Debounced';
 import MainPane from './MainPane';
 import SummaryPane from './SummaryPane';
 import BuildPane from './BuildPane';
+import SelectStarterDialog from './Gatsby/SelectStarterDialog';
 
 import type { Field, Status, Step } from './types';
 
@@ -216,42 +217,48 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     return (
       <Transition in={isVisible} timeout={300}>
         {transitionState => (
-          <TwoPaneModal
-            isFolded={readyToBeBuilt}
-            transitionState={transitionState}
-            isDismissable={status !== 'building-project'}
-            onDismiss={createNewProjectCancel}
-            leftPane={
-              <Debounced on={activeField} duration={40}>
-                <SummaryPane
-                  currentStep={currentStep}
+          <Fragment>
+            <TwoPaneModal
+              isFolded={readyToBeBuilt}
+              transitionState={transitionState}
+              isDismissable={status !== 'building-project'}
+              onDismiss={createNewProjectCancel}
+              leftPane={
+                <Debounced on={activeField} duration={40}>
+                  <SummaryPane
+                    currentStep={currentStep}
+                    activeField={activeField}
+                    projectType={projectType}
+                  />
+                </Debounced>
+              }
+              rightPane={
+                <MainPane
+                  {...project}
+                  status={status}
                   activeField={activeField}
-                  projectType={projectType}
+                  currentStepIndex={FORM_STEPS.indexOf(currentStep)}
+                  updateFieldValue={this.updateFieldValue}
+                  focusField={this.focusField}
+                  handleSubmit={this.handleSubmit}
+                  hasBeenSubmitted={status !== 'filling-in-form'}
+                  isProjectNameTaken={isProjectNameTaken}
                 />
-              </Debounced>
-            }
-            rightPane={
-              <MainPane
-                {...project}
-                status={status}
-                activeField={activeField}
-                currentStepIndex={FORM_STEPS.indexOf(currentStep)}
-                updateFieldValue={this.updateFieldValue}
-                focusField={this.focusField}
-                handleSubmit={this.handleSubmit}
-                hasBeenSubmitted={status !== 'filling-in-form'}
-                isProjectNameTaken={isProjectNameTaken}
-              />
-            }
-            backface={
-              <BuildPane
-                {...project}
-                status={status}
-                projectHomePath={projectHomePath}
-                handleCompleteBuild={this.finishBuilding}
-              />
-            }
-          />
+              }
+              backface={
+                <BuildPane
+                  {...project}
+                  status={status}
+                  projectHomePath={projectHomePath}
+                  handleCompleteBuild={this.finishBuilding}
+                />
+              }
+            />
+            <SelectStarterDialog
+              updateFieldValue={this.updateFieldValue}
+              selectedStarter={projectStarter}
+            />
+          </Fragment>
         )}
       </Transition>
     );
@@ -261,7 +268,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 const mapStateToProps = state => ({
   projects: getById(state),
   projectHomePath: getDefaultProjectPath(state),
-  isVisible: state.modal === 'new-project-wizard',
+  isVisible: state.modal && state.modal.includes('new-project-wizard'),
   isOnboardingCompleted: getOnboardingCompleted(state),
   settings: getAppSettings(state),
 });

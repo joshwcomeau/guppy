@@ -195,8 +195,14 @@ class SummaryPane extends PureComponent<Props> {
 
               <Paragraph>
                 Please enter a starter for your project (e.g.
-                gatsby-starter-blog). Later we'll have a starter search modal
-                here.
+                gatsby-starter-blog or repo. url) or pick one from the starters
+                list.
+              </Paragraph>
+              <Paragraph>
+                This step is optional. Just leave the field empty to use the
+                default Gatsby starter. But picking a starter will help to
+                bootstrap your project e.g. you can easily create your own blog
+                by picking one of the blog starter templates.
               </Paragraph>
             </FadeIn>
           </Fragment>

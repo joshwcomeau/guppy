@@ -2,7 +2,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
-import ReduxToastr from 'react-redux-toastr';
 
 import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
@@ -44,7 +43,6 @@ class App extends PureComponent<Props> {
               <CreateNewProjectWizard />
               <ProjectConfigurationModal />
               <AppSettingsModal />
-              <ReduxToastr />
             </Fragment>
           )
         }

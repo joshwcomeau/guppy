@@ -1,6 +1,5 @@
 // @flow
 import { combineReducers } from 'redux';
-import { reducer as toastrReducer } from 'react-redux-toastr'; // todo: Would be better to separate library reducers and add them before creating store. Not sure how to do that and if it's really needed.
 
 import appSettings from './app-settings.reducer';
 import appLoaded from './app-loaded.reducer';
@@ -24,5 +23,4 @@ export default combineReducers({
   onboardingStatus,
   paths,
   queue,
-  toastr: toastrReducer,
 });
