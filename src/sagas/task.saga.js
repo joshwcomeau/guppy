@@ -36,7 +36,6 @@ import type { Saga } from 'redux-saga';
 import type { ChildProcess } from 'child_process';
 import type { Task, ProjectType } from '../types';
 import type { ReturnType } from '../actions/types';
-import type { VariableMap } from '../services/config-variables.service';
 
 const { dialog } = remote;
 

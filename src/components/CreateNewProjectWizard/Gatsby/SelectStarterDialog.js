@@ -10,13 +10,9 @@ import { Tooltip } from 'react-tippy';
 import Divider from '../../Divider';
 import Spacer from '../../Spacer';
 import ExternalLink from '../../ExternalLink';
-
-// import { SearchBox } from 'react-instantsearch/dom';
-// import {
-//   InstantSearch,
-//   InfiniteHits,
-//   Configure,
-// } from 'react-instantsearch/dom';
+import TextInput from '../../TextInput';
+import Spinner from '../../Spinner';
+import CodesandboxLogo from '../../CodesandboxLogo';
 
 import StrokeButton from '../../Button/StrokeButton';
 import Paragraph from '../../Paragraph';
@@ -26,7 +22,6 @@ import ModalHeader from '../../ModalHeader';
 
 import * as actions from '../../../actions';
 
-// import { ALGOLIA_KEYS } from '../../../constants';
 import { COLORS } from '../../../constants';
 import type { Dispatch } from '../../../actions/types';
 
@@ -66,10 +61,19 @@ class SelectStarterDialog extends PureComponent<Props, State> {
     loading: true,
     starters: [],
     selectedStarterInModal: '',
+    paginationIndex: 10,
+    filterString: '',
   };
 
+  PAGINATION_STEP = 10;
+
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+    // Clear search string on modal open display
+    const filterString =
+      !prevState.isVisible && nextProps.isVisible ? '' : prevState.filterString;
     return {
+      ...prevState,
+      filterString,
       selectedStarterInModal: nextProps.selectedStarter,
     };
   }
@@ -104,6 +108,10 @@ class SelectStarterDialog extends PureComponent<Props, State> {
       'projectStarter',
       this.state.selectedStarterInModal
     );
+
+    this.setState({
+      selectedStarterInModal: '',
+    });
     this.props.hideModal();
   };
 
@@ -113,74 +121,121 @@ class SelectStarterDialog extends PureComponent<Props, State> {
     });
   };
 
+  handleShowMore = () => {
+    let newIndex = this.state.paginationIndex + this.PAGINATION_STEP;
+    newIndex = Math.min(this.state.starters.length, newIndex); // limit
+    this.setState({
+      paginationIndex: newIndex,
+    });
+  };
+
+  updateSearchString = evt => {
+    this.setState({
+      filterString: evt.target.value,
+    });
+  };
+
   render() {
     const { isVisible, hideModal } = this.props;
-    const { starters, selectedStarterInModal } = this.state;
-    console.log('render dialog', selectedStarterInModal);
+    const {
+      loading,
+      starters,
+      selectedStarterInModal,
+      paginationIndex,
+      filterString,
+    } = this.state;
+    const filteredStarters = starters.filter(
+      starter => filterString === '' || starter.repo.includes(filterString)
+    );
+    const disabledUseSelect = selectedStarterInModal === '';
+
     return (
       <Modal isVisible={isVisible} onDismiss={hideModal}>
         <ModalHeader title="Select starter" />
 
         <MainContent>
           <Paragraph>
-            Please select a starter template for your new project.
+            For a better overview you can also have a look at the Gatsby
+            starters library{' '}
+            <ExternalLink href="https://www.gatsbyjs.org/starters/">
+              here.
+            </ExternalLink>
           </Paragraph>
+          <TextInput
+            placeholder="What are you looking for? E.g. type blog to see all blog-starters ..."
+            onChange={this.updateSearchString}
+          />
+          <Spacer size={10} />
           <ScrollContainer>
             <StarterList>
-              {starters.slice(0, 10).map((starter, index) => (
-                <StarterItem
-                  selected={selectedStarterInModal === starter.repo}
-                  key={index}
-                  onClick={() => this.setStarter(starter.repo)}
-                >
-                  <Heading size="small">{starter.repo}</Heading>
-                  {starter.description !== 'n/a' && (
-                    <Paragraph>{starter.description}</Paragraph>
-                  )}
-                  <ExternalLink
-                    href={this.prepareUrlForCodesandbox(starter.repo)}
-                  >
-                    Preview in Codesandbox
-                  </ExternalLink>
-                  <Spacer size={25} />
-                  <Divider />
-                </StarterItem>
-              ))}
+              {loading && (
+                <center>
+                  <Spinner size={22} />
+                </center>
+              )}
+              {filteredStarters
+                .slice(0, paginationIndex)
+                .map((starter, index) => (
+                  <StarterItem key={index}>
+                    <StarterItemTitle>
+                      <StarterItemHeading
+                        size="small"
+                        selected={selectedStarterInModal === starter.repo}
+                        onClick={() => this.setStarter(starter.repo)}
+                      >
+                        {starter.repo.split('/').pop()}
+                      </StarterItemHeading>
+                      <ExternalLink
+                        href={this.prepareUrlForCodesandbox(starter.repo)}
+                      >
+                        <Tooltip title="Preview in Codesandbox">
+                          <CodesandboxLogo />
+                        </Tooltip>
+                      </ExternalLink>
+                    </StarterItemTitle>
+
+                    <Spacer size={10} />
+                    <Paragraph>
+                      {starter.description !== 'n/a' && starter.description}
+                    </Paragraph>
+                    <Divider />
+                  </StarterItem>
+                ))}
             </StarterList>
 
-            {/* We could add Algolia here --> Setup at Algolia required */}
-            {/* <InstantSearch {...ALGOLIA_KEYS}>
-          <Configure
-            attributesToRetrieve={[
-              'name',
-              'version',
-              'description',
-              'modified',
-              'humanDownloadsLast30Days',
-              'license',
-            ]}
-            hitsPerPage={10}
-          />
-          <SearchBox onChange={value => console.log(value)} />
-          <InfiniteHits
-            hitComponent={({ hit }) => (
-              <div onClick={() => onSelect(hit.name)}>
-                {hit.name}
-              </div>
+            {/* Show more button if we're having more starters to display */}
+            {paginationIndex < filteredStarters.length && (
+              <ShowMoreWrapper>
+                <StrokeButton
+                  strokeColors={[COLORS.gray[200], COLORS.gray[500]]}
+                  onClick={this.handleShowMore}
+                >
+                  Show more...
+                </StrokeButton>
+              </ShowMoreWrapper>
             )}
-          />
-        </InstantSearch> */}
           </ScrollContainer>
           <Actions>
             {/* Todo: Refactor OK/Cancel buttons into a component. So this is reusable. */}
             <StrokeButton
-              strokeColors={[COLORS.green[700], COLORS.lightGreen[500]]}
+              fillColor={disabledUseSelect ? COLORS.gray[400] : COLORS.white}
+              strokeColors={
+                !disabledUseSelect
+                  ? [COLORS.green[700], COLORS.lightGreen[500]]
+                  : [COLORS.gray[400], COLORS.gray[400]]
+              }
               onClick={this.handleDialogOK}
-              disabled={selectedStarterInModal === ''}
-            >
-              {/* Todo: Add tooltip if disabled  */}
-              Use selected
-            </StrokeButton>
+              disabled={disabledUseSelect}
+              children={
+                disabledUseSelect ? (
+                  <Tooltip title="Select a starter from the list">
+                    Use Selection
+                  </Tooltip>
+                ) : (
+                  'Use Selection'
+                )
+              }
+            />
             <Spacer size={15} />
             <StrokeButton onClick={hideModal}>Cancel</StrokeButton>
           </Actions>
@@ -205,15 +260,29 @@ const ScrollContainer = styled(Scrollbars)`
   min-height: 60vh;
 `;
 
+const ShowMoreWrapper = styled.div`
+  padding: 10px;
+`;
+
 const StarterList = styled.div`
   padding: 15px;
 `;
 const StarterItem = styled.div`
-  cursor: pointer;
   padding: 8px 10px;
+`;
+
+const StarterItemHeading = styled(Heading)`
+  cursor: pointer;
   border-radius: 6px;
   border: 2px solid
-    ${props => (props.selected ? COLORS.purple[500] : 'transparent')};
+    ${props => (props.selected ? COLORS.purple[500] : COLORS.gray[200])};
+  padding: 6px;
+`;
+
+const StarterItemTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const MainContent = styled.div`
