@@ -17,6 +17,7 @@ type State = {
 type Props = {
   projectStarter: string,
   isFocused: boolean,
+  handleFocus: string => void,
   onSelect: string => void,
   onFocus: () => void,
   showStarterSelection: Dispatch<typeof actions.showStarterSelectionModal>,
@@ -57,6 +58,7 @@ class ProjectStarter extends PureComponent<Props, State> {
 
   render() {
     const {
+      handleFocus,
       projectStarter,
       isFocused,
       onSelect,
@@ -65,6 +67,7 @@ class ProjectStarter extends PureComponent<Props, State> {
 
     return (
       <TextInputWithButton
+        handleFocus={handleFocus}
         isFocused={isFocused}
         value={projectStarter}
         onChange={onSelect}

@@ -7,9 +7,11 @@ import { moreHorizontal } from 'react-icons-kit/feather/moreHorizontal';
 import { COLORS } from '../../constants';
 
 import TextInput from '../TextInput';
+import HoverableOutlineButton from '../HoverableOutlineButton';
 
 type Props = {
   value: string,
+  handleFocus: string => void,
   onClick: () => void,
   onChange: string => void,
   isFocused?: boolean,
@@ -25,16 +27,26 @@ class TextInputWithButton extends PureComponent<Props> {
   };
 
   render() {
-    const { onChange, onClick, icon, ...props } = this.props;
+    const { onChange, onClick, icon, handleFocus, ...props } = this.props;
 
     return (
       <Wrapper>
         <TextInput {...props} onChange={ev => onChange(ev.target.value)}>
-          <ButtonPositionAdjuster>
+          <HoverableOutlineButton
+            noPadding
+            onMouseDown={() => window.requestAnimationFrame(handleFocus)}
+            onClick={onClick}
+            style={{ width: 32, height: 32 }}
+          >
+            <ButtonPositionAdjuster>
+              <IconBase size={22} icon={icon} />
+            </ButtonPositionAdjuster>
+          </HoverableOutlineButton>
+          {/* <ButtonPositionAdjuster>
             <IconWrapper onClick={onClick}>
               <IconBase size={22} icon={icon} />
             </IconWrapper>
-          </ButtonPositionAdjuster>
+          </ButtonPositionAdjuster> */}
         </TextInput>
       </Wrapper>
     );
@@ -46,7 +58,7 @@ const Wrapper = styled.div`
 `;
 
 const ButtonPositionAdjuster = styled.div`
-  transform: translateY(-2px);
+  transform: translateY(2px);
 `;
 
 // const DirectoryButton = styled(TextButton)`

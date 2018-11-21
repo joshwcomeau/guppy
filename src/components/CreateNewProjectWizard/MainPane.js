@@ -5,8 +5,6 @@ import styled from 'styled-components';
 
 import FormField from '../FormField';
 import FadeIn from '../FadeIn';
-import TextInput from '../TextInput'; // todo: move to SelectStarter Component
-import FillButton from '../Button/FillButton'; // dito
 
 import ProjectName from './ProjectName';
 import ProjectPath from './ProjectPath';
@@ -72,6 +70,7 @@ class MainPane extends PureComponent<Props, State> {
             >
               <ProjectStarterSelection
                 isFocused={activeField === 'projectStarter'}
+                handleFocus={this.handleFocusStarter}
                 onSelect={this.updateGatsbyStarter}
                 projectStarter={projectStarter}
               />

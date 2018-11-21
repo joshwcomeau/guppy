@@ -1,10 +1,11 @@
 // @flow
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import fetch from 'node-fetch'; // Note: This is using net.request from Node. Browser fetch throws CORS error.
 import styled from 'styled-components';
 import yaml from 'js-yaml';
 import Scrollbars from 'react-custom-scrollbars';
+import { Tooltip } from 'react-tippy';
 
 import Divider from '../../Divider';
 import Spacer from '../../Spacer';
@@ -17,7 +18,7 @@ import ExternalLink from '../../ExternalLink';
 //   Configure,
 // } from 'react-instantsearch/dom';
 
-import FillButton from '../../Button/FillButton';
+import StrokeButton from '../../Button/StrokeButton';
 import Paragraph from '../../Paragraph';
 import Heading from '../../Heading';
 import Modal from '../../Modal';
@@ -127,25 +128,23 @@ class SelectStarterDialog extends PureComponent<Props, State> {
           <ScrollContainer>
             <StarterList>
               {starters.slice(0, 10).map((starter, index) => (
-                <Fragment>
-                  <StarterItem
-                    selected={selectedStarterInModal === starter.repo}
-                    key={index}
-                    onClick={() => this.setStarter(starter.repo)}
+                <StarterItem
+                  selected={selectedStarterInModal === starter.repo}
+                  key={index}
+                  onClick={() => this.setStarter(starter.repo)}
+                >
+                  <Heading size="small">{starter.repo}</Heading>
+                  {starter.description !== 'n/a' && (
+                    <Paragraph>{starter.description}</Paragraph>
+                  )}
+                  <ExternalLink
+                    href={this.prepareUrlForCodesandbox(starter.repo)}
                   >
-                    <Heading size="small">{starter.repo}</Heading>
-                    {starter.description !== 'n/a' && (
-                      <Paragraph>{starter.description}</Paragraph>
-                    )}
-                    <ExternalLink
-                      href={this.prepareUrlForCodesandbox(starter.repo)}
-                    >
-                      Preview in Codesandbox
-                    </ExternalLink>
-                    <Spacer size={25} />
-                  </StarterItem>
+                    Preview in Codesandbox
+                  </ExternalLink>
+                  <Spacer size={25} />
                   <Divider />
-                </Fragment>
+                </StarterItem>
               ))}
             </StarterList>
 
@@ -172,19 +171,43 @@ class SelectStarterDialog extends PureComponent<Props, State> {
           />
         </InstantSearch> */}
           </ScrollContainer>
-          <FillButton onClick={this.handleDialogOK}>Use selected</FillButton>
-          <FillButton onClick={hideModal}>Cancel</FillButton>
+          <Actions>
+            {/* Todo: Refactor OK/Cancel buttons into a component. So this is reusable. */}
+            <StrokeButton
+              strokeColors={[COLORS.green[700], COLORS.lightGreen[500]]}
+              onClick={this.handleDialogOK}
+              disabled={selectedStarterInModal === ''}
+            >
+              {/* Todo: Add tooltip if disabled  */}
+              Use selected
+            </StrokeButton>
+            <Spacer size={15} />
+            <StrokeButton onClick={hideModal}>Cancel</StrokeButton>
+          </Actions>
         </MainContent>
       </Modal>
     );
   }
 }
 
+/*
+  Actions could be refactored in a component 
+  used here and in ProjectConfigurationModal
+*/
+const Actions = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 8px;
+`;
+
 const ScrollContainer = styled(Scrollbars)`
   min-height: 60vh;
 `;
 
-const StarterList = styled.div``;
+const StarterList = styled.div`
+  padding: 15px;
+`;
 const StarterItem = styled.div`
   cursor: pointer;
   padding: 8px 10px;
