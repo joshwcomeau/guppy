@@ -36,6 +36,8 @@ type State = {
   loading: boolean,
   starters: Array<any>,
   selectedStarterInModal: string,
+  paginationIndex: number,
+  filterString: '',
 };
 
 /*
@@ -69,11 +71,9 @@ class SelectStarterDialog extends PureComponent<Props, State> {
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     // Clear search string on modal open display
-    const filterString =
-      !prevState.isVisible && nextProps.isVisible ? '' : prevState.filterString;
     return {
       ...prevState,
-      filterString,
+      filterString: '',
       selectedStarterInModal: nextProps.selectedStarter,
     };
   }
