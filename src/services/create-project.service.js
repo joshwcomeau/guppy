@@ -221,6 +221,6 @@ export const getBuildInstructions = (
       $projectStarter: options && options.projectStarter,
     }
   );
-  console.log('create cmd', createCommand);
+
   return [command, ...createCommand.args];
 };

@@ -3,9 +3,11 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
+import { remote } from 'electron';
 
 import { COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
+import { urlExists } from '../../services/check-if-url-exists.service';
 
 import Spacer from '../Spacer';
 import WhimsicalInstaller from '../WhimsicalInstaller';
@@ -13,6 +15,8 @@ import BuildStepProgress from './BuildStepProgress';
 
 import type { BuildStep, Status } from './types';
 import type { ProjectType, ProjectInternal } from '../../types';
+
+const { dialog } = remote;
 
 const BUILD_STEPS = {
   installingCliTool: {
@@ -69,17 +73,21 @@ class BuildPane extends PureComponent<Props, State> {
       // `runInstaller` becomes true, so we want it to be in its final position
       // when this happens. Otherwise, clicking files in the air instantly
       // "teleports" them a couple inches from the mouse :/
-      this.timeoutId = window.setTimeout(() => {
-        this.buildProject();
-
-        this.timeoutId = window.setTimeout(() => {
-          this.setState({ runInstaller: true });
-        }, 500);
-      }, 600);
+      this.buildProject().then(result => {
+        if (result) {
+          this.timeoutId = window.setTimeout(() => {
+            // Using promise not async as async can be problematic in life-cycle hooks
+            // Build can be started
+            this.timeoutId = window.setTimeout(() => {
+              this.setState({ runInstaller: true });
+            }, 500);
+          }, 600);
+        }
+      });
     }
   }
 
-  buildProject = () => {
+  buildProject = async () => {
     const {
       projectName,
       projectType,
@@ -106,6 +114,17 @@ class BuildPane extends PureComponent<Props, State> {
         ? 'https://github.com/gatsbyjs/' + projectStarterInput
         : projectStarterInput;
 
+    const exists = await urlExists(projectStarter);
+
+    console.log('exists', exists);
+    if (!exists) {
+      // starter not found
+      return dialog.showErrorBox(
+        'Starter not found',
+        'Please check your starter url or use the starter selection to pick a starter.'
+      );
+    }
+
     createProject(
       { projectName, projectType, projectIcon, projectStarter },
       this.props.projectHomePath,
@@ -113,6 +132,8 @@ class BuildPane extends PureComponent<Props, State> {
       this.handleError,
       this.handleComplete
     );
+
+    return true;
   };
 
   handleStatusUpdate = (output: any) => {

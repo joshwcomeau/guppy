@@ -116,7 +116,6 @@ class MainPane extends PureComponent<Props, State> {
       currentStepIndex
     );
 
-    // Todo: Fix index or change to a better model. At the moment, difficult to handle.
     return {
       lastIndex: buildSteps.length,
       steps: renderedSteps,
@@ -128,7 +127,7 @@ class MainPane extends PureComponent<Props, State> {
 
     return (
       (currentStepIndex > 0 && !projectType) ||
-      (currentStepIndex > lastIndex && !projectIcon)
+      (currentStepIndex >= lastIndex && !projectIcon)
     );
   }
   render() {
@@ -169,7 +168,7 @@ class MainPane extends PureComponent<Props, State> {
               !projectName ||
               this.validateField(currentStepIndex, lastIndex)
             }
-            readyToBeSubmitted={currentStepIndex > lastIndex}
+            readyToBeSubmitted={currentStepIndex >= lastIndex}
             hasBeenSubmitted={hasBeenSubmitted}
             onSubmit={handleSubmit}
           />
