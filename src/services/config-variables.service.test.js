@@ -13,7 +13,7 @@ describe('substitute config variables', () => {
 
     expect(
       substituteConfigVariables(configuration, {
-        $port: 3000,
+        $port: '3000',
         $projectPath: 'some/path/to/project',
         $projectStarter: 'https://github.com/gatsbyjs/gatsby-starter-default',
       })
@@ -25,7 +25,7 @@ Object {
     "https://github.com/gatsbyjs/gatsby-starter-default",
   ],
   "env": Object {
-    "PORT": 3000,
+    "PORT": "3000",
     "cwd": "some/path/to/project",
   },
 }

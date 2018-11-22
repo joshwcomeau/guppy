@@ -19,7 +19,10 @@ export const substituteConfigVariables = (
     (config, key) => {
       if (config[key] instanceof Array) {
         // replace $port inside args array
-        config[key] = config[key].map(arg => variableMap[arg] || arg);
+        // empty string is special here - we'd like to us it as replacement
+        config[key] = config[key].map(
+          arg => (variableMap[arg] === '' ? '' : variableMap[arg] || arg)
+        );
       } else {
         // check config[key] e.g. is {env: { PORT: '$port'} }
         if (config[key] instanceof Object) {
@@ -28,7 +31,9 @@ export const substituteConfigVariables = (
             (newObj, nestedKey) => {
               // use replacement value if available
               newObj[nestedKey] =
-                variableMap[newObj[nestedKey]] || newObj[nestedKey];
+                variableMap[newObj[nestedKey]] === ''
+                  ? ''
+                  : variableMap[newObj[nestedKey]] || newObj[nestedKey];
               return newObj;
             },
             { ...config[key] }

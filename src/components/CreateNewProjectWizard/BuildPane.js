@@ -98,12 +98,13 @@ class BuildPane extends PureComponent<Props, State> {
       );
     }
 
-    // Add url to starter if not passed
+    // Add url to starter if not passed & not an empty string
     // Todo: We need error handling to show a notification that it failed to use the starter (e.g. starter doesn't exists or wrong url/name)
     //       --> Probably just needed if we allow the user to enter an url to a starter.
-    const projectStarter = !projectStarterInput.includes('http')
-      ? 'https://github.com/gatsbyjs/' + projectStarterInput
-      : projectStarterInput;
+    const projectStarter =
+      !projectStarterInput.includes('http') && projectStarterInput !== ''
+        ? 'https://github.com/gatsbyjs/' + projectStarterInput
+        : projectStarterInput;
 
     createProject(
       { projectName, projectType, projectIcon, projectStarter },

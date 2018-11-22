@@ -32,7 +32,7 @@ type Props = {
 };
 
 type State = {
-  gatsbyStarter: string, // temporary value during selection in selection toast
+  gatsbyStarter: string, // Temporary value during selection in selection toast
 };
 
 class MainPane extends PureComponent<Props, State> {
@@ -52,11 +52,6 @@ class MainPane extends PureComponent<Props, State> {
     this.props.updateFieldValue('projectIcon', projectIcon);
   updateGatsbyStarter = (selectedStarter: string) =>
     this.props.updateFieldValue('projectStarter', selectedStarter);
-
-  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    console.log('MainPane new props', nextProps, prevState);
-    return prevState;
-  }
 
   projectSpecificSteps() {
     const { activeField, projectType, projectStarter } = this.props;
@@ -85,7 +80,7 @@ class MainPane extends PureComponent<Props, State> {
   renderConditionalSteps(currentStepIndex: number) {
     const { activeField, projectType, projectIcon } = this.props;
     const buildSteps: Array<?React$Node> = [
-      // currentStepIndex > 0 -- > 1
+      // currentStepIndex = 0
       <FadeIn key="step-type">
         <FormField
           label="Project Type"
@@ -99,7 +94,7 @@ class MainPane extends PureComponent<Props, State> {
           />
         </FormField>
       </FadeIn>,
-      this.projectSpecificSteps(), // currentStepIndex > 1
+      this.projectSpecificSteps(), // currentStepIndex = 1
       <FadeIn key="step-icon">
         <FormField
           label="Project Icon"
@@ -114,28 +109,27 @@ class MainPane extends PureComponent<Props, State> {
           />
         </FormField>
       </FadeIn>,
-    ];
+    ].filter(step => !!step);
 
-    const renderedSteps: Array<?React$Node> = buildSteps
-      .filter(step => !!step)
-      .slice(0, currentStepIndex);
+    const renderedSteps: Array<?React$Node> = buildSteps.slice(
+      0,
+      currentStepIndex
+    );
 
-    console.log('render steps', renderedSteps);
+    // Todo: Fix index or change to a better model. At the moment, difficult to handle.
     return {
-      lastIndex: projectType === 'gatsby' ? 3 : 2, //buildSteps.length, // Todo: Use buildSteps array to find last index
+      lastIndex: buildSteps.length,
       steps: renderedSteps,
     };
   }
-  validateField(currentStepIndex: number) {
-    // todo: Refactor - Move buildsteps to component scope & use an array method to check current validation
-    //       --> For now we're doing a different check for Gatsby flow
-    const { projectIcon, projectStarter, projectType } = this.props;
-    return projectType === 'gatsby'
-      ? (currentStepIndex > 0 && !projectType) ||
-          (currentStepIndex > 1 && projectStarter === '') ||
-          (currentStepIndex > 2 && !projectIcon)
-      : (currentStepIndex > 0 && !projectType) ||
-          (currentStepIndex > 1 && !projectIcon);
+  validateField(currentStepIndex: number, lastIndex: number) {
+    // No validation for projectStarter as it is optional
+    const { projectIcon, projectType } = this.props;
+
+    return (
+      (currentStepIndex > 0 && !projectType) ||
+      (currentStepIndex > lastIndex && !projectIcon)
+    );
   }
   render() {
     const {
@@ -150,7 +144,6 @@ class MainPane extends PureComponent<Props, State> {
     const { lastIndex, steps } = this.renderConditionalSteps(currentStepIndex);
     return (
       <Fragment>
-        {/* <pre>{JSON.stringify(this.props, null, 2)}</pre> */}
         <Motion style={{ offset: spring(currentStepIndex === 0 ? 50 : 0) }}>
           {({ offset }) => (
             <Wrapper style={{ transform: `translateY(${offset}px)` }}>
@@ -174,9 +167,9 @@ class MainPane extends PureComponent<Props, State> {
             isDisabled={
               isProjectNameTaken ||
               !projectName ||
-              this.validateField(currentStepIndex)
+              this.validateField(currentStepIndex, lastIndex)
             }
-            readyToBeSubmitted={currentStepIndex >= lastIndex}
+            readyToBeSubmitted={currentStepIndex > lastIndex}
             hasBeenSubmitted={hasBeenSubmitted}
             onSubmit={handleSubmit}
           />

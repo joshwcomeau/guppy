@@ -218,9 +218,9 @@ export const getBuildInstructions = (
     projectConfigs[projectType].create,
     {
       $projectPath: projectPath,
-      $projectStarter: (options && options.projectStarter) || '',
+      $projectStarter: options && options.projectStarter,
     }
   );
-
+  console.log('create cmd', createCommand);
   return [command, ...createCommand.args];
 };
