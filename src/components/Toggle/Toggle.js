@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Spring, animated } from 'react-spring';
+import { Spring, animated, interpolate } from 'react-spring';
 
 import { COLORS } from '../../constants';
 
@@ -19,46 +19,10 @@ class Toggle extends PureComponent<Props> {
     padding: 2,
   };
 
-  lastTranslateVal: ?number = null;
-  lastFrameTime: ?number = null;
-
-  renderBall = (interpolated: { translate: number }) => {
-    const { size } = this.props;
-
-    const { lastTranslateVal, lastFrameTime } = this;
-
-    if (lastTranslateVal == null || lastFrameTime == null) {
-      this.lastTranslateVal = interpolated.translate;
-      this.lastFrameTime = performance.now();
-      return (
-        <Ball size={size} translate={interpolated.translate} stretch={1} />
-      );
-    }
-
-    const now = performance.now();
-
-    const translateDelta = Math.abs(lastTranslateVal - interpolated.translate);
-    const timeDelta = now - lastFrameTime;
-
-    this.lastTranslateVal = interpolated.translate;
-    this.lastFrameTime = now;
-
-    const timeAdjustment = 1 / (timeDelta / 16.666);
-
-    const stretch = translateDelta / 40;
-
-    return (
-      <Ball
-        size={size}
-        translate={interpolated.translate}
-        stretch={1 + stretch * timeAdjustment}
-      />
-    );
-  };
-
   render() {
     const { isToggled, size, padding, isDisabled, onToggle } = this.props;
     const doublePadding = padding * 2;
+    const stretchAddition = 0.8;
 
     return (
       <Wrapper
@@ -72,11 +36,27 @@ class Toggle extends PureComponent<Props> {
           <Pulsing />
         </OnBackground>
         <Spring
-          from={{ translate: isToggled ? 0 : 100 }}
-          to={{ translate: isToggled ? 100 : 0 }}
-          config={{ tension: 220, friction: 19 }}
+          from={{
+            translate: isToggled ? 0 : 100,
+            stretch: isToggled ? -stretchAddition : stretchAddition,
+          }}
+          to={{
+            translate: isToggled ? 100 : 0,
+            stretch: isToggled ? stretchAddition : -stretchAddition,
+          }}
+          config={{ tension: 220, friction: 25 }}
+          native
         >
-          {this.renderBall}
+          {interpolated => (
+            <Ball
+              size={size}
+              translate={interpolated.translate}
+              stretch={interpolate(
+                [interpolated.stretch],
+                stretch => 1 + (stretchAddition - Math.abs(stretch))
+              )}
+            />
+          )}
         </Spring>
       </Wrapper>
     );
