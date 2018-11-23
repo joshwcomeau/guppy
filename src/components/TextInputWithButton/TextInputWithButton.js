@@ -31,7 +31,11 @@ class TextInputWithButton extends PureComponent<Props> {
 
     return (
       <Wrapper>
-        <TextInput {...props} onChange={ev => onChange(ev.target.value)}>
+        <TextInput
+          {...props}
+          onFocus={handleFocus}
+          onChange={ev => onChange(ev.target.value)}
+        >
           <HoverableOutlineButton
             noPadding
             onMouseDown={() => window.requestAnimationFrame(handleFocus)}

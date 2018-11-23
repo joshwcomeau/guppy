@@ -13,6 +13,8 @@ import { getById } from '../../reducers/projects.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { checkIfProjectExists } from '../../services/create-project.service';
+import { urlExists } from '../../services/check-if-url-exists.service';
+import { replaceProjectStarterStringWithUrl } from './helpers';
 
 import TwoPaneModal from '../TwoPaneModal';
 import Debounced from '../Debounced';
@@ -141,14 +143,37 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       }
     });
   };
+
+  checkIfStarterUrlExists = async () => {
+    const { projectStarter: projectStarterInput } = this.state;
+    // Add url to starter if not passed & not an empty string
+    const projectStarter = replaceProjectStarterStringWithUrl(
+      projectStarterInput
+    );
+
+    const exists = await urlExists(projectStarter);
+
+    if (!exists) {
+      // starter not found
+      dialog.showErrorBox(
+        `Starter ${projectStarter} not found`,
+        'Please check your starter url or use the starter selection to pick a starter.'
+      );
+      throw new Error('starter-not-found');
+    }
+  };
+
   handleSubmit = () => {
     const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
     const nextStep = FORM_STEPS[currentStepIndex + 1];
 
     if (!nextStep) {
-      return this.checkProjectLocationUsage()
+      return Promise.all([
+        this.checkProjectLocationUsage(),
+        this.checkIfStarterUrlExists(),
+      ])
         .then(() => {
-          // not in use
+          // not in use & starter exists (if Gatsby project)
           this.setState({
             activeField: null,
             status: 'building-project',

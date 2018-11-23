@@ -3,11 +3,10 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
-import { remote } from 'electron';
 
 import { COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
-import { urlExists } from '../../services/check-if-url-exists.service';
+import { replaceProjectStarterStringWithUrl } from './helpers';
 
 import Spacer from '../Spacer';
 import WhimsicalInstaller from '../WhimsicalInstaller';
@@ -15,8 +14,6 @@ import BuildStepProgress from './BuildStepProgress';
 
 import type { BuildStep, Status } from './types';
 import type { ProjectType, ProjectInternal } from '../../types';
-
-const { dialog } = remote;
 
 const BUILD_STEPS = {
   installingCliTool: {
@@ -106,24 +103,11 @@ class BuildPane extends PureComponent<Props, State> {
       );
     }
 
-    // Add url to starter if not passed & not an empty string
-    // Todo: We need error handling to show a notification that it failed to use the starter (e.g. starter doesn't exists or wrong url/name)
-    //       --> Probably just needed if we allow the user to enter an url to a starter.
-    const projectStarter =
-      !projectStarterInput.includes('http') && projectStarterInput !== ''
-        ? 'https://github.com/gatsbyjs/' + projectStarterInput
-        : projectStarterInput;
-
-    const exists = await urlExists(projectStarter);
-
-    console.log('exists', exists);
-    if (!exists) {
-      // starter not found
-      return dialog.showErrorBox(
-        'Starter not found',
-        'Please check your starter url or use the starter selection to pick a starter.'
-      );
-    }
+    // Replace starter string with URL.
+    // No need to check if it exists as this already happend before we're here.
+    const projectStarter = replaceProjectStarterStringWithUrl(
+      projectStarterInput
+    );
 
     createProject(
       { projectName, projectType, projectIcon, projectStarter },

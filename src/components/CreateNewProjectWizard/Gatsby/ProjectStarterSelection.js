@@ -1,9 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-// import styled from 'styled-components';
-
-// import { COLORS } from '../../constants';
 
 import TextInputWithButton from '../../TextInputWithButton';
 
@@ -49,11 +46,6 @@ class ProjectStarter extends PureComponent<Props, State> {
 
   handleSelect = () => {
     this.props.onSelect(this.state.gatsbyStarter);
-
-    // clear temporary state value
-    // this.setState({
-    //   gatsbyStarter: '',
-    // });
   };
 
   render() {
