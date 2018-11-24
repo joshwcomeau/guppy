@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { messageSquare } from 'react-icons-kit/feather/messageSquare';
+import { Spring, animated, interpolate } from 'react-spring';
 
 import DetectActive from '../DetectActive';
 
@@ -28,20 +29,33 @@ class FeedbackButton extends PureComponent<Props> {
     return (
       <DetectActive>
         {(_, isHovered) => (
-          <Wrapper color={isHovered ? hoverColor : color}>
-            <IconBase
-              size={size}
-              icon={messageSquare}
-              onClick={() => openWindow(IN_APP_FEEDBACK_URL)}
-            />
-          </Wrapper>
+          <Spring
+            native
+            to={{
+              scale: isHovered ? 1.15 : 1,
+            }}
+          >
+            {({ scale }) => (
+              <IconWrapper scale={scale} color={isHovered ? hoverColor : color}>
+                <IconBase
+                  size={size}
+                  icon={messageSquare}
+                  onClick={() => openWindow(IN_APP_FEEDBACK_URL)}
+                />
+              </IconWrapper>
+            )}
+          </Spring>
         )}
       </DetectActive>
     );
   }
 }
 
-const Wrapper = styled.div`
+const IconWrapper = animated(styled.div.attrs({
+  style: ({ scale }) => ({
+    transform: `scale(${scale}, ${scale})`,
+  }),
+})`
   position: fixed;
   width: 40px;
   height: 40px;
@@ -49,6 +63,6 @@ const Wrapper = styled.div`
   bottom: 20px;
   color: ${props => props.color};
   z-index: 1;
-`;
+`);
 
 export default FeedbackButton;
