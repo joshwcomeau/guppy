@@ -27,7 +27,7 @@ class FeedbackButton extends PureComponent<Props> {
   render() {
     const { color, hoverColor, size } = this.props;
     return (
-      <DetectActive>
+      <DetectActiveWrapper>
         {(_, isHovered) => (
           <Spring
             native
@@ -46,23 +46,28 @@ class FeedbackButton extends PureComponent<Props> {
             )}
           </Spring>
         )}
-      </DetectActive>
+      </DetectActiveWrapper>
     );
   }
 }
 
-const IconWrapper = animated(styled.div.attrs({
-  style: ({ scale }) => ({
-    transform: `scale(${scale}, ${scale})`,
-  }),
-})`
+const IconWrapper = animated(
+  styled.div.attrs({
+    style: ({ scale }) => ({
+      transform: `scale(${scale}, ${scale})`,
+    }),
+  })`
+    color: ${props => props.color};
+  `
+);
+
+const DetectActiveWrapper = styled(DetectActive)`
   position: fixed;
   width: 40px;
   height: 40px;
   right: 20px;
   bottom: 20px;
-  color: ${props => props.color};
   z-index: 1;
-`);
+`;
 
 export default FeedbackButton;
