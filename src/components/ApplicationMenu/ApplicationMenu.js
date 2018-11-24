@@ -8,6 +8,7 @@ import { shell, remote } from 'electron';
 
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
+import { IN_APP_FEEDBACK_URL } from '../../config/app';
 import {
   isMac,
   getCopyForOpeningFolder,
@@ -25,7 +26,7 @@ import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import type { Project, Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
-const { app, process, Menu } = remote;
+const { app, process, Menu, BrowserWindow } = remote;
 
 type Props = {
   projects: Array<Project>,
@@ -58,6 +59,20 @@ class ApplicationMenu extends Component<Props> {
 
   openGithubLink = pathname => {
     shell.openExternal(`${GUPPY_REPO_URL}/${pathname}`);
+  };
+
+  openLink = url => {
+    const win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        devTools: false,
+      },
+    });
+    // Remove the menu
+    win.setMenu(null);
+    win.loadURL(url);
+    win.show();
   };
 
   buildMenu = (props: Props) => {
@@ -158,6 +173,10 @@ class ApplicationMenu extends Component<Props> {
           {
             label: isMac ? 'Privacy Policy' : 'Privacy policy',
             click: () => this.openGithubLink('blob/master/PRIVACY.md'),
+          },
+          {
+            label: 'Feedback',
+            click: () => this.openLink(IN_APP_FEEDBACK_URL),
           },
         ],
       },
