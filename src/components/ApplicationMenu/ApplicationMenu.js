@@ -16,6 +16,7 @@ import {
 import {
   openProjectInFolder,
   openProjectInEditor,
+  openWindow,
 } from '../../services/shell.service';
 import {
   getSelectedProject,
@@ -26,7 +27,7 @@ import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import type { Project, Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
-const { app, process, Menu, BrowserWindow } = remote;
+const { app, process, Menu } = remote;
 
 type Props = {
   projects: Array<Project>,
@@ -62,17 +63,7 @@ class ApplicationMenu extends Component<Props> {
   };
 
   openLink = url => {
-    const win = new BrowserWindow({
-      width: 800,
-      height: 600,
-      webPreferences: {
-        devTools: false,
-      },
-    });
-    // Remove the menu
-    win.setMenu(null);
-    win.loadURL(url);
-    win.show();
+    openWindow(url);
   };
 
   buildMenu = (props: Props) => {

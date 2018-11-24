@@ -2,17 +2,48 @@
 /**
  * Thin wrapper around electron `shell`, and other shell-like functions
  */
-import { shell } from 'electron';
+import { shell, remote } from 'electron';
 import launchEditor from 'react-dev-utils/launchEditor';
 import { exec } from 'child_process';
 
 import type { Project } from '../types';
+
+const { BrowserWindow } = remote;
+
+const openedWindows = {};
 
 export const openProjectInFolder = (project: Project) =>
   shell.openItem(project.path);
 
 export const openProjectInEditor = (project: Project) =>
   launchEditor(project.path, 1, 1);
+
+export const openWindow = (url: string) => {
+  const urlKey = url.replace(/(\/|:|\.)/g, '');
+
+  if (openedWindows[urlKey]) {
+    try {
+      return openedWindows[urlKey].show();
+    } catch (err) {
+      // swallow error - Window could be closed
+    }
+  }
+
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      devTools: false,
+    },
+  });
+  // Remove the menu
+  win.setMenu(null);
+  win.loadURL(url);
+  win.show();
+
+  // Save Window so we can open it later
+  openedWindows[urlKey] = win;
+};
 
 export const getNodeJsVersion = () =>
   new Promise<string | void>(resolve =>
