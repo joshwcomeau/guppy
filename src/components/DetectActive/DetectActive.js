@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 
 type Props = {
+  className: string,
   children: (isActive: boolean, isHovered: boolean) => React$Node,
 };
 
@@ -11,6 +12,10 @@ type State = {
 };
 
 class DetectActive extends Component<Props, State> {
+  static defaultProps = {
+    className: '',
+  };
+
   state = {
     isActive: false,
     isHovered: false,
