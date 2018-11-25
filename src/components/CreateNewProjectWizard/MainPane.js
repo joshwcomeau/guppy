@@ -53,82 +53,90 @@ class MainPane extends PureComponent<Props, State> {
   updateGatsbyStarter = (selectedStarter: string) =>
     this.props.updateFieldValue('projectStarter', selectedStarter);
 
-  projectSpecificSteps() {
-    const { activeField, projectType, projectStarter } = this.props;
-    switch (projectType) {
-      case 'gatsby':
-        return (
-          <FadeIn key="step-starter">
-            <FormField
-              label="Project Starter"
-              isFocused={activeField === 'projectStarter'}
-            >
-              <ProjectStarterSelection
-                isFocused={activeField === 'projectStarter'}
-                handleFocus={this.handleFocusStarter}
-                onSelect={this.updateGatsbyStarter}
-                projectStarter={projectStarter}
-              />
-            </FormField>
-          </FadeIn>
-        );
-      default:
-        return null;
-    }
+  projectSpecificGatsbyStep() {
+    const { activeField, projectStarter } = this.props;
+    return (
+      <FadeIn key="step-starter">
+        <FormField
+          label="Project Starter"
+          isFocused={activeField === 'projectStarter'}
+        >
+          <ProjectStarterSelection
+            isFocused={activeField === 'projectStarter'}
+            handleFocus={this.handleFocusStarter}
+            onSelect={this.updateGatsbyStarter}
+            projectStarter={projectStarter}
+          />
+        </FormField>
+      </FadeIn>
+    );
   }
 
   renderConditionalSteps(currentStepIndex: number) {
     const { activeField, projectType, projectIcon } = this.props;
-    const buildSteps: Array<?React$Node> = [
-      // currentStepIndex = 0
-      <FadeIn key="step-type">
-        <FormField
-          label="Project Type"
-          isFocused={activeField === 'projectType'}
-        >
-          <ProjectTypeSelection
-            projectType={projectType}
-            onProjectTypeSelect={selectedProjectType =>
-              this.updateProjectType(selectedProjectType)
-            }
-          />
-        </FormField>
-      </FadeIn>,
-      this.projectSpecificSteps(), // currentStepIndex = 1
-      <FadeIn key="step-icon">
-        <FormField
-          label="Project Icon"
-          focusOnClick={false}
-          isFocused={activeField === 'projectIcon'}
-        >
-          <ProjectIconSelection
-            selectedIcon={projectIcon}
-            randomize={true}
-            limitTo={8}
-            onSelectIcon={this.updateProjectIcon}
-          />
-        </FormField>
-      </FadeIn>,
-    ].filter(step => !!step);
+    const steps: Array<?React$Node> = [];
+    let lastIndex = 2;
 
-    const renderedSteps: Array<?React$Node> = buildSteps.slice(
-      0,
-      currentStepIndex
-    );
+    if (projectType === 'gatsby') {
+      lastIndex = 3;
+    }
+
+    if (currentStepIndex > 0) {
+      // currentStepIndex = 1
+      steps.push(
+        <FadeIn key="step-type">
+          <FormField
+            label="Project Type"
+            isFocused={activeField === 'projectType'}
+          >
+            <ProjectTypeSelection
+              projectType={projectType}
+              onProjectTypeSelect={selectedProjectType =>
+                this.updateProjectType(selectedProjectType)
+              }
+            />
+          </FormField>
+        </FadeIn>
+      );
+    }
+    if (currentStepIndex > 1) {
+      steps.push(
+        // 2
+        <FadeIn key="step-icon">
+          <FormField
+            label="Project Icon"
+            focusOnClick={false}
+            isFocused={activeField === 'projectIcon'}
+          >
+            <ProjectIconSelection
+              selectedIcon={projectIcon}
+              randomize={true}
+              limitTo={8}
+              onSelectIcon={this.updateProjectIcon}
+            />
+          </FormField>
+        </FadeIn>
+      );
+    }
+
+    if (currentStepIndex > 2 && projectType === 'gatsby') {
+      // 3
+      steps.push(this.projectSpecificGatsbyStep());
+    }
 
     return {
-      lastIndex: buildSteps.length,
-      steps: renderedSteps,
+      lastIndex,
+      steps,
     };
   }
-  validateField(currentStepIndex: number, lastIndex: number) {
+  isSubmitDisabled(currentStepIndex: number, lastIndex: number) {
     // No validation for projectStarter as it is optional
     const { projectIcon, projectType } = this.props;
 
-    return (
-      (currentStepIndex > 0 && !projectType) ||
-      (currentStepIndex >= lastIndex && !projectIcon)
-    );
+    const needsProjectType = !projectType && currentStepIndex > 1;
+    const needsProjectIcon = !projectIcon && currentStepIndex >= 2;
+
+    return needsProjectType || needsProjectIcon;
   }
   render() {
     const {
@@ -166,7 +174,7 @@ class MainPane extends PureComponent<Props, State> {
             isDisabled={
               isProjectNameTaken ||
               !projectName ||
-              this.validateField(currentStepIndex, lastIndex)
+              this.isSubmitDisabled(currentStepIndex, lastIndex)
             }
             readyToBeSubmitted={currentStepIndex >= lastIndex}
             hasBeenSubmitted={hasBeenSubmitted}

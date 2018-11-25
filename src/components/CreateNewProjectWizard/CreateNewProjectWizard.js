@@ -32,8 +32,8 @@ import type { Dispatch } from '../../actions/types';
 const FORM_STEPS: Array<Field> = [
   'projectName',
   'projectType',
-  'projectStarter',
   'projectIcon',
+  'projectStarter',
 ];
 const { dialog } = remote;
 
@@ -151,6 +151,10 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       projectStarterInput
     );
 
+    if (projectStarter === '') {
+      return;
+    }
+
     const exists = await urlExists(projectStarter);
 
     if (!exists) {
@@ -166,8 +170,9 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   handleSubmit = () => {
     const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
     const nextStep = FORM_STEPS[currentStepIndex + 1];
+    const lastStep = this.state.projectType === 'gatsby' ? 3 : 2;
 
-    if (!nextStep) {
+    if (currentStepIndex >= lastStep) {
       return Promise.all([
         this.checkProjectLocationUsage(),
         this.checkIfStarterUrlExists(),

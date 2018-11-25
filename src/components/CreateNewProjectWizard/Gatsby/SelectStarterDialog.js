@@ -155,10 +155,9 @@ class SelectStarterDialog extends PureComponent<Props, State> {
 
         <MainContent>
           <Paragraph>
-            For a better overview you can also have a look at the Gatsby
-            starters library{' '}
+            For a better overview you can also have a look at the{' '}
             <ExternalLink href="https://www.gatsbyjs.org/starters/">
-              here.
+              Gatsby starters library
             </ExternalLink>
           </Paragraph>
           <TextInput

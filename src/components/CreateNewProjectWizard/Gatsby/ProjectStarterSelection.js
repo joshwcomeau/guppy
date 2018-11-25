@@ -21,32 +21,26 @@ type Props = {
 };
 
 class ProjectStarter extends PureComponent<Props, State> {
-  state = {
-    gatsbyStarter: '',
-  };
+  // state = {
+  //   gatsbyStarter: '',
+  // };
 
-  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    return {
-      gatsbyStarter: nextProps.projectStarter,
-    };
-  }
+  // static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+  //   return {
+  //     gatsbyStarter: nextProps.projectStarter,
+  //   };
+  // }
 
   // Change method needed so we can dismiss the selection on close click of toastr
-  changeGatsbyStarter = (selectedStarter: string) => {
-    console.log('change starter', selectedStarter, this);
-    this.setState(
-      {
-        gatsbyStarter: selectedStarter,
-      },
-      () => {
-        console.log('updated', this.state);
-      }
-    );
-  };
+  // changeGatsbyStarter = (selectedStarter: string) => {
+  //   this.setState({
+  //     gatsbyStarter: selectedStarter,
+  //   });
+  // };
 
-  handleSelect = () => {
-    this.props.onSelect(this.state.gatsbyStarter);
-  };
+  // handleSelect = () => {
+  //   this.props.onSelect(this.state.gatsbyStarter);
+  // };
 
   render() {
     const {

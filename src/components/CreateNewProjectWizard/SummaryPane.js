@@ -187,7 +187,7 @@ class SummaryPane extends PureComponent<Props> {
       }
       case 'projectStarter': {
         // todo: why is a key needed on FadeIn? Was s3t.
-        // todo: should we rename projectStarter to be mores specific as this is Gatbsy only.
+        // todo: should we rename projectStarter to be mores specific as this is Gatsby only.
         return (
           <Fragment>
             <FadeIn>

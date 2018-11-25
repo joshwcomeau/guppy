@@ -27,12 +27,12 @@ class TextInputWithButton extends PureComponent<Props> {
   };
 
   render() {
-    const { onChange, onClick, icon, handleFocus, ...props } = this.props;
+    const { onChange, onClick, icon, handleFocus, isFocused } = this.props;
 
     return (
       <Wrapper>
         <TextInput
-          {...props}
+          isFocused={isFocused}
           onFocus={handleFocus}
           onChange={ev => onChange(ev.target.value)}
         >
