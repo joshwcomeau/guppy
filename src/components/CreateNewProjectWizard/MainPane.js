@@ -31,7 +31,7 @@ type Props = {
   handleSubmit: () => Promise<any> | void,
 };
 
-class MainPane extends PureComponent<Props, State> {
+class MainPane extends PureComponent<Props> {
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
   handleFocusStarter = () => this.props.focusField('projectStarter');

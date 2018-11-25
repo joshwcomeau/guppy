@@ -12,7 +12,6 @@ type Props = {
   isFocused: boolean,
   handleFocus: string => void,
   onSelect: string => void,
-  onFocus: () => void,
 };
 
 type State = {
@@ -70,7 +69,7 @@ class ProjectStarter extends Component<Props, State> {
     }));
   };
 
-  updateSearchString = filterString => {
+  updateSearchString = (filterString: string) => {
     this.setState({
       starterListVisible: filterString !== '',
     });

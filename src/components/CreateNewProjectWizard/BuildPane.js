@@ -70,21 +70,17 @@ class BuildPane extends PureComponent<Props, State> {
       // `runInstaller` becomes true, so we want it to be in its final position
       // when this happens. Otherwise, clicking files in the air instantly
       // "teleports" them a couple inches from the mouse :/
-      this.buildProject().then(result => {
-        if (result) {
-          this.timeoutId = window.setTimeout(() => {
-            // Using promise not async as async can be problematic in life-cycle hooks
-            // Build can be started
-            this.timeoutId = window.setTimeout(() => {
-              this.setState({ runInstaller: true });
-            }, 500);
-          }, 600);
-        }
-      });
+      this.timeoutId = window.setTimeout(() => {
+        this.buildProject();
+
+        this.timeoutId = window.setTimeout(() => {
+          this.setState({ runInstaller: true });
+        }, 500);
+      }, 600);
     }
   }
 
-  buildProject = async () => {
+  buildProject = () => {
     const {
       projectName,
       projectType,

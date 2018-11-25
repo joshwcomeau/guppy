@@ -16,7 +16,7 @@ type Props = {
   handleShowMore: () => void,
   selectedStarter: string,
   isVisible: boolean,
-  starters: [],
+  starters: Array<any>,
   paginationIndex: number,
   lastIndex: number,
 };
@@ -40,7 +40,7 @@ A starter object from starter.yml contains the following data:
 ]
 */
 class SelectStarterList extends PureComponent<Props> {
-  node: HTMLElement;
+  node: any;
 
   handleUpdateStarter = (starter: string) => {
     const { updateStarter } = this.props;

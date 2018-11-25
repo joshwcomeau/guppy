@@ -12,10 +12,10 @@ import HoverableOutlineButton from '../HoverableOutlineButton';
 type Props = {
   value: string,
   handleFocus: string => void,
-  onClick: () => void,
   onChange: string => void,
-  isFocused?: boolean,
+  onClick: () => void,
   onFocus: string => void,
+  isFocused?: boolean,
   icon: React$Node,
 };
 

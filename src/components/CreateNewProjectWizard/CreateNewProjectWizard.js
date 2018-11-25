@@ -40,7 +40,6 @@ type Props = {
   settings: AppSettings,
   projects: { [projectId: string]: ProjectInternal },
   projectHomePath: string,
-  projectStarter: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
   addProject: Dispatch<typeof actions.addProject>,
@@ -293,7 +292,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 const mapStateToProps = state => ({
   projects: getById(state),
   projectHomePath: getDefaultProjectPath(state),
-  isVisible: state.modal && state.modal.includes('new-project-wizard'),
+  isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
   settings: getAppSettings(state),
 });
