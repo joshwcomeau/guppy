@@ -22,7 +22,6 @@ import Debounced from '../Debounced';
 import MainPane from './MainPane';
 import SummaryPane from './SummaryPane';
 import BuildPane from './BuildPane';
-import SelectStarterDialog from './Gatsby/SelectStarterDialog';
 
 import type { Field, Status, Step } from './types';
 
@@ -283,10 +282,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                   handleCompleteBuild={this.finishBuilding}
                 />
               }
-            />
-            <SelectStarterDialog
-              updateFieldValue={this.updateFieldValue}
-              selectedStarter={projectStarter}
             />
           </Fragment>
         )}

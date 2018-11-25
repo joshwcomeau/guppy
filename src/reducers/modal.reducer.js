@@ -12,8 +12,6 @@ import {
   SAVE_PROJECT_SETTINGS_FINISH,
   SHOW_PROJECT_SETTINGS,
   SHOW_APP_SETTINGS,
-  SHOW_STARTER_SELECTION,
-  HIDE_STARTER_SELECTION,
   HIDE_MODAL,
   RESET_ALL_STATE,
 } from '../actions';
@@ -30,7 +28,6 @@ export const initialState = null;
 
 export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
-    case HIDE_STARTER_SELECTION:
     case CREATE_NEW_PROJECT_START:
       return 'new-project-wizard';
 
@@ -39,9 +36,6 @@ export default (state: State = initialState, action: Action = {}) => {
 
     case SHOW_APP_SETTINGS:
       return 'app-settings';
-
-    case SHOW_STARTER_SELECTION:
-      return 'new-project-wizard/select-starter';
 
     case CREATE_NEW_PROJECT_CANCEL:
     case CREATE_NEW_PROJECT_FINISH:

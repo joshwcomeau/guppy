@@ -204,6 +204,16 @@ class SummaryPane extends PureComponent<Props> {
                 bootstrap your project e.g. you can easily create your own blog
                 by picking one of the blog starter templates.
               </Paragraph>
+              <Paragraph>
+                For a better overview you can also have a look at the{' '}
+                <ExternalLink
+                  color={COLORS.white}
+                  hoverColor={COLORS.white}
+                  href="https://www.gatsbyjs.org/starters/"
+                >
+                  Gatsby starters library
+                </ExternalLink>
+              </Paragraph>
             </FadeIn>
           </Fragment>
         );

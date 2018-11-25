@@ -3,8 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Logo = ({
-  width = 35,
-  height = 35,
+  width = 32,
+  height = 32,
   className,
 }: {
   width: number,

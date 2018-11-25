@@ -20,7 +20,7 @@ type Props = {
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
-  projectStarter: ?string,
+  projectStarter: string,
   activeField: ?Field,
   status: Status,
   currentStepIndex: number,
@@ -31,15 +31,7 @@ type Props = {
   handleSubmit: () => Promise<any> | void,
 };
 
-type State = {
-  gatsbyStarter: string, // Temporary value during selection in selection toast
-};
-
 class MainPane extends PureComponent<Props, State> {
-  state = {
-    gatsbyStarter: '',
-  };
-
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
   handleFocusStarter = () => this.props.focusField('projectStarter');
@@ -60,6 +52,7 @@ class MainPane extends PureComponent<Props, State> {
         <FormField
           label="Project Starter"
           isFocused={activeField === 'projectStarter'}
+          spacing={15}
         >
           <ProjectStarterSelection
             isFocused={activeField === 'projectStarter'}
@@ -88,6 +81,7 @@ class MainPane extends PureComponent<Props, State> {
           <FormField
             label="Project Type"
             isFocused={activeField === 'projectType'}
+            spacing={10}
           >
             <ProjectTypeSelection
               projectType={projectType}
@@ -107,11 +101,12 @@ class MainPane extends PureComponent<Props, State> {
             label="Project Icon"
             focusOnClick={false}
             isFocused={activeField === 'projectIcon'}
+            spacing={10}
           >
             <ProjectIconSelection
               selectedIcon={projectIcon}
               randomize={true}
-              limitTo={8}
+              limitTo={9}
               onSelectIcon={this.updateProjectIcon}
             />
           </FormField>
@@ -187,15 +182,12 @@ class MainPane extends PureComponent<Props, State> {
 }
 
 const Wrapper = styled.div`
-  height: 80vh;
+  min-height: 500px;
+  max-height: 90vh;
   will-change: transform;
 `;
 
 const SubmitButtonWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 30px;
   text-align: center;
 `;
 

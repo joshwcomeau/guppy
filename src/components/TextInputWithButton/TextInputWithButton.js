@@ -27,18 +27,16 @@ class TextInputWithButton extends PureComponent<Props> {
   };
 
   render() {
-    const { onChange, onClick, icon, handleFocus, isFocused } = this.props;
+    const { onChange, onClick, icon, ...delegated } = this.props;
 
     return (
       <Wrapper>
-        <TextInput
-          isFocused={isFocused}
-          onFocus={handleFocus}
-          onChange={ev => onChange(ev.target.value)}
-        >
+        <TextInput {...delegated} onChange={ev => onChange(ev.target.value)}>
           <HoverableOutlineButton
             noPadding
-            onMouseDown={() => window.requestAnimationFrame(handleFocus)}
+            onMouseDown={() =>
+              window.requestAnimationFrame(delegated.handleFocus)
+            }
             onClick={onClick}
             style={{ width: 32, height: 32 }}
           >
