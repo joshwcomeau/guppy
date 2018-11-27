@@ -160,7 +160,7 @@ class ProjectPage extends PureComponent<Props> {
                   </Paragraph>
                   <Paragraph>
                     This can happen if you've freshly cloned a project from
-                    Github. In order to run scripts in Guppy, you'll need to
+                    GitHub. In order to run scripts in Guppy, you'll need to
                     install them now.
                   </Paragraph>
                   <Spacer size={30} />
