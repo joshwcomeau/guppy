@@ -22,7 +22,7 @@ class Toggle extends PureComponent<Props> {
   render() {
     const { isToggled, size, padding, isDisabled, onToggle } = this.props;
     const doublePadding = padding * 2;
-    const stretchAddition = 0.8;
+    const stretchAddition = 0.4;
 
     return (
       <Wrapper
@@ -36,10 +36,6 @@ class Toggle extends PureComponent<Props> {
           <Pulsing />
         </OnBackground>
         <Spring
-          from={{
-            translate: isToggled ? 0 : 100,
-            stretch: isToggled ? -stretchAddition : stretchAddition,
-          }}
           to={{
             translate: isToggled ? 100 : 0,
             stretch: isToggled ? stretchAddition : -stretchAddition,
