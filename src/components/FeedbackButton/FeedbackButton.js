@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { messageSquare } from 'react-icons-kit/feather/messageSquare';
 import { Spring, animated, interpolate } from 'react-spring';
+import { shell } from 'electron';
 
-import { openWindow } from '../../services/shell.service';
 import { IN_APP_FEEDBACK_URL } from '../../config/app';
 import { COLORS } from '../../constants';
 
@@ -16,55 +16,84 @@ type Props = {
 };
 
 type State = {
-  hovered: boolean,
+  isHovered: boolean,
 };
 
 class FeedbackButton extends PureComponent<Props, State> {
   static defaultProps = {
     size: 28,
-    color: COLORS.gray[400],
+    color: COLORS.gray[600],
     hoverColor: COLORS.purple[500],
   };
 
   state = {
-    hovered: false,
+    isHovered: false,
   };
 
-  handleMouseOver = () => {
+  handleMouseEnter = () => {
     this.setState({
-      hovered: true,
+      isHovered: true,
     });
   };
   handleMouseLeave = () => {
     this.setState({
-      hovered: false,
+      isHovered: false,
     });
   };
 
   render() {
-    const { color, hoverColor, size } = this.props;
+    const { color, hoverColor, size, ...delegatedProps } = this.props;
+    const { isHovered } = this.state;
+
     return (
       <Spring
+        native
         config={{
-          tension: 200,
-          friction: 25,
-          precision: 0.01,
+          tension: 190,
+          friction: 40,
         }}
-        to={{ hovered: this.state.hovered ? 1.0 : 0 }}
+        to={{ hovered: isHovered ? 1.0 : 0 }}
       >
         {({ hovered }) => (
           <Wrapper
+            native
+            {...delegatedProps}
+            onClick={() => shell.openExternal(IN_APP_FEEDBACK_URL)}
+            onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
-            onMouseOver={this.handleMouseOver}
-            onClick={() => openWindow(IN_APP_FEEDBACK_URL)}
           >
-            <Text hovered={hovered}>Feedback</Text>
+            <SliderWrapper>
+              <SliderBox
+                hovered={hovered}
+                style={{
+                  transform: interpolate(
+                    [hovered],
+                    scale => `scale(${Math.max(scale * 180, 1)}, 1)`
+                  ),
+                  opacity: interpolate([hovered], opacity => opacity),
+                }}
+              />
+              <Text
+                style={{
+                  transform: interpolate(
+                    [hovered],
+                    pos => `translateX(-${Math.max(pos * 110, 5)}px)`
+                  ),
+                }}
+              >
+                Feedback
+              </Text>
+            </SliderWrapper>
             <Icon
               size={size}
               icon={messageSquare}
-              hovered={hovered}
-              color={color}
-              hovercolor={hoverColor}
+              style={{
+                transform: interpolate(
+                  [hovered],
+                  scale => `scale(${scale / 5 + 1}, ${scale / 5 + 1})`
+                ),
+              }}
+              color={!!isHovered ? hoverColor : color}
             />
           </Wrapper>
         )}
@@ -83,47 +112,47 @@ const Wrapper = styled.div`
   z-index: +1;
 `;
 
-const Text = styled.div.attrs(props => ({
-  style: {
-    paddingRight: `${props.hovered * 125 + 5}px`,
-    opacity: props.hovered ? 1.0 : 0,
-  },
-}))`
+const SliderBox = animated(styled.div`
   position: absolute;
-  display: inline-block;
-  right: 1px;
-  padding-left: 10px;
-  width: 50px;
-  bottom: 0;
-  font-size: 16px;
-  line-height: 50px;
-  border-radius: 25px;
+  right: -25px;
+  width: 1px; /* small width so it hides behind wrapper - not 0 because we need something to scale*/
+  height: 50px;
+  /*
+  // would be nice to have a border-radius but scale is modifying it
+  // so it's looking weird - I think it's OK to just have the round clipping from SliderWrapper overflow
+  border-radius: 5px;*/
   background: ${COLORS.gray[200]};
   z-index: -1;
   transform-origin: center right;
+`);
+
+const SliderWrapper = animated(styled.div`
+  position: absolute;
+  right: 0;
+  width: 150px;
+  height: 50px;
   overflow: hidden;
+  border-radius: 25px;
   cursor: pointer;
   user-select: none; /* diable text-selection */
-`;
+`);
 
-const Icon = styled(IconBase).attrs(props => ({
-  size: props.size,
-  style: {
-    transform: `scale(${props.hovered / 5 + 1}, ${props.hovered / 5 + 1})`,
-  },
-}))`
+const Text = animated(styled.div`
+  position: absolute;
+  right: -50px;
+  padding-left: 10px;
+  font-size: 18px;
+  line-height: 50px;
+`);
+
+const Icon = animated(styled(IconBase)`
   width: 50px;
   height: 50px;
-  line-height: 50px;
   background: ${COLORS.white};
-  color: ${props => (!!props.hovered ? props.hovercolor : props.color)};
+  color: ${props => props.color};
   border-radius: 50% 50%;
   border: 2px solid ${COLORS.gray[200]};
   cursor: pointer;
-  & > svg {
-    transform-origin: center center;
-    transform: translateY(-2px); /* slightly move icon up */
-  }
-`;
+`);
 
 export default FeedbackButton;

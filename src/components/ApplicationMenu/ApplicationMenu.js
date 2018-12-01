@@ -16,7 +16,6 @@ import {
 import {
   openProjectInFolder,
   openProjectInEditor,
-  openWindow,
 } from '../../services/shell.service';
 import {
   getSelectedProject,
@@ -63,7 +62,7 @@ class ApplicationMenu extends Component<Props> {
   };
 
   openLink = url => {
-    openWindow(url);
+    shell.openExternal(url);
   };
 
   buildMenu = (props: Props) => {
