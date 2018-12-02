@@ -59,10 +59,9 @@ class FeedbackButton extends PureComponent<Props, State> {
             native
             {...delegatedProps}
             onClick={() => shell.openExternal(IN_APP_FEEDBACK_URL)}
-            onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
           >
-            <SliderWrapper>
+            <SliderWrapper style={{ cursor: isHovered ? 'pointer' : 'auto' }}>
               <SliderBox
                 hovered={hovered}
                 style={{
@@ -94,6 +93,7 @@ class FeedbackButton extends PureComponent<Props, State> {
                 ),
               }}
               color={!!isHovered ? hoverColor : color}
+              onMouseEnter={this.handleMouseEnter}
             />
           </Wrapper>
         )}
@@ -133,7 +133,6 @@ const SliderWrapper = animated(styled.div`
   height: 50px;
   overflow: hidden;
   border-radius: 25px;
-  cursor: pointer;
   user-select: none; /* diable text-selection */
 `);
 
