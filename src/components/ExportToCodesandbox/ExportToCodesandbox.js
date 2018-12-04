@@ -1,3 +1,4 @@
+// @flow
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { remote } from 'electron';
@@ -19,10 +20,9 @@ import { processLogger } from '../../services/process-logger.service';
 import { sendCommandToProcess } from '../../sagas/task.saga'; // todo move command to shell.service?
 
 import ExternalLink from '../ExternalLink';
-// import Heading from '../Heading';
 import FormField from '../FormField';
 import TokenInput from '../TokenInput';
-import FillButton from '../Button/FillButton';
+import StrokeButton from '../Button/StrokeButton';
 import DisabledText from '../DisabledText';
 
 const { dialog } = remote;
@@ -41,6 +41,20 @@ class ExportToCodesandbox extends PureComponent<State> {
       codesandboxToken,
       setCodesandboxUrl,
     } = this.props;
+    // exportSteps are the messages & responses for exporting to Codesandbox (same order as they occur in terminal)
+    const exportSteps = [
+      { msg: 'Do you want to sign in using GitHub', response: 'Y' },
+      {
+        // Would be good to not go to codesandbox as the user already entered the token
+        // we need to open codesandbox because otherwise there won't be a question for the token
+        // --> current CLI api doesn't support what we need here. A command line arg for the token would help.
+        msg: 'will open CodeSandbox to finish the login process',
+        response: 'Y',
+      },
+      { msg: 'Token:', response: codesandboxToken.toString() },
+      { msg: 'proceed with the deployment', response: 'y' },
+    ];
+    let currentStep = 0;
     let args = ['.'];
     evt.preventDefault();
 
@@ -73,18 +87,20 @@ class ExportToCodesandbox extends PureComponent<State> {
 
     child.stdout.on('data', async out => {
       const data = out.toString();
-      if (data.includes('Do you want to sign in using GitHub')) {
-        sendCommandToProcess(child, 'Y');
+
+      // Check terminal output for export messages
+      // We're using an object & a step counter to ensure that each output only happens once
+      // otherwise there could be multiple commands.
+      if (
+        exportSteps[currentStep] &&
+        data.includes(exportSteps[currentStep].msg)
+      ) {
+        sendCommandToProcess(child, exportSteps[currentStep].response);
+        currentStep++;
       }
-      if (data.includes('Token')) {
-        sendCommandToProcess(child, codesandboxToken.toString());
-      }
-      if (data.includes('proceed with the deployment')) {
-        // todo: add a prompt before executing the export -->  By deploying to CodeSandbox, the code of your project will be made public
-        sendCommandToProcess(child, 'y');
-      }
-      // grep url from [success] http
-      if (data.includes('[success]')) {
+
+      // Last export step - grep url from [success] http message
+      if (currentStep >= 4 && data.includes('[success]')) {
         const strippedText = stripEscapeChars(data);
 
         const newCodesandboxUrl = (/(http|https|ftp|ftps):\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,3}(\/\S*)?/gim.exec(
@@ -179,9 +195,7 @@ class ExportToCodesandbox extends PureComponent<State> {
   };
 
   // todo: Change flow:
-  //       1. Check if token is availble
-  //          y --> enable export to codesandbox button
-  //          n --> display button with link to token page @codesandbox
+  //       1. Token always available before running the code - so no need to opne codesandbox page
   //       2. After export click display External link to created sandbox & store link in project
   render() {
     const { codesandboxToken, project } = this.props;
@@ -204,21 +218,22 @@ class ExportToCodesandbox extends PureComponent<State> {
             value={codesandboxToken}
             onBlur={this.updateToken}
             focused={this.state.focusTokenInput}
+            disabled={codesandboxToken !== ''}
           />
           {codesandboxToken && (
-            <FillButton onClick={this.logout} size="small">
+            <StrokeButton size="small" onClick={this.logout}>
               Logout
-            </FillButton>
+            </StrokeButton>
           )}
         </FormField>
         <Action>
-          <FillButton
+          <StrokeButton
             onClick={this.export}
             size="small"
             disabled={!codesandboxToken}
           >
             Export to Codesandbox
-          </FillButton>
+          </StrokeButton>
           {!codesandboxToken && (
             <DisabledText>
               Export disabled because token is missing.
@@ -228,7 +243,7 @@ class ExportToCodesandbox extends PureComponent<State> {
         <InfoText>
           {codesandboxUrl && (
             <div>
-              Codesandbox created {codesandboxUrl}:{' '}
+              Codesandbox created <strong>{codesandboxUrl}</strong>
               <ExternalLink href={codesandboxUrl}>Open sandbox</ExternalLink>
             </div>
           )}

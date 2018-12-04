@@ -1,4 +1,5 @@
-import React, { Fragment, PureComponent } from 'react';
+// @flow
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { checkCircle } from 'react-icons-kit/feather/checkCircle';
