@@ -16,7 +16,7 @@
 
 import { REFRESH_PROJECTS_FINISH } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 
 type State = boolean;
 

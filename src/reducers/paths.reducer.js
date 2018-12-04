@@ -21,7 +21,7 @@ import {
 } from '../actions';
 import { getProjectNameSlug } from '../services/create-project.service';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 
 type State = {
   byId: {

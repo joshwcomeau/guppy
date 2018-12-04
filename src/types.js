@@ -132,7 +132,7 @@ export type Project = {
   codesandboxUrl: string,
 };
 
-export type ProjectsMap = { [id: string]: Project };
+export type ProjectInternalsMap = { [id: string]: ProjectInternal };
 
 export type AppSettings = {
   general: {

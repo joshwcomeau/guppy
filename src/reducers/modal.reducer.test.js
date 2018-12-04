@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import reducer, { initialState } from './modal.reducer';
 import {
   CREATE_NEW_PROJECT_START,

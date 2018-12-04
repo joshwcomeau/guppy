@@ -110,15 +110,21 @@ class AppSettingsModal extends PureComponent<Props, State> {
                   isFocused={activeField === 'directoryPicker'}
                 />
               </FormField>
-              <ProjectTypeSelection
+              <FormField
                 label="Default Project Type"
-                activeField={activeField}
-                projectType={newSettings.general.defaultProjectType}
-                onSelect={projectType => {
-                  this.setActive('projectType');
-                  this.updateSetting('general.defaultProjectType', projectType);
-                }}
-              />
+                isFocused={activeField === 'projectType'}
+              >
+                <ProjectTypeSelection
+                  projectType={newSettings.general.defaultProjectType}
+                  onProjectTypeSelect={projectType => {
+                    this.setActive('projectType');
+                    this.updateSetting(
+                      'general.defaultProjectType',
+                      projectType
+                    );
+                  }}
+                />
+              </FormField>
             </PixelShifter>
             <SectionTitle>Privacy</SectionTitle>
             <PixelShifter x={5} reason="Slightly intend in section">

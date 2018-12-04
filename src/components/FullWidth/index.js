@@ -1,1 +1,2 @@
-export { default } from "./FullWidth";
+// @flow
+export { default } from './FullWidth';

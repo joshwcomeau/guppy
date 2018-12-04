@@ -1,9 +1,26 @@
+// @flow
+
 // project type configuration
 // used for
 // - create project command args
 // - devServer name mapping
 //
-export default {
+import type { ProjectType } from '../types';
+
+const config: {
+  [projectType: ProjectType]: {
+    devServer: {
+      taskName: string,
+      args: Array<string>,
+      env?: {
+        [envVariable: string]: string,
+      },
+    },
+    create: {
+      args: (projectPath: string) => Array<string>,
+    },
+  },
+} = {
   'create-react-app': {
     devServer: {
       taskName: 'start',
@@ -50,3 +67,5 @@ export default {
     },
   },
 };
+
+export default config;

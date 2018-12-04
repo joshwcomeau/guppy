@@ -12,7 +12,6 @@ import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
-import Heading from '../Heading';
 import Spacer from '../Spacer';
 import { FillButton } from '../Button';
 import FormField from '../FormField';
@@ -22,13 +21,14 @@ import ExportToCodesandbox from '../ExportToCodesandbox';
 import DisabledText from '../DisabledText';
 
 import type { Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project | null,
   isVisible: boolean,
   dependenciesChangingForProject: boolean,
-  hideModal: () => void,
-  saveProjectSettings: (string, string, Project) => void,
+  hideModal: Dispatch<typeof actions.hideModal>,
+  saveProjectSettings: Dispatch<typeof actions.saveProjectSettingsStart>,
 };
 
 type State = {
@@ -98,12 +98,7 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
   };
 
   render() {
-    const {
-      hideModal,
-      isVisible,
-      dependenciesChangingForProject,
-      project,
-    } = this.props;
+    const { hideModal, isVisible, dependenciesChangingForProject } = this.props;
     const { activeField, projectIcon } = this.state;
 
     return (
@@ -124,7 +119,7 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
                 />
               </FormField>
 
-              <Spacer size={10} />
+              <Spacer size={5} />
 
               <FormField
                 label="Project Icon"
@@ -137,15 +132,11 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
                 />
               </FormField>
 
-              {/* {project &&
-              project.type === 'create-react-app' && (
-              )} */}
+              <FormField label="Export" focusOnClick={false}>
+                <ExportToCodesandbox />
+              </FormField>
 
-              <FormField label="Export" focusOnClick={false} />
-              <ExportToCodesandbox />
-              {/* <Fragment>
-            {/* Codesandbox export only supported for create-react-apps at the moment. */}
-              {/* </Fragment> */}
+              <Spacer size={5} />
 
               <Actions>
                 <FillButton

@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { select, call, put, takeEvery } from 'redux-saga/effects';
 import rootSaga, {
   handleAddDependency,
@@ -5,6 +6,7 @@ import rootSaga, {
   handleDeleteDependency,
   handleInstallDependenciesStart,
   handleUninstallDependenciesStart,
+  handleLoadDependencyInfoFromDiskStart,
 } from './dependency.saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
@@ -19,6 +21,7 @@ import {
   DELETE_DEPENDENCY,
   INSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_START,
+  LOAD_DEPENDENCY_INFO_FROM_DISK_START,
   queueDependencyInstall,
   queueDependencyUninstall,
   installDependenciesError,
@@ -315,6 +318,12 @@ describe('Dependency sagas', () => {
         takeEvery(
           UNINSTALL_DEPENDENCIES_START,
           handleUninstallDependenciesStart
+        )
+      );
+      expect(saga.next().value).toEqual(
+        takeEvery(
+          LOAD_DEPENDENCY_INFO_FROM_DISK_START,
+          handleLoadDependencyInfoFromDiskStart
         )
       );
       expect(saga.next().done).toBe(true);

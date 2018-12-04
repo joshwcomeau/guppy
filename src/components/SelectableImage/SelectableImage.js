@@ -3,8 +3,12 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 
 import SelectableItem from '../SelectableItem';
+import type { Props as SelectableItemProps, Status } from '../SelectableItem';
 
-type Props = {
+type Props = $Rest<
+  SelectableItemProps,
+  {| children: (status: Status) => React$Node |}
+> & {
   src: string,
 };
 

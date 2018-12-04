@@ -1,1 +1,2 @@
-export { default } from "./DependencyDetails";
+// @flow
+export { default } from './DependencyDetails';

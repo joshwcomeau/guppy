@@ -77,7 +77,7 @@ export const getBaseProjectEnvironment = (
 // 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
 // reasons.
 export const initializePath = () => {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     if (!isMac) {
       return resolve();
     }

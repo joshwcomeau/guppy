@@ -18,9 +18,9 @@ import { getColorForProject } from '../services/create-project.service';
 import { getInternalProjectById } from '../reducers/projects.reducer';
 import { getOnboardingCompleted } from '../reducers/onboarding-status.reducer';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { ProjectType } from '../types';
+import type { ReturnType } from '../actions/types';
 
 const { showOpenDialog, showErrorBox } = electron.remote.dialog;
 
@@ -73,7 +73,9 @@ export function* handleImportError(err: Error): Saga<void> {
   }
 }
 
-export function* importProject({ path }: Action): Saga<void> {
+export function* importProject({
+  path,
+}: ReturnType<typeof importExistingProjectStart>): Saga<void> {
   try {
     // Let's load the basic project info for the path specified, if possible.
     const json = yield call(loadPackageJson, path);

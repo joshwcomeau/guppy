@@ -23,6 +23,7 @@ import TerminalOutput from '../TerminalOutput';
 import WindowDimensions from '../WindowDimensions';
 
 import type { Task, Project } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   projectId: string,
@@ -33,8 +34,8 @@ type Props = {
   // From Redux:
   task: Task,
   project: Project,
-  runTask: (task: Task, timestamp: Date) => any,
-  abortTask: (task: Task, projectType: string, timestamp: Date) => any,
+  runTask: Dispatch<typeof actions.runTask>,
+  abortTask: Dispatch<typeof actions.abortTask>,
 };
 
 class TaskDetailsModal extends PureComponent<Props> {

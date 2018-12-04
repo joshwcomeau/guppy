@@ -1,1 +1,2 @@
-export { default } from "./OnlyOn";
+// @flow
+export { default } from './OnlyOn';
