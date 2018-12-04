@@ -54,7 +54,7 @@ class FeedbackButton extends PureComponent<Props, State> {
         }}
         to={{ hovered: isHovered ? 1.0 : 0 }}
       >
-        {({ hovered }) => (
+        {interpolated => (
           <Wrapper
             native
             {...delegatedProps}
@@ -63,19 +63,22 @@ class FeedbackButton extends PureComponent<Props, State> {
           >
             <SliderWrapper style={{ cursor: isHovered ? 'pointer' : 'auto' }}>
               <SliderBox
-                hovered={hovered}
+                hovered={interpolated.hovered}
                 style={{
                   transform: interpolate(
-                    [hovered],
+                    [interpolated.hovered],
                     scale => `scale(${Math.max(scale * 180, 1)}, 1)`
                   ),
-                  opacity: interpolate([hovered], opacity => opacity),
+                  opacity: interpolate(
+                    [interpolated.hovered],
+                    opacity => opacity
+                  ),
                 }}
               />
               <Text
                 style={{
                   transform: interpolate(
-                    [hovered],
+                    [interpolated.hovered],
                     pos => `translateX(-${Math.max(pos * 110, 5)}px)`
                   ),
                 }}
@@ -88,7 +91,7 @@ class FeedbackButton extends PureComponent<Props, State> {
               icon={messageSquare}
               style={{
                 transform: interpolate(
-                  [hovered],
+                  [interpolated.hovered],
                   scale => `scale(${scale / 5 + 1}, ${scale / 5 + 1})`
                 ),
               }}
