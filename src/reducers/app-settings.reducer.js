@@ -81,3 +81,6 @@ export const getDefaultProjectType = (state: any) =>
   state.appSettings.general.defaultProjectType;
 
 export const getPrivacySettings = (state: any) => state.appSettings.privacy;
+
+export const getCodesandboxToken = (state: any) =>
+  state.appSettings.export.codesandboxToken;

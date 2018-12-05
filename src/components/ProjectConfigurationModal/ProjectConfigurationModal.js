@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -92,13 +92,19 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
   };
 
   setActive = (name: string) => {
+    console.log('setting', name);
     this.setState(state => ({
       activeField: name,
     }));
   };
 
   render() {
-    const { hideModal, isVisible, dependenciesChangingForProject } = this.props;
+    const {
+      hideModal,
+      isVisible,
+      dependenciesChangingForProject,
+      project,
+    } = this.props;
     const { activeField, projectIcon } = this.state;
 
     return (
@@ -106,7 +112,7 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
         <ModalHeader title="Project settings" />
 
         <MainContent>
-          <Scrollbars autoHeight={true} autoHeightMax={'80vh'} autoHide>
+          <Scrollbars autoHeight={true} autoHeightMax={'80vh'}>
             <form onSubmit={this.saveSettings}>
               <FormField label="Project name" focusOnClick={false}>
                 <TextInput
@@ -132,8 +138,14 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
                 />
               </FormField>
 
+              <Spacer size={5} />
+
               <FormField label="Export" focusOnClick={false}>
-                <ExportToCodesandbox />
+                <ExportToCodesandbox
+                  onFocus={() => this.setActive('exportCodesandbox')}
+                  isFocused={activeField === 'exportCodesandbox'}
+                  onBlur={() => this.setActive('')}
+                />
               </FormField>
 
               <Spacer size={5} />
@@ -170,12 +182,6 @@ const MainContent = styled.div`
 const Actions = styled.div`
   text-align: center;
   padding-bottom: 16px;
-`;
-
-const SectionTitle = styled.h1.attrs({
-  size: 'small',
-})`
-  //padding-bottom: 10px;
 `;
 
 const mapStateToProps = state => {

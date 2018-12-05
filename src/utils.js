@@ -317,7 +317,7 @@ export const setNested = <T: {}>(obj: T, path: string, value: any): T => {
 };
 
 // todo: Check usage of stripEscapeChars & use this function
-export const stripEscapeChars = text => {
+export const stripEscapeChars = (text: string) => {
   const regex = new RegExp('\x1B[[0-?]*[ -/]*[@-~]', 'gim'); // eslint-disable-line
 
   return text.replace(regex, '');

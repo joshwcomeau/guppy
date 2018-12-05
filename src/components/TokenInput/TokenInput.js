@@ -9,90 +9,37 @@ import { config, Spring } from 'react-spring';
 import TextInput from '../TextInput';
 
 // Note: Async validation not working.
-//       Would be great to allow an async tokenValidator function.
+//       Would be great to allow an async tokenValidator function. But it's not needed here.
 
-class TokenInputField extends PureComponent {
+type Props = {
+  focused: boolean,
+  oneTimeDisplay: boolean, // if true only displayed once - next focus will clear the field
+  hideDuringTyping: boolean,
+  token: string,
+  onChange: string => void,
+  onBlur: string => void,
+  tokenValidator: string => boolean,
+};
+
+class TokenInputField extends PureComponent<Props> {
   static defaultProps = {
     focused: false,
-    oneTimeDisplay: true, // if true only displayed on next enter will clear the field
-    hideDuringTyping: true, // todo need to save both in token weakmap
-    value: '',
-    onChange: token => {},
+    oneTimeDisplay: false,
+    token: '',
+    onChange: (token: string) => {},
     onBlur: () => {},
-    tokenValidator: token => token, // we're checking only if it's not '' but with a backend we could check if it's a valid token
-  };
-
-  state = {
-    focused: false,
-    untouched: true,
-  };
-
-  constructor(props) {
-    super(props);
-
-    let token = props.value;
-
-    this.setToken = newToken => {
-      token = newToken;
-      this.forceUpdate();
-    };
-    this.getToken = () => token;
-
-    if (this.props.value) {
-      this.state = {
-        untouched: false,
-        focused: false,
-      };
-    } else {
-      this.state = {
-        untouched: true,
-        focused: props.focused,
-      };
-    }
-  }
-
-  tokenInput;
-  valid = false;
-  REPLACEMENT_CHAR = '\u2022';
-
-  updateToken = evt => {
-    const tokenVal = evt.target.value;
-    this.setToken(tokenVal);
-    this.props.onChange(tokenVal);
-  };
-
-  displayedValue = () => {
-    const { focused } = this.state;
-    const token = this.getToken();
-
-    return focused // && !hideDuringTyping
-      ? token
-      : token
-          .split('')
-          .map(char => this.REPLACEMENT_CHAR)
-          .join('');
+    tokenValidator: (token: string) => token, // we're checking only if it's not '' but with a backend we could check if it's a valid token
   };
 
   focus = () => {
-    if (this.props.oneTimeDisplay && !this.state.focused) {
-      this.setToken('');
+    if (this.props.oneTimeDisplay && !this.props.focused) {
+      this.props.onChange('');
     }
 
-    this.setState({
-      focused: true,
-      untouched: false,
-    });
+    this.props.onFocus();
   };
 
-  blur = () => {
-    this.setState({
-      focused: false,
-    });
-
-    this.props.onBlur(this.getToken());
-  };
-
-  renderIcon = (token, valid, opacity) => {
+  renderIcon = (token: string, valid: number, opacity: number) => {
     const icon = token ? checkCircle : xCircle;
     return (
       <ValidationIcon
@@ -105,26 +52,22 @@ class TokenInputField extends PureComponent {
     );
   };
 
-  /*async componentWillReceiveProps() {
-    const token = this.getToken();
-    this.valid = await this.props.tokenValidator(token);
-  }*/
-
   render() {
-    const { focused, untouched } = this.state;
-    const token = this.getToken();
+    const { focused, onChange, token, onBlur } = this.props;
+    const untouched = token === '';
     const showInput = focused || untouched;
     const showValidation = !focused && !untouched;
-    const valid = this.props.tokenValidator(token);
+    const valid = this.props.tokenValidator(token) ? 1 : 0;
     return (
       <Wrapper>
         {showInput && (
           <TextInput
             isFocused={focused}
             onFocus={this.focus}
-            onBlur={this.blur}
-            value={this.displayedValue()}
-            onChange={this.updateToken}
+            onBlur={() => onBlur(token)}
+            value={token}
+            onChange={evt => onChange(evt.target.value)}
+            autoFocus
           />
         )}
         {showValidation && (

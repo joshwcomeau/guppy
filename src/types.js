@@ -92,7 +92,7 @@ export type ProjectInternal = {
     icon: string,
     createdAt: number,
     // codesandbox props
-    codesandboxUrl: string,
+    codesandboxUrl?: string,
   },
 };
 
@@ -141,5 +141,8 @@ export type AppSettings = {
   },
   privacy: {
     enableUsageTracking: boolean,
+  },
+  export: {
+    codesandboxToken: string,
   },
 };

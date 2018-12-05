@@ -10,6 +10,7 @@ import taskSaga from './task.saga';
 import developmentSaga from './development.saga';
 import queueSaga from './queue.saga';
 import analyticsSaga from './analytics.saga';
+import exportToCodesandboxSaga from './export-to-codesandbox.saga';
 
 // $FlowFixMe
 export default function*() {
@@ -32,5 +33,7 @@ export default function*() {
     queueSaga(),
     // $FlowFixMe
     analyticsSaga(),
+    // $FlowFixMe
+    exportToCodesandboxSaga(),
   ]);
 }

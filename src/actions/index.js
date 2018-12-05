@@ -77,6 +77,10 @@ export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
 export const CHANGE_DEFAULT_PROJECT_PATH = 'CHANGE_DEFAULT_PROJECT_PATH';
 export const UPDATE_CODESANDBOX_TOKEN = 'UPDATE_CODESANDBOX_TOKEN';
 
+// export to codesandbox
+export const EXPORT_TO_CODESANDBOX = 'EXPORT_TO_CODESANDBOX';
+export const CODESANDBOX_LOGOUT = 'CODESANDBOX_LOGOUT';
+
 //
 //
 // Action Creators
@@ -435,3 +439,13 @@ export const showResetStatePrompt = () => ({
 });
 
 export const resetAllState = () => ({ type: RESET_ALL_STATE });
+
+export const exportToCodesandbox = (projectPath: string) => ({
+  type: EXPORT_TO_CODESANDBOX,
+  projectPath,
+});
+
+export const logoutCodesandbox = (projectPath: string) => ({
+  type: CODESANDBOX_LOGOUT,
+  projectPath,
+});
