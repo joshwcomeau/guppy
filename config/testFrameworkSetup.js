@@ -10,3 +10,6 @@ global.navigator = {
 
 // Import test framework for styled components for better snapshot messages
 require('jest-styled-components');
+
+require('jest-dom/extend-expect');
+require('react-testing-library/cleanup-after-each');
