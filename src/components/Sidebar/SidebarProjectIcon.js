@@ -37,9 +37,9 @@ const SidebarProjectIcon = ({
   // that icon. For imported projects with no icon, we instead want to render
   // a circle with the first letter of that project name.
   return iconSrc ? (
-    <SelectableImage src={iconSrc} {...sharedProps} />
+    <SelectableImage src={iconSrc} {...sharedProps} data-testid={id} />
   ) : (
-    <SelectableItem {...sharedProps}>
+    <SelectableItem {...sharedProps} data-testid={id}>
       {status => (
         <ProjectNameIcon style={{ backgroundColor: color }}>
           {name.slice(0, 1).toUpperCase()}

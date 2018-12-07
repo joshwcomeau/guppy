@@ -248,6 +248,8 @@ const mapDispatchToProps = {
   selectProject: actions.selectProject,
 };
 
+export { Sidebar };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
