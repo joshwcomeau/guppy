@@ -29,7 +29,13 @@ export default function configureStore() {
 
   // We don't want to store ephemeral info, such as application
   // status, tasks, or the dependency queue.
-  engine = filter(engine, null, ['appLoaded', 'tasks', 'queue']);
+  engine = filter(engine, null, [
+    'appLoaded',
+    'appStatus',
+    'projectStatus',
+    'tasks',
+    'queue',
+  ]);
   const storageMiddleware = storage.createMiddleware(engine);
 
   const wrappedReducer = storage.reducer(rootReducer);

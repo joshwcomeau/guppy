@@ -1,8 +1,8 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Scrollbars } from 'react-custom-scrollbars';
+// import { Scrollbars } from 'react-custom-scrollbars';
 
 import * as actions from '../../actions';
 
@@ -12,7 +12,7 @@ import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
-import Spacer from '../Spacer';
+// import Spacer from '../Spacer';
 import { FillButton } from '../Button';
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
@@ -99,64 +99,21 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
   };
 
   render() {
-    const {
-      hideModal,
-      isVisible,
-      dependenciesChangingForProject,
-      project,
-    } = this.props;
+    const { hideModal, isVisible, dependenciesChangingForProject } = this.props;
     const { activeField, projectIcon } = this.state;
 
     return (
-      <Modal isVisible={isVisible} onDismiss={hideModal}>
-        <ModalHeader title="Project settings" />
-
-        <MainContent>
-          <Scrollbars autoHeight={true} autoHeightMax={'80vh'}>
-            <form onSubmit={this.saveSettings}>
-              <FormField label="Project name" focusOnClick={false}>
-                <TextInput
-                  onFocus={() => this.setActive('projectName')}
-                  onChange={this.changeProjectName}
-                  onKeyPress={this.handleKeyPress}
-                  value={this.state.newName}
-                  isFocused={activeField === 'projectName'}
-                  autoFocus
-                />
-              </FormField>
-
-              <Spacer size={5} />
-
-              <FormField
-                label="Project Icon"
-                focusOnClick={false}
-                isFocused={activeField === 'projectIcon'}
-              >
-                <ProjectIconSelection
-                  selectedIcon={projectIcon}
-                  onSelectIcon={this.updateProjectIcon}
-                />
-              </FormField>
-
-              <Spacer size={5} />
-
-              <FormField label="Export" focusOnClick={false}>
-                <ExportToCodesandbox
-                  onFocus={() => this.setActive('exportCodesandbox')}
-                  isFocused={activeField === 'exportCodesandbox'}
-                  onBlur={() => this.setActive('')}
-                />
-              </FormField>
-
-              <Spacer size={5} />
-
-              <Actions>
+      <form onSubmit={this.saveSettings}>
+        <Modal isVisible={isVisible} onDismiss={hideModal}>
+          <ModalHeader title="Project settings">
+            <ModalHeader.Controls>
+              <Fragment>
                 <FillButton
                   size="large"
                   colors={[COLORS.green[700], COLORS.lightGreen[500]]}
                   disabled={dependenciesChangingForProject}
                 >
-                  Save Project
+                  Save
                 </FillButton>
 
                 {dependenciesChangingForProject && (
@@ -164,24 +121,56 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
                     Waiting for pending tasks to finish…
                   </DisabledText>
                 )}
-              </Actions>
-            </form>
-          </Scrollbars>
-        </MainContent>
-      </Modal>
+              </Fragment>
+            </ModalHeader.Controls>
+          </ModalHeader>
+
+          <MainContent>
+            {/* <Scrollbars autoHeight={true} autoHeightMax={'80vh'}> */}
+            <FormField label="Project name" focusOnClick={false} spacing={5}>
+              <TextInput
+                onFocus={() => this.setActive('projectName')}
+                onChange={this.changeProjectName}
+                onKeyPress={this.handleKeyPress}
+                value={this.state.newName}
+                isFocused={activeField === 'projectName'}
+                autoFocus
+              />
+            </FormField>
+
+            {/* <Spacer size={5} /> */}
+
+            <FormField
+              label="Project Icon"
+              focusOnClick={false}
+              isFocused={activeField === 'projectIcon'}
+              spacing={5}
+            >
+              <ProjectIconSelection
+                selectedIcon={projectIcon}
+                onSelectIcon={this.updateProjectIcon}
+              />
+            </FormField>
+
+            {/* <Spacer size={5} /> */}
+
+            <FormField label="Export" focusOnClick={false} spacing={15}>
+              <ExportToCodesandbox
+                onFocus={() => this.setActive('exportCodesandbox')}
+                isFocused={activeField === 'exportCodesandbox'}
+                onBlur={() => this.setActive('')}
+              />
+            </FormField>
+            {/* </Scrollbars> */}
+          </MainContent>
+        </Modal>
+      </form>
     );
   }
 }
 
 const MainContent = styled.div`
   padding: 25px;
-  // height: 95vh;
-  // overflow: hidden;
-`;
-
-const Actions = styled.div`
-  text-align: center;
-  padding-bottom: 16px;
 `;
 
 const mapStateToProps = state => {

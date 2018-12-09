@@ -47,21 +47,29 @@ export const spawnProcessChannel = (
 
     child.stdout.on('data', data => {
       output.stdout += data.toString();
-      emitter({ data: data.toString(), child });
+      emitter({
+        data: {
+          stdout: data.toString(),
+        },
+        child,
+      });
     });
 
     child.stderr.on('data', data => {
       output.stderr += data.toString();
-      emitter({ error: data.toString() });
+      emitter({
+        data: {
+          stderr: data.toString(),
+        },
+      });
     });
 
     child.on('exit', code => {
-      // emit exit code & complete data/err --> not used yet but maybe useful later
+      // emit exit code & complete data/err
       emitter({
         exit: code,
         data: {
-          data: output.stdout,
-          error: output.stderr,
+          ...output,
         },
       });
     });

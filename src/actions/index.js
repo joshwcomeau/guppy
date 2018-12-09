@@ -78,7 +78,8 @@ export const CHANGE_DEFAULT_PROJECT_PATH = 'CHANGE_DEFAULT_PROJECT_PATH';
 export const UPDATE_CODESANDBOX_TOKEN = 'UPDATE_CODESANDBOX_TOKEN';
 
 // export to codesandbox
-export const EXPORT_TO_CODESANDBOX = 'EXPORT_TO_CODESANDBOX';
+export const EXPORT_TO_CODESANDBOX_START = 'EXPORT_TO_CODESANDBOX_START';
+export const EXPORT_TO_CODESANDBOX_FINISH = 'EXPORT_TO_CODESANDBOX_FINISH';
 export const CODESANDBOX_LOGOUT = 'CODESANDBOX_LOGOUT';
 
 //
@@ -440,9 +441,14 @@ export const showResetStatePrompt = () => ({
 
 export const resetAllState = () => ({ type: RESET_ALL_STATE });
 
-export const exportToCodesandbox = (projectPath: string) => ({
-  type: EXPORT_TO_CODESANDBOX,
-  projectPath,
+export const exportToCodesandboxStart = (projectId: string) => ({
+  type: EXPORT_TO_CODESANDBOX_START,
+  projectId,
+});
+
+export const exportToCodesandboxFinish = (projectId: string) => ({
+  type: EXPORT_TO_CODESANDBOX_FINISH,
+  projectId,
 });
 
 export const logoutCodesandbox = (projectPath: string) => ({

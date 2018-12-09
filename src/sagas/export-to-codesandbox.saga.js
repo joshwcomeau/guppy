@@ -1,14 +1,6 @@
 // @flow
 // import { channel } from 'redux-saga';
-import {
-  call,
-  fork,
-  cancel,
-  select,
-  put,
-  take,
-  takeEvery,
-} from 'redux-saga/effects';
+import { call, cancel, select, put, take, takeEvery } from 'redux-saga/effects';
 import { remote } from 'electron';
 import { spawnProcessChannel } from './spawn.helpers';
 
@@ -23,18 +15,24 @@ import { sendCommandToProcess } from './task.saga'; // todo move command to shel
 import { stripEscapeChars } from '../utils';
 
 import {
-  EXPORT_TO_CODESANDBOX,
+  EXPORT_TO_CODESANDBOX_START,
   CODESANDBOX_LOGOUT,
   setCodesandboxUrl,
   updateCodesandboxToken,
+  exportToCodesandboxStart,
+  exportToCodesandboxFinish,
+  logoutCodesandbox,
 } from '../actions';
+import type { Saga } from 'redux-saga';
+import type { ReturnType } from '../actions/types';
 
 const { dialog } = remote;
 
-export function* handleExport({ projectPath }): Saga<void> {
-  console.log('handle export', projectPath);
+export function* handleExport({
+  projectId,
+}: ReturnType<typeof exportToCodesandboxStart>): Saga<void> {
   let args = ['.'];
-
+  const { path: projectPath } = yield select(getSelectedProject);
   const result = yield call([dialog, dialog.showMessageBox], {
     type: 'warning',
     title: 'Exported code will be public',
@@ -44,6 +42,7 @@ export function* handleExport({ projectPath }): Saga<void> {
   });
 
   if (result === 1) {
+    yield put(exportToCodesandboxFinish(projectId));
     // abort export
     yield cancel();
   }
@@ -55,7 +54,7 @@ export function* handleExport({ projectPath }): Saga<void> {
   //   args.push(['deploy', codesandboxUrl]);
   // }
 
-  const spawnChannel = yield call(
+  const channel = yield call(
     spawnProcessChannel,
     formatCommandForPlatform('codesandbox'),
     args,
@@ -63,19 +62,42 @@ export function* handleExport({ projectPath }): Saga<void> {
     'CODESANDBOX:EXPORT'
   );
 
-  // const chan = yield call(channel);
-  yield fork(watchExportMessages, spawnChannel);
+  yield call(watchExportMessages, channel, projectId);
 }
 
-export function* watchExportMessages(channel: any): any {
+export function* watchExportMessages(channel: any, projectId: string): any {
+  let output;
+  var currentStep = 0;
   try {
     while (true) {
-      let output = yield take(channel);
+      output = yield take(channel);
       if (!output.hasOwnProperty('exit')) {
-        console.log('running');
-        yield call(checkMessage, output);
+        const next = yield call(checkMessage, output, currentStep);
+
+        // Modify/increment currentStep if requested by checkMessage
+        // will be skipped if message requires no action.
+        if (next) {
+          if (next === 'inc') {
+            currentStep++;
+          } else if (!isNaN(next)) {
+            // numeric value
+            currentStep = next;
+          }
+        }
       } else {
         // Yield exit code and complete stdout
+        if (output.data && output.data.stdout.includes('[error]')) {
+          // e.g. errors:
+          // - This project is too big, it contains 140 files which is more than the max of 120. (exported Gatsby project)
+          // - This project is too big, it contains 56 directories which is more than the max of 50.
+          yield call([dialog, dialog.showMessageBox], {
+            type: 'error',
+            title: 'Codesandbox Export Error',
+            // $FlowFixMe
+            message: /\[error\] (.*)/.exec(output.data.stdout)[1],
+          });
+          yield put(exportToCodesandboxFinish(projectId));
+        }
         yield output;
 
         // Close channel manually --> emitter(END) inside spwanProcessChannel would exit too early
@@ -86,52 +108,65 @@ export function* watchExportMessages(channel: any): any {
   }
 }
 
-export function* checkMessage({ data, child }) {
-  let currentStep = 0;
-  const codesandboxToken = yield select(getCodesandboxToken);
-  const { path: projectPath, id } = yield select(getSelectedProject);
+// exportSteps are the messages & responses for exporting to Codesandbox (same order as they occur in terminal)
+export const exportSteps = [
+  { msg: 'Do you want to sign in using GitHub', response: 'Y' },
+  {
+    // Would be good to not go to codesandbox as the user already entered the token
+    // we need to open codesandbox because otherwise there won't be a question for the token
+    // --> current CLI api doesn't support what we need here. A command line arg for the token would help.
+    msg: 'will open CodeSandbox to finish the login process',
+    response: 'Y',
+  },
+  { msg: 'Token:', response: (token: string) => token.toString() },
+  { msg: 'proceed with the deployment', response: 'y' },
+];
 
-  // exportSteps are the messages & responses for exporting to Codesandbox (same order as they occur in terminal)
-  const exportSteps = [
-    { msg: 'Do you want to sign in using GitHub', response: 'Y' },
-    {
-      // Would be good to not go to codesandbox as the user already entered the token
-      // we need to open codesandbox because otherwise there won't be a question for the token
-      // --> current CLI api doesn't support what we need here. A command line arg for the token would help.
-      msg: 'will open CodeSandbox to finish the login process',
-      response: 'Y',
-    },
-    { msg: 'Token:', response: codesandboxToken.toString() },
-    { msg: 'proceed with the deployment', response: 'y' },
-  ];
+export function* checkMessage({ data, child }: any, currentStep: number): any {
+  const codesandboxToken = yield select(getCodesandboxToken);
+  const { path: projectPath, id: projectId } = yield select(getSelectedProject);
+  let next: string | number;
+
   // Check terminal output for export messages
   // We're using an object & a step counter to ensure that each output only happens once
   // otherwise there could be multiple commands.
-  if (exportSteps[currentStep] && data.includes(exportSteps[currentStep].msg)) {
+  if (
+    exportSteps[currentStep] &&
+    data.stdout.includes(exportSteps[currentStep].msg)
+  ) {
+    // $FlowFixMe
     yield call(sendCommandToProcess, child, exportSteps[currentStep].response);
-    currentStep++;
+    next = 'inc';
   }
 
-  if (data.includes(exportSteps[3].msg)) {
+  if (data.stdout.includes(exportSteps[2].msg)) {
+    yield call(
+      sendCommandToProcess,
+      child,
+      exportSteps[2].response(codesandboxToken)
+    );
+
+    // Set currentStep as we're expecting success as next output
+    next = 3;
+  }
+
+  if (data.stdout.includes(exportSteps[3].msg)) {
     // Needed if no token requested by cli as it will only ask for proceed
     yield call(sendCommandToProcess, child, exportSteps[3].response);
 
     // Set currentStep as we're expecting success as next output
-    currentStep = 4;
+    next = 3;
   }
   // Last export step - grep url from [success] http message
-  console.log('step', currentStep);
-  // if (currentStep >= 4 &&
-  if (data.includes('[success] http')) {
-    console.log('success');
-    const strippedText = stripEscapeChars(data);
+  if (data.stdout.includes('[success] http')) {
+    const strippedText = stripEscapeChars(data.stdout);
 
     const newCodesandboxUrl = (/(http|https|ftp|ftps):\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,3}(\/\S*)?/gim.exec(
       strippedText
     ) || [])[0];
 
     // info: Check that url changed not needed as it is always changing
-    yield put(setCodesandboxUrl(id, newCodesandboxUrl));
+    yield put(setCodesandboxUrl(projectId, newCodesandboxUrl));
 
     let json;
     try {
@@ -148,15 +183,16 @@ export function* checkMessage({ data, child }) {
         codesandboxUrl: newCodesandboxUrl,
       },
     });
+
+    yield put(exportToCodesandboxFinish(projectId));
   }
 
-  yield currentStep;
-  // child.stderr.on('data', out => {
-  //   dialog.showErrorMessage('Error', 'Please check your token and try again');
-  // });
+  return next;
 }
 
-export function* handleLogout({ projectPath }): Saga<void> {
+export function* handleLogout({
+  projectPath,
+}: ReturnType<typeof logoutCodesandbox>): Saga<void> {
   const channel = yield call(
     spawnProcessChannel,
     formatCommandForPlatform('codesandbox'),
@@ -168,10 +204,10 @@ export function* handleLogout({ projectPath }): Saga<void> {
 
   try {
     while (true) {
-      const { data, child, ...rest } = yield take(channel);
-      console.log('data', data);
+      const { data, child, exit } = yield take(channel);
+
       output += data;
-      if (!rest.hasOwnProperty('exit')) {
+      if (!exit) {
         if (output.includes('log out?')) {
           yield call(sendCommandToProcess, child, 'Y');
         }
@@ -195,6 +231,6 @@ export function* handleLogout({ projectPath }): Saga<void> {
 }
 
 export default function* rootSaga(): Saga<void> {
-  yield takeEvery(EXPORT_TO_CODESANDBOX, handleExport);
+  yield takeEvery(EXPORT_TO_CODESANDBOX_START, handleExport);
   yield takeEvery(CODESANDBOX_LOGOUT, handleLogout);
 }

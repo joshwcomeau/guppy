@@ -14,9 +14,9 @@ import TextInput from '../TextInput';
 type Props = {
   focused: boolean,
   oneTimeDisplay: boolean, // if true only displayed once - next focus will clear the field
-  hideDuringTyping: boolean,
   token: string,
   onChange: string => void,
+  onFocus: () => void,
   onBlur: string => void,
   tokenValidator: string => boolean,
 };
@@ -28,7 +28,7 @@ class TokenInputField extends PureComponent<Props> {
     token: '',
     onChange: (token: string) => {},
     onBlur: () => {},
-    tokenValidator: (token: string) => token, // we're checking only if it's not '' but with a backend we could check if it's a valid token
+    tokenValidator: (token: string) => !!token, // we're checking only if it's not '' but with a backend we could check if it's a valid token
   };
 
   focus = () => {
