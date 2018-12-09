@@ -4,8 +4,8 @@ import { Component } from 'react';
 import { throttle } from '../../utils';
 
 type State = {
-  width: Number,
-  height: Number,
+  width: number,
+  height: number,
 };
 type Props = {
   children: (dimensions: State) => React$Node,

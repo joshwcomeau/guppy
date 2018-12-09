@@ -1,1 +1,2 @@
-export { default } from "./DevelopmentServerStatus";
+// @flow
+export { default } from './DevelopmentServerStatus';

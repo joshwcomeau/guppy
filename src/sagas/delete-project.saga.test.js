@@ -1,8 +1,7 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 import electron from 'electron'; // Mocked
 import { call, put, select, takeEvery } from 'redux-saga/effects';
-import rimraf from 'rimraf';
 import * as fs from 'fs';
-import * as path from 'path';
 
 import rootSaga, {
   deleteProject,
@@ -17,7 +16,7 @@ import {
   createNewProjectStart,
   startDeletingProject,
   deleteProjectError,
-  loadDependencyInfoFromDisk,
+  loadDependencyInfoFromDiskStart,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
@@ -201,7 +200,7 @@ describe('delete-project saga', () => {
 
       expect(JSON.stringify(saga.next().value)).toEqual(
         JSON.stringify(
-          put(loadDependencyInfoFromDisk(project.id, project.path))
+          put(loadDependencyInfoFromDiskStart(project.id, project.path))
         )
       );
 

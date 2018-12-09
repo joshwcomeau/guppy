@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants';
 
 type Props = {
-  size: 'small' | 'medium' | 'large' | 'xlarge',
+  size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge',
   children: React$Node,
 };
 

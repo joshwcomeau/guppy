@@ -1,3 +1,4 @@
+// @flow
 // Fake data for manually testing project-creation flow.
 export const FAKE_CRA_PROJECT = {
   name: 'haidddd',
@@ -18,5 +19,8 @@ export const FAKE_CRA_PROJECT = {
     id: 'haidddd',
     name: 'Haidddd',
     icon: '/static/media/icon_blueorange.174c0078.jpg',
+    color: '#FFF',
+    createdAt: Date.now(),
+    type: 'gatsby',
   },
 };

@@ -1,3 +1,4 @@
+// @flow
 import { combineReducers } from 'redux';
 
 import appSettings from './app-settings.reducer';

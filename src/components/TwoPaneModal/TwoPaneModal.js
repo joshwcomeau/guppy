@@ -131,7 +131,9 @@ class TwoPaneModal extends PureComponent<Props, State> {
                   <PaneChildren>{leftPane}</PaneChildren>
                 </LeftPaneWrapper>
 
-                <BackfaceWrapper>{backface}</BackfaceWrapper>
+                <BackfaceWrapper isFolded={isFolded}>
+                  {backface}
+                </BackfaceWrapper>
               </LeftHalf>
 
               <RightPaneWrapper
@@ -229,7 +231,11 @@ const RightPaneWrapper = styled.div`
   border-radius: 0 8px 8px 0;
 `;
 
-const BackfaceWrapper = styled.div`
+const BackfaceWrapper = styled.div.attrs({
+  style: props => ({
+    pointerEvents: props.isFolded ? 'auto' : 'none',
+  }),
+})`
   position: absolute;
   z-index: 3;
   top: 0;

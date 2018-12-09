@@ -1,1 +1,2 @@
-export { default } from "./Label";
+// @flow
+export { default } from './Label';

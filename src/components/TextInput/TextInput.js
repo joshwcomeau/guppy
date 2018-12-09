@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants';
 
 type Props = {
-  isFocused: boolean,
-  hasError: boolean,
-  children: React$Node,
+  isFocused?: boolean,
+  hasError?: boolean,
+  children?: React$Node,
 };
 
 const TextInput = ({ isFocused, hasError, children, ...delegated }: Props) => (

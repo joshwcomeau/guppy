@@ -1,1 +1,2 @@
-export { default } from "./DeleteDependencyButton";
+// @flow
+export { default } from './DeleteDependencyButton';

@@ -1,1 +1,2 @@
-export { default } from "./DependencyManagementPane";
+// @flow
+export { default } from './DependencyManagementPane';

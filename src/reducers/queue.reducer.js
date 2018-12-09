@@ -12,16 +12,16 @@ import {
   UNINSTALL_DEPENDENCIES_FINISH,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 import type { QueuedDependency, QueueAction } from '../types';
 
-type QueueEntry = {
+export type QueueEntry = {
   action: QueueAction,
   active: boolean,
   dependencies: Array<QueuedDependency>,
 };
 
-type State = {
+export type State = {
   [projectId: string]: Array<QueueEntry>,
 };
 

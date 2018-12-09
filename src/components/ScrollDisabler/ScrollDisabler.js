@@ -1,7 +1,19 @@
+// @flow
 import { PureComponent } from 'react';
 
-class ScrollDisabler extends PureComponent {
+class ScrollDisabler extends PureComponent<{}> {
+  oldOverflow: string;
+  oldPosition: string;
+  oldWidth: string;
+  oldHeight: string;
+  oldTop: string;
+  oldScrollY: string;
+
   componentDidMount() {
+    if (document.body === null) {
+      // that can't happen but let's make flow happy
+      return;
+    }
     this.oldOverflow = document.body.style.overflow;
     this.oldPosition = document.body.style.position;
     this.oldWidth = document.body.style.width;
@@ -18,6 +30,10 @@ class ScrollDisabler extends PureComponent {
   }
 
   componentWillUnmount() {
+    if (document.body === null) {
+      // that can't happen but let's make flow happy
+      return;
+    }
     document.body.style.overflow = this.oldOverflow;
     document.body.style.position = this.oldPosition;
     document.body.style.width = this.oldWidth;

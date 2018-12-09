@@ -3,19 +3,14 @@ import React, { PureComponent, Fragment } from 'react';
 import { Motion, spring } from 'react-motion';
 import styled from 'styled-components';
 
-import reactIconSrc from '../../assets/images/react-icon.svg';
-import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
-import nextjsIconSrc from '../../assets/images/nextjs_small.png';
-
 import FormField from '../FormField';
-import ProjectIconSelection from '../ProjectIconSelection';
 import FadeIn from '../FadeIn';
 
 import ProjectName from './ProjectName';
 import ProjectPath from './ProjectPath';
 import SubmitButton from './SubmitButton';
-import ButtonWithIcon from '../ButtonWithIcon';
-import Spacer from '../Spacer';
+import ProjectIconSelection from '../ProjectIconSelection';
+import ProjectTypeSelection from '../ProjectTypeSelection';
 
 import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
@@ -79,34 +74,12 @@ class MainPane extends PureComponent<Props> {
                     label="Project Type"
                     isFocused={activeField === 'projectType'}
                   >
-                    <ProjectTypeTogglesWrapper>
-                      {/* Todo: Make it easier to add new flows - e.g. map over an array to generate the UI*/}
-                      <ButtonWithIcon
-                        showStroke={projectType === 'create-react-app'}
-                        icon={<ReactIcon src={reactIconSrc} />}
-                        onClick={() =>
-                          this.updateProjectType('create-react-app')
-                        }
-                      >
-                        Vanilla React
-                      </ButtonWithIcon>
-                      <Spacer inline size={10} />
-                      <ButtonWithIcon
-                        showStroke={projectType === 'gatsby'}
-                        icon={<GatsbyIcon src={gatsbyIconSrc} />}
-                        onClick={() => this.updateProjectType('gatsby')}
-                      >
-                        Gatsby
-                      </ButtonWithIcon>
-                      <Spacer inline size={10} />
-                      <ButtonWithIcon
-                        showStroke={projectType === 'nextjs'}
-                        icon={<NextjsIcon src={nextjsIconSrc} />}
-                        onClick={() => this.updateProjectType('nextjs')}
-                      >
-                        Next.js
-                      </ButtonWithIcon>
-                    </ProjectTypeTogglesWrapper>
+                    <ProjectTypeSelection
+                      projectType={projectType}
+                      onProjectTypeSelect={selectedProjectType =>
+                        this.updateProjectType(selectedProjectType)
+                      }
+                    />
                   </FormField>
                 </FadeIn>
               )}
@@ -151,26 +124,6 @@ class MainPane extends PureComponent<Props> {
 const Wrapper = styled.div`
   height: 500px;
   will-change: transform;
-`;
-
-const ReactIcon = styled.img`
-  width: 32px;
-  height: 32px;
-`;
-
-const GatsbyIcon = styled.img`
-  width: 22px;
-  height: 22px;
-`;
-
-const NextjsIcon = styled.img`
-  width: 22px;
-  height: 22px;
-`;
-
-const ProjectTypeTogglesWrapper = styled.div`
-  margin-top: 8px;
-  margin-left: -8px;
 `;
 
 const SubmitButtonWrapper = styled.div`
