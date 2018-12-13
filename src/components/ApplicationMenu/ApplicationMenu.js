@@ -61,10 +61,6 @@ class ApplicationMenu extends Component<Props> {
     shell.openExternal(`${GUPPY_REPO_URL}/${pathname}`);
   };
 
-  openLink = url => {
-    shell.openExternal(url);
-  };
-
   buildMenu = (props: Props) => {
     const {
       selectedProject,
@@ -166,7 +162,7 @@ class ApplicationMenu extends Component<Props> {
           },
           {
             label: 'Feedback',
-            click: () => this.openLink(IN_APP_FEEDBACK_URL),
+            click: () => shell.openExternal(IN_APP_FEEDBACK_URL),
           },
         ],
       },

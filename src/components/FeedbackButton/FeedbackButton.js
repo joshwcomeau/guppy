@@ -61,13 +61,21 @@ class FeedbackButton extends PureComponent<Props, State> {
             onClick={() => shell.openExternal(IN_APP_FEEDBACK_URL)}
             onMouseLeave={this.handleMouseLeave}
           >
-            <SliderWrapper style={{ cursor: isHovered ? 'pointer' : 'auto' }}>
+            <SliderWrapper
+              style={{
+                cursor: isHovered ? 'pointer' : 'auto',
+                width: interpolate(
+                  [interpolated.hovered],
+                  pos => pos * 100 + 45 + 'px'
+                ),
+              }}
+            >
               <SliderBox
                 hovered={interpolated.hovered}
                 style={{
                   transform: interpolate(
                     [interpolated.hovered],
-                    scale => `scale(${Math.max(scale * 180, 1)}, 1)`
+                    scale => `scale(${Math.max(scale * 200, 1)}, 1)`
                   ),
                   opacity: interpolate(
                     [interpolated.hovered],
@@ -112,7 +120,7 @@ const Wrapper = styled.div`
   width: 50px;
   height: 50px;
   text-align: center;
-  z-index: +1;
+  z-index: 1;
 `;
 
 const SliderBox = animated(styled.div`
@@ -120,10 +128,6 @@ const SliderBox = animated(styled.div`
   right: -25px;
   width: 1px; /* small width so it hides behind wrapper - not 0 because we need something to scale*/
   height: 50px;
-  /*
-  // would be nice to have a border-radius but scale is modifying it
-  // so it's looking weird - I think it's OK to just have the round clipping from SliderWrapper overflow
-  border-radius: 5px;*/
   background: ${COLORS.gray[200]};
   z-index: -1;
   transform-origin: center right;
@@ -132,7 +136,7 @@ const SliderBox = animated(styled.div`
 const SliderWrapper = animated(styled.div`
   position: absolute;
   right: 0;
-  width: 150px;
+  width: 45px;
   height: 50px;
   overflow: hidden;
   border-radius: 25px;

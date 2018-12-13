@@ -25,7 +25,11 @@ export const openWindow = (url: string) => {
     try {
       return openedWindows[urlKey].show();
     } catch (err) {
-      // swallow error - Window could be closed
+      if (!err.message.includes('Object has been destroyed')) {
+        console.error(err);
+        throw new Error('Unhandled error');
+      }
+      // else swallow Object has been destroyed - Window could be closed
     }
   }
 
