@@ -47,7 +47,7 @@ describe('Sidebar', () => {
     const icon = projectButton.find('button');
 
     icon.simulate('click');
-    //icon.prop('onClick')(); // would be needed if we didn't query the button e.g. find('SelectableImage') would need this instead of simulate('click')
+    //icon.prop('onClick')(); // would be needed if we query const icon = find(SelectableImage); instead of simulate('click')
     expect(props.selectProject.mock.calls.length).toBe(1);
   });
   it('renders introduction correctly', () => {
