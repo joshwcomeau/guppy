@@ -8,6 +8,7 @@ import { shell, remote } from 'electron';
 
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
+import { IN_APP_FEEDBACK_URL } from '../../config/app';
 import {
   isMac,
   getCopyForOpeningFolder,
@@ -158,6 +159,10 @@ class ApplicationMenu extends Component<Props> {
           {
             label: isMac ? 'Privacy Policy' : 'Privacy policy',
             click: () => this.openGithubLink('blob/master/PRIVACY.md'),
+          },
+          {
+            label: 'Feedback',
+            click: () => shell.openExternal(IN_APP_FEEDBACK_URL),
           },
         ],
       },
