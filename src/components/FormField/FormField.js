@@ -12,10 +12,14 @@ type Props = {
   isFocused?: boolean,
   hasError?: boolean,
   children: React$Node,
-  spacing?: number,
+  spacing: number,
 };
 
 class FormField extends PureComponent<Props> {
+  static defaultProps = {
+    spacing: 30,
+  };
+
   render() {
     const {
       label,
@@ -49,17 +53,12 @@ const getTextColor = (props: Props) => {
   }
 };
 
-const WrapperLabel = styled.label.attrs({
-  // default to 30px spacing between FormFields
-  spacing: props => props.spacing || 30,
-})`
+const WrapperLabel = styled.label`
   display: block;
   margin-bottom: ${props => props.spacing}px;
 `;
 
-const WrapperDiv = styled.div.attrs({
-  spacing: props => props.spacing || 30,
-})`
+const WrapperDiv = styled.div`
   margin-bottom: ${props => props.spacing}px;
 `;
 
