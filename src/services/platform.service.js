@@ -93,47 +93,54 @@ export const initializePath = () => {
           return resolve();
         }
 
-        childProcess.exec('echo $SHELL', (error, stdout) => {
-          if (error) {
-            resolve(error);
-          }
+        // Get login username
+        const username = os.userInfo().username;
 
-          // Check which shell is in use e.g. /bin/bash or /bin/zsh
-          // Get the name of the shell after the last instant of '/'
-          const shell = stdout
-            .substring(stdout.lastIndexOf('/') + 1, stdout.length)
-            .trim();
+        childProcess.exec(
+          `dscl . -read /Users/${username} UserShell`,
+          (error, stdout) => {
+            if (error) {
+              resolve(error);
+            }
 
-          // Format the dotfile using correct shell
-          let sourceFile = `~/.${shell}rc`;
+            // Check which shell is in use e.g. /bin/bash or /bin/zsh
+            // Get the name of the shell after the last instant of '/'
+            const shell = stdout
+              .substring(stdout.lastIndexOf('/') + 1, stdout.length)
+              .trim();
 
-          // Check the dotfile actually exists first
-          const fileExists = fs.existsSync(`${os.homedir()}/.${shell}rc`);
+            // Format the config file using correct shell
+            let sourceFile =
+              shell === 'fish' ? '.config/fish/config.fish' : `.${shell}rc`;
 
-          // If file doesn't exist then source .bash_profile instead
-          if (!fileExists) {
-            sourceFile = '~/.bash_profile';
-          }
+            // Check the file actually exists first
+            const fileExists = fs.existsSync(`${os.homedir()}/${sourceFile}`);
 
-          // For users with a standard Node installation, node will be in
-          // /usr/local/bin
-          // For users using NVM, the path to Node will be added to `.[shell]rc`.
-          // Add both to the PATH.
-          try {
-            childProcess.exec(
-              `source ${sourceFile} && echo $PATH`,
-              (err, updatedPath) => {
-                if (updatedPath) {
-                  window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
+            // If file doesn't exist then source .bash_profile instead
+            if (!fileExists) {
+              sourceFile = '~/.bash_profile';
+            }
+
+            // For users with a standard Node installation, node will be in
+            // /usr/local/bin
+            // For users using NVM, the path to Node will be added to the shell config file.
+            // Add both to the PATH.
+            try {
+              childProcess.exec(
+                `source ~/${sourceFile} ; echo $PATH`,
+                (err, updatedPath) => {
+                  if (updatedPath) {
+                    window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
+                  }
+
+                  resolve();
                 }
-
-                resolve();
-              }
-            );
-          } catch (e) {
-            resolve(e);
+              );
+            } catch (e) {
+              resolve(e);
+            }
           }
-        });
+        );
       }
     );
   });
