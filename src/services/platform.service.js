@@ -2,6 +2,7 @@
 import * as childProcess from 'child_process';
 import * as os from 'os';
 import * as path from 'path';
+import fs from 'fs';
 import { remote } from 'electron';
 
 import { PACKAGE_MANAGER } from '../config/app';
@@ -92,24 +93,47 @@ export const initializePath = () => {
           return resolve();
         }
 
-        // For users with a standard Node installation, node will be in
-        // /usr/local/bin
-        // For users using NVM, the path to Node will be added to `.bashrc`.
-        // Add both to the PATH.
-        try {
-          childProcess.exec(
-            'source ~/.bashrc && echo $PATH',
-            (err, updatedPath) => {
-              if (updatedPath) {
-                window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
-              }
+        childProcess.exec('echo $SHELL', (error, stdout) => {
+          if (error) {
+            resolve(error);
+          }
 
-              resolve();
-            }
-          );
-        } catch (e) {
-          resolve(e);
-        }
+          // Check which shell is in use e.g. /bin/bash or /bin/zsh
+          // Get the name of the shell after the last instant of '/'
+          const shell = stdout
+            .substring(stdout.lastIndexOf('/') + 1, stdout.length)
+            .trim();
+
+          // Format the dotfile using correct shell
+          let sourceFile = `~/.${shell}rc`;
+
+          // Check the dotfile actually exists first
+          const fileExists = fs.existsSync(`${os.homedir()}/.${shell}rc`);
+
+          // If file doesn't exist then source .bash_profile instead
+          if (!fileExists) {
+            sourceFile = '~/.bash_profile';
+          }
+
+          // For users with a standard Node installation, node will be in
+          // /usr/local/bin
+          // For users using NVM, the path to Node will be added to `.[shell]rc`.
+          // Add both to the PATH.
+          try {
+            childProcess.exec(
+              `source ${sourceFile} && echo $PATH`,
+              (err, updatedPath) => {
+                if (updatedPath) {
+                  window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
+                }
+
+                resolve();
+              }
+            );
+          } catch (e) {
+            resolve(e);
+          }
+        });
       }
     );
   });
