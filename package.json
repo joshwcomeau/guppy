@@ -11,6 +11,8 @@
       "build/**/*"
     ],
     "asarUnpack": [
+      "node_modules/node/",
+      "node_modules/npm/",
       "node_modules/yarn/"
     ],
     "publish": "github"
@@ -55,6 +57,8 @@
     "electron-updater": "3.1.2",
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
+    "node": "11.4.0",
+    "npm": "6.5.0",
     "ps-tree": "1.1.0",
     "react-custom-scrollbars": "4.2.1",
     "rimraf": "2.6.2",

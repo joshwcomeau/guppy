@@ -7,7 +7,7 @@ import logger from '../../services/analytics.service';
 import { getNodeJsVersion } from '../../services/shell.service';
 import { getAppLoaded } from '../../reducers/app-loaded.reducer';
 import { getProjectsArray } from '../../reducers/projects.reducer';
-import { initializePath } from '../../services/platform.service';
+import { binaryPaths } from '../../services/platform.service';
 
 import { GUPPY_REPO_URL } from '../../constants';
 
@@ -34,8 +34,12 @@ class Initialization extends PureComponent<Props, State> {
   };
 
   componentDidMount() {
-    initializePath()
-      .then(getNodeJsVersion)
+    const { systemNodeUsed } = binaryPaths;
+    if (!systemNodeUsed) {
+      console.info('You are not using your system node version');
+    }
+
+    getNodeJsVersion()
       .then(nodeVersion => {
         this.setState({ wasSuccessfullyInitialized: !!nodeVersion });
 

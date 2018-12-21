@@ -62,6 +62,7 @@ export function* handleLaunchDevServer({
       port
     );
 
+    console.log('starting: ', PACKAGE_MANAGER_CMD);
     const child = yield call(
       [childProcess, childProcess.spawn],
       PACKAGE_MANAGER_CMD,

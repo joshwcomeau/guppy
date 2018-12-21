@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as uuid from 'uuid/v1';
 import projectConfigs from '../config/project-types';
 import { processLogger } from './process-logger.service';
+import { binaryPaths } from './platform.service';
 
 import { COLORS } from '../constants';
 
@@ -77,6 +78,18 @@ export default (
 
   const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
 
+  console.log('npm', childProcess.execSync('npm -v').toString());
+  console.log('node', childProcess.execSync('node -v').toString());
+  console.log(
+    'npx',
+    childProcess
+      .execSync(instruction + ' -v', {
+        env: getBaseProjectEnvironment(projectPath),
+      })
+      .toString()
+  );
+
+  console.log('creating:', instruction, args, window.process.env);
   const process = childProcess.spawn(instruction, args, {
     env: getBaseProjectEnvironment(projectPath),
     shell: true,
@@ -190,7 +203,12 @@ export const getBuildInstructions = (
   // For Windows Support
   // Windows tries to run command as a script rather than on a cmd
   // To force it we add *.cmd to the commands
-  const command = formatCommandForPlatform('npx');
+  // Note: Using env. path if Node not found would be nicer but that wasn't working
+  const command = path.join(
+    binaryPaths.npmPath,
+    formatCommandForPlatform('npx')
+  );
+
   if (!projectConfigs.hasOwnProperty(projectType)) {
     throw new Error('Unrecognized project type: ' + projectType);
   }

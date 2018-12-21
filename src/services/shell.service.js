@@ -5,7 +5,9 @@
 import { shell } from 'electron';
 import launchEditor from 'react-dev-utils/launchEditor';
 import { exec } from 'child_process';
+import path from 'path';
 
+import { binaryPaths } from './platform.service';
 import type { Project } from '../types';
 
 export const openProjectInFolder = (project: Project) =>
@@ -16,11 +18,15 @@ export const openProjectInEditor = (project: Project) =>
 
 export const getNodeJsVersion = () =>
   new Promise<string | void>(resolve =>
-    exec('node -v', { env: window.process.env }, (error, stdout) => {
-      if (error) {
-        return resolve();
+    exec(
+      path.join(binaryPaths.nodePath, 'node') + ' -v',
+      { env: window.process.env },
+      (error, stdout) => {
+        console.log('nodePath', binaryPaths.nodePath);
+        if (error) {
+          return resolve();
+        }
+        resolve(stdout.toString().trim());
       }
-
-      resolve(stdout.toString().trim());
-    })
+    )
   );

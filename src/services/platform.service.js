@@ -3,8 +3,9 @@ import * as childProcess from 'child_process';
 import * as os from 'os';
 import * as path from 'path';
 import { remote } from 'electron';
-
 import { PACKAGE_MANAGER } from '../config/app';
+
+const { app } = remote;
 
 export const isWin = /^win/.test(os.platform());
 export const isMac = /darwin/.test(os.platform());
@@ -31,17 +32,74 @@ if (isWin) {
 }
 export const windowsHomeDir = isWin ? path.join(os.homedir(), winDocPath) : '';
 
+// Here we're checking if node is available in system path.
+// If not we're using the bundled node version.
+// Todo: Is a version check required? See issue #322
+//       Is 'fix-path' still required?
+export const initializePath = () => {
+  // Check synchronously if node is available so we can use the return value in binaryPaths constant
+  let version;
+  try {
+    version = childProcess.execSync('node -v', { env: window.process.env });
+  } catch (e) {
+    // e.g. Node not found in path
+    if (!e.message.includes('Command failed')) {
+      console.log(e); // swallow command failed error --> if other error console.log it here
+    }
+  }
+
+  if (version) {
+    // Later check if it's meeting the minimum requirements - if not warn user & load bundled node
+    // for now always use system node if available
+    console.log('found node version', version.toString());
+    return {
+      systemNodeUsed: true,
+      nodePath: '',
+      npmPath: '',
+      yarnPath: '',
+    };
+  }
+
+  // Use bundled Yarn & Node
+  console.log(app.getAppPath());
+  const appPath = app.getAppPath().replace('app.asar', 'app.asar.unpacked');
+  const nodePath = path.join(appPath, './node_modules', 'node', 'bin');
+  const npmPath = path.join(appPath, './node_modules', 'npm', 'bin'); // also includes npx
+  const yarnPath = path.join(appPath, './node_modules', 'yarn', 'bin');
+
+  // Add our Node version to path (so Yarn can find it)
+  const pathKey = isWin ? 'Path' : 'PATH';
+
+  window.process.env = {
+    [pathKey]: nodePath + path.delimiter + npmPath, // Add our Node & npm on path so Yarn can find it
+  };
+
+  // Link npm to bundled Node
+  // usually linked to C:\\Program Files\\nodejs on Windows
+  // but overidden to C:\Users\Alexander\AppData\Roaming\npm -- so global packages are installed there (not needed here)
+  // Todo: Do we need to wrap it in a try/catch block?
+  // childProcess.execSync('npm config set prefix ' + nodePath, {
+  //   env: window.process.env,
+  // });
+
+  return {
+    systemNodeUsed: false,
+    nodePath,
+    npmPath,
+    yarnPath,
+  };
+};
+
+export const binaryPaths = initializePath();
+
 // Returns formatted command for Windows
 export const formatCommandForPlatform = (command: string): string =>
   isWin ? `${command}.cmd` : command;
 
-export const PACKAGE_MANAGER_CMD = path
-  .join(
-    remote.app.getAppPath(),
-    'node_modules/yarn/bin',
-    formatCommandForPlatform(PACKAGE_MANAGER)
-  )
-  .replace('app.asar', 'app.asar.unpacked');
+export const PACKAGE_MANAGER_CMD = path.join(
+  binaryPaths.yarnPath,
+  formatCommandForPlatform(PACKAGE_MANAGER)
+);
 
 // Forward the host env, and append the
 // project's .bin directory to PATH to allow
@@ -70,49 +128,6 @@ export const getBaseProjectEnvironment = (
       currentEnvironment[pathKey] +
       path.join(projectPath, 'node_modules', '.bin', path.delimiter),
   };
-};
-
-// HACK: With electron-builder, we're having some issues on mac finding Node.
-// This is because for some reason, the PATH is not updated properly :(
-// 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
-// reasons.
-export const initializePath = () => {
-  return new Promise<void>(resolve => {
-    if (!isMac) {
-      return resolve();
-    }
-
-    // Check if we need to fix the Path (Mac only)
-    childProcess.exec(
-      'which node',
-      { env: window.process.env },
-      (_, nodePath) => {
-        if (nodePath) {
-          // Node found
-          return resolve();
-        }
-
-        // For users with a standard Node installation, node will be in
-        // /usr/local/bin
-        // For users using NVM, the path to Node will be added to `.bashrc`.
-        // Add both to the PATH.
-        try {
-          childProcess.exec(
-            'source ~/.bashrc && echo $PATH',
-            (err, updatedPath) => {
-              if (updatedPath) {
-                window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
-              }
-
-              resolve();
-            }
-          );
-        } catch (e) {
-          resolve(e);
-        }
-      }
-    );
-  });
 };
 
 export const getCopyForOpeningFolder = () =>

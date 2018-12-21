@@ -95,7 +95,7 @@ function createWindow() {
   });
 
   // set up some chrome extensions
-  if (process.env.NODE_ENV === 'development') {
+  // if (process.env.NODE_ENV === 'development') {
     const {
       default: installExtension,
       REACT_DEVELOPER_TOOLS,
@@ -119,7 +119,7 @@ function createWindow() {
         console.error(chalk.red(`[ELECTRON] Extension installation failed`), e);
       }
     }
-  }
+  // }
 
   // and load the index.html of the app.
   const startUrl =
