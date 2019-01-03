@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { Sidebar } from './Sidebar';
 import AddProjectButton from './AddProjectButton';
@@ -23,7 +23,7 @@ const testProject = {
   name: 'Test Project',
   type: 'nextjs',
   icon: 'nextjs-project-icon',
-  color: COLORS.red,
+  color: COLORS.red['500'],
   createdAt: 0,
   dependencies: [],
   tasks: [],
