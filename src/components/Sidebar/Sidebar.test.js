@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import { mount } from 'enzyme';
 
@@ -18,6 +18,7 @@ const createProps = props => ({
   selectProject: jest.fn(),
   ...props,
 });
+
 const testProject = {
   id: 'test-project',
   name: 'Test Project',
@@ -29,6 +30,7 @@ const testProject = {
   tasks: [],
   path: '.',
 };
+
 describe('Sidebar', () => {
   it('renders add project button correctly', () => {
     const props = createProps();
@@ -44,10 +46,9 @@ describe('Sidebar', () => {
     const wrapper = mount(<Sidebar {...props} />);
     const projectButton = wrapper.find(SidebarProjectIcon);
     expect(projectButton).toHaveLength(1);
-    const icon = projectButton.find('button');
+    const button = projectButton.find('button');
 
-    icon.simulate('click');
-    //icon.prop('onClick')(); // would be needed if we query const icon = find(SelectableImage); instead of simulate('click')
+    button.simulate('click');
     expect(props.selectProject.mock.calls.length).toBe(1);
   });
   it('renders introduction correctly', () => {

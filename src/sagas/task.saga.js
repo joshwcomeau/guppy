@@ -410,10 +410,10 @@ const createStdioChannel = (
 export const substituteConfigVariables = (
   configObject: any,
   variableMap: VariableMap
-) => {
+): any => {
   // e.g. $port inside args will be replaced with variable reference from variabeMap obj. {$port: port}
   return Object.keys(configObject).reduce(
-    (config, key) => {
+    (config: any, key: any) => {
       if (config[key] instanceof Array) {
         // replace $port inside args array
         config[key] = config[key].map(arg => variableMap[arg] || arg);
@@ -444,7 +444,7 @@ export const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
   port: string
-) => {
+): any => {
   const config = projectConfigs[projectType];
 
   if (!config) {
