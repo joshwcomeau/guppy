@@ -31,7 +31,7 @@ class StrokeButton extends Component<Props> {
     } = this.props;
 
     return (
-      <DetectActive>
+      <DetectActiveStyled>
         {isActive => (
           <Wrapper>
             <Foreground>
@@ -47,10 +47,14 @@ class StrokeButton extends Component<Props> {
             />
           </Wrapper>
         )}
-      </DetectActive>
+      </DetectActiveStyled>
     );
   }
 }
+
+const DetectActiveStyled = styled(DetectActive)`
+  display: inline-block;
+`;
 
 const Wrapper = styled.div`
   position: relative;
