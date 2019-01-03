@@ -16,7 +16,7 @@ import {
   RESET_ALL_STATE,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 
 type State = 'new-project-wizard' | 'project-settings' | null;
 

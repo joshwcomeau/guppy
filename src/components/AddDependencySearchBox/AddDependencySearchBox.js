@@ -11,7 +11,7 @@ import { SearchBox } from 'react-instantsearch/dom';
 import { COLORS } from '../../constants';
 
 type Props = {
-  onChange: (ev: SyntheticEvent<*>) => void,
+  onChange?: (ev: SyntheticEvent<*>) => void,
 };
 
 class AddDependencySearchBox extends Component<Props> {

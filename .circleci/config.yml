@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: node:8.0
+      - image: node:8.10
 
     working_directory: ~/repo
 
@@ -14,8 +14,8 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          # don't fallback to using the latest cache if no exact match is found
+          # because it yarn doesn't pick some changes (for example, flow doesn't update)
 
       - run: yarn install
 

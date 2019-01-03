@@ -1,1 +1,2 @@
-export { default } from "./FadeOnChange";
+// @flow
+export { default } from './FadeOnChange';

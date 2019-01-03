@@ -13,8 +13,8 @@ import TextInput from '../TextInput';
 type Props = {
   path: string,
   pathToSelectMessage: ?string,
-  inputEditable: ?boolean,
-  isFocused: ?boolean,
+  inputEditable?: boolean,
+  isFocused?: boolean,
   onFocus: string => void,
   onSelect: string => void,
 };
@@ -45,30 +45,21 @@ class DirectoryPicker extends PureComponent<Props> {
     );
   };
 
-  getFullProjectPath(path: string) {
-    return path.replace(/^\//, '');
-  }
-
   render() {
     const { path, inputEditable, onFocus, onSelect, isFocused } = this.props;
-
-    // Join the projectHome with the prospective project ID
-    // Hide the leading forward-slash, on Mac/Linux
-    const fullProjectPath = this.getFullProjectPath(path);
 
     return (
       <Wrapper>
         {!inputEditable ? (
           <DirectoryButton onClick={this.updatePath} hideCursor={true}>
-            {fullProjectPath}
+            {path}
           </DirectoryButton>
         ) : (
           <TextInput
             onFocus={onFocus}
             isFocused={isFocused}
-            value={fullProjectPath}
+            value={path}
             onChange={ev => onSelect(ev.target.value)}
-            autoFocus
           >
             <ButtonPositionAdjuster>
               <IconWrapper onClick={this.updatePath}>

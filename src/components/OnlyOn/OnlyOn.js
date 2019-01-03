@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants';
 
-type Size = 'sm' | 'md' | 'smMin' | 'mdMin';
+type Size = $Keys<typeof BREAKPOINTS>;
 
 type Props = {
   size: Size,
@@ -22,10 +22,10 @@ class OnlyOn extends PureComponent<Props> {
         return LessThanSmall;
       case 'md':
         return LessThanMedium;
-      case 'smMin':
-        return SmallAndUp;
       case 'mdMin':
         return MediumAndUp;
+      case 'lgMin':
+        return LargeAndUp;
       default:
         throw new Error('Unrecognized size to OnlyOn');
     }
@@ -57,9 +57,9 @@ const LessThanMedium = styled.span`
   }
 `;
 
-const SmallAndUp = styled.span`
+const LargeAndUp = styled.span`
   display: none;
-  @media ${BREAKPOINTS.smMin} {
+  @media ${BREAKPOINTS.lgMin} {
     display: ${props => props.display};
   }
 `;

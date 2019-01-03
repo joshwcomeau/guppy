@@ -1,1 +1,2 @@
-export { default } from "./AddDependencyInitialScreen";
+// @flow
+export { default } from './AddDependencyInitialScreen';

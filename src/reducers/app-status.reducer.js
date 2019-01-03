@@ -5,7 +5,7 @@ import {
   DELETE_PROJECT_ERROR,
 } from '../actions';
 
-import type { Action } from 'redux';
+import type { Action } from '../actions/types';
 
 type State = {
   blockingActionActive: boolean,

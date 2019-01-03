@@ -8,6 +8,7 @@ import { shell, remote } from 'electron';
 
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
+import { IN_APP_FEEDBACK_URL } from '../../config/app';
 import {
   isMac,
   getCopyForOpeningFolder,
@@ -23,6 +24,7 @@ import {
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 
 import type { Project, Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 const { app, process, Menu } = remote;
 
@@ -30,14 +32,16 @@ type Props = {
   projects: Array<Project>,
   selectedProject: ?Project,
   devServerTask: ?Task,
-  createNewProjectStart: () => any,
-  showImportExistingProjectPrompt: () => any,
-  clearConsole: (task: Task) => any,
-  showDeleteProjectPrompt: (project: any) => any,
-  showResetStatePrompt: () => any,
-  showProjectSettings: () => any,
-  showAppSettings: () => any,
-  selectProject: (projectId: string) => any,
+  createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
+  showImportExistingProjectPrompt: Dispatch<
+    typeof actions.showImportExistingProjectPrompt
+  >,
+  clearConsole: Dispatch<typeof actions.clearConsole>,
+  showDeleteProjectPrompt: Dispatch<typeof actions.showDeleteProjectPrompt>,
+  showResetStatePrompt: Dispatch<typeof actions.showResetStatePrompt>,
+  showProjectSettings: Dispatch<typeof actions.showProjectSettings>,
+  showAppSettings: Dispatch<typeof actions.showAppSettings>,
+  selectProject: Dispatch<typeof actions.selectProject>,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -156,6 +160,10 @@ class ApplicationMenu extends Component<Props> {
             label: isMac ? 'Privacy Policy' : 'Privacy policy',
             click: () => this.openGithubLink('blob/master/PRIVACY.md'),
           },
+          {
+            label: 'Feedback',
+            click: () => shell.openExternal(IN_APP_FEEDBACK_URL),
+          },
         ],
       },
     ];
@@ -166,7 +174,7 @@ class ApplicationMenu extends Component<Props> {
         // Linux & Windows only
         label: '&Preferences...',
         click: showAppSettings,
-        accelerator: 'Ctrl+,',
+        accelerator: 'CmdOrCtrl+,',
       });
     }
 
@@ -185,7 +193,7 @@ class ApplicationMenu extends Component<Props> {
           {
             label: 'Preferences...',
             click: showAppSettings,
-            accelerator: 'Ctrl+,',
+            accelerator: 'CmdOrCtrl+,',
           },
           { type: 'separator' },
           { role: 'quit' },

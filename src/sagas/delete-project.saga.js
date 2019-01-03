@@ -7,18 +7,19 @@ import * as path from 'path';
 
 import {
   SHOW_DELETE_PROJECT_PROMPT,
+  showDeleteProjectPrompt,
   startDeletingProject,
   finishDeletingProject,
   deleteProjectError,
   selectProject,
   createNewProjectStart,
-  loadDependencyInfoFromDisk,
+  loadDependencyInfoFromDiskStart,
 } from '../actions';
 import { getProjectsArray } from '../reducers/projects.reducer';
 
-import type { Action } from 'redux';
 import type { Saga } from 'redux-saga';
 import type { Project } from '../types';
+import type { ReturnType } from '../actions/types';
 
 const { dialog, shell } = remote;
 
@@ -63,7 +64,9 @@ export function waitForAsyncRimraf(projectPath: string): Promise<void> {
   );
 }
 
-export function* deleteProject({ project }: Action): Saga<void> {
+export function* deleteProject({
+  project,
+}: ReturnType<typeof showDeleteProjectPrompt>): Saga<void> {
   // NOTE: we're using this form of `call` because it appears to work best
   // with Flow. Once https://github.com/joshwcomeau/guppy/pull/154 is merged,
   // we should try changing this to:
@@ -131,7 +134,7 @@ export function* deleteProject({ project }: Action): Saga<void> {
           'Please make sure no tasks are running and no applications are using files in that directory.',
       });
 
-      yield put(loadDependencyInfoFromDisk(project.id, project.path));
+      yield put(loadDependencyInfoFromDiskStart(project.id, project.path));
 
       return;
     }

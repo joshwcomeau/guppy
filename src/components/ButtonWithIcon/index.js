@@ -1,1 +1,2 @@
-export { default } from "./ButtonWithIcon";
+// @flow
+export { default } from './ButtonWithIcon';

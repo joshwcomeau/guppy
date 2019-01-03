@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 /**
  * NOTE: This service is used both by the Electron client
  * and server, so it must only contain Node-compatible (read: non-ES6)

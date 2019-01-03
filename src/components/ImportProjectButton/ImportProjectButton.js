@@ -6,10 +6,14 @@ import * as actions from '../../actions';
 
 import TextButton from '../TextButton';
 
+import type { Dispatch } from '../../actions/types';
+
 type Props = {
   color: string,
   children: React$Node,
-  showImportExistingProjectPrompt: () => any,
+  showImportExistingProjectPrompt: Dispatch<
+    typeof actions.showImportExistingProjectPrompt
+  >,
 };
 
 class ImportProjectButton extends Component<Props> {

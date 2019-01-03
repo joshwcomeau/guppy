@@ -1,24 +1,19 @@
 // @flow
 import uuid from 'uuid/v1';
 
-import { loadAllProjectDependencies } from '../services/read-from-disk.service';
-
 import type {
   AppSettings,
   Project,
   ProjectInternal,
   ProjectType,
-  ProjectsMap,
+  ProjectInternalsMap,
   Task,
   Dependency,
   QueuedDependency,
 } from '../types';
 
 //
-//
 // Action Types
-// TODO: Do this with Flow
-// https://flow.org/en/docs/react/redux/
 //
 export const REFRESH_PROJECTS_START = 'REFRESH_PROJECTS_START';
 export const REFRESH_PROJECTS_ERROR = 'REFRESH_PROJECTS_ERROR';
@@ -40,7 +35,10 @@ export const RECEIVE_DATA_FROM_TASK_EXECUTION =
   'RECEIVE_DATA_FROM_TASK_EXECUTION';
 export const LAUNCH_DEV_SERVER = 'LAUNCH_DEV_SERVER';
 export const CLEAR_CONSOLE = 'CLEAR_CONSOLE';
-export const LOAD_DEPENDENCY_INFO_FROM_DISK = 'LOAD_DEPENDENCY_INFO_FROM_DISK';
+export const LOAD_DEPENDENCY_INFO_FROM_DISK_START =
+  'LOAD_DEPENDENCY_INFO_FROM_DISK_START';
+export const LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH =
+  'LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH';
 export const ADD_DEPENDENCY = 'ADD_DEPENDENCY';
 export const UPDATE_DEPENDENCY = 'UPDATE_DEPENDENCY';
 export const DELETE_DEPENDENCY = 'DELETE_DEPENDENCY';
@@ -102,7 +100,7 @@ export const refreshProjectsError = (error: string) => ({
   error,
 });
 
-export const refreshProjectsFinish = (projects: ProjectsMap) => ({
+export const refreshProjectsFinish = (projects: ProjectInternalsMap) => ({
   type: REFRESH_PROJECTS_FINISH,
   projects,
 });
@@ -111,27 +109,29 @@ export const refreshProjectsFinish = (projects: ProjectsMap) => ({
  * This action figures out what dependencies are installed for a given
  * projectId.
  *
- * TODO: This should really have a "START" and "COMPLETE" action pair, so that
- * we can show some loading UI while it works.
+ * TODO: we should show some loading UI while it works.
  *
- * TODO: This is our last thunk! We should convert it to a saga, so we can
- * be rid of thunks altogether.
  */
 
-export const loadDependencyInfoFromDisk = (
+export const loadDependencyInfoFromDiskStart = (
   projectId: string,
   projectPath: string
-) => {
-  return (dispatch: any, getState: Function) => {
-    loadAllProjectDependencies(projectPath).then(dependencies => {
-      dispatch({
-        type: LOAD_DEPENDENCY_INFO_FROM_DISK,
-        projectId,
-        dependencies,
-      });
-    });
-  };
-};
+) => ({
+  type: LOAD_DEPENDENCY_INFO_FROM_DISK_START,
+  projectId,
+  projectPath,
+});
+
+export const loadDependencyInfoFromDiskFinish = (
+  projectId: string,
+  dependencies: {
+    [dependencyName: string]: Dependency,
+  }
+) => ({
+  type: LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH,
+  projectId,
+  dependencies,
+});
 
 export const createNewProjectStart = () => ({
   type: CREATE_NEW_PROJECT_START,
@@ -173,7 +173,7 @@ export const attachTaskMetadata = (
 
 export const abortTask = (
   task: Task,
-  projectType: string,
+  projectType: ProjectType,
   timestamp: Date
 ) => ({
   type: ABORT_TASK,
@@ -216,10 +216,15 @@ export const clearConsole = (task: Task) => ({
   task,
 });
 
-export const addDependency = (projectId: string, dependencyName: string) => ({
+export const addDependency = (
+  projectId: string,
+  dependencyName: string,
+  version: string
+) => ({
   type: ADD_DEPENDENCY,
   projectId,
   dependencyName,
+  version,
 });
 
 export const updateDependency = (

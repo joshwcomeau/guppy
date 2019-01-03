@@ -1,6 +1,9 @@
+// @flow
 import { LOGGING } from '../config/app';
 
-export const processLogger = (child, label) => {
+import type { ChildProcess } from 'child_process';
+
+export const processLogger = (child: ChildProcess, label: string) => {
   if (!LOGGING || process.env.NODE_ENV === 'production') {
     return; // no logging
   }

@@ -1,1 +1,2 @@
-export { default } from "./DependencyInstalling";
+// @flow
+export { default } from './DependencyInstalling';

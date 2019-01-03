@@ -1,1 +1,2 @@
-export { default } from "./EjectButton";
+// @flow
+export { default } from './EjectButton';

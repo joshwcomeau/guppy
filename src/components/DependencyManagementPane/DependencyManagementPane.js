@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { plus } from 'react-icons-kit/feather/plus';
 
-import { runTask, abortTask } from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { COLORS, GUPPY_REPO_URL } from '../../constants';
 
@@ -330,9 +329,4 @@ const mapStateToProps = state => ({
   project: getSelectedProject(state),
 });
 
-const mapDispatchToProps = { runTask, abortTask };
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DependencyManagementPane);
+export default connect(mapStateToProps)(DependencyManagementPane);

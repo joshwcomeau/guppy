@@ -1,1 +1,2 @@
-export { default } from "./ProgressBar";
+// @flow
+export { default } from './ProgressBar';

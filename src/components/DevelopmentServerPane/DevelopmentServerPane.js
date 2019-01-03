@@ -19,12 +19,13 @@ import OnlyOn from '../OnlyOn';
 import DevelopmentServerStatus from '../DevelopmentServerStatus';
 
 import type { Project, Task } from '../../types';
+import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
   task: ?Task,
-  launchDevServer: (task: Task, timestamp: Date) => void,
-  abortTask: (task: Task, projectType: string, timestamp: Date) => void,
+  launchDevServer: Dispatch<typeof actions.launchDevServer>,
+  abortTask: Dispatch<typeof actions.abortTask>,
 };
 
 class DevelopmentServerPane extends PureComponent<Props> {
