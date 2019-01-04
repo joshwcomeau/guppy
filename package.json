@@ -155,7 +155,7 @@
     "webpack-dev-server": "2.11.0",
     "webpack-manifest-plugin": "1.3.2"
   },
-  "browserslist": "chrome 61",
+  "browserslist": "chrome 66",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,mjs}"
