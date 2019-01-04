@@ -51,6 +51,9 @@ describe('App-Settings reducer', () => {
 
       expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
+  "export": Object {
+    "codesandboxToken": "",
+  },
   "general": Object {
     "defaultProjectPath": "Users/john_doe/work",
   },

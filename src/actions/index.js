@@ -69,11 +69,19 @@ export const SHOW_PROJECT_SETTINGS = 'SHOW_PROJECT_SETTINGS';
 export const SAVE_PROJECT_SETTINGS_START = 'SAVE_PROJECT_SETTINGS_START';
 export const SAVE_PROJECT_SETTINGS_ERROR = 'SAVE_PROJECT_SETTINGS_ERROR';
 export const SAVE_PROJECT_SETTINGS_FINISH = 'SAVE_PROJECT_SETTINGS_FINISH';
+export const SET_CODESANDBOX_URL = 'SET_CODESANDBOX_URL';
 
 // app settings
 export const SHOW_APP_SETTINGS = 'SHOW_APP_SETTINGS';
 export const SAVE_APP_SETTINGS_START = 'SAVE_APP_SETTINGS_START';
 export const CHANGE_DEFAULT_PROJECT_PATH = 'CHANGE_DEFAULT_PROJECT_PATH';
+export const UPDATE_CODESANDBOX_TOKEN = 'UPDATE_CODESANDBOX_TOKEN';
+
+// export to codesandbox
+export const EXPORT_TO_CODESANDBOX_START = 'EXPORT_TO_CODESANDBOX_START';
+export const EXPORT_TO_CODESANDBOX_FINISH = 'EXPORT_TO_CODESANDBOX_FINISH';
+export const CODESANDBOX_LOGOUT = 'CODESANDBOX_LOGOUT';
+
 //
 //
 // Action Creators
@@ -379,6 +387,20 @@ export const changeDefaultProjectPath = (defaultProjectPath: string) => ({
   defaultProjectPath,
 });
 
+export const updateCodesandboxToken = (codesandboxToken: string) => ({
+  type: UPDATE_CODESANDBOX_TOKEN,
+  codesandboxToken,
+});
+
+export const setCodesandboxUrl = (
+  projectId: string,
+  codesandboxUrl: string
+) => ({
+  type: SET_CODESANDBOX_URL,
+  projectId,
+  codesandboxUrl,
+});
+
 // project settings related actions
 export const saveProjectSettingsStart = (
   name: string,
@@ -418,3 +440,18 @@ export const showResetStatePrompt = () => ({
 });
 
 export const resetAllState = () => ({ type: RESET_ALL_STATE });
+
+export const exportToCodesandboxStart = (projectId: string) => ({
+  type: EXPORT_TO_CODESANDBOX_START,
+  projectId,
+});
+
+export const exportToCodesandboxFinish = (projectId: string) => ({
+  type: EXPORT_TO_CODESANDBOX_FINISH,
+  projectId,
+});
+
+export const logoutCodesandbox = (projectPath: string) => ({
+  type: CODESANDBOX_LOGOUT,
+  projectPath,
+});

@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 import appSettings from './app-settings.reducer';
 import appLoaded from './app-loaded.reducer';
 import appStatus from './app-status.reducer';
+import projectStatus from './project-status.reducer';
 import projects from './projects.reducer';
 import tasks from './tasks.reducer';
 import dependencies from './dependencies.reducer';
@@ -16,6 +17,7 @@ export default combineReducers({
   appSettings,
   appLoaded,
   appStatus,
+  projectStatus,
   projects,
   tasks,
   dependencies,

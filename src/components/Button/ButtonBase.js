@@ -73,7 +73,7 @@ const ButtonBaseStyles = styled.button`
   align-items: center;
   background: ${props => props.background};
   color: ${props => props.textColor};
-  cursor: pointer;
+  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
   outline: none;
   white-space: nowrap;
 

@@ -1,7 +1,8 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+// import { Scrollbars } from 'react-custom-scrollbars';
 
 import * as actions from '../../actions';
 
@@ -11,11 +12,13 @@ import { getIsQueueEmpty } from '../../reducers/queue.reducer';
 
 import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
-import Spacer from '../Spacer';
+// import Spacer from '../Spacer';
 import { FillButton } from '../Button';
 import FormField from '../FormField';
 import ProjectIconSelection from '../ProjectIconSelection';
 import TextInput from '../TextInput';
+import ExportToCodesandbox from '../ExportToCodesandbox';
+import DisabledText from '../DisabledText';
 
 import type { Project } from '../../types';
 import type { Dispatch } from '../../actions/types';
@@ -89,6 +92,7 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
   };
 
   setActive = (name: string) => {
+    console.log('setting', name);
     this.setState(state => ({
       activeField: name,
     }));
@@ -96,16 +100,34 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
 
   render() {
     const { hideModal, isVisible, dependenciesChangingForProject } = this.props;
-    const { activeField } = this.state;
-    const { projectIcon } = this.state;
+    const { activeField, projectIcon } = this.state;
 
     return (
-      <Modal isVisible={isVisible} onDismiss={hideModal}>
-        <ModalHeader title="Project settings" />
+      <form onSubmit={this.saveSettings}>
+        <Modal isVisible={isVisible} onDismiss={hideModal}>
+          <ModalHeader title="Project settings">
+            <ModalHeader.Controls>
+              <Fragment>
+                <FillButton
+                  size="large"
+                  colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+                  disabled={dependenciesChangingForProject}
+                >
+                  Save
+                </FillButton>
 
-        <MainContent>
-          <form onSubmit={this.saveSettings}>
-            <FormField label="Project name" focusOnClick={false}>
+                {dependenciesChangingForProject && (
+                  <DisabledText>
+                    Waiting for pending tasks to finish…
+                  </DisabledText>
+                )}
+              </Fragment>
+            </ModalHeader.Controls>
+          </ModalHeader>
+
+          <MainContent>
+            {/* <Scrollbars autoHeight={true} autoHeightMax={'80vh'}> */}
+            <FormField label="Project name" focusOnClick={false} spacing={5}>
               <TextInput
                 onFocus={() => this.setActive('projectName')}
                 onChange={this.changeProjectName}
@@ -116,12 +138,13 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
               />
             </FormField>
 
-            <Spacer size={10} />
+            {/* <Spacer size={5} /> */}
 
             <FormField
               label="Project Icon"
               focusOnClick={false}
               isFocused={activeField === 'projectIcon'}
+              spacing={5}
             >
               <ProjectIconSelection
                 selectedIcon={projectIcon}
@@ -129,40 +152,25 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
               />
             </FormField>
 
-            <Actions>
-              <FillButton
-                size="large"
-                colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-                disabled={dependenciesChangingForProject}
-              >
-                Save Project
-              </FillButton>
+            {/* <Spacer size={5} /> */}
 
-              {dependenciesChangingForProject && (
-                <DisabledText>
-                  Waiting for pending tasks to finish…
-                </DisabledText>
-              )}
-            </Actions>
-          </form>
-        </MainContent>
-      </Modal>
+            <FormField label="Export" focusOnClick={false} spacing={15}>
+              <ExportToCodesandbox
+                onFocus={() => this.setActive('exportCodesandbox')}
+                isFocused={activeField === 'exportCodesandbox'}
+                onBlur={() => this.setActive('')}
+              />
+            </FormField>
+            {/* </Scrollbars> */}
+          </MainContent>
+        </Modal>
+      </form>
     );
   }
 }
 
-const MainContent = styled.section`
+const MainContent = styled.div`
   padding: 25px;
-`;
-
-const Actions = styled.div`
-  text-align: center;
-  padding-bottom: 16px;
-`;
-
-const DisabledText = styled.div`
-  padding-top: 16px;
-  color: ${COLORS.gray[500]};
 `;
 
 const mapStateToProps = state => {

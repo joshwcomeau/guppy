@@ -19,6 +19,14 @@ class ModalHeader extends Component<Props> {
     theme: 'standard',
   };
 
+  static Controls = ({ children = null, ...delegated }: any) => {
+    const Wrapped = () => {
+      return children;
+    };
+    Wrapped.displayName = 'ModalHeader.Controls';
+    return <Wrapped {...delegated} />;
+  };
+
   render() {
     const { title, action, theme, children } = this.props;
 
@@ -30,22 +38,18 @@ class ModalHeader extends Component<Props> {
     return (
       <Wrapper colors={colors}>
         <MainContent>
-          <PixelShifter y={-5} reason="line-height fix">
-            <PixelShifter
-              x={-1}
-              reason="Align left edge of header with subheader"
+          <PixelShifter y={-2} reason="line-height fix">
+            <Heading
+              style={{
+                color: theme === 'standard' ? COLORS.gray[900] : COLORS.white,
+              }}
             >
-              <Heading
-                style={{
-                  color: theme === 'standard' ? COLORS.gray[900] : COLORS.white,
-                }}
-              >
-                {title}
-              </Heading>
-            </PixelShifter>
-
-            {children}
+              {title}
+            </Heading>
+            <ModalHeader.Controls />
           </PixelShifter>
+
+          {children}
         </MainContent>
 
         <ActionWrapper>{action}</ActionWrapper>
@@ -63,7 +67,9 @@ const Wrapper = styled.header`
 `;
 
 const MainContent = styled.div`
-  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
 `;
 
 const ActionWrapper = styled.div`
