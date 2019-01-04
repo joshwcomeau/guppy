@@ -9,7 +9,7 @@
  * issues?
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated, config } from 'react-spring';
 import Transition from 'react-transition-group/Transition';
 import styled from 'styled-components';
 
@@ -18,14 +18,24 @@ import { hasPropChanged } from '../../utils';
 
 import ScrollDisabler from '../ScrollDisabler';
 
-const translateYSpringSettings = {
-  stiffness: 95,
-  damping: 25,
-};
-
-const opacitySpringSettings = {
-  stiffness: 170,
-  damping: 22,
+const springConfig = key => {
+  switch (key) {
+    case 'opacity': {
+      return {
+        tension: 170,
+        friction: 22,
+      };
+    }
+    case 'translateY': {
+      return {
+        tension: 95,
+        friction: 25,
+      };
+    }
+    default: {
+      return config.default;
+    }
+  }
 };
 
 type Props = {
@@ -80,31 +90,37 @@ class Modal extends PureComponent<Props, State> {
             const inTransit =
               transitionState === 'entering' || transitionState === 'exiting';
 
-            const translateY = transitionState === 'entered' ? 0 : 50;
-            return (
-              <Motion
-                style={{
-                  interpolatedTranslateY: spring(
-                    translateY,
-                    translateYSpringSettings
-                  ),
-                  opacity: spring(inTransit ? 0 : 1, opacitySpringSettings),
-                }}
-              >
-                {({ interpolatedTranslateY, opacity }) => (
-                  <Wrapper opacity={opacity} clickable={!inTransit}>
-                    <Backdrop onClick={onDismiss} />
+            const translateY = {
+              from: transitionState === 'entering' ? 50 : 0,
+              to: transitionState === 'exiting' ? 50 : 0,
+            };
 
+            return (
+              <Spring
+                from={{
+                  opacity: inTransit ? 1 : 0,
+                  translateY: translateY.from,
+                }}
+                to={{ opacity: inTransit ? 0 : 1, translateY: translateY.to }}
+                config={springConfig}
+                native
+              >
+                {interpolated => (
+                  <Wrapper
+                    opacity={interpolated.opacity}
+                    clickable={!inTransit}
+                  >
+                    <Backdrop onClick={onDismiss} />
                     <PaneWrapper
                       width={width}
                       height={height}
-                      translateY={interpolatedTranslateY}
+                      translateY={interpolated.translateY}
                     >
                       {outdatedChildren || children}
                     </PaneWrapper>
                   </Wrapper>
                 )}
-              </Motion>
+              </Spring>
             );
           }}
         </Transition>
@@ -113,7 +129,7 @@ class Modal extends PureComponent<Props, State> {
   }
 }
 
-const Wrapper = styled.div.attrs({
+const Wrapper = animated(styled.div.attrs({
   style: props => ({
     opacity: props.opacity,
     pointerEvents: props.clickable ? 'auto' : 'none',
@@ -134,7 +150,7 @@ const Wrapper = styled.div.attrs({
     scrollable.
   */
   overflow: auto;
-`;
+`);
 
 const Backdrop = styled.div`
   position: absolute;
@@ -146,7 +162,7 @@ const Backdrop = styled.div`
   background: rgba(230, 230, 230, 0.8);
 `;
 
-const PaneWrapper = styled.div.attrs({
+const PaneWrapper = animated(styled.div.attrs({
   style: props => ({
     width: props.width,
     height: props.height,
@@ -161,6 +177,6 @@ const PaneWrapper = styled.div.attrs({
   border-radius: 8px;
   background: ${COLORS.white};
   will-change: transform;
-`;
+`);
 
 export default Modal;

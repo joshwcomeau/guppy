@@ -1,10 +1,11 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated } from 'react-spring';
 
 import { COLORS } from '../../constants';
 
+// TODO: consider renaming stiffness and damping to tension and friction
 type Props = {
   height: number,
   progress: number,
@@ -26,19 +27,18 @@ class ProgressBar extends Component<Props> {
 
     return (
       <Wrapper height={height}>
-        <Motion
-          style={{
-            interpolatedProgress: spring(progress, {
-              stiffness,
-              damping,
-              precision: 0.0001,
-            }),
-          }}
+        <Spring
+          to={{ progress }}
+          config={{ tension: stiffness, friction: damping }}
+          native
         >
-          {({ interpolatedProgress }) => (
-            <ProgressGradient colors={colors} progress={interpolatedProgress} />
+          {interpolated => (
+            <ProgressGradient
+              colors={colors}
+              progress={interpolated.progress}
+            />
           )}
-        </Motion>
+        </Spring>
       </Wrapper>
     );
   }
@@ -50,7 +50,7 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const ProgressGradient = styled.div.attrs({
+const ProgressGradient = animated(styled.div.attrs({
   style: props => ({
     clipPath: `polygon(
       0% 0%,
@@ -66,6 +66,6 @@ const ProgressGradient = styled.div.attrs({
   right: 0;
   bottom: 0;
   background: linear-gradient(to right, ${props => props.colors.join(', ')});
-`;
+`);
 
 export default ProgressBar;
