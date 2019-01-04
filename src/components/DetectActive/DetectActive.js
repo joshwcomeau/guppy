@@ -40,7 +40,7 @@ class DetectActive extends Component<Props, State> {
   render() {
     const { className } = this.props;
     return (
-      <div
+      <span
         className={className}
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
@@ -48,7 +48,7 @@ class DetectActive extends Component<Props, State> {
         onMouseLeave={this.handleMouseLeave}
       >
         {this.props.children(this.state.isActive, this.state.isHovered)}
-      </div>
+      </span>
     );
   }
 }
