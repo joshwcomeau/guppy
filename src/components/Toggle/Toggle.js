@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated, interpolate } from 'react-spring';
 
 import { COLORS } from '../../constants';
 
@@ -19,44 +19,10 @@ class Toggle extends PureComponent<Props> {
     padding: 2,
   };
 
-  lastTranslateVal: ?number = null;
-  lastFrameTime: ?number = null;
-
-  renderBall = ({ translate }: { translate: number }) => {
-    const { size } = this.props;
-
-    const { lastTranslateVal, lastFrameTime } = this;
-
-    if (lastTranslateVal == null || lastFrameTime == null) {
-      this.lastTranslateVal = translate;
-      this.lastFrameTime = performance.now();
-      return <Ball size={size} translate={translate} stretch={1} />;
-    }
-
-    const now = performance.now();
-
-    const translateDelta = Math.abs(lastTranslateVal - translate);
-    const timeDelta = now - lastFrameTime;
-
-    this.lastTranslateVal = translate;
-    this.lastFrameTime = now;
-
-    const timeAdjustment = 1 / (timeDelta / 16.666);
-
-    const stretch = translateDelta / 40;
-
-    return (
-      <Ball
-        size={size}
-        translate={translate}
-        stretch={1 + stretch * timeAdjustment}
-      />
-    );
-  };
-
   render() {
     const { isToggled, size, padding, isDisabled, onToggle } = this.props;
     const doublePadding = padding * 2;
+    const stretchAddition = 0.4;
 
     return (
       <Wrapper
@@ -69,16 +35,25 @@ class Toggle extends PureComponent<Props> {
         <OnBackground isVisible={isToggled}>
           <Pulsing />
         </OnBackground>
-        <Motion
-          style={{
-            translate: spring(isToggled ? 100 : 0, {
-              stiffness: 220,
-              damping: 19,
-            }),
+        <Spring
+          to={{
+            translate: isToggled ? 100 : 0,
+            stretch: isToggled ? stretchAddition : -stretchAddition,
           }}
+          config={{ tension: 220, friction: 25 }}
+          native
         >
-          {this.renderBall}
-        </Motion>
+          {interpolated => (
+            <Ball
+              size={size}
+              translate={interpolated.translate}
+              stretch={interpolate(
+                [interpolated.stretch],
+                stretch => 1 + (stretchAddition - Math.abs(stretch))
+              )}
+            />
+          )}
+        </Spring>
       </Wrapper>
     );
   }
@@ -139,7 +114,7 @@ const Pulsing = styled.div`
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
 
-const Ball = styled.div.attrs({
+const Ball = animated(styled.div.attrs({
   style: props => ({
     transform: `
       translateX(${props.translate}%)
@@ -156,6 +131,6 @@ const Ball = styled.div.attrs({
 
   transform-origin: center center;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
-`;
+`);
 
 export default Toggle;
