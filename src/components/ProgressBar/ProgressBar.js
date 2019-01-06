@@ -44,7 +44,7 @@ class ProgressBar extends Component<Props> {
   }
 }
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   position: relative;
   height: ${props => props.height}px;
   width: 100%;

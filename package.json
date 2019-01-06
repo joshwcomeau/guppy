@@ -87,7 +87,10 @@
     "dotenv-expand": "4.2.0",
     "electron": "2.0.1",
     "electron-builder": "20.28.4",
-    "electron-log": "^2.2.17",
+    "electron-log": "2.2.17",
+    "enzyme": "3.7.0",
+    "enzyme-adapter-react-16": "1.6.0",
+    "enzyme-to-json": "3.3.4",
     "eslint": "5.7.0",
     "eslint-config-react-app": "3.0.4",
     "eslint-loader": "1.9.0",
@@ -108,6 +111,9 @@
     "immer": "1.3.1",
     "import-all.macro": "2.0.3",
     "jest": "23.3",
+    "jest-styled-components": "6.2.2",
+    "jsdom": "13.0.0",
+    "jsdom-global": "3.0.2",
     "lint-staged": "7.2.0",
     "loader-utils": "1.1.0",
     "mixpanel-browser": "2.22.4",
@@ -127,6 +133,7 @@
     "react-powerplug": "1.0.0-rc.1",
     "react-redux": "5.0.7",
     "react-spring": "5.3.8",
+    "react-test-renderer": "16.6.0",
     "react-tippy": "1.2.2",
     "react-transition-group": "2.3.1",
     "redux": "4.0.0",
@@ -158,18 +165,25 @@
   "browserslist": "chrome 61",
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
+      "src/**/*.{js,jsx,mjs}",
+      "!src/**/*.stories.js",
+      "!src/components/**/index.js"
     ],
     "setupFiles": [
       "<rootDir>/config/jest/electron.js",
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/config/enzyme-setup.js"
     ],
+    "setupTestFrameworkScriptFile": "<rootDir>/config/testFrameworkSetup.js",
     "testMatch": [
       "**/__tests__/**/*.{js,jsx,mjs}",
       "**/?(*.)(spec|test).{js,jsx,mjs}"
     ],
     "roots": [
       "<rootDir>/src"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
