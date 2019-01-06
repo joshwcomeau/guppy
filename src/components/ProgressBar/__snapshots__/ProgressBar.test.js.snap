@@ -4,20 +4,28 @@ exports[`ProgressBar component should render with 0% 1`] = `
 <styled.div
   height={8}
 >
-  <Motion
-    style={
+  <Spring
+    config={
       Object {
-        "interpolatedProgress": Object {
-          "damping": 32,
-          "precision": 0.0001,
-          "stiffness": 32,
-          "val": 0,
-        },
+        "friction": 32,
+        "tension": 32,
+      }
+    }
+    from={Object {}}
+    hold={false}
+    immediate={false}
+    impl={[Function]}
+    inject={[Function]}
+    native={true}
+    reset={false}
+    to={
+      Object {
+        "progress": 0,
       }
     }
   >
     <Component />
-  </Motion>
+  </Spring>
 </styled.div>
 `;
 
@@ -25,20 +33,28 @@ exports[`ProgressBar component should render with 50% 1`] = `
 <styled.div
   height={8}
 >
-  <Motion
-    style={
+  <Spring
+    config={
       Object {
-        "interpolatedProgress": Object {
-          "damping": 32,
-          "precision": 0.0001,
-          "stiffness": 32,
-          "val": 0.5,
-        },
+        "friction": 32,
+        "tension": 32,
+      }
+    }
+    from={Object {}}
+    hold={false}
+    immediate={false}
+    impl={[Function]}
+    inject={[Function]}
+    native={true}
+    reset={false}
+    to={
+      Object {
+        "progress": 0.5,
       }
     }
   >
     <Component />
-  </Motion>
+  </Spring>
 </styled.div>
 `;
 
@@ -46,19 +62,27 @@ exports[`ProgressBar component should render with 100% 1`] = `
 <styled.div
   height={8}
 >
-  <Motion
-    style={
+  <Spring
+    config={
       Object {
-        "interpolatedProgress": Object {
-          "damping": 32,
-          "precision": 0.0001,
-          "stiffness": 32,
-          "val": 1,
-        },
+        "friction": 32,
+        "tension": 32,
+      }
+    }
+    from={Object {}}
+    hold={false}
+    immediate={false}
+    impl={[Function]}
+    inject={[Function]}
+    native={true}
+    reset={false}
+    to={
+      Object {
+        "progress": 1,
       }
     }
   >
     <Component />
-  </Motion>
+  </Spring>
 </styled.div>
 `;
