@@ -12,7 +12,7 @@ type Props = {
   children: React$Node,
 };
 
-const wrapColorsInGradient = colors => {
+export const wrapColorsInGradient = colors => {
   if (!Array.isArray(colors)) {
     return colors;
   }
