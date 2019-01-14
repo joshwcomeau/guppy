@@ -7,6 +7,7 @@ import { remote } from 'electron';
 import { COLORS } from '../../constants';
 
 import BigClickableButton from '../BigClickableButton';
+import type Electron from 'electron';
 
 const { dialog } = remote;
 
