@@ -41,10 +41,6 @@ export function dialogCallback(response: number) {
 }
 
 class EjectButton extends PureComponent<Props> {
-  handleClick = () => {
-    dialog.showMessageBox(dialogOptions, dialogCallback.bind(this));
-  };
-
   render() {
     const { isRunning } = this.props;
 
@@ -54,7 +50,9 @@ class EjectButton extends PureComponent<Props> {
         height={34}
         colors={[COLORS.purple[500], COLORS.blue[700]]}
         isOn={isRunning}
-        onClick={this.handleClick}
+        onClick={() =>
+          dialog.showMessageBox(dialogOptions, dialogCallback.bind(this))
+        }
       >
         <IconBase size={24} icon={ejectIcon} />
       </BigClickableButton>
