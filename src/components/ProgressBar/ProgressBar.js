@@ -30,11 +30,9 @@ class ProgressBar extends Component<Props> {
     return (
       <Wrapper height={height}>
         <Spring
-          from={{ progress: 0 }}
           to={{ progress }}
           config={{ tension: stiffness, friction: damping }}
-          //native
-          reset={reset}
+          native
         >
           {interpolated => (
             <ProgressGradient
@@ -48,7 +46,7 @@ class ProgressBar extends Component<Props> {
   }
 }
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   position: relative;
   height: ${props => props.height}px;
   width: 100%;
