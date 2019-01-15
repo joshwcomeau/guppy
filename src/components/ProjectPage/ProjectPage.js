@@ -3,8 +3,11 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import { Tooltip } from 'react-tippy';
+import IconBase from 'react-icons-kit';
+import { packageIcon } from 'react-icons-kit/feather/packageIcon';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getDependenciesLoadingStatus } from '../../reducers/dependencies.reducer';
 import { COLORS } from '../../constants';
 import * as actions from '../../actions';
 
@@ -17,6 +20,11 @@ import DevelopmentServerPane from '../DevelopmentServerPane';
 import TaskRunnerPane from '../TaskRunnerPane';
 import DependencyManagementPane from '../DependencyManagementPane';
 import SettingsButton from '../SettingsButton';
+import Paragraph from '../Paragraph';
+import MountAfter from '../MountAfter';
+import Spinner from '../Spinner';
+import Card from '../Card';
+
 import {
   openProjectInEditor,
   openProjectInFolder,
@@ -28,9 +36,11 @@ import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
+  dependenciesLoadingStatus: string,
   loadDependencyInfoFromDisk: Dispatch<
     typeof actions.loadDependencyInfoFromDiskStart
   >,
+  reinstallDependencies: Dispatch<typeof actions.reinstallDependenciesStart>,
 };
 
 class ProjectPage extends PureComponent<Props> {
@@ -58,7 +68,8 @@ class ProjectPage extends PureComponent<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (this.props.project.id !== nextProps.project.id) {
+    const { project } = this.props;
+    if (project.id !== nextProps.project.id) {
       this.props.loadDependencyInfoFromDisk(
         nextProps.project.id,
         nextProps.project.path
@@ -67,7 +78,11 @@ class ProjectPage extends PureComponent<Props> {
   }
 
   render() {
-    const { project } = this.props;
+    const {
+      project,
+      reinstallDependencies,
+      dependenciesLoadingStatus,
+    } = this.props;
     const { path } = project;
 
     return (
@@ -110,18 +125,58 @@ class ProjectPage extends PureComponent<Props> {
           </ProjectActionBar>
 
           <Spacer size={30} />
-          <DevelopmentServerPane leftSideWidth={300} />
+          {
+            // Conditionally render depending on dependenciesLoadingStatus
+            {
+              loading: (
+                <MountAfter
+                  delay={100}
+                  reason={`Don't show spinner if we're really fast.`}
+                >
+                  <SpinnerWrapper>
+                    <Spinner size={50} />
+                  </SpinnerWrapper>
+                </MountAfter>
+              ),
+              done: (
+                <Fragment>
+                  <DevelopmentServerPane leftSideWidth={300} />
 
-          <Spacer size={30} />
-          <TaskRunnerPane leftSideWidth={200} />
+                  <Spacer size={30} />
+                  <TaskRunnerPane leftSideWidth={200} />
+                  <Spacer size={30} />
+                  <DependencyManagementPane />
+                </Fragment>
+              ),
+              fail: (
+                <Card>
+                  <BaseWrapper>
+                    <DependencyMissingIcon />
+                  </BaseWrapper>
 
-          {project.dependencies.length > 0 && (
-            <Fragment>
-              <Spacer size={30} />
-              <DependencyManagementPane />
-            </Fragment>
-          )}
-
+                  <Paragraph>
+                    <strong>Oh no!</strong> Looks like your project dependencies
+                    are missing.
+                  </Paragraph>
+                  <Paragraph>
+                    This can happen if you've freshly cloned a project from
+                    GitHub. In order to run scripts in Guppy, you'll need to
+                    install them now.
+                  </Paragraph>
+                  <Spacer size={30} />
+                  <InstallWrapper>
+                    <FillButton
+                      size="large"
+                      colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+                      onClick={() => reinstallDependencies(project.id)}
+                    >
+                      Install Dependencies
+                    </FillButton>
+                  </InstallWrapper>
+                </Card>
+              ),
+            }[dependenciesLoadingStatus]
+          }
           <Spacer size={60} />
         </MainContentWrapper>
       </FadeIn>
@@ -139,6 +194,22 @@ const ProjectActionBar = styled.div`
   display: flex;
 `;
 
+const BaseWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const InstallWrapper = styled(BaseWrapper)``;
+const SpinnerWrapper = styled(BaseWrapper)``;
+
+const DependencyMissingIcon = styled(IconBase).attrs({
+  icon: packageIcon,
+  size: 100,
+})`
+  color: ${COLORS.gray[300]};
+  padding: 30px;
+`;
+
 const fadeIn = keyframes`
   from { opacity: 0.5 }
   to { opacity: 1 }
@@ -148,13 +219,22 @@ const FadeIn = styled.div`
   animation: ${fadeIn} 400ms;
 `;
 
-const mapStateToProps = state => ({
-  project: getSelectedProject(state),
-});
+const mapStateToProps = state => {
+  const project = getSelectedProject(state);
+  const props = {
+    projectId: project && project.id,
+  };
+
+  return {
+    project,
+    dependenciesLoadingStatus: getDependenciesLoadingStatus(state, props),
+  };
+};
 
 export default connect(
   mapStateToProps,
   {
     loadDependencyInfoFromDisk: actions.loadDependencyInfoFromDiskStart,
+    reinstallDependencies: actions.reinstallDependenciesStart,
   }
 )(ProjectPage);

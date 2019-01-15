@@ -30,6 +30,7 @@ import {
   PACKAGE_MANAGER_CMD,
 } from '../services/platform.service';
 import { processLogger } from '../services/process-logger.service';
+import { waitForAsyncRimraf } from './delete-project.saga';
 
 import type { Saga } from 'redux-saga';
 import type { ChildProcess } from 'child_process';
@@ -281,7 +282,14 @@ export function* taskRun({ task }: ReturnType<typeof runTask>): Saga<void> {
               detail:
                 'Oh no! In order to eject, git state must be clean. Please commit your changes and retry ejecting.',
             });
+
+            // Update the UI to failed
+            yield put(completeTask(task, message.timestamp, false));
+            return;
           }
+
+          // delete node_modules folder
+          yield call(waitForAsyncRimraf, projectPath);
 
           // Run a fresh install of dependencies after ejecting to get around issue
           // documented here https://github.com/facebook/create-react-app/issues/4433
@@ -354,6 +362,7 @@ export function* displayTaskComplete(
 
 export function* taskComplete({
   task,
+  wasSuccessful,
 }: ReturnType<typeof completeTask>): Saga<void> {
   if (task.processId) {
     yield call(
@@ -367,7 +376,7 @@ export function* taskComplete({
   // have changed.
   // TODO: We should really have a `EJECT_PROJECT_COMPLETE` action that does
   // this instead.
-  if (task.name === 'eject') {
+  if (task.name === 'eject' && wasSuccessful) {
     const project = yield select(getProjectById, { projectId: task.projectId });
 
     yield put(loadDependencyInfoFromDiskStart(project.id, project.path));

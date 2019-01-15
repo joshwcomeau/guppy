@@ -5,9 +5,12 @@ import rootSaga, {
   handleUpdateDependency,
   handleDeleteDependency,
   handleInstallDependenciesStart,
+  handleReinstallDependenciesStart,
   handleUninstallDependenciesStart,
   handleLoadDependencyInfoFromDiskStart,
+  watchInstallMessages,
 } from './dependency.saga';
+import { waitForAsyncRimraf } from './delete-project.saga';
 import { getPathForProjectId } from '../reducers/paths.reducer';
 import { getNextActionForProjectId } from '../reducers/queue.reducer';
 import {
@@ -22,13 +25,19 @@ import {
   INSTALL_DEPENDENCIES_START,
   UNINSTALL_DEPENDENCIES_START,
   LOAD_DEPENDENCY_INFO_FROM_DISK_START,
+  REINSTALL_DEPENDENCIES_START,
   queueDependencyInstall,
   queueDependencyUninstall,
   installDependenciesError,
   installDependenciesFinish,
+  loadDependencyInfoFromDiskStart,
   uninstallDependenciesError,
   uninstallDependenciesFinish,
   startNextActionInQueue,
+  reinstallDependenciesStart,
+  reinstallDependenciesFinish,
+  refreshProjectsStart,
+  resetStatusText,
 } from '../actions';
 
 describe('Dependency sagas', () => {
@@ -253,6 +262,50 @@ describe('Dependency sagas', () => {
     });
   });
 
+  describe('startReinstallingDependencies saga', () => {
+    it('should reinstall dependencies', () => {
+      const action = { projectId };
+      const saga = handleReinstallDependenciesStart(action);
+
+      expect(saga.next().value).toEqual(
+        select(getPathForProjectId, {
+          projectId,
+        })
+      );
+      expect(saga.next(projectPath).value).toEqual(
+        call(waitForAsyncRimraf, projectPath)
+      );
+
+      // TODO: Why is JSON.stringify needed for the next expect?
+      //       With-out it we're getting 'Compared values have no visual difference.'
+      expect(JSON.stringify(saga.next().value)).toEqual(
+        JSON.stringify(call(reinstallDependenciesStart, projectPath))
+      );
+      // cechk watchInstallMessages called
+      expect(saga.next().value).toEqual(call(watchInstallMessages, undefined));
+
+      // reload dependencies
+      expect(saga.next().value).toEqual(
+        put(loadDependencyInfoFromDiskStart(projectId, projectPath))
+      );
+
+      // Finally it should dispatch refreshProjectStart
+      expect(saga.next().value).toEqual(put(refreshProjectsStart()));
+
+      // check dispatch of resetStatusText
+      expect(saga.next().value).toEqual(put(resetStatusText()));
+
+      // check reinstall dependency finish dispatch
+      expect(saga.next().value).toEqual(put(reinstallDependenciesFinish()));
+    });
+
+    it('should fail silently with-out projectId', () => {
+      const action = { projectId: null };
+      const saga = handleReinstallDependenciesStart(action);
+
+      expect(saga.next().value).toBeUndefined();
+    });
+  });
   describe('startUninstallingDependencies saga', () => {
     const action = {
       projectId,
@@ -313,6 +366,12 @@ describe('Dependency sagas', () => {
       );
       expect(saga.next().value).toEqual(
         takeEvery(INSTALL_DEPENDENCIES_START, handleInstallDependenciesStart)
+      );
+      expect(saga.next().value).toEqual(
+        takeEvery(
+          REINSTALL_DEPENDENCIES_START,
+          handleReinstallDependenciesStart
+        )
       );
       expect(saga.next().value).toEqual(
         takeEvery(
