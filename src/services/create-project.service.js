@@ -214,7 +214,7 @@ export const getBuildInstructions = (
     throw new Error('Unrecognized project type: ' + projectType);
   }
 
-  const createCommand = substituteConfigVariables(
+  const createCommand: Object = substituteConfigVariables(
     projectConfigs[projectType].create,
     {
       $projectPath: projectPath,

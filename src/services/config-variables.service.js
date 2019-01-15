@@ -11,12 +11,12 @@ export type VariableMap = {
 // so with the following function we can replace the string $port with the real port number e.g. 3000
 // (see type VariableMap for used mapping strings)
 export const substituteConfigVariables = (
-  configObject: any,
+  configObject: Object,
   variableMap: VariableMap
 ) => {
   // e.g. $port inside args will be replaced with variable reference from variabeMap obj. {$port: port}
   return Object.keys(configObject).reduce(
-    (config, key) => {
+    (config: any, key) => {
       if (config[key] instanceof Array) {
         // replace $port inside args array
         // empty string is special here - we'd like to us it as replacement

@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import { substituteConfigVariables } from './config-variables.service';
 
 describe('substitute config variables', () => {
