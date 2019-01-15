@@ -16,11 +16,11 @@ describe('EjectButton component', () => {
     wrapper = shallow(<EjectButton onClick={clickHandler} />);
   });
 
-  it('should render (not running)', () => {
+  it('should render without being pressed (not running)', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('should render (running)', () => {
+  it('should render as pressed (running)', () => {
     wrapper.setProps({ isRunning: true });
     expect(wrapper).toMatchSnapshot();
   });
