@@ -1,4 +1,5 @@
 // @flow
+import { eventChannel } from 'redux-saga';
 import { PACKAGE_MANAGER_CMD } from './platform.service';
 import { processLogger } from './process-logger.service';
 import * as childProcess from 'child_process';
@@ -27,6 +28,48 @@ const spawnProcess = (
     );
     processLogger(child, 'DEPENDENCY');
   });
+
+export const spawnProcessChannel = (
+  cmd: string,
+  cmdArgs: string[],
+  projectPath: string
+) => {
+  const output = {
+    stdout: '',
+    stderr: '',
+  };
+  const child = childProcess.spawn(cmd, cmdArgs, {
+    cwd: projectPath,
+  });
+
+  return eventChannel(emitter => {
+    processLogger(child, 'DEPENDENCY');
+
+    child.stdout.on('data', data => {
+      output.stdout += data.toString();
+      emitter({ data: data.toString() });
+    });
+
+    child.stderr.on('data', data => {
+      output.stderr += data.toString();
+      emitter({ error: data.toString() });
+    });
+
+    child.on('exit', code => {
+      // emit exit code & complete data/err --> not used yet but maybe useful later
+      emitter({
+        exit: code,
+        data: {
+          data: output.stdout,
+          error: output.stderr,
+        },
+      });
+    });
+
+    // The subscriber must return an unsubscribe function
+    return () => {};
+  });
+};
 
 export const getDependencyInstallationCommand = (
   dependencies: Array<QueuedDependency>
@@ -59,4 +102,4 @@ export const uninstallDependencies = (
   );
 
 export const reinstallDependencies = (projectPath: string) =>
-  spawnProcess(PACKAGE_MANAGER_CMD, ['install'], projectPath);
+  spawnProcessChannel(PACKAGE_MANAGER_CMD, ['install'], projectPath);

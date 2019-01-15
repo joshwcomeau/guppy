@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EjectButton component should render as pressed (running) 1`] = `
+<BigClickableButton
+  colors={
+    Array [
+      "#651fff",
+      "#304FFE",
+    ]
+  }
+  height={34}
+  isOn={true}
+  onClick={[Function]}
+  thickness={6}
+  width={40}
+>
+  <Icon
+    fill="currentColor"
+    icon={
+      Object {
+        "children": Array [
+          Object {
+            "attribs": Object {
+              "d": "M5 17h14v2H5zm7-12L5.33 15h13.34z",
+            },
+            "name": "path",
+          },
+        ],
+        "viewBox": "0 0 24 24",
+      }
+    }
+    size={24}
+  />
+</BigClickableButton>
+`;
+
+exports[`EjectButton component should render without being pressed (not running) 1`] = `
+<BigClickableButton
+  colors={
+    Array [
+      "#651fff",
+      "#304FFE",
+    ]
+  }
+  height={34}
+  onClick={[Function]}
+  thickness={6}
+  width={40}
+>
+  <Icon
+    fill="currentColor"
+    icon={
+      Object {
+        "children": Array [
+          Object {
+            "attribs": Object {
+              "d": "M5 17h14v2H5zm7-12L5.33 15h13.34z",
+            },
+            "name": "path",
+          },
+        ],
+        "viewBox": "0 0 24 24",
+      }
+    }
+    size={24}
+  />
+</BigClickableButton>
+`;

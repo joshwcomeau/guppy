@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated } from 'react-spring';
 import styled from 'styled-components';
 
 import FormField from '../FormField';
@@ -146,9 +146,13 @@ class MainPane extends PureComponent<Props> {
     const { lastIndex, steps } = this.renderConditionalSteps(currentStepIndex);
     return (
       <Fragment>
-        <Motion style={{ offset: spring(currentStepIndex === 0 ? 50 : 0) }}>
+        <Spring
+          from={{ offset: currentStepIndex === 0 ? 0 : 50 }}
+          to={{ offset: currentStepIndex === 0 ? 50 : 0 }}
+          native
+        >
           {({ offset }) => (
-            <Wrapper style={{ transform: `translateY(${offset}px)` }}>
+            <Wrapper translateY={offset}>
               <ProjectName
                 name={projectName}
                 isFocused={activeField === 'projectName'}
@@ -163,7 +167,7 @@ class MainPane extends PureComponent<Props> {
               {steps}
             </Wrapper>
           )}
-        </Motion>
+        </Spring>
         <SubmitButtonWrapper>
           <SubmitButton
             isDisabled={
@@ -181,11 +185,15 @@ class MainPane extends PureComponent<Props> {
   }
 }
 
-const Wrapper = styled.div`
+const Wrapper = animated(styled.div.attrs({
+  style: props => ({
+    transform: `translateY(${props.translateY}px)`,
+  }),
+})`
   min-height: 500px;
   max-height: 90vh;
   will-change: transform;
-`;
+`);
 
 const SubmitButtonWrapper = styled.div`
   text-align: center;

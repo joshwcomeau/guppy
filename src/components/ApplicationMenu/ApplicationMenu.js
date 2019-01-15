@@ -8,6 +8,7 @@ import { shell, remote } from 'electron';
 
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
+import { IN_APP_FEEDBACK_URL } from '../../config/app';
 import {
   isMac,
   getCopyForOpeningFolder,
@@ -41,6 +42,7 @@ type Props = {
   showProjectSettings: Dispatch<typeof actions.showProjectSettings>,
   showAppSettings: Dispatch<typeof actions.showAppSettings>,
   selectProject: Dispatch<typeof actions.selectProject>,
+  reinstallDependencies: Dispatch<typeof actions.reinstallDependenciesStart>,
 };
 
 class ApplicationMenu extends Component<Props> {
@@ -73,6 +75,7 @@ class ApplicationMenu extends Component<Props> {
       showAppSettings,
       selectProject,
       projects,
+      reinstallDependencies,
     } = props;
 
     const template = [
@@ -159,6 +162,10 @@ class ApplicationMenu extends Component<Props> {
             label: isMac ? 'Privacy Policy' : 'Privacy policy',
             click: () => this.openGithubLink('blob/master/PRIVACY.md'),
           },
+          {
+            label: 'Feedback',
+            click: () => shell.openExternal(IN_APP_FEEDBACK_URL),
+          },
         ],
       },
     ];
@@ -221,6 +228,11 @@ class ApplicationMenu extends Component<Props> {
           label: isMac ? 'Open Settings' : 'Open settings',
           click: () => showProjectSettings(),
           accelerator: 'CmdOrCtrl+shift+,',
+        },
+        {
+          label: isMac ? 'Reinstall Dependencies' : 'Reinstall dependencies',
+          click: () => reinstallDependencies(selectedProject.id),
+          accelerator: 'CmdOrCtrl+alt+R',
         },
         { type: 'separator' },
       ];
@@ -308,6 +320,7 @@ const mapDispatchToProps = {
   showProjectSettings: actions.showProjectSettings,
   showAppSettings: actions.showAppSettings,
   selectProject: actions.selectProject,
+  reinstallDependencies: actions.reinstallDependenciesStart,
 };
 
 export default connect(
