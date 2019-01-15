@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EjectButton component should render (not running) 1`] = `
+exports[`EjectButton component should render as pressed (running) 1`] = `
 <BigClickableButton
   colors={
     Array [
@@ -9,6 +9,7 @@ exports[`EjectButton component should render (not running) 1`] = `
     ]
   }
   height={34}
+  isOn={true}
   onClick={[Function]}
   thickness={6}
   width={40}
@@ -33,7 +34,7 @@ exports[`EjectButton component should render (not running) 1`] = `
 </BigClickableButton>
 `;
 
-exports[`EjectButton component should render (running) 1`] = `
+exports[`EjectButton component should render without being pressed (not running) 1`] = `
 <BigClickableButton
   colors={
     Array [
@@ -42,7 +43,6 @@ exports[`EjectButton component should render (running) 1`] = `
     ]
   }
   height={34}
-  isOn={true}
   onClick={[Function]}
   thickness={6}
   width={40}
