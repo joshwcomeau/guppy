@@ -7,7 +7,6 @@ import { remote } from 'electron';
 import { COLORS } from '../../constants';
 
 import BigClickableButton from '../BigClickableButton';
-import type Electron from 'electron';
 
 const { dialog } = remote;
 
@@ -18,7 +17,7 @@ type Props = {
   onClick: () => void,
 };
 
-export const dialogOptions: Electron.MessageBoxOptions = {
+export const dialogOptions = {
   type: 'warning',
   buttons: ['Yes, light this candle', "Ahhh no don't do that"],
   defaultId: 1,
