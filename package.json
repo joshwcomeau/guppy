@@ -114,6 +114,7 @@
     "immer": "1.3.1",
     "import-all.macro": "2.0.3",
     "jest": "23.3",
+    "jest-fetch-mock": "2.1.0",
     "jest-styled-components": "6.2.2",
     "jsdom": "13.0.0",
     "jsdom-global": "3.0.2",

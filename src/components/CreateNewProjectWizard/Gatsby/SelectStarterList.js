@@ -132,20 +132,21 @@ const ScrollContainer = styled(Scrollbars)`
   border-radius: 4px;
 `;
 
-const ShowMoreWrapper = styled.div`
+export const ShowMoreWrapper = styled.div`
   padding: 4px;
 `;
 
 const StarterList = styled.div`
   padding: 10px;
 `;
-const StarterItem = styled.div`
+
+export const StarterItem = styled.div`
   font-size: 15px;
   padding: 4px;
   padding-right: 10px;
 `;
 
-const StarterItemHeading = styled.div`
+export const StarterItemHeading = styled.div`
   cursor: pointer;
   border-radius: 6px;
   border: 2px solid

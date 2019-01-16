@@ -190,8 +190,7 @@ const Wrapper = animated(styled.div.attrs({
     transform: `translateY(${props.translateY}px)`,
   }),
 })`
-  min-height: 500px;
-  max-height: 90vh;
+  height: 75vh;
   will-change: transform;
 `);
 
