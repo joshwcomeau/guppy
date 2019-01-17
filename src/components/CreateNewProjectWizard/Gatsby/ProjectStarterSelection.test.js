@@ -24,7 +24,6 @@ describe('ProjectStarterSelection component', () => {
   });
 
   it('should use all starters (paginated)', () => {
-    // const wrapperAllStarters = shallow(<ProjectStarterSelection />);
     expect(instance.state.starters).toHaveLength(6);
     wrapper.setProps({ projectStarter: '' });
     expect(
