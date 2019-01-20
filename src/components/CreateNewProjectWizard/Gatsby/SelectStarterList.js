@@ -42,10 +42,10 @@ A starter object from starter.yml contains the following data:
 class SelectStarterList extends PureComponent<Props> {
   node: any;
 
-  handleUpdateStarter = (starter: string) => {
+  handleUpdateStarter = (starter: string, removeSelection: boolean) => {
     const { updateStarter } = this.props;
 
-    updateStarter(starter);
+    updateStarter(starter, removeSelection);
 
     // Scroll to top as the selected starter will be the first entry
     this.node.scrollTop(0);
@@ -80,7 +80,12 @@ class SelectStarterList extends PureComponent<Props> {
                 <StarterItemTitle>
                   <StarterItemHeading
                     selected={selectedStarter === starter.repo}
-                    onClick={() => this.handleUpdateStarter(starter.repo)}
+                    onClick={() =>
+                      this.handleUpdateStarter(
+                        starter.repo,
+                        selectedStarter === starter.repo
+                      )
+                    }
                   >
                     {starter.repo.split('/').pop()}
                   </StarterItemHeading>

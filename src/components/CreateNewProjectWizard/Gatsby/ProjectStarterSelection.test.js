@@ -11,9 +11,35 @@ describe('ProjectStarterSelection component', () => {
   let instance;
   let mockedOnSelect;
 
-  fetch.mockResponse(mockStartersYaml);
+  describe('Fetch starters', () => {
+    beforeEach(() => {
+      fetch.resetMocks();
+    });
+
+    it('should succeed', async done => {
+      fetch.mockResponse(mockStartersYaml);
+      wrapper = shallow(<ProjectStarterSelection />);
+      instance = wrapper.instance();
+
+      await instance.componentDidMount();
+      expect(instance.state.starters).toHaveLength(6);
+      done();
+    });
+
+    it('should fail', async done => {
+      const error = new Error('ENOTFOUND');
+      fetch.mockReject(error);
+      wrapper = shallow(<ProjectStarterSelection />);
+      instance = wrapper.instance();
+
+      await instance.componentDidMount();
+      expect(instance.state.error).toBe(error);
+      done();
+    });
+  });
 
   beforeEach(() => {
+    fetch.mockResponse(mockStartersYaml);
     mockedOnSelect = jest.fn();
     wrapper = shallow(<ProjectStarterSelection onSelect={mockedOnSelect} />);
     instance = wrapper.instance();
@@ -34,10 +60,6 @@ describe('ProjectStarterSelection component', () => {
     ).toHaveLength(instance.PAGINATION_STEP);
   });
 
-  it('should fetch starters (mocked)', () => {
-    expect(instance.state.starters).toHaveLength(6);
-  });
-
   it('should increment paginationIndex with limiting', () => {
     instance.PAGINATION_STEP = 1; // reduce pagination step for testing
     expect(instance.state.paginationIndex).toBe(4);
@@ -52,13 +74,46 @@ describe('ProjectStarterSelection component', () => {
     expect(instance.state.starterListVisible).toBeFalsy();
     instance.toggleStarterSelection();
     expect(instance.state.starterListVisible).toBeTruthy();
+
+    // Don't hide list if projectStarter selected
+    wrapper.setProps({ projectStarter: 'blog' });
+    instance.toggleStarterSelection();
+    expect(instance.state.starterListVisible).toBeTruthy();
   });
 
-  it('should update search string & call onSelect', () => {
+  it('should deselect starter if selectedStarter clicked', () => {
+    wrapper.setProps({ projectStarter: 'blog' });
+    instance.handleOnSelect('blog', true);
+    expect(mockedOnSelect).toBeCalledWith('');
+  });
+
+  it('should update projectStarter', () => {
+    instance.handleOnSelect('blog', false);
+    expect(mockedOnSelect).toBeCalledWith('blog');
+  });
+
+  it('should update search string & display starter list', () => {
     const starter = 'blog';
     instance.updateSearchString(starter);
     expect(instance.state.starterListVisible).toBeTruthy();
-    expect(mockedOnSelect.mock.calls).toHaveLength(1);
-    expect(mockedOnSelect).toBeCalledWith(starter);
+    expect(instance.state.filterString).toEqual(starter);
+
+    wrapper.setProps({ projectStarter: 'blog' });
+    instance.updateSearchString('');
+    expect(instance.state.starterListVisible).toBeTruthy();
+
+    wrapper.setProps({ projectStarter: '' });
+    instance.updateSearchString('');
+    expect(instance.state.starterListVisible).toBeFalsy();
+  });
+
+  it('should move the selected starter to first entry of starter list', () => {
+    const blogStarterUrl = 'https://github.com/dschau/gatsby-blog-starter-kit';
+    wrapper.setProps({ projectStarter: blogStarterUrl });
+    expect(
+      instance.filteredStarters.findIndex(
+        starter => starter.repo === blogStarterUrl
+      )
+    ).toBe(0);
   });
 });

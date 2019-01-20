@@ -18,6 +18,9 @@ type State = {
   starterListVisible: boolean,
   starters: Array<any>,
   paginationIndex: number,
+  filterString: string,
+  loading: boolean,
+  error: ?object,
 };
 
 const fuseOptions = {
@@ -37,12 +40,15 @@ class ProjectStarter extends Component<Props, State> {
     filterString: '',
     starters: [],
     paginationIndex: 4,
+    loading: true,
+    error: null,
   };
 
   PAGINATION_STEP = 4;
+  filteredStarters = [];
 
   componentDidMount() {
-    fetch(
+    return fetch(
       'https://raw.githubusercontent.com/gatsbyjs/gatsby/master/docs/starters.yml'
     )
       .then(response => response.text())
@@ -51,6 +57,14 @@ class ProjectStarter extends Component<Props, State> {
 
         this.setState({
           starters,
+          loading: false,
+          error: null,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+          error,
         });
       });
   }
@@ -63,29 +77,59 @@ class ProjectStarter extends Component<Props, State> {
     });
   };
 
+  handleOnSelect = (selectedStarterUrl, removeSelection) => {
+    const { onSelect } = this.props;
+    onSelect(removeSelection ? '' : selectedStarterUrl);
+  };
+
   toggleStarterSelection = () => {
+    const { projectStarter } = this.props;
     this.setState(state => ({
-      starterListVisible: !state.starterListVisible,
+      starterListVisible: !state.starterListVisible || !!projectStarter,
     }));
   };
 
   updateSearchString = (filterString: string) => {
+    const { projectStarter } = this.props;
     this.setState({
-      starterListVisible: filterString !== '',
+      starterListVisible: filterString !== '' || !!projectStarter,
+      filterString,
     });
-    // Note: We're directly using the projectStarter to filter the list.
-    this.props.onSelect(filterString);
   };
 
   render() {
-    const { handleFocus, projectStarter, isFocused, onSelect } = this.props;
-    const { starterListVisible, starters, paginationIndex } = this.state;
+    const { handleFocus, projectStarter, isFocused } = this.props;
+    const {
+      starterListVisible,
+      starters,
+      paginationIndex,
+      filterString,
+      loading,
+      error,
+    } = this.state;
+    let fuse;
+    let selectedStarter = [];
+    let limitedStarters = [];
 
-    const fuse = new Fuse(starters, fuseOptions);
-    const filteredStarters =
-      projectStarter === '' ? starters : fuse.search(projectStarter);
-    const limitedStarters = filteredStarters.slice(0, paginationIndex);
+    if (!loading && starters) {
+      // Loaded & starters available
+      fuse = new Fuse(starters, fuseOptions);
+      this.filteredStarters =
+        filterString === '' ? starters : fuse.search(filterString); //projectStarter);
+      selectedStarter = starters.find(
+        starter => starter.repo === projectStarter
+      );
 
+      if (selectedStarter) {
+        // Remove the selected from list if available
+        this.filteredStarters = this.filteredStarters.filter(
+          starter => starter !== selectedStarter
+        );
+        // Always re-add selectedStarter to top of list otherwise the selected starter could be on a different pagination page
+        this.filteredStarters.unshift(selectedStarter); // add selected as first element as we always want the selected to be in the list
+      }
+      limitedStarters = this.filteredStarters.slice(0, paginationIndex);
+    }
     return (
       <Fragment>
         <TextInputWithButton
@@ -94,18 +138,21 @@ class ProjectStarter extends Component<Props, State> {
           onFocus={handleFocus}
           handleFocus={handleFocus}
           isFocused={isFocused}
-          value={projectStarter}
+          value={filterString}
           onClick={this.toggleStarterSelection}
         />
-        <SelectStarterList
-          isVisible={starterListVisible}
-          selectedStarter={projectStarter}
-          starters={limitedStarters}
-          handleShowMore={this.handleShowMore}
-          updateStarter={onSelect}
-          paginationIndex={paginationIndex}
-          lastIndex={filteredStarters.length}
-        />
+        {!loading &&
+          !error && (
+            <SelectStarterList
+              isVisible={starterListVisible}
+              selectedStarter={projectStarter}
+              starters={limitedStarters}
+              handleShowMore={this.handleShowMore}
+              updateStarter={this.handleOnSelect}
+              paginationIndex={paginationIndex}
+              lastIndex={this.filteredStarters.length}
+            />
+          )}
       </Fragment>
     );
   }

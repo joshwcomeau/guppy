@@ -69,7 +69,7 @@ describe('ProjectStarterSelection component', () => {
       .find(StarterItemHeading)
       .first()
       .simulate('click');
-    expect(mockUpdateStarter).toBeCalledWith(starters[0].repo);
+    expect(mockUpdateStarter).toBeCalledWith(starters[0].repo, false);
     // check scrollTop call
     expect(instance.node.scrollTop).toBeCalledWith(0);
   });

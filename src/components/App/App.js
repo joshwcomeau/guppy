@@ -26,7 +26,7 @@ type Props = {
 
 class App extends PureComponent<Props> {
   render() {
-    const { selectedProjectId } = this.props;
+    const { selectedProjectId, modalVisible } = this.props;
     return (
       <Initialization>
         {wasSuccessfullyInitialized =>
@@ -37,7 +37,7 @@ class App extends PureComponent<Props> {
                 <ApplicationMenu />
                 <LoadingScreen />
                 <Sidebar />
-                <MainContent>
+                <MainContent disableScroll={modalVisible}>
                   {selectedProjectId ? <ProjectPage /> : <IntroScreen />}
                 </MainContent>
               </Wrapper>
@@ -69,12 +69,19 @@ const Wrapper = styled.div`
 
 const MainContent = styled.div`
   position: relative;
-  min-height: 100vh;
   flex: 1;
+  ${props =>
+    props.disableScroll
+      ? `
+    height: 100vh;
+    overflow: hidden;
+  `
+      : 'min-height: 100vh;'};
 `;
 
 const mapStateToProps = state => ({
   selectedProjectId: getSelectedProjectId(state),
+  modalVisible: !!state.modal,
 });
 
 export default connect(mapStateToProps)(App);
