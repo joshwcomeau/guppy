@@ -22,6 +22,7 @@ import type { Project } from '../../types';
 
 type Props = {
   selectedProjectId: ?Project,
+  modalVisible: boolean,
 };
 
 class App extends PureComponent<Props> {

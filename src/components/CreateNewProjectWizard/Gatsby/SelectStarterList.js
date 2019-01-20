@@ -12,7 +12,7 @@ import StrokeButton from '../../Button/StrokeButton';
 import { COLORS } from '../../../constants';
 
 type Props = {
-  updateStarter: string => void,
+  updateStarter: (string, boolean) => void,
   handleShowMore: () => void,
   selectedStarter: string,
   isVisible: boolean,

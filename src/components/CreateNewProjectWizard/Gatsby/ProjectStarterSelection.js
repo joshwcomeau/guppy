@@ -20,7 +20,7 @@ type State = {
   paginationIndex: number,
   filterString: string,
   loading: boolean,
-  error: ?object,
+  error: ?Error,
 };
 
 const fuseOptions = {
@@ -45,7 +45,7 @@ class ProjectStarter extends Component<Props, State> {
   };
 
   PAGINATION_STEP = 4;
-  filteredStarters = [];
+  filteredStarters: Array<any> = [];
 
   componentDidMount() {
     return fetch(
@@ -77,7 +77,7 @@ class ProjectStarter extends Component<Props, State> {
     });
   };
 
-  handleOnSelect = (selectedStarterUrl, removeSelection) => {
+  handleOnSelect = (selectedStarterUrl: string, removeSelection: boolean) => {
     const { onSelect } = this.props;
     onSelect(removeSelection ? '' : selectedStarterUrl);
   };
