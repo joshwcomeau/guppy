@@ -2,7 +2,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import BigClickableButton from './BigClickableButton';
-// Use Lolex to mock setTimeout - later use Jest mock once PR https://github.com/facebook/jest/pull/5171 landed
+// TODO: Use Lolex to mock setTimeout - later use Jest mock once PR https://github.com/facebook/jest/pull/5171 landed
 import lolex from 'lolex';
 
 describe('BigClickableButton component', () => {
