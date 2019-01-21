@@ -119,6 +119,7 @@
     "jsdom-global": "3.0.2",
     "lint-staged": "7.2.0",
     "loader-utils": "1.1.0",
+    "lolex": "3.0.0",
     "mixpanel-browser": "2.22.4",
     "moment": "2.22.2",
     "node-fetch": "2.3.0",
