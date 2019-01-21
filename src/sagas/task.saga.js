@@ -30,6 +30,7 @@ import {
   PACKAGE_MANAGER_CMD,
 } from '../services/platform.service';
 import { processLogger } from '../services/process-logger.service';
+import { substituteConfigVariables } from '../services/config-variables.service';
 import { waitForAsyncRimraf } from './delete-project.saga';
 
 import type { Saga } from 'redux-saga';
@@ -38,11 +39,6 @@ import type { Task, ProjectType } from '../types';
 import type { ReturnType } from '../actions/types';
 
 const { dialog } = remote;
-
-// Mapping type for config template variables '$port'
-export type VariableMap = {
-  $port: string,
-};
 
 const chalk = new chalkRaw.constructor({ level: 3 });
 
@@ -413,42 +409,6 @@ const createStdioChannel = (
   });
 };
 
-// We're using "template" variables inside the project type configuration file (config/project-types.js)
-// so with the following function we can replace the string $port with the real port number e.g. 3000
-// (see type VariableMap for used mapping strings)
-export const substituteConfigVariables = (
-  configObject: any,
-  variableMap: VariableMap
-): any => {
-  // e.g. $port inside args will be replaced with variable reference from variabeMap obj. {$port: port}
-  return Object.keys(configObject).reduce(
-    (config: any, key: any) => {
-      if (config[key] instanceof Array) {
-        // replace $port inside args array
-        config[key] = config[key].map(arg => variableMap[arg] || arg);
-      } else {
-        // check config[key] e.g. is {env: { PORT: '$port'} }
-        if (config[key] instanceof Object) {
-          // config[key] = {PORT: '$port'}, key = 'env'
-          config[key] = Object.keys(config[key]).reduce(
-            (newObj, nestedKey) => {
-              // use replacement value if available
-              newObj[nestedKey] =
-                variableMap[newObj[nestedKey]] || newObj[nestedKey];
-              return newObj;
-            },
-            { ...config[key] }
-          );
-        }
-      }
-      // todo: add top level substitution - not used yet but maybe needed later e.g. { env: $port } won't be replaced.
-      //       Bad example but just to have it as reminder.
-      return config;
-    },
-    { ...configObject }
-  );
-};
-
 export const getDevServerCommand = (
   task: Task,
   projectType: ProjectType,
@@ -462,7 +422,7 @@ export const getDevServerCommand = (
 
   // Substitution is needed as we'd like to have $port as args or in env
   // we can use it in either position and it will be subsituted with the port value here
-  const devServer = substituteConfigVariables(config.devServer, {
+  const devServer: Object = substituteConfigVariables(config.devServer, {
     // pass every value that is needed in the commands here
     $port: port,
   });

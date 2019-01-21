@@ -173,6 +173,7 @@ class ProjectName extends PureComponent<Props, State> {
         label="Project Name"
         isFocused={isFocused}
         hasError={isProjectNameTaken}
+        spacing={15}
       >
         <TextInput
           innerRef={node => (this.node = node)}

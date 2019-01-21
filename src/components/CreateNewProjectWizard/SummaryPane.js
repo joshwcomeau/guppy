@@ -185,6 +185,39 @@ class SummaryPane extends PureComponent<Props> {
           </Fragment>
         );
       }
+      case 'projectStarter': {
+        // todo: why is a key needed on FadeIn? Was s3t.
+        // todo: should we rename projectStarter to be mores specific as this is Gatsby only.
+        return (
+          <Fragment>
+            <FadeIn>
+              <StepTitle>Gatsby Starter</StepTitle>
+
+              <Paragraph>
+                Please enter a starter for your project (e.g.
+                gatsby-starter-blog or repo. url) or pick one from the starters
+                list.
+              </Paragraph>
+              <Paragraph>
+                This step is optional. Just leave the field empty to use the
+                default Gatsby starter. But picking a starter will help to
+                bootstrap your project e.g. you can easily create your own blog
+                by picking one of the blog starter templates.
+              </Paragraph>
+              <Paragraph>
+                For a better overview you can also have a look at the{' '}
+                <ExternalLink
+                  color={COLORS.white}
+                  hoverColor={COLORS.white}
+                  href="https://www.gatsbyjs.org/starters/"
+                >
+                  Gatsby starters library
+                </ExternalLink>
+              </Paragraph>
+            </FadeIn>
+          </Fragment>
+        );
+      }
 
       default:
         throw new Error('Unrecognized `focusField`: ' + focusField);

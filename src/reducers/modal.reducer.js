@@ -18,7 +18,11 @@ import {
 
 import type { Action } from '../actions/types';
 
-type State = 'new-project-wizard' | 'project-settings' | null;
+type State =
+  | 'new-project-wizard'
+  | 'project-settings'
+  | 'new-project-wizard/select-starter'
+  | null;
 
 export const initialState = null;
 
