@@ -6,6 +6,7 @@ import { check } from 'react-icons-kit/feather/check';
 
 import { COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
+import { replaceProjectStarterStringWithUrl } from './helpers';
 
 import Spacer from '../Spacer';
 import WhimsicalInstaller from '../WhimsicalInstaller';
@@ -36,6 +37,7 @@ type Props = {
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
+  projectStarter: string,
   status: Status,
   projectHomePath: string,
   handleCompleteBuild: (project: ProjectInternal) => void,
@@ -79,7 +81,12 @@ class BuildPane extends PureComponent<Props, State> {
   }
 
   buildProject = () => {
-    const { projectName, projectType, projectIcon } = this.props;
+    const {
+      projectName,
+      projectType,
+      projectIcon,
+      projectStarter: projectStarterInput,
+    } = this.props;
 
     if (!projectName || !projectType || !projectIcon) {
       console.error('Missing one of:', {
@@ -92,13 +99,21 @@ class BuildPane extends PureComponent<Props, State> {
       );
     }
 
+    // Replace starter string with URL.
+    // No need to check if it exists as this already happend before we're here.
+    const projectStarter = replaceProjectStarterStringWithUrl(
+      projectStarterInput
+    );
+
     createProject(
-      { projectName, projectType, projectIcon },
+      { projectName, projectType, projectIcon, projectStarter },
       this.props.projectHomePath,
       this.handleStatusUpdate,
       this.handleError,
       this.handleComplete
     );
+
+    return true;
   };
 
   handleStatusUpdate = (output: any) => {

@@ -9,6 +9,12 @@ import {
   RESET_ALL_STATE,
 } from '../actions';
 
+// Mock needed for Windows so path.join is not using backslashes
+jest.mock('path', () => ({
+  join: (...path) => path.join(''),
+  resolve: jest.fn,
+}));
+
 // The paths reducer initial state chooses a platform-specific home path.
 // To avoid dealing with all that, we'll just supply an initial state in
 // all tests

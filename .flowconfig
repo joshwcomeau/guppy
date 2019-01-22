@@ -9,6 +9,10 @@
 # new branches, and have Flow run on old files without the same dependencies.
 .*/release-builds/*
 
+# Ignore styled-components as there are many flow errors
+# Maybe related to https://github.com/styled-components/styled-components/issues/302
+.*/node_modules/styled-components/**/*.js
+
 [include]
 
 [libs]

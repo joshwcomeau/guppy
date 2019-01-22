@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 import { remote } from 'electron';
@@ -13,6 +13,8 @@ import { getById } from '../../reducers/projects.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { checkIfProjectExists } from '../../services/create-project.service';
+import { urlExists } from '../../services/check-if-url-exists.service';
+import { replaceProjectStarterStringWithUrl } from './helpers';
 
 import TwoPaneModal from '../TwoPaneModal';
 import Debounced from '../Debounced';
@@ -26,7 +28,12 @@ import type { Field, Status, Step } from './types';
 import type { ProjectType, ProjectInternal, AppSettings } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
-const FORM_STEPS: Array<Field> = ['projectName', 'projectType', 'projectIcon'];
+const FORM_STEPS: Array<Field> = [
+  'projectName',
+  'projectType',
+  'projectIcon',
+  'projectStarter',
+];
 const { dialog } = remote;
 
 type Props = {
@@ -44,6 +51,7 @@ type State = {
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
+  projectStarter: string,
   activeField: ?Field,
   settings: ?AppSettings,
   status: Status,
@@ -55,6 +63,7 @@ const initialState = {
   projectName: '',
   projectType: null,
   projectIcon: null,
+  projectStarter: '',
   activeField: 'projectName',
   status: 'filling-in-form',
   currentStep: 'projectName',
@@ -132,14 +141,42 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       }
     });
   };
+
+  checkIfStarterUrlExists = async () => {
+    const { projectStarter: projectStarterInput } = this.state;
+    // Add url to starter if not passed & not an empty string
+    const projectStarter = replaceProjectStarterStringWithUrl(
+      projectStarterInput
+    );
+
+    if (projectStarter === '') {
+      return;
+    }
+
+    const exists = await urlExists(projectStarter);
+
+    if (!exists) {
+      // starter not found
+      dialog.showErrorBox(
+        `Starter ${projectStarter} not found`,
+        'Please check your starter url or use the starter selection to pick a starter.'
+      );
+      throw new Error('starter-not-found');
+    }
+  };
+
   handleSubmit = () => {
     const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
     const nextStep = FORM_STEPS[currentStepIndex + 1];
+    const lastStep = this.state.projectType === 'gatsby' ? 3 : 2;
 
-    if (!nextStep) {
-      return this.checkProjectLocationUsage()
+    if (currentStepIndex >= lastStep) {
+      return Promise.all([
+        this.checkProjectLocationUsage(),
+        this.checkIfStarterUrlExists(),
+      ])
         .then(() => {
-          // not in use
+          // not in use & starter exists (if Gatsby project)
           this.setState({
             activeField: null,
             status: 'building-project',
@@ -194,55 +231,58 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       projectName,
       projectType,
       projectIcon,
+      projectStarter,
       activeField,
       status,
       currentStep,
       isProjectNameTaken,
     } = this.state;
 
-    const project = { projectName, projectType, projectIcon };
+    const project = { projectName, projectType, projectIcon, projectStarter };
 
     const readyToBeBuilt = status !== 'filling-in-form';
 
     return (
       <Transition in={isVisible} timeout={300}>
         {transitionState => (
-          <TwoPaneModal
-            isFolded={readyToBeBuilt}
-            transitionState={transitionState}
-            isDismissable={status !== 'building-project'}
-            onDismiss={createNewProjectCancel}
-            leftPane={
-              <Debounced on={activeField} duration={40}>
-                <SummaryPane
-                  currentStep={currentStep}
+          <Fragment>
+            <TwoPaneModal
+              isFolded={readyToBeBuilt}
+              transitionState={transitionState}
+              isDismissable={status !== 'building-project'}
+              onDismiss={createNewProjectCancel}
+              leftPane={
+                <Debounced on={activeField} duration={40}>
+                  <SummaryPane
+                    currentStep={currentStep}
+                    activeField={activeField}
+                    projectType={projectType}
+                  />
+                </Debounced>
+              }
+              rightPane={
+                <MainPane
+                  {...project}
+                  status={status}
                   activeField={activeField}
-                  projectType={projectType}
+                  currentStepIndex={FORM_STEPS.indexOf(currentStep)}
+                  updateFieldValue={this.updateFieldValue}
+                  focusField={this.focusField}
+                  handleSubmit={this.handleSubmit}
+                  hasBeenSubmitted={status !== 'filling-in-form'}
+                  isProjectNameTaken={isProjectNameTaken}
                 />
-              </Debounced>
-            }
-            rightPane={
-              <MainPane
-                {...project}
-                status={status}
-                activeField={activeField}
-                currentStepIndex={FORM_STEPS.indexOf(currentStep)}
-                updateFieldValue={this.updateFieldValue}
-                focusField={this.focusField}
-                handleSubmit={this.handleSubmit}
-                hasBeenSubmitted={status !== 'filling-in-form'}
-                isProjectNameTaken={isProjectNameTaken}
-              />
-            }
-            backface={
-              <BuildPane
-                {...project}
-                status={status}
-                projectHomePath={projectHomePath}
-                handleCompleteBuild={this.finishBuilding}
-              />
-            }
-          />
+              }
+              backface={
+                <BuildPane
+                  {...project}
+                  status={status}
+                  projectHomePath={projectHomePath}
+                  handleCompleteBuild={this.finishBuilding}
+                />
+              }
+            />
+          </Fragment>
         )}
       </Transition>
     );

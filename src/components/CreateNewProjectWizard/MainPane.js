@@ -11,6 +11,7 @@ import ProjectPath from './ProjectPath';
 import SubmitButton from './SubmitButton';
 import ProjectIconSelection from '../ProjectIconSelection';
 import ProjectTypeSelection from '../ProjectTypeSelection';
+import ProjectStarterSelection from './Gatsby/ProjectStarterSelection';
 
 import type { Field, Status } from './types';
 import type { ProjectType } from '../../types';
@@ -19,6 +20,7 @@ type Props = {
   projectName: string,
   projectType: ?ProjectType,
   projectIcon: ?string,
+  projectStarter: string,
   activeField: ?Field,
   status: Status,
   currentStepIndex: number,
@@ -32,6 +34,7 @@ type Props = {
 class MainPane extends PureComponent<Props> {
   handleFocusProjectName = () => this.props.focusField('projectName');
   handleBlurProjectName = () => this.props.focusField(null);
+  handleFocusStarter = () => this.props.focusField('projectStarter');
 
   updateProjectName = (projectName: string) =>
     this.props.updateFieldValue('projectName', projectName);
@@ -39,12 +42,100 @@ class MainPane extends PureComponent<Props> {
     this.props.updateFieldValue('projectType', projectType);
   updateProjectIcon = (projectIcon: string) =>
     this.props.updateFieldValue('projectIcon', projectIcon);
+  updateGatsbyStarter = (selectedStarter: string) =>
+    this.props.updateFieldValue('projectStarter', selectedStarter);
 
+  projectSpecificGatsbyStep() {
+    const { activeField, projectStarter } = this.props;
+    return (
+      <FadeIn key="step-starter">
+        <FormField
+          label="Project Starter"
+          isFocused={activeField === 'projectStarter'}
+          spacing={15}
+        >
+          <ProjectStarterSelection
+            isFocused={activeField === 'projectStarter'}
+            handleFocus={this.handleFocusStarter}
+            onSelect={this.updateGatsbyStarter}
+            projectStarter={projectStarter}
+          />
+        </FormField>
+      </FadeIn>
+    );
+  }
+
+  renderConditionalSteps(currentStepIndex: number) {
+    const { activeField, projectType, projectIcon } = this.props;
+    const steps: Array<?React$Node> = [];
+    let lastIndex = 2;
+
+    if (projectType === 'gatsby') {
+      lastIndex = 3;
+    }
+
+    if (currentStepIndex > 0) {
+      // currentStepIndex = 1
+      steps.push(
+        <FadeIn key="step-type">
+          <FormField
+            label="Project Type"
+            isFocused={activeField === 'projectType'}
+            spacing={10}
+          >
+            <ProjectTypeSelection
+              projectType={projectType}
+              onProjectTypeSelect={selectedProjectType =>
+                this.updateProjectType(selectedProjectType)
+              }
+            />
+          </FormField>
+        </FadeIn>
+      );
+    }
+    if (currentStepIndex > 1) {
+      steps.push(
+        // 2
+        <FadeIn key="step-icon">
+          <FormField
+            label="Project Icon"
+            focusOnClick={false}
+            isFocused={activeField === 'projectIcon'}
+            spacing={10}
+          >
+            <ProjectIconSelection
+              selectedIcon={projectIcon}
+              randomize={true}
+              limitTo={9}
+              onSelectIcon={this.updateProjectIcon}
+            />
+          </FormField>
+        </FadeIn>
+      );
+    }
+
+    if (currentStepIndex > 2 && projectType === 'gatsby') {
+      // 3
+      steps.push(this.projectSpecificGatsbyStep());
+    }
+
+    return {
+      lastIndex,
+      steps,
+    };
+  }
+  isSubmitDisabled(currentStepIndex: number, lastIndex: number) {
+    // No validation for projectStarter as it is optional
+    const { projectIcon, projectType } = this.props;
+
+    const needsProjectType = !projectType && currentStepIndex > 1;
+    const needsProjectIcon = !projectIcon && currentStepIndex >= 2;
+
+    return needsProjectType || needsProjectIcon;
+  }
   render() {
     const {
       projectName,
-      projectType,
-      projectIcon,
       activeField,
       currentStepIndex,
       hasBeenSubmitted,
@@ -52,6 +143,7 @@ class MainPane extends PureComponent<Props> {
       handleSubmit,
     } = this.props;
 
+    const { lastIndex, steps } = this.renderConditionalSteps(currentStepIndex);
     return (
       <Fragment>
         <Spring
@@ -72,38 +164,7 @@ class MainPane extends PureComponent<Props> {
               />
               <ProjectPath projectName={projectName} />
 
-              {currentStepIndex > 0 && (
-                <FadeIn>
-                  <FormField
-                    label="Project Type"
-                    isFocused={activeField === 'projectType'}
-                  >
-                    <ProjectTypeSelection
-                      projectType={projectType}
-                      onProjectTypeSelect={selectedProjectType =>
-                        this.updateProjectType(selectedProjectType)
-                      }
-                    />
-                  </FormField>
-                </FadeIn>
-              )}
-
-              {currentStepIndex > 1 && (
-                <FadeIn>
-                  <FormField
-                    label="Project Icon"
-                    focusOnClick={false}
-                    isFocused={activeField === 'projectIcon'}
-                  >
-                    <ProjectIconSelection
-                      selectedIcon={projectIcon}
-                      randomize={true}
-                      limitTo={8}
-                      onSelectIcon={this.updateProjectIcon}
-                    />
-                  </FormField>
-                </FadeIn>
-              )}
+              {steps}
             </Wrapper>
           )}
         </Spring>
@@ -112,10 +173,9 @@ class MainPane extends PureComponent<Props> {
             isDisabled={
               isProjectNameTaken ||
               !projectName ||
-              (currentStepIndex > 0 && !projectType) ||
-              (currentStepIndex > 1 && !projectIcon)
+              this.isSubmitDisabled(currentStepIndex, lastIndex)
             }
-            readyToBeSubmitted={currentStepIndex >= 2}
+            readyToBeSubmitted={currentStepIndex >= lastIndex}
             hasBeenSubmitted={hasBeenSubmitted}
             onSubmit={handleSubmit}
           />
@@ -130,15 +190,11 @@ const Wrapper = animated(styled.div.attrs({
     transform: `translateY(${props.translateY}px)`,
   }),
 })`
-  height: 500px;
+  height: 75vh;
   will-change: transform;
 `);
 
 const SubmitButtonWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 30px;
   text-align: center;
 `;
 

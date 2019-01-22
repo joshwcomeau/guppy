@@ -65,7 +65,7 @@ const INTRO_SEQUENCE_STEPS = [
 // TODO: this component re-renders whenever _anything_ with a project changes
 // (like adding a log to a task). It might be prudent to add a selector that
 // only provides the fields necessary for the sidebar.
-class Sidebar extends PureComponent<Props, State> {
+export class Sidebar extends PureComponent<Props, State> {
   static defaultProps = {
     projects: [],
   };

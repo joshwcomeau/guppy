@@ -5,6 +5,8 @@ import {
   getBuildInstructions,
 } from './create-project.service';
 
+import { substituteConfigVariables } from './config-variables.service';
+
 jest.mock('os', () => ({
   homedir: jest.fn(),
   platform: () => process.platform,
@@ -35,8 +37,18 @@ describe('getBuildInstructions', () => {
   });
 
   it('should return the build instructions for a Gatsby project', () => {
-    const expectedOutput = ['npx', 'gatsby', 'new', path];
-    expect(getBuildInstructions('gatsby', path)).toEqual(expectedOutput);
+    const expectedOutput = [
+      'npx',
+      'gatsby',
+      'new',
+      path,
+      'gatsby-starter-blog',
+    ];
+    expect(
+      getBuildInstructions('gatsby', path, {
+        projectStarter: 'gatsby-starter-blog',
+      })
+    ).toEqual(expectedOutput);
   });
 
   it('should throw an exception when passed an unknown project type', () => {

@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import {
   mapTasksPerProjectToString,
   mapActionsToString,
@@ -13,6 +13,7 @@ describe('Initialization helpers', () => {
         {
           name: 'test',
           version: '1.0',
+          updating: false,
         },
       ],
     };
@@ -22,6 +23,7 @@ describe('Initialization helpers', () => {
     task.dependencies.push({
       name: 'test2',
       version: '1.0',
+      updating: false,
     });
     expect(mapTasksPerProjectToString(task)).toEqual('- Installing 2 tasks');
   });
@@ -34,6 +36,7 @@ describe('Initialization helpers', () => {
         {
           name: 'test',
           version: '1.0',
+          updating: false,
         },
       ],
     };
@@ -53,6 +56,7 @@ describe('Initialization helpers', () => {
               {
                 name: 'test',
                 version: '1.0',
+                updating: false,
               },
             ],
           },
@@ -63,6 +67,7 @@ describe('Initialization helpers', () => {
               {
                 name: 'test2',
                 version: '1.0',
+                updating: false,
               },
             ],
           },
@@ -78,6 +83,7 @@ describe('Initialization helpers', () => {
               {
                 name: 'test',
                 version: '1.0',
+                updating: false,
               },
             ],
           },
@@ -88,10 +94,12 @@ describe('Initialization helpers', () => {
               {
                 name: 'test2',
                 version: '1.0',
+                updating: false,
               },
               {
                 name: 'test3',
                 version: '1.0',
+                updating: false,
               },
             ],
           },

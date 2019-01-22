@@ -12,6 +12,7 @@ type Props = {
   stiffness: number,
   damping: number,
   colors: Array<string>,
+  reset: boolean,
 };
 
 class ProgressBar extends Component<Props> {
@@ -20,10 +21,11 @@ class ProgressBar extends Component<Props> {
     stiffness: 32,
     damping: 32,
     colors: [COLORS.blue[700], COLORS.teal[500], COLORS.lightGreen[500]],
+    reset: false,
   };
 
   render() {
-    const { height, progress, stiffness, damping, colors } = this.props;
+    const { height, progress, stiffness, damping, colors, reset } = this.props;
 
     return (
       <Wrapper height={height}>
@@ -44,7 +46,7 @@ class ProgressBar extends Component<Props> {
   }
 }
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   position: relative;
   height: ${props => props.height}px;
   width: 100%;
