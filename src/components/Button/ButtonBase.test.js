@@ -2,18 +2,17 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import ButtonBase, {
-  XSmallButton,
-  SmallButton,
-  MediumButton,
-  LargeButton,
+  XSmallButton as xsmall,
+  SmallButton as small,
+  MediumButton as medium,
+  LargeButton as large,
 } from './ButtonBase';
 
-const sizes = ['xsmall', 'small', 'medium', 'large'];
 const sizeComponents = {
-  xsmall: XSmallButton,
-  small: SmallButton,
-  medium: MediumButton,
-  large: LargeButton,
+  xsmall,
+  small,
+  medium,
+  large,
 };
 
 describe('ButtonBase component', () => {
@@ -21,7 +20,7 @@ describe('ButtonBase component', () => {
     const wrapper = shallow(<ButtonBase />);
     const instance = wrapper.instance();
 
-    for (const size of sizes) {
+    for (const size in sizeComponents) {
       it(`should return sized button component for size = ${size}`, () => {
         const component = instance.getButtonElem(size);
         expect(component).toBe(sizeComponents[size]);
@@ -40,7 +39,7 @@ describe('ButtonBase component', () => {
 
     it('should return default size medium', () => {
       const componentDefault = instance.getButtonElem();
-      expect(componentDefault).toBe(sizeComponents['medium']);
+      expect(componentDefault).toBe(medium);
     });
   });
 });
