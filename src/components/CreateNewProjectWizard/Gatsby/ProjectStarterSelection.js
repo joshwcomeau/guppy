@@ -106,6 +106,7 @@ class ProjectStarter extends Component<Props, State> {
 
   updateSearchString = (filterString: string) => {
     const { projectStarter, onSelect } = this.props;
+
     this.setState({
       starterListVisible: filterString !== '' || !!projectStarter,
       filterString,
