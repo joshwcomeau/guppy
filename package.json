@@ -29,7 +29,7 @@
     "publish": "yarn dist --publish always",
     "publish:all": "yarn dist:all --publish always",
     "test": "node scripts/test.js --env=node",
-    "coverage": "yarn test --coverage",
+    "coverage": "yarn test --maxWorkers=2 --coverage",
     "report-coverage": "yarn coverage && codecov",
     "flow": "flow",
     "lint": "eslint src/**/*.js config/**/*.js",
