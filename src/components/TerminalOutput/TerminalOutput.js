@@ -2,6 +2,7 @@
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Terminal } from 'xterm';
 
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
@@ -24,20 +25,56 @@ type Props = {
   clearConsole: Dispatch<typeof actions.clearConsole>,
 };
 
-class TerminalOutput extends PureComponent<Props> {
+type State = {
+  logs: any,
+};
+
+class TerminalOutput extends PureComponent<Props, State> {
   static defaultProps = {
     width: '100%',
     height: 200,
   };
 
+  state = {
+    logs: [],
+  };
+
+  xterm: Terminal;
   node: ?HTMLElement;
 
   componentDidMount() {
+    this.xterm = new Terminal();
+    this.xterm.open(this.node);
     this.scrollToBottom();
   }
 
-  componentDidUpdate() {
-    this.scrollToBottom();
+  componentDidUpdate(prevProps, prevState) {
+    //this.scrollToBottom();
+    console.log('update', this.state.logs);
+    if (prevState.logs !== this.state.logs) {
+      this.xterm.clear();
+      for (const log in this.state.logs) {
+        console.log('item', log.text);
+        this.writeln(log.text);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.xterm) {
+      this.xterm.destroy();
+      this.xterm = null;
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.task && nextProps.task.logs !== prevState.logs) {
+      return {
+        logs: nextProps.task.logs,
+      };
+    }
+
+    return null;
   }
 
   scrollToBottom = () => {
@@ -63,6 +100,14 @@ class TerminalOutput extends PureComponent<Props> {
     clearConsole(task);
   };
 
+  write(data: any) {
+    this.xterm && this.xterm.write(data);
+  }
+
+  writeln(data: any) {
+    this.xterm && this.xterm.writeln(data);
+  }
+
   render() {
     const { width, height, title, task } = this.props;
 
@@ -87,21 +132,17 @@ class TerminalOutput extends PureComponent<Props> {
             </FillButton>
           </PixelShifter>
         </Header>
-        <Wrapper
-          width={width}
-          height={height}
-          innerRef={node => (this.node = node)}
-        >
+        <Wrapper width={width} height={height}>
           <TableWrapper height={height}>
-            <LogWrapper>
-              {task.logs.map(log => (
+            <LogWrapper innerRef={node => (this.node = node)}>
+              {/* {task.logs.map(log => (
                 <LogRow
                   key={log.id}
                   dangerouslySetInnerHTML={{
                     __html: convert.toHtml(log.text),
                   }}
                 />
-              ))}
+              ))} */}
             </LogWrapper>
           </TableWrapper>
         </Wrapper>
