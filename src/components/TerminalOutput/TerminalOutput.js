@@ -1,8 +1,13 @@
 // @flow
 import React, { Fragment, PureComponent } from 'react';
+import { shell } from 'electron';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Terminal } from 'xterm';
+import * as webLinks from 'xterm/lib/addons/webLinks/webLinks';
+import * as fit from 'xterm/lib/addons/fit/fit';
+
+import xtermCss from 'xterm/dist/xterm.css';
 
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
@@ -13,9 +18,6 @@ import PixelShifter from '../PixelShifter';
 
 import type { Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
-
-var Convert = require('ansi-to-html');
-var convert = new Convert();
 
 type Props = {
   width?: number,
@@ -43,9 +45,16 @@ class TerminalOutput extends PureComponent<Props, State> {
   node: ?HTMLElement;
 
   componentDidMount() {
-    this.xterm = new Terminal();
+    Terminal.applyAddon(webLinks);
+    Terminal.applyAddon(fit);
+    this.xterm = new Terminal({});
     this.xterm.open(this.node);
-    this.scrollToBottom();
+    //this.xterm.fit(); // todo: onResize needs to be handled
+    this.xterm.webLinksInit.call(this.xterm, (evt, uri) => {
+      shell.openExternal(uri);
+    });
+    //this.xterm.writeln(`[1mLocal:[22m            http://localhost:[1m3002[22m/`); // test for link handling
+    //this.scrollToBottom();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -53,8 +62,8 @@ class TerminalOutput extends PureComponent<Props, State> {
     console.log('update', this.state.logs);
     if (prevState.logs !== this.state.logs) {
       this.xterm.clear();
-      for (const log in this.state.logs) {
-        console.log('item', log.text);
+      for (const log of this.state.logs) {
+        console.log('item', log.text, this.state.logs);
         this.writeln(log.text);
       }
     }
@@ -132,19 +141,23 @@ class TerminalOutput extends PureComponent<Props, State> {
             </FillButton>
           </PixelShifter>
         </Header>
-        <Wrapper width={width} height={height}>
-          <TableWrapper height={height}>
-            <LogWrapper innerRef={node => (this.node = node)}>
-              {/* {task.logs.map(log => (
+        <Wrapper
+          width={width}
+          height={height}
+          innerRef={node => (this.node = node)}
+        >
+          {/* <TableWrapper height={height}>
+            <LogWrapper>
+              {{task.logs.map(log => (
                 <LogRow
                   key={log.id}
                   dangerouslySetInnerHTML={{
                     __html: convert.toHtml(log.text),
                   }}
                 />
-              ))} */}
+              ))}}
             </LogWrapper>
-          </TableWrapper>
+          </TableWrapper> */}
         </Wrapper>
       </Fragment>
     );
@@ -159,9 +172,11 @@ const Header = styled.header`
 `;
 
 const Wrapper = styled.div`
-  width: ${props =>
+  ${css(xtermCss)}
+
+  /* width: ${props =>
     typeof props.width === 'number' ? `${props.width}px` : props.width};
-  height: ${props => props.height}px;
+  height: ${props => props.height}px; */
   overflow: auto;
   padding: 15px;
   color: ${COLORS.white};
