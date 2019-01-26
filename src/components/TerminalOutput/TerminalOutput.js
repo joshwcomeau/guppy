@@ -46,7 +46,7 @@ class TerminalOutput extends PureComponent<Props, State> {
 
   componentDidMount() {
     Terminal.applyAddon(webLinks);
-    Terminal.applyAddon(fit);
+    // Terminal.applyAddon(fit);
     this.xterm = new Terminal({});
     this.xterm.open(this.node);
     //this.xterm.fit(); // todo: onResize needs to be handled
@@ -66,6 +66,7 @@ class TerminalOutput extends PureComponent<Props, State> {
         console.log('item', log.text, this.state.logs);
         this.writeln(log.text);
       }
+      this.xterm.refresh(0, this.xterm.rows);
     }
   }
 
@@ -172,18 +173,18 @@ const Header = styled.header`
 `;
 
 const Wrapper = styled.div`
-  ${css(xtermCss)}
+  /* ${css(xtermCss)} */
 
   /* width: ${props =>
     typeof props.width === 'number' ? `${props.width}px` : props.width};
   height: ${props => props.height}px; */
-  overflow: auto;
+  /* overflow: auto;
   padding: 15px;
   color: ${COLORS.white};
   background-color: ${COLORS.blue[900]};
   border-radius: 4px;
   font-family: 'Fira Mono', monospace;
-  font-size: 13px;
+  font-size: 13px; */
 `;
 
 // NOTE: I have a loooot of nested elements here, to try and align things
