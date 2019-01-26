@@ -140,7 +140,7 @@ const SelectionInfo = styled.div`
   background: ${COLORS.gray[200]};
   border-radius: 5px;
   padding: 5px;
-  display: ${props => (props.visible ? 'auto' : 'none')};
+  ${({ visible }) => !visible && 'display: none;'};
 `;
 
 const ScrollContainer = styled(Scrollbars)`
