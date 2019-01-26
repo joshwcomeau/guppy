@@ -89,6 +89,9 @@ class SelectStarterList extends PureComponent<Props> {
                   >
                     {starter.repo.split('/').pop()}
                   </StarterItemHeading>
+                  <SelectionInfo visible={selectedStarter === starter.repo}>
+                    selected
+                  </SelectionInfo>
                   <ExternalLink
                     href={this.prepareUrlForCodesandbox(starter.repo)}
                   >
@@ -99,7 +102,9 @@ class SelectStarterList extends PureComponent<Props> {
                 </StarterItemTitle>
 
                 <Description>
-                  {starter.description !== 'n/a' && starter.description}
+                  {starter.description === 'n/a'
+                    ? 'No description'
+                    : starter.description}
                 </Description>
                 <Divider />
               </StarterItem>
@@ -129,6 +134,13 @@ const Description = styled.p`
   padding: 0 5px 2px;
   hyphens: auto;
   text-align: justify;
+`;
+
+const SelectionInfo = styled.div`
+  background: ${COLORS.gray[200]};
+  border-radius: 5px;
+  padding: 5px;
+  ${({ visible }) => !visible && 'display: none;'};
 `;
 
 const ScrollContainer = styled(Scrollbars)`
