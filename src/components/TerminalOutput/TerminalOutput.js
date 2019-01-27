@@ -5,9 +5,12 @@ import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { Terminal } from 'xterm';
 import * as webLinks from 'xterm/lib/addons/webLinks/webLinks';
+import * as fullscreen from 'xterm/lib/addons/fullscreen/fullscreen';
+
 import * as fit from 'xterm/lib/addons/fit/fit';
 
 import xtermCss from 'xterm/dist/xterm.css';
+import xtermFullscreenCss from 'xterm/lib/addons/fullscreen/fullscreen.css';
 
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
@@ -46,10 +49,22 @@ class TerminalOutput extends PureComponent<Props, State> {
 
   componentDidMount() {
     Terminal.applyAddon(webLinks);
-    // Terminal.applyAddon(fit);
-    this.xterm = new Terminal({});
+    Terminal.applyAddon(fullscreen);
+    Terminal.applyAddon(fit);
+    this.xterm = new Terminal({
+      convertEol: true,
+      fontFamily: `'Fira Mono', monospace`,
+      fontSize: 15,
+      rendererType: 'dom', // default is canvas
+    });
+
+    this.xterm.setOption('theme', {
+      background: COLORS.blue[900],
+      foreground: COLORS.white,
+    });
+
     this.xterm.open(this.node);
-    //this.xterm.fit(); // todo: onResize needs to be handled
+    this.xterm.fit(); // todo: onResize needs to be handled
     this.xterm.webLinksInit.call(this.xterm, (evt, uri) => {
       shell.openExternal(uri);
     });
@@ -57,16 +72,14 @@ class TerminalOutput extends PureComponent<Props, State> {
     //this.scrollToBottom();
   }
 
+  // shouldComponentUpdate(nextProps) {
   componentDidUpdate(prevProps, prevState) {
     //this.scrollToBottom();
-    console.log('update', this.state.logs);
-    if (prevState.logs !== this.state.logs) {
+    if (prevProps.logs !== this.state.logs) {
       this.xterm.clear();
       for (const log of this.state.logs) {
-        console.log('item', log.text, this.state.logs);
         this.writeln(log.text);
       }
-      this.xterm.refresh(0, this.xterm.rows);
     }
   }
 
@@ -118,6 +131,13 @@ class TerminalOutput extends PureComponent<Props, State> {
     this.xterm && this.xterm.writeln(data);
   }
 
+  toggleFullScreen = () => {
+    if (this.xterm) {
+      this.xterm.toggleFullScreen();
+      // this.xterm.fit();
+    }
+  };
+
   render() {
     const { width, height, title, task } = this.props;
 
@@ -139,6 +159,16 @@ class TerminalOutput extends PureComponent<Props, State> {
               onClick={this.handleClear}
             >
               Clear
+            </FillButton>
+            <FillButton
+              size="xsmall"
+              colors={[COLORS.pink[300], COLORS.red[500]]}
+              onClick={this.toggleFullScreen}
+              style={{
+                zIndex: 1000,
+              }}
+            >
+              Toggle fullscreen
             </FillButton>
           </PixelShifter>
         </Header>
@@ -173,7 +203,30 @@ const Header = styled.header`
 `;
 
 const Wrapper = styled.div`
-  /* ${css(xtermCss)} */
+  ${css(xtermCss)}
+
+  .terminal {
+    /* Colors set with js-API as xterm.js is using style on element */
+    padding: 15px;
+  }
+  
+  .xterm .xterm-viewport {
+    border-radius: 4px;
+    overflow-y: hidden;
+  }
+
+  /*${css(xtermFullscreenCss)}*/
+  .xterm.fullscreen {
+    /* similar to code from addon css - slightly modified */
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 80px;
+    /* right: 0; */
+    width: 80vw;
+    height: auto;
+    z-index: 255;
+  }
 
   /* width: ${props =>
     typeof props.width === 'number' ? `${props.width}px` : props.width};
