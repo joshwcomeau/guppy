@@ -1,0 +1,361 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TerminalOutput component should render terminal 1`] = `
+.c3 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: linear-gradient( 45deg, #ff416c,#ff4b2b );
+  color: #FFF;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c3:hover {
+  background: linear-gradient( 45deg, #ff416c,#ff4b2b );
+}
+
+.c3:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+}
+
+.c3:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.c2 {
+  padding: 0px 12px;
+  height: 22px;
+  border-radius: 15px;
+  font-size: 12px;
+}
+
+.c1 {
+  font-size: 21px;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  color: #2A2A2A;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 50px;
+}
+
+.c4 {
+  width: 100%;
+  height: 200px;
+}
+
+.c4 .terminal {
+  padding: 15px;
+}
+
+.c4 .xterm .xterm-viewport {
+  border-radius: 4px;
+  overflow-y: hidden;
+}
+
+<Connect(TerminalOutput)
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+  task={
+    Object {
+      "logs": Array [
+        Object {
+          "id": 0,
+          "text": "First line",
+        },
+        Object {
+          "id": 1,
+          "text": "Second line",
+        },
+      ],
+    }
+  }
+>
+  <TerminalOutput
+    clearConsole={[Function]}
+    height={200}
+    projectPath="path/to/project"
+    store={
+      Object {
+        "clearActions": [Function],
+        "dispatch": [Function],
+        "getActions": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      }
+    }
+    storeSubscription={
+      Subscription {
+        "listeners": Object {
+          "clear": [Function],
+          "get": [Function],
+          "notify": [Function],
+          "subscribe": [Function],
+        },
+        "onStateChange": [Function],
+        "parentSub": undefined,
+        "store": Object {
+          "clearActions": [Function],
+          "dispatch": [Function],
+          "getActions": [Function],
+          "getState": [Function],
+          "replaceReducer": [Function],
+          "subscribe": [Function],
+        },
+        "unsubscribe": [Function],
+      }
+    }
+    task={
+      Object {
+        "logs": Array [
+          Object {
+            "id": 0,
+            "text": "First line",
+          },
+          Object {
+            "id": 1,
+            "text": "Second line",
+          },
+        ],
+      }
+    }
+    width="100%"
+  >
+    <styled.div>
+      <div
+        className=""
+      >
+        <styled.header>
+          <header
+            className="c0"
+          >
+            <Heading
+              size="xsmall"
+            >
+              <styled.h6>
+                <h6
+                  className="c1"
+                />
+              </styled.h6>
+            </Heading>
+            <PixelShifter
+              reason="
+              Buttons have a slightly-extruding stroke we want to
+              offset.
+            "
+              style={
+                Object {
+                  "display": "inherit",
+                }
+              }
+              x={-1}
+            >
+              <div
+                style={
+                  Object {
+                    "display": "inherit",
+                    "transform": "translate(-1px, 0px)",
+                  }
+                }
+              >
+                <FillButton
+                  colors={
+                    Array [
+                      "#ff416c",
+                      "#ff4b2b",
+                    ]
+                  }
+                  onClick={[Function]}
+                  size="xsmall"
+                  textColor="#FFF"
+                >
+                  <ButtonBase
+                    activeSplat={true}
+                    background="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
+                    hoverBackground="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
+                    onClick={[Function]}
+                    size="xsmall"
+                    textColor="#FFF"
+                  >
+                    <Styled(styled.button)
+                      activeSplat={true}
+                      background="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
+                      hoverBackground="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
+                      onClick={[Function]}
+                      textColor="#FFF"
+                    >
+                      <styled.button
+                        activeSplat={true}
+                        background="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
+                        className="c2"
+                        hoverBackground="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
+                        onClick={[Function]}
+                        textColor="#FFF"
+                      >
+                        <button
+                          className="c2 c3"
+                          onClick={[Function]}
+                        >
+                          Clear
+                        </button>
+                      </styled.button>
+                    </Styled(styled.button)>
+                  </ButtonBase>
+                </FillButton>
+              </div>
+            </PixelShifter>
+          </header>
+        </styled.header>
+        <styled.div
+          height={200}
+          innerRef={[Function]}
+          width="100%"
+        >
+          <div
+            className="c4"
+            height={200}
+            width="100%"
+          />
+        </styled.div>
+        <ResizeObserver
+          onResize={[Function]}
+        >
+          <div
+            style={
+              Object {
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "pointerEvents": "none",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+                "visibility": "hidden",
+                "zIndex": -1,
+              }
+            }
+          >
+            <div
+              style={
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "visibility": "hidden",
+                  "zIndex": -1,
+                }
+              }
+            >
+              <div
+                style={
+                  Object {
+                    "height": 100000,
+                    "left": 0,
+                    "position": "absolute",
+                    "top": 0,
+                    "transition": "0s",
+                    "width": 100000,
+                  }
+                }
+              />
+            </div>
+            <div
+              style={
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "visibility": "hidden",
+                  "zIndex": -1,
+                }
+              }
+            >
+              <div
+                style={
+                  Object {
+                    "height": "200%",
+                    "left": 0,
+                    "position": "absolute",
+                    "top": 0,
+                    "transition": "0s",
+                    "width": "200%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </ResizeObserver>
+      </div>
+    </styled.div>
+  </TerminalOutput>
+</Connect(TerminalOutput)>
+`;
