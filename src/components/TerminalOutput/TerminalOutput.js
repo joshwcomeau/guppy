@@ -5,12 +5,9 @@ import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { Terminal } from 'xterm';
 import * as webLinks from 'xterm/lib/addons/webLinks/webLinks';
-import * as fullscreen from 'xterm/lib/addons/fullscreen/fullscreen';
-
 import * as fit from 'xterm/lib/addons/fit/fit';
 
 import xtermCss from 'xterm/dist/xterm.css';
-import xtermFullscreenCss from 'xterm/lib/addons/fullscreen/fullscreen.css';
 
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
@@ -46,10 +43,10 @@ class TerminalOutput extends PureComponent<Props, State> {
 
   xterm: Terminal;
   node: ?HTMLElement;
+  renderedLogs: any = {}; // used to avoid clearing & only add new lines
 
   componentDidMount() {
     Terminal.applyAddon(webLinks);
-    Terminal.applyAddon(fullscreen);
     Terminal.applyAddon(fit);
     this.xterm = new Terminal({
       convertEol: true,
@@ -68,17 +65,21 @@ class TerminalOutput extends PureComponent<Props, State> {
     this.xterm.webLinksInit.call(this.xterm, (evt, uri) => {
       shell.openExternal(uri);
     });
-    //this.xterm.writeln(`[1mLocal:[22m            http://localhost:[1m3002[22m/`); // test for link handling
-    //this.scrollToBottom();
   }
 
-  // shouldComponentUpdate(nextProps) {
   componentDidUpdate(prevProps, prevState) {
-    //this.scrollToBottom();
     if (prevProps.logs !== this.state.logs) {
-      this.xterm.clear();
       for (const log of this.state.logs) {
-        this.writeln(log.text);
+        /*
+        We need to track what we have added to xterm - feels hacky but it's working.
+        `this.xterm.clear()` and re-render everything caused screen flicker that's why I decided to not use it.
+        Todo: Check if there is a react-xterm wrapper that is not using xterm.clear or 
+              create a wrapper component that can render the logs array (with-out flicker).
+        */
+        if (!this.renderedLogs[log.id]) {
+          this.writeln(log.text);
+          this.renderedLogs[log.id] = true;
+        }
       }
     }
   }
@@ -100,25 +101,15 @@ class TerminalOutput extends PureComponent<Props, State> {
     return null;
   }
 
-  scrollToBottom = () => {
-    // TODO: can element.scrollIntoView(false) be used instead?
-    if (!this.node) {
-      return;
-    }
-
-    const scrollHeight = this.node.scrollHeight;
-    const height = this.node.clientHeight;
-    const maxScrollTop = scrollHeight - height;
-
-    this.node.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
-  };
-
   handleClear = () => {
     const { task, clearConsole } = this.props;
 
     if (!task) {
       return;
     }
+
+    this.renderedLogs = {};
+    this.xterm.clear();
 
     clearConsole(task);
   };
@@ -131,15 +122,8 @@ class TerminalOutput extends PureComponent<Props, State> {
     this.xterm && this.xterm.writeln(data);
   }
 
-  toggleFullScreen = () => {
-    if (this.xterm) {
-      this.xterm.toggleFullScreen();
-      // this.xterm.fit();
-    }
-  };
-
   render() {
-    const { width, height, title, task } = this.props;
+    const { width, height, title } = this.props;
 
     return (
       <Fragment>
@@ -160,36 +144,13 @@ class TerminalOutput extends PureComponent<Props, State> {
             >
               Clear
             </FillButton>
-            <FillButton
-              size="xsmall"
-              colors={[COLORS.pink[300], COLORS.red[500]]}
-              onClick={this.toggleFullScreen}
-              style={{
-                zIndex: 1000,
-              }}
-            >
-              Toggle fullscreen
-            </FillButton>
           </PixelShifter>
         </Header>
-        <Wrapper
+        <XtermContainer
           width={width}
           height={height}
           innerRef={node => (this.node = node)}
-        >
-          {/* <TableWrapper height={height}>
-            <LogWrapper>
-              {{task.logs.map(log => (
-                <LogRow
-                  key={log.id}
-                  dangerouslySetInnerHTML={{
-                    __html: convert.toHtml(log.text),
-                  }}
-                />
-              ))}}
-            </LogWrapper>
-          </TableWrapper> */}
-        </Wrapper>
+        />
       </Fragment>
     );
   }
@@ -202,9 +163,13 @@ const Header = styled.header`
   height: 50px;
 `;
 
-const Wrapper = styled.div`
+const XtermContainer = styled.div`
   ${css(xtermCss)}
 
+  width: ${props =>
+    typeof props.width === 'number' ? `${props.width}px` : props.width};
+  height: ${props => props.height}px;
+  
   .terminal {
     /* Colors set with js-API as xterm.js is using style on element */
     padding: 15px;
@@ -214,52 +179,6 @@ const Wrapper = styled.div`
     border-radius: 4px;
     overflow-y: hidden;
   }
-
-  /*${css(xtermFullscreenCss)}*/
-  .xterm.fullscreen {
-    /* similar to code from addon css - slightly modified */
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 80px;
-    /* right: 0; */
-    width: 80vw;
-    height: auto;
-    z-index: 255;
-  }
-
-  /* width: ${props =>
-    typeof props.width === 'number' ? `${props.width}px` : props.width};
-  height: ${props => props.height}px; */
-  /* overflow: auto;
-  padding: 15px;
-  color: ${COLORS.white};
-  background-color: ${COLORS.blue[900]};
-  border-radius: 4px;
-  font-family: 'Fira Mono', monospace;
-  font-size: 13px; */
-`;
-
-// NOTE: I have a loooot of nested elements here, to try and align things
-// to the bottom. Flexbox doesn't play nicely with overflow: scroll :/
-// There's almost certainly a better way to do this, just haven't spent time.
-const TableWrapper = styled.div`
-  display: table;
-  width: 100%;
-  height: 100%;
-`;
-
-const LogWrapper = styled.div`
-  display: table-cell;
-  vertical-align: bottom;
-  width: 100%;
-  height: 100%;
-`;
-
-const LogRow = styled.div`
-  min-height: 0;
-  margin-top: 10px;
-  white-space: pre;
 `;
 
 export default connect(
