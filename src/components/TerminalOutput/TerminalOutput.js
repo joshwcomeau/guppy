@@ -1,20 +1,27 @@
 // @flow
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { shell } from 'electron';
 import { connect } from 'react-redux';
+import * as path from 'path';
+import * as os from 'os';
 import styled, { css } from 'styled-components';
 import { Terminal } from 'xterm';
+import ResizeObserver from 'react-resize-observer';
+
 import * as webLinks from 'xterm/lib/addons/webLinks/webLinks';
 import * as fit from 'xterm/lib/addons/fit/fit';
+import * as localLinks from './localLinksAddon.js';
 
 import xtermCss from 'xterm/dist/xterm.css';
 
+import { getSelectedProject } from '../../reducers/projects.reducer';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 
 import { FillButton } from '../Button';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
+import { openProjectInEditor } from '../../services/shell.service';
 
 import type { Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
@@ -47,7 +54,9 @@ class TerminalOutput extends PureComponent<Props, State> {
 
   componentDidMount() {
     Terminal.applyAddon(webLinks);
+    Terminal.applyAddon(localLinks);
     Terminal.applyAddon(fit);
+
     this.xterm = new Terminal({
       convertEol: true,
       fontFamily: `'Fira Mono', monospace`,
@@ -61,10 +70,22 @@ class TerminalOutput extends PureComponent<Props, State> {
     });
 
     this.xterm.open(this.node);
-    this.xterm.fit(); // todo: onResize needs to be handled
+    this.xterm.fit();
+
+    // Init addons
     this.xterm.webLinksInit.call(this.xterm, (evt, uri) => {
       shell.openExternal(uri);
     });
+    this.xterm.localLinksInit.call(
+      this.xterm,
+      (evt, uri) => {
+        const { projectPath } = this.props;
+        openProjectInEditor({ path: path.resolve(projectPath, uri) });
+      },
+      {
+        platform: os.platform(),
+      }
+    );
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -81,6 +102,14 @@ class TerminalOutput extends PureComponent<Props, State> {
           this.renderedLogs[log.id] = true;
         }
       }
+    }
+
+    if (
+      prevProps.width !== this.props.width ||
+      prevProps.height !== this.props.height
+    ) {
+      // size changed
+      this.xterm.fit();
     }
   }
 
@@ -126,7 +155,7 @@ class TerminalOutput extends PureComponent<Props, State> {
     const { width, height, title } = this.props;
 
     return (
-      <Fragment>
+      <Wrapper>
         <Header>
           <Heading size="xsmall">{title}</Heading>
           <PixelShifter
@@ -151,7 +180,8 @@ class TerminalOutput extends PureComponent<Props, State> {
           height={height}
           innerRef={node => (this.node = node)}
         />
-      </Fragment>
+        <ResizeObserver onResize={() => this.xterm && this.xterm.fit()} />
+      </Wrapper>
     );
   }
 }
@@ -162,6 +192,8 @@ const Header = styled.header`
   align-items: center;
   height: 50px;
 `;
+
+const Wrapper = styled.div``;
 
 const XtermContainer = styled.div`
   ${css(xtermCss)}
@@ -181,7 +213,15 @@ const XtermContainer = styled.div`
   }
 `;
 
+const mapStateToProps = state => {
+  const { path: projectPath } = getSelectedProject(state);
+
+  return {
+    projectPath,
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   { clearConsole: actions.clearConsole }
 )(TerminalOutput);

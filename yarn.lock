@@ -10360,6 +10360,11 @@ react-redux@5.0.7:
     loose-envify "^1.1.0"
     prop-types "^15.6.0"
 
+react-resize-observer@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-resize-observer/-/react-resize-observer-1.1.1.tgz#641dfa2e0f4bd2549a8ab4bbbaf43b68f3dcaf76"
+  integrity sha512-3R+90Hou90Mr3wJYc+unsySC8Pn91V4nmjO32NKvUvjphRUbq9HisyLg7bDyGBE7xlMrrM6Fax7iNQaFdc/FYA==
+
 react-split-pane@^0.1.77:
   version "0.1.84"
   resolved "https://registry.yarnpkg.com/react-split-pane/-/react-split-pane-0.1.84.tgz#b9c1499cbc40b09cf29953ee6f5ff1039d31906e"
