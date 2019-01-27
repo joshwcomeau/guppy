@@ -15,8 +15,8 @@ const openedWindows = {};
 export const openProjectInFolder = (project: Project) =>
   shell.openItem(project.path);
 
-export const openProjectInEditor = (project: Project) =>
-  launchEditor(project.path, 1, 1);
+export const openProjectInEditor = (projectOrPath: Project | string) =>
+  launchEditor(projectOrPath.path || projectOrPath, 1, 1);
 
 export const openWindow = (url: string) => {
   const urlKey = url.replace(/(\/|:|\.)/g, '');

@@ -32,6 +32,7 @@ type Props = {
   title: string,
   task: Task,
   clearConsole: Dispatch<typeof actions.clearConsole>,
+  projectPath: string,
 };
 
 type State = {
@@ -80,7 +81,7 @@ class TerminalOutput extends PureComponent<Props, State> {
       this.xterm,
       (evt, uri) => {
         const { projectPath } = this.props;
-        openProjectInEditor({ path: path.resolve(projectPath, uri) });
+        openProjectInEditor(path.resolve(projectPath, uri));
       },
       {
         platform: os.platform(),
@@ -89,7 +90,10 @@ class TerminalOutput extends PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.logs !== this.state.logs) {
+    if (prevProps.task.logs !== this.state.logs) {
+      if (this.state.logs.length === 0) {
+        this.xterm.clear();
+      }
       for (const log of this.state.logs) {
         /*
         We need to track what we have added to xterm - feels hacky but it's working.
@@ -99,6 +103,7 @@ class TerminalOutput extends PureComponent<Props, State> {
         */
         if (!this.renderedLogs[log.id]) {
           this.writeln(log.text);
+          this.xterm.scrollToBottom();
           this.renderedLogs[log.id] = true;
         }
       }
@@ -121,10 +126,17 @@ class TerminalOutput extends PureComponent<Props, State> {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.task && nextProps.task.logs !== prevState.logs) {
-      return {
-        logs: nextProps.task.logs,
-      };
+    if (nextProps.task) {
+      if (nextProps.task.logs !== prevState.logs) {
+        return {
+          logs: nextProps.task.logs,
+        };
+      }
+      if (nextProps.task.logs.length === 0) {
+        return {
+          logs: [],
+        };
+      }
     }
 
     return null;
@@ -138,7 +150,6 @@ class TerminalOutput extends PureComponent<Props, State> {
     }
 
     this.renderedLogs = {};
-    this.xterm.clear();
 
     clearConsole(task);
   };
@@ -214,10 +225,14 @@ const XtermContainer = styled.div`
 `;
 
 const mapStateToProps = state => {
-  const { path: projectPath } = getSelectedProject(state);
+  if (state === null) {
+    return;
+  }
+
+  const project = getSelectedProject(state);
 
   return {
-    projectPath,
+    projectPath: project && project.path,
   };
 };
 

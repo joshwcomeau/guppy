@@ -80,8 +80,8 @@ function handleLink(event: MouseEvent, uri: string): void {
 // todo: localLinkRegex & platform not available in function - not sure how to add.
 export function extractLineColumnInfo(
   link: string,
-  localLinkRegex,
-  platform
+  localLinkRegex: any,
+  platform: string
 ): LineColumnInfo {
   const matches: string[] | null = localLinkRegex.exec(link);
   const lineColumnInfo: LineColumnInfo = {
