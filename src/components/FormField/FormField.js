@@ -12,16 +12,28 @@ type Props = {
   isFocused?: boolean,
   hasError?: boolean,
   children: React$Node,
+  spacing: number,
 };
 
 class FormField extends PureComponent<Props> {
+  static defaultProps = {
+    spacing: 30,
+  };
+
   render() {
-    const { label, useLabelTag, isFocused, hasError, children } = this.props;
+    const {
+      label,
+      useLabelTag,
+      isFocused,
+      hasError,
+      children,
+      spacing,
+    } = this.props;
 
     const Wrapper = useLabelTag ? WrapperLabel : WrapperDiv;
 
     return (
-      <Wrapper>
+      <Wrapper spacing={spacing}>
         <LabelText isFocused={isFocused} hasError={hasError}>
           {label}
         </LabelText>
@@ -43,11 +55,11 @@ const getTextColor = (props: Props) => {
 
 const WrapperLabel = styled.label`
   display: block;
-  margin-bottom: 30px;
+  margin-bottom: ${props => props.spacing}px;
 `;
 
 const WrapperDiv = styled.div`
-  margin-bottom: 30px;
+  margin-bottom: ${props => props.spacing}px;
 `;
 
 const LabelText = styled(Label)`

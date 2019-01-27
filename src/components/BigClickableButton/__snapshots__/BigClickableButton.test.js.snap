@@ -1,0 +1,621 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BigClickableButton component should render pressed 1`] = `
+.c0 {
+  position: relative;
+  overflow: hidden;
+  padding-right: 6px;
+  padding-bottom: 6px;
+}
+
+.c1 {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  -webkit-transform: translate(4px,4px);
+  -ms-transform: translate(4px,4px);
+  transform: translate(4px,4px);
+}
+
+.c2 {
+  width: 64px;
+  height: 64px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-around;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: space-around;
+  justify-content: space-around;
+  color: #FFF;
+  font-size: 18px;
+  border: none;
+  background: linear-gradient(45deg,#2142ff,#3f6cff);
+  outline: none;
+}
+
+.c3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+<BigClickableButton
+  colors={
+    Array [
+      "#2142ff",
+      "#3f6cff",
+    ]
+  }
+  height={64}
+  thickness={6}
+  width={64}
+>
+  <styled.div
+    thickness={6}
+  >
+    <div
+      className="c0"
+    >
+      <Spring
+        config={
+          Object {
+            "friction": 16,
+            "tension": 196,
+          }
+        }
+        from={
+          Object {
+            "offset": 0,
+          }
+        }
+        hold={false}
+        immediate={false}
+        impl={[Function]}
+        inject={[Function]}
+        native={true}
+        reset={false}
+        to={
+          Object {
+            "offset": 6,
+          }
+        }
+      >
+        <AnimatedComponent
+          height={64}
+          offset={
+            AnimatedValue {
+              "_animatedStyles": Set {
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "offset": [Circular],
+                  },
+                },
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "children": Array [
+                      <styled.button
+                        background="linear-gradient(45deg, #2142ff, #3f6cff)"
+                        height={64}
+                        onMouseDown={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseUp={[Function]}
+                        width={64}
+                      />,
+                      <styled.div>
+                        <styled.svg
+                          height={72}
+                          style={
+                            Object {
+                              "display": "block",
+                            }
+                          }
+                          width={72}
+                        >
+                          <path
+                            d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+                            fill="rgb(0, 30, 202)"
+                          />
+                          <path
+                            d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+                            fill="rgb(0, 52, 223)"
+                          />
+                        </styled.svg>
+                      </styled.div>,
+                    ],
+                    "height": 64,
+                    "offset": [Circular],
+                    "width": 64,
+                  },
+                },
+              },
+              "_animation": SpringAnimation {
+                "__active": true,
+                "__onEnd": [Function],
+                "_animationFrame": 2,
+                "_friction": 49,
+                "_initialVelocity": undefined,
+                "_lastPosition": 4,
+                "_lastTime": 0,
+                "_lastVelocity": 0,
+                "_onUpdate": [Function],
+                "_overshootClamping": false,
+                "_restDisplacementThreshold": 0.0001,
+                "_restSpeedThreshold": 0.0001,
+                "_startPosition": 4,
+                "_tension": 794.9200000000001,
+                "_to": 6,
+                "onUpdate": [Function],
+              },
+              "_children": Array [
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "offset": [Circular],
+                  },
+                },
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "children": Array [
+                      <styled.button
+                        background="linear-gradient(45deg, #2142ff, #3f6cff)"
+                        height={64}
+                        onMouseDown={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseUp={[Function]}
+                        width={64}
+                      />,
+                      <styled.div>
+                        <styled.svg
+                          height={72}
+                          style={
+                            Object {
+                              "display": "block",
+                            }
+                          }
+                          width={72}
+                        >
+                          <path
+                            d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+                            fill="rgb(0, 30, 202)"
+                          />
+                          <path
+                            d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+                            fill="rgb(0, 52, 223)"
+                          />
+                        </styled.svg>
+                      </styled.div>,
+                    ],
+                    "height": 64,
+                    "offset": [Circular],
+                    "width": 64,
+                  },
+                },
+              ],
+              "_listeners": Object {},
+              "_tracking": null,
+              "_value": 4,
+            }
+          }
+          width={64}
+        >
+          <styled.div
+            height={64}
+            offset={4}
+            width={64}
+          >
+            <div
+              className="c1"
+              height={64}
+              offset={4}
+              width={64}
+            >
+              <styled.button
+                background="linear-gradient(45deg, #2142ff, #3f6cff)"
+                height={64}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                width={64}
+              >
+                <button
+                  className="c2"
+                  height={64}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  width={64}
+                />
+              </styled.button>
+              <styled.div>
+                <div
+                  className="c3"
+                >
+                  <styled.svg
+                    height={72}
+                    style={
+                      Object {
+                        "display": "block",
+                      }
+                    }
+                    width={72}
+                  >
+                    <svg
+                      className=""
+                      height={72}
+                      style={
+                        Object {
+                          "display": "block",
+                        }
+                      }
+                      width={72}
+                    >
+                      <path
+                        d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+                        fill="rgb(0, 30, 202)"
+                      />
+                      <path
+                        d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+                        fill="rgb(0, 52, 223)"
+                      />
+                    </svg>
+                  </styled.svg>
+                </div>
+              </styled.div>
+            </div>
+          </styled.div>
+        </AnimatedComponent>
+      </Spring>
+    </div>
+  </styled.div>
+</BigClickableButton>
+`;
+
+exports[`BigClickableButton component should render released 1`] = `
+.c0 {
+  position: relative;
+  overflow: hidden;
+  padding-right: 6px;
+  padding-bottom: 6px;
+}
+
+.c1 {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  -webkit-transform: translate(4px,4px);
+  -ms-transform: translate(4px,4px);
+  transform: translate(4px,4px);
+}
+
+.c2 {
+  width: 64px;
+  height: 64px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-around;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: space-around;
+  justify-content: space-around;
+  color: #FFF;
+  font-size: 18px;
+  border: none;
+  background: linear-gradient(45deg,#2142ff,#3f6cff);
+  outline: none;
+}
+
+.c3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+<BigClickableButton
+  colors={
+    Array [
+      "#2142ff",
+      "#3f6cff",
+    ]
+  }
+  height={64}
+  thickness={6}
+  width={64}
+>
+  <styled.div
+    thickness={6}
+  >
+    <div
+      className="c0"
+    >
+      <Spring
+        config={
+          Object {
+            "friction": 16,
+            "tension": 196,
+          }
+        }
+        from={
+          Object {
+            "offset": 4,
+          }
+        }
+        hold={false}
+        immediate={false}
+        impl={[Function]}
+        inject={[Function]}
+        native={true}
+        reset={false}
+        to={
+          Object {
+            "offset": 0,
+          }
+        }
+      >
+        <AnimatedComponent
+          height={64}
+          offset={
+            AnimatedValue {
+              "_animatedStyles": Set {
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "offset": [Circular],
+                  },
+                },
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "children": Array [
+                      <styled.button
+                        background="linear-gradient(45deg, #2142ff, #3f6cff)"
+                        height={64}
+                        onMouseDown={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseUp={[Function]}
+                        width={64}
+                      />,
+                      <styled.div>
+                        <styled.svg
+                          height={72}
+                          style={
+                            Object {
+                              "display": "block",
+                            }
+                          }
+                          width={72}
+                        >
+                          <path
+                            d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+                            fill="rgb(0, 30, 202)"
+                          />
+                          <path
+                            d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+                            fill="rgb(0, 52, 223)"
+                          />
+                        </styled.svg>
+                      </styled.div>,
+                    ],
+                    "height": 64,
+                    "offset": [Circular],
+                    "width": 64,
+                  },
+                },
+              },
+              "_animation": SpringAnimation {
+                "__active": true,
+                "__onEnd": [Function],
+                "_animationFrame": 5,
+                "_friction": 49,
+                "_initialVelocity": undefined,
+                "_lastPosition": 4,
+                "_lastTime": 0,
+                "_lastVelocity": 0,
+                "_onUpdate": [Function],
+                "_overshootClamping": false,
+                "_restDisplacementThreshold": 0.0001,
+                "_restSpeedThreshold": 0.0001,
+                "_startPosition": 4,
+                "_tension": 794.9200000000001,
+                "_to": 0,
+                "onUpdate": [Function],
+              },
+              "_children": Array [
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "offset": [Circular],
+                  },
+                },
+                AnimatedProps {
+                  "_callback": [Function],
+                  "_props": Object {
+                    "children": Array [
+                      <styled.button
+                        background="linear-gradient(45deg, #2142ff, #3f6cff)"
+                        height={64}
+                        onMouseDown={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseUp={[Function]}
+                        width={64}
+                      />,
+                      <styled.div>
+                        <styled.svg
+                          height={72}
+                          style={
+                            Object {
+                              "display": "block",
+                            }
+                          }
+                          width={72}
+                        >
+                          <path
+                            d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+                            fill="rgb(0, 30, 202)"
+                          />
+                          <path
+                            d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+                            fill="rgb(0, 52, 223)"
+                          />
+                        </styled.svg>
+                      </styled.div>,
+                    ],
+                    "height": 64,
+                    "offset": [Circular],
+                    "width": 64,
+                  },
+                },
+              ],
+              "_listeners": Object {},
+              "_tracking": null,
+              "_value": 4,
+            }
+          }
+          width={64}
+        >
+          <styled.div
+            height={64}
+            offset={4}
+            width={64}
+          >
+            <div
+              className="c1"
+              height={64}
+              offset={4}
+              width={64}
+            >
+              <styled.button
+                background="linear-gradient(45deg, #2142ff, #3f6cff)"
+                height={64}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                width={64}
+              >
+                <button
+                  className="c2"
+                  height={64}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  width={64}
+                />
+              </styled.button>
+              <styled.div>
+                <div
+                  className="c3"
+                >
+                  <styled.svg
+                    height={72}
+                    style={
+                      Object {
+                        "display": "block",
+                      }
+                    }
+                    width={72}
+                  >
+                    <svg
+                      className=""
+                      height={72}
+                      style={
+                        Object {
+                          "display": "block",
+                        }
+                      }
+                      width={72}
+                    >
+                      <path
+                        d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+                        fill="rgb(0, 30, 202)"
+                      />
+                      <path
+                        d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+                        fill="rgb(0, 52, 223)"
+                      />
+                    </svg>
+                  </styled.svg>
+                </div>
+              </styled.div>
+            </div>
+          </styled.div>
+        </AnimatedComponent>
+      </Spring>
+    </div>
+  </styled.div>
+</BigClickableButton>
+`;

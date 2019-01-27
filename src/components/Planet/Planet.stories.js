@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import styled from 'styled-components';
@@ -16,7 +17,7 @@ storiesOf('Planet', module)
   ))
   .add('Earth', () => (
     <Space>
-      <Earth />
+      <Earth size={(500 / 2) * 0.4} />
     </Space>
   ));
 

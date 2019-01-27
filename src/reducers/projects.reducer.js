@@ -8,6 +8,7 @@ import {
   IMPORT_EXISTING_PROJECT_FINISH,
   FINISH_DELETING_PROJECT,
   INSTALL_DEPENDENCIES_FINISH,
+  UNINSTALL_DEPENDENCIES_FINISH,
   REFRESH_PROJECTS_FINISH,
   SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
@@ -60,6 +61,15 @@ const byIdReducer = (state: ById = initialState.byId, action: Action = {}) => {
         dependencies.forEach(dependency => {
           draftState[projectId].dependencies[dependency.name] =
             dependency.version;
+        });
+      });
+    }
+
+    case UNINSTALL_DEPENDENCIES_FINISH: {
+      const { projectId, dependencies } = action;
+      return produce(state, draftState => {
+        dependencies.forEach(dependency => {
+          delete draftState[projectId].dependencies[dependency.name];
         });
       });
     }

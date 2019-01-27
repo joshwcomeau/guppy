@@ -1,0 +1,347 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonWithIcon component should render button with icon 1`] = `
+.c3 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #FFF;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c3:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+}
+
+.c3:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c2 {
+  padding: 0px;
+  height: auto;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+.c0 {
+  position: relative;
+  display: inline-block;
+  padding: 2px;
+}
+
+.c1 {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.c6 {
+  position: absolute;
+  z-index: 0;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-radius: 100px;
+  background: linear-gradient(25deg,#651fff,#D500F9);
+  opacity: 1;
+  -webkit-transition: opacity 350ms;
+  transition: opacity 350ms;
+}
+
+.c4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 34px;
+  padding: 0 10px 0 32px;
+}
+
+.c5 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+<ButtonWithIcon
+  icon={
+    <Icon
+      fill="currentColor"
+      icon={
+        Object {
+          "attribs": Object {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+          },
+          "children": Array [
+            Object {
+              "attribs": Object {
+                "cx": "12",
+                "cy": "12",
+                "r": "3",
+              },
+              "children": Array [],
+              "name": "circle",
+            },
+            Object {
+              "attribs": Object {
+                "d": "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z",
+              },
+              "children": Array [],
+              "name": "path",
+            },
+          ],
+          "viewBox": "0 0 24 24",
+        }
+      }
+      size={16}
+    />
+  }
+>
+  <StrokeButton
+    fillColor="#FFF"
+    noPadding={true}
+    showStroke={true}
+    strokeColors={
+      Array [
+        "#651fff",
+        "#D500F9",
+      ]
+    }
+  >
+    <DetectActive
+      className=""
+    >
+      <span
+        className=""
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        onMouseUp={[Function]}
+      >
+        <styled.div>
+          <div
+            className="c0"
+          >
+            <styled.span>
+              <span
+                className="c1"
+              >
+                <ButtonBase
+                  background="#FFF"
+                  noPadding={true}
+                  size="medium"
+                  textColor="#111111"
+                >
+                  <Styled(styled.button)
+                    background="#FFF"
+                    noPadding={true}
+                    textColor="#111111"
+                  >
+                    <styled.button
+                      background="#FFF"
+                      className="c2"
+                      noPadding={true}
+                      textColor="#111111"
+                    >
+                      <button
+                        className="c2 c3"
+                      >
+                        <span
+                          style={
+                            Object {
+                              "display": "block",
+                            }
+                          }
+                        >
+                          <styled.div>
+                            <div
+                              className="c4"
+                            >
+                              <styled.div>
+                                <div
+                                  className="c5"
+                                >
+                                  <Icon
+                                    fill="currentColor"
+                                    icon={
+                                      Object {
+                                        "attribs": Object {
+                                          "fill": "none",
+                                          "stroke": "currentColor",
+                                          "stroke-linecap": "round",
+                                          "stroke-linejoin": "round",
+                                          "stroke-width": "2",
+                                        },
+                                        "children": Array [
+                                          Object {
+                                            "attribs": Object {
+                                              "cx": "12",
+                                              "cy": "12",
+                                              "r": "3",
+                                            },
+                                            "children": Array [],
+                                            "name": "circle",
+                                          },
+                                          Object {
+                                            "attribs": Object {
+                                              "d": "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z",
+                                            },
+                                            "children": Array [],
+                                            "name": "path",
+                                          },
+                                        ],
+                                        "viewBox": "0 0 24 24",
+                                      }
+                                    }
+                                    size={16}
+                                  >
+                                    <div
+                                      fill="currentColor"
+                                      size={16}
+                                      style={
+                                        Object {
+                                          "alignItems": "center",
+                                          "display": "inline-flex",
+                                          "justifyContent": "center",
+                                        }
+                                      }
+                                    >
+                                      <SvgIcon
+                                        icon={
+                                          Object {
+                                            "attribs": Object {
+                                              "fill": "none",
+                                              "stroke": "currentColor",
+                                              "stroke-linecap": "round",
+                                              "stroke-linejoin": "round",
+                                              "stroke-width": "2",
+                                            },
+                                            "children": Array [
+                                              Object {
+                                                "attribs": Object {
+                                                  "cx": "12",
+                                                  "cy": "12",
+                                                  "r": "3",
+                                                },
+                                                "children": Array [],
+                                                "name": "circle",
+                                              },
+                                              Object {
+                                                "attribs": Object {
+                                                  "d": "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z",
+                                                },
+                                                "children": Array [],
+                                                "name": "path",
+                                              },
+                                            ],
+                                            "viewBox": "0 0 24 24",
+                                          }
+                                        }
+                                        size={16}
+                                      >
+                                        <svg
+                                          fill="none"
+                                          height={16}
+                                          stroke="currentColor"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth="2"
+                                          style={
+                                            Object {
+                                              "display": "inline-block",
+                                              "verticalAlign": "middle",
+                                            }
+                                          }
+                                          viewBox="0 0 24 24"
+                                          width={16}
+                                        >
+                                          <circle
+                                            cx="12"
+                                            cy="12"
+                                            key="0"
+                                            r="3"
+                                          />
+                                          <path
+                                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+                                            key="1"
+                                          />
+                                        </svg>
+                                      </SvgIcon>
+                                    </div>
+                                  </Icon>
+                                </div>
+                              </styled.div>
+                            </div>
+                          </styled.div>
+                        </span>
+                      </button>
+                    </styled.button>
+                  </Styled(styled.button)>
+                </ButtonBase>
+              </span>
+            </styled.span>
+            <styled.div
+              colors={
+                Array [
+                  "#651fff",
+                  "#D500F9",
+                ]
+              }
+              isActive={false}
+              isVisible={true}
+            >
+              <div
+                className="c6"
+              />
+            </styled.div>
+          </div>
+        </styled.div>
+      </span>
+    </DetectActive>
+  </StrokeButton>
+</ButtonWithIcon>
+`;

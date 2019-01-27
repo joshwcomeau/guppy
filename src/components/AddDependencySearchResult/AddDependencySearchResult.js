@@ -15,6 +15,7 @@ import {
 } from '../../reducers/projects.reducer';
 import { COLORS } from '../../constants';
 
+import Divider from '../Divider';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import ExternalLink from '../ExternalLink';
@@ -209,12 +210,6 @@ const StatsItemElem = styled.span`
 const Description = styled.div`
   font-size: 18px;
   margin-right: 120px;
-`;
-
-const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  background: ${COLORS.gray[100]};
 `;
 
 const StatsItemHighlight = styled.span`

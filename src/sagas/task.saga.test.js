@@ -20,6 +20,7 @@ import {
   completeTask,
   loadDependencyInfoFromDiskStart,
 } from '../actions';
+import { waitForAsyncRimraf } from './delete-project.saga';
 import killProcessId from '../services/kill-process-id.service';
 import { getProjectById } from '../reducers/projects.reducer';
 import { getPathForProjectId } from '../reducers/paths.reducer';
@@ -283,6 +284,16 @@ describe('task saga', () => {
         // `take` a log message
         saga.next();
 
+        // delete node_modules folder
+        expect(
+          saga.next({
+            channel: 'exit',
+            timestamp,
+            wasSuccessful: true,
+            uncleanRepo: false,
+          }).value
+        ).toEqual(call(waitForAsyncRimraf, projectPath));
+
         // ejecting requires that dependencies are reinstalled
         const installProcessDescription = call(
           [childProcess, childProcess.spawn],
@@ -403,7 +414,7 @@ describe('task saga', () => {
       const processId = 12345;
       const project = { id: 'tangy-blueberry', path: '/path/to/project' };
       const task = { processId, name: 'eject', projectId: project.id };
-      const saga = taskComplete({ task });
+      const saga = taskComplete({ task, wasSuccessful: true });
       saga.next();
 
       expect(saga.next().value).toEqual(

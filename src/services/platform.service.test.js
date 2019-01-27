@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import path from 'path';
 
 import { getBaseProjectEnvironment, isWin } from './platform.service';

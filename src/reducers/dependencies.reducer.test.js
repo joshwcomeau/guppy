@@ -20,12 +20,14 @@ import {
 
 describe('dependencies reducer', () => {
   it('should return initial state', () => {
-    expect(reducer()).toEqual({});
+    expect(reducer()).toEqual(initialState);
   });
 
   it(`should handle ${LOAD_DEPENDENCY_INFO_FROM_DISK_FINISH}`, () => {
     const prevState = {
-      baz: {},
+      loadedDependencies: {
+        baz: {},
+      },
     };
 
     const action = {
@@ -36,9 +38,14 @@ describe('dependencies reducer', () => {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "baz": Object {},
-  "foo": Object {
-    "redux": Object {},
+  "loadedDependencies": Object {
+    "baz": Object {},
+    "foo": Object {
+      "redux": Object {},
+    },
+  },
+  "loadingStatus": Object {
+    "foo": "done",
   },
 }
 `);
@@ -46,7 +53,9 @@ Object {
 
   it(`should handle ${ADD_DEPENDENCY}`, () => {
     const prevState = {
-      foo: {},
+      loadedDependencies: {
+        foo: {},
+      },
     };
 
     const action = {
@@ -57,38 +66,43 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "redux": Object {
-      "description": "",
-      "homepage": "",
-      "license": "",
-      "location": "dependencies",
-      "name": "redux",
-      "repository": Object {
-        "type": "",
-        "url": "",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "redux": Object {
+        "description": "",
+        "homepage": "",
+        "license": "",
+        "location": "dependencies",
+        "name": "redux",
+        "repository": Object {
+          "type": "",
+          "url": "",
+        },
+        "status": "queued-install",
+        "version": "",
       },
-      "status": "queued-install",
-      "version": "",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${UPDATE_DEPENDENCY}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'idle',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'idle',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
         },
       },
     };
@@ -102,42 +116,47 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "redux": Object {
-      "description": "dependency description",
-      "homepage": "https://dependency-homepage.io",
-      "keywords": Array [
-        "key",
-        "words",
-      ],
-      "license": "MIT",
-      "location": "dependencies",
-      "name": "redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/foo/bar.git",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "redux": Object {
+        "description": "dependency description",
+        "homepage": "https://dependency-homepage.io",
+        "keywords": Array [
+          "key",
+          "words",
+        ],
+        "license": "MIT",
+        "location": "dependencies",
+        "name": "redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/foo/bar.git",
+        },
+        "status": "queued-update",
+        "version": "3.2",
       },
-      "status": "queued-update",
-      "version": "3.2",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${DELETE_DEPENDENCY}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'idle',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'idle',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
         },
       },
     };
@@ -151,52 +170,57 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "redux": Object {
-      "description": "dependency description",
-      "homepage": "https://dependency-homepage.io",
-      "keywords": Array [
-        "key",
-        "words",
-      ],
-      "license": "MIT",
-      "location": "dependencies",
-      "name": "redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/foo/bar.git",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "redux": Object {
+        "description": "dependency description",
+        "homepage": "https://dependency-homepage.io",
+        "keywords": Array [
+          "key",
+          "words",
+        ],
+        "license": "MIT",
+        "location": "dependencies",
+        "name": "redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/foo/bar.git",
+        },
+        "status": "queued-delete",
+        "version": "3.2",
       },
-      "status": "queued-delete",
-      "version": "3.2",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${INSTALL_DEPENDENCIES_START}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'queued-update',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
-        },
-        'react-redux': {
-          name: 'react-redux',
-          status: 'queued-install',
-          location: 'dependencies',
-          description: '',
-          version: '',
-          homepage: '',
-          license: '',
-          repository: { type: '', url: '' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'queued-update',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
+          'react-redux': {
+            name: 'react-redux',
+            status: 'queued-install',
+            location: 'dependencies',
+            description: '',
+            version: '',
+            homepage: '',
+            license: '',
+            repository: { type: '', url: '' },
+          },
         },
       },
     };
@@ -218,65 +242,70 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "react-redux": Object {
-      "description": "",
-      "homepage": "",
-      "license": "",
-      "location": "dependencies",
-      "name": "react-redux",
-      "repository": Object {
-        "type": "",
-        "url": "",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "react-redux": Object {
+        "description": "",
+        "homepage": "",
+        "license": "",
+        "location": "dependencies",
+        "name": "react-redux",
+        "repository": Object {
+          "type": "",
+          "url": "",
+        },
+        "status": "installing",
+        "version": "",
       },
-      "status": "installing",
-      "version": "",
-    },
-    "redux": Object {
-      "description": "dependency description",
-      "homepage": "https://dependency-homepage.io",
-      "keywords": Array [
-        "key",
-        "words",
-      ],
-      "license": "MIT",
-      "location": "dependencies",
-      "name": "redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/foo/bar.git",
+      "redux": Object {
+        "description": "dependency description",
+        "homepage": "https://dependency-homepage.io",
+        "keywords": Array [
+          "key",
+          "words",
+        ],
+        "license": "MIT",
+        "location": "dependencies",
+        "name": "redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/foo/bar.git",
+        },
+        "status": "updating",
+        "version": "3.2",
       },
-      "status": "updating",
-      "version": "3.2",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${INSTALL_DEPENDENCIES_ERROR}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'queued-update',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
-        },
-        'react-redux': {
-          name: 'react-redux',
-          status: 'queued-install',
-          location: 'dependencies',
-          description: '',
-          version: '',
-          homepage: '',
-          license: '',
-          repository: { type: '', url: '' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'queued-update',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
+          'react-redux': {
+            name: 'react-redux',
+            status: 'queued-install',
+            location: 'dependencies',
+            description: '',
+            version: '',
+            homepage: '',
+            license: '',
+            repository: { type: '', url: '' },
+          },
         },
       },
     };
@@ -298,52 +327,57 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "redux": Object {
-      "description": "dependency description",
-      "homepage": "https://dependency-homepage.io",
-      "keywords": Array [
-        "key",
-        "words",
-      ],
-      "license": "MIT",
-      "location": "dependencies",
-      "name": "redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/foo/bar.git",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "redux": Object {
+        "description": "dependency description",
+        "homepage": "https://dependency-homepage.io",
+        "keywords": Array [
+          "key",
+          "words",
+        ],
+        "license": "MIT",
+        "location": "dependencies",
+        "name": "redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/foo/bar.git",
+        },
+        "status": "idle",
+        "version": "3.2",
       },
-      "status": "idle",
-      "version": "3.2",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${INSTALL_DEPENDENCIES_FINISH}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'queued-update',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
-        },
-        'react-redux': {
-          name: 'react-redux',
-          status: 'queued-install',
-          location: 'dependencies',
-          description: '',
-          version: '',
-          homepage: '',
-          license: '',
-          repository: { type: '', url: '' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'queued-update',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
+          'react-redux': {
+            name: 'react-redux',
+            status: 'queued-install',
+            location: 'dependencies',
+            description: '',
+            version: '',
+            homepage: '',
+            license: '',
+            repository: { type: '', url: '' },
+          },
         },
       },
     };
@@ -377,58 +411,63 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "react-redux": Object {
-      "description": "other description",
-      "homepage": "https://dependency-homepage2.io",
-      "keywords": Array [
-        "foo",
-        "bar",
-      ],
-      "license": "ISC",
-      "location": "dependencies",
-      "name": "react-redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/bar/foo.git",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "react-redux": Object {
+        "description": "other description",
+        "homepage": "https://dependency-homepage2.io",
+        "keywords": Array [
+          "foo",
+          "bar",
+        ],
+        "license": "ISC",
+        "location": "dependencies",
+        "name": "react-redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/bar/foo.git",
+        },
+        "status": "idle",
+        "version": "3.0",
       },
-      "status": "idle",
-      "version": "3.0",
-    },
-    "redux": Object {
-      "description": "dependency description",
-      "homepage": "https://dependency-homepage.io",
-      "keywords": Array [
-        "key",
-        "words",
-      ],
-      "license": "MIT",
-      "location": "dependencies",
-      "name": "redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/foo/bar.git",
+      "redux": Object {
+        "description": "dependency description",
+        "homepage": "https://dependency-homepage.io",
+        "keywords": Array [
+          "key",
+          "words",
+        ],
+        "license": "MIT",
+        "location": "dependencies",
+        "name": "redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/foo/bar.git",
+        },
+        "status": "idle",
+        "version": "3.3",
       },
-      "status": "idle",
-      "version": "3.3",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${UNINSTALL_DEPENDENCIES_START}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'queued-delete',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'queued-delete',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
         },
       },
     };
@@ -445,41 +484,46 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "redux": Object {
-      "description": "dependency description",
-      "homepage": "https://dependency-homepage.io",
-      "keywords": Array [
-        "key",
-        "words",
-      ],
-      "license": "MIT",
-      "name": "redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/foo/bar.git",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "redux": Object {
+        "description": "dependency description",
+        "homepage": "https://dependency-homepage.io",
+        "keywords": Array [
+          "key",
+          "words",
+        ],
+        "license": "MIT",
+        "name": "redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/foo/bar.git",
+        },
+        "status": "deleting",
+        "version": "3.2",
       },
-      "status": "deleting",
-      "version": "3.2",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${UNINSTALL_DEPENDENCIES_ERROR}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'queued-delete',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'queued-delete',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
         },
       },
     };
@@ -496,42 +540,47 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {
-    "redux": Object {
-      "description": "dependency description",
-      "homepage": "https://dependency-homepage.io",
-      "keywords": Array [
-        "key",
-        "words",
-      ],
-      "license": "MIT",
-      "location": "dependencies",
-      "name": "redux",
-      "repository": Object {
-        "type": "git",
-        "url": "https://github.com/foo/bar.git",
+  "loadedDependencies": Object {
+    "foo": Object {
+      "redux": Object {
+        "description": "dependency description",
+        "homepage": "https://dependency-homepage.io",
+        "keywords": Array [
+          "key",
+          "words",
+        ],
+        "license": "MIT",
+        "location": "dependencies",
+        "name": "redux",
+        "repository": Object {
+          "type": "git",
+          "url": "https://github.com/foo/bar.git",
+        },
+        "status": "idle",
+        "version": "3.2",
       },
-      "status": "idle",
-      "version": "3.2",
     },
   },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${UNINSTALL_DEPENDENCIES_FINISH}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'queued-delete',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'queued-delete',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
         },
       },
     };
@@ -548,24 +597,29 @@ Object {
 
     expect(reducer(prevState, action)).toMatchInlineSnapshot(`
 Object {
-  "foo": Object {},
+  "loadedDependencies": Object {
+    "foo": Object {},
+  },
+  "loadingStatus": Object {},
 }
 `);
   });
 
   it(`should handle ${REFRESH_PROJECTS_FINISH} and remove non-existing projects`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'queued-delete',
-          location: 'dependencies',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'queued-delete',
+            location: 'dependencies',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: { type: 'git', url: 'https://github.com/foo/bar.git' },
+          },
         },
       },
     };
@@ -575,21 +629,28 @@ Object {
       projects: [],
     };
 
-    expect(reducer(prevState, action)).toMatchInlineSnapshot(`Object {}`);
+    expect(reducer(prevState, action)).toMatchInlineSnapshot(`
+Object {
+  "loadedDependencies": Object {},
+  "loadingStatus": Object {},
+}
+`);
   });
 
   it(`should handle ${RESET_ALL_STATE}`, () => {
     const prevState = {
-      foo: {
-        redux: {
-          name: 'redux',
-          status: 'deleting',
-          description: 'dependency description',
-          keywords: ['key', 'words'],
-          version: '3.2',
-          homepage: 'https://dependency-homepage.io',
-          license: 'MIT',
-          repository: 'https://github.com',
+      loadedDependencies: {
+        foo: {
+          redux: {
+            name: 'redux',
+            status: 'deleting',
+            description: 'dependency description',
+            keywords: ['key', 'words'],
+            version: '3.2',
+            homepage: 'https://dependency-homepage.io',
+            license: 'MIT',
+            repository: 'https://github.com',
+          },
         },
       },
     };
@@ -602,18 +663,20 @@ Object {
 describe('getDependenciesForProjectId selector', () => {
   const state = {
     dependencies: {
-      foo: {
-        react: {
-          name: 'react',
-          status: 'idle',
-        },
-        redux: {
-          name: 'redux',
-          status: 'idle',
-        },
-        'react-dom': {
-          name: 'react-dom',
-          status: 'idle',
+      loadedDependencies: {
+        foo: {
+          react: {
+            name: 'react',
+            status: 'idle',
+          },
+          redux: {
+            name: 'redux',
+            status: 'idle',
+          },
+          'react-dom': {
+            name: 'react-dom',
+            status: 'idle',
+          },
         },
       },
     },
