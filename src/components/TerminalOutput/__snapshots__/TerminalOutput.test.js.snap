@@ -164,55 +164,66 @@ exports[`TerminalOutput component should render terminal 1`] = `
     }
     width="100%"
   >
-    <styled.div>
-      <div
-        className=""
-      >
-        <styled.header>
-          <header
-            className="c0"
+    <div>
+      <styled.header>
+        <header
+          className="c0"
+        >
+          <Heading
+            size="xsmall"
           >
-            <Heading
-              size="xsmall"
-            >
-              <styled.h6>
-                <h6
-                  className="c1"
-                />
-              </styled.h6>
-            </Heading>
-            <PixelShifter
-              reason="
+            <styled.h6>
+              <h6
+                className="c1"
+              />
+            </styled.h6>
+          </Heading>
+          <PixelShifter
+            reason="
               Buttons have a slightly-extruding stroke we want to
               offset.
             "
+            style={
+              Object {
+                "display": "inherit",
+              }
+            }
+            x={-1}
+          >
+            <div
               style={
                 Object {
                   "display": "inherit",
+                  "transform": "translate(-1px, 0px)",
                 }
               }
-              x={-1}
             >
-              <div
-                style={
-                  Object {
-                    "display": "inherit",
-                    "transform": "translate(-1px, 0px)",
-                  }
+              <FillButton
+                colors={
+                  Array [
+                    "#ff416c",
+                    "#ff4b2b",
+                  ]
                 }
+                onClick={[Function]}
+                size="xsmall"
+                textColor="#FFF"
               >
-                <FillButton
-                  colors={
-                    Array [
-                      "#ff416c",
-                      "#ff4b2b",
-                    ]
-                  }
+                <ButtonBase
+                  activeSplat={true}
+                  background="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
+                  hoverBackground="linear-gradient(
+    45deg,
+    #ff416c,#ff4b2b
+  )"
                   onClick={[Function]}
                   size="xsmall"
                   textColor="#FFF"
                 >
-                  <ButtonBase
+                  <Styled(styled.button)
                     activeSplat={true}
                     background="linear-gradient(
     45deg,
@@ -223,15 +234,15 @@ exports[`TerminalOutput component should render terminal 1`] = `
     #ff416c,#ff4b2b
   )"
                     onClick={[Function]}
-                    size="xsmall"
                     textColor="#FFF"
                   >
-                    <Styled(styled.button)
+                    <styled.button
                       activeSplat={true}
                       background="linear-gradient(
     45deg,
     #ff416c,#ff4b2b
   )"
+                      className="c2"
                       hoverBackground="linear-gradient(
     45deg,
     #ff416c,#ff4b2b
@@ -239,47 +250,48 @@ exports[`TerminalOutput component should render terminal 1`] = `
                       onClick={[Function]}
                       textColor="#FFF"
                     >
-                      <styled.button
-                        activeSplat={true}
-                        background="linear-gradient(
-    45deg,
-    #ff416c,#ff4b2b
-  )"
-                        className="c2"
-                        hoverBackground="linear-gradient(
-    45deg,
-    #ff416c,#ff4b2b
-  )"
+                      <button
+                        className="c2 c3"
                         onClick={[Function]}
-                        textColor="#FFF"
                       >
-                        <button
-                          className="c2 c3"
-                          onClick={[Function]}
-                        >
-                          Clear
-                        </button>
-                      </styled.button>
-                    </Styled(styled.button)>
-                  </ButtonBase>
-                </FillButton>
-              </div>
-            </PixelShifter>
-          </header>
-        </styled.header>
-        <styled.div
+                        Clear
+                      </button>
+                    </styled.button>
+                  </Styled(styled.button)>
+                </ButtonBase>
+              </FillButton>
+            </div>
+          </PixelShifter>
+        </header>
+      </styled.header>
+      <styled.div
+        height={200}
+        innerRef={[Function]}
+        width="100%"
+      >
+        <div
+          className="c4"
           height={200}
-          innerRef={[Function]}
           width="100%"
-        >
-          <div
-            className="c4"
-            height={200}
-            width="100%"
-          />
-        </styled.div>
-        <ResizeObserver
-          onResize={[Function]}
+        />
+      </styled.div>
+      <ResizeObserver
+        onResize={[Function]}
+      >
+        <div
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "overflow": "hidden",
+              "pointerEvents": "none",
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "visibility": "hidden",
+              "zIndex": -1,
+            }
+          }
         >
           <div
             style={
@@ -299,63 +311,47 @@ exports[`TerminalOutput component should render terminal 1`] = `
             <div
               style={
                 Object {
-                  "bottom": 0,
+                  "height": 100000,
                   "left": 0,
-                  "overflow": "hidden",
-                  "pointerEvents": "none",
                   "position": "absolute",
-                  "right": 0,
                   "top": 0,
-                  "visibility": "hidden",
-                  "zIndex": -1,
+                  "transition": "0s",
+                  "width": 100000,
                 }
               }
-            >
-              <div
-                style={
-                  Object {
-                    "height": 100000,
-                    "left": 0,
-                    "position": "absolute",
-                    "top": 0,
-                    "transition": "0s",
-                    "width": 100000,
-                  }
-                }
-              />
-            </div>
+            />
+          </div>
+          <div
+            style={
+              Object {
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "pointerEvents": "none",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+                "visibility": "hidden",
+                "zIndex": -1,
+              }
+            }
+          >
             <div
               style={
                 Object {
-                  "bottom": 0,
+                  "height": "200%",
                   "left": 0,
-                  "overflow": "hidden",
-                  "pointerEvents": "none",
                   "position": "absolute",
-                  "right": 0,
                   "top": 0,
-                  "visibility": "hidden",
-                  "zIndex": -1,
+                  "transition": "0s",
+                  "width": "200%",
                 }
               }
-            >
-              <div
-                style={
-                  Object {
-                    "height": "200%",
-                    "left": 0,
-                    "position": "absolute",
-                    "top": 0,
-                    "transition": "0s",
-                    "width": "200%",
-                  }
-                }
-              />
-            </div>
+            />
           </div>
-        </ResizeObserver>
-      </div>
-    </styled.div>
+        </div>
+      </ResizeObserver>
+    </div>
   </TerminalOutput>
 </Connect(TerminalOutput)>
 `;
