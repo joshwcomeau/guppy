@@ -166,7 +166,7 @@ class TerminalOutput extends PureComponent<Props, State> {
     const { width, height, title } = this.props;
 
     return (
-      <Wrapper>
+      <div>
         <Header>
           <Heading size="xsmall">{title}</Heading>
           <PixelShifter
@@ -192,7 +192,7 @@ class TerminalOutput extends PureComponent<Props, State> {
           innerRef={node => (this.node = node)}
         />
         <ResizeObserver onResize={() => this.xterm && this.xterm.fit()} />
-      </Wrapper>
+      </div>
     );
   }
 }
@@ -203,8 +203,6 @@ const Header = styled.header`
   align-items: center;
   height: 50px;
 `;
-
-const Wrapper = styled.div``;
 
 const XtermContainer = styled.div`
   ${css(xtermCss)}
