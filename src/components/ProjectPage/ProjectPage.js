@@ -43,7 +43,7 @@ type Props = {
   reinstallDependencies: Dispatch<typeof actions.reinstallDependenciesStart>,
 };
 
-class ProjectPage extends PureComponent<Props> {
+export class ProjectPage extends PureComponent<Props> {
   openIDE = () => {
     const { project } = this.props;
     openProjectInEditor(project);
