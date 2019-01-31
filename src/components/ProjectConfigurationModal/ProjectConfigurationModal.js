@@ -34,7 +34,7 @@ type State = {
   activeField: string,
 };
 
-class ProjectConfigurationModal extends PureComponent<Props, State> {
+export class ProjectConfigurationModal extends PureComponent<Props, State> {
   state = {
     newName: '',
     projectIcon: '',
