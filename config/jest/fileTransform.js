@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 const path = require('path');
 
 // This is a custom Jest transformer turning file imports into filenames.
