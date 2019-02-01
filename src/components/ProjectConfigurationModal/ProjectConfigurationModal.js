@@ -34,12 +34,14 @@ type State = {
   activeField: string,
 };
 
+export const initialState = {
+  newName: '',
+  projectIcon: '',
+  activeField: 'projectName',
+};
+
 export class ProjectConfigurationModal extends PureComponent<Props, State> {
-  state = {
-    newName: '',
-    projectIcon: '',
-    activeField: 'projectName',
-  };
+  state = initialState;
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.project) {
@@ -83,9 +85,9 @@ export class ProjectConfigurationModal extends PureComponent<Props, State> {
   updateProjectIcon = (src: string, ev) => {
     ev.preventDefault();
 
-    this.setState(prevState => ({
+    this.setState({
       projectIcon: src,
-    }));
+    });
   };
 
   setActive = (name: string) => {

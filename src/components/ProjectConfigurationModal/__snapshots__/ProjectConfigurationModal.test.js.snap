@@ -3,6 +3,7 @@
 exports[`ProjectConfigurationModal component Rendering should render 1`] = `
 <Modal
   isVisible={true}
+  onDismiss={[MockFunction]}
   width={750}
 >
   <ModalHeader
@@ -62,9 +63,10 @@ exports[`ProjectConfigurationModal component Rendering should render 1`] = `
 </Modal>
 `;
 
-exports[`ProjectConfigurationModal component Rendering should render with active dependency installation 1`] = `
+exports[`ProjectConfigurationModal component Rendering should render with active dependency installation (save disabled) 1`] = `
 <Modal
   isVisible={true}
+  onDismiss={[MockFunction]}
   width={750}
 >
   <ModalHeader
