@@ -5,6 +5,7 @@ import {
   ProjectConfigurationModal,
   initialState,
 } from './ProjectConfigurationModal';
+import FormField from '../FormField';
 
 describe('ProjectConfigurationModal component', () => {
   let wrapper;
@@ -115,6 +116,18 @@ describe('ProjectConfigurationModal component', () => {
 
       it('should set a form field to active in local state', () => {
         instance.setActive('projectName');
+        expect(instance.state.activeField).toEqual('projectName');
+      });
+
+      it('should set activeField to projectName on text input focus', () => {
+        instance.setActive('projectIcon');
+        expect(instance.state.activeField).toEqual('projectIcon');
+        const input = wrapper
+          .find(FormField)
+          .find('[label="Project name"]')
+          .children();
+        input.prop('onFocus')();
+
         expect(instance.state.activeField).toEqual('projectName');
       });
 
