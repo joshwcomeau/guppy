@@ -43,7 +43,7 @@ export const initialState = {
 export class ProjectConfigurationModal extends PureComponent<Props, State> {
   state = initialState;
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (!nextProps.project) {
       return;
     }
@@ -82,7 +82,7 @@ export class ProjectConfigurationModal extends PureComponent<Props, State> {
     }
   };
 
-  updateProjectIcon = (src: string, ev) => {
+  updateProjectIcon = (src: string, ev: SyntheticEvent<*>) => {
     ev.preventDefault();
 
     this.setState({
