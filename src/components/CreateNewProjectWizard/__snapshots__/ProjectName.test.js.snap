@@ -1,0 +1,933 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectName component Rendering should render input (projectName already taken) 1`] = `
+.c2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c0 {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.c1 {
+  -webkit-flex-basis: px;
+  -ms-flex-preferred-size: px;
+  flex-basis: px;
+  color: #f40041;
+  padding: 0px 5px;
+}
+
+.c3 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0px 5px 5px;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  border-bottom: 2px solid #f40041;
+}
+
+.c5 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 8px 0px;
+  border: none;
+  border-radius: 0px;
+  outline: none;
+  font-size: 21px;
+}
+
+.c5::-webkit-input-placeholder {
+  color: #cccccc;
+}
+
+.c5::-moz-placeholder {
+  color: #cccccc;
+}
+
+.c5:-ms-input-placeholder {
+  color: #cccccc;
+}
+
+.c5::placeholder {
+  color: #cccccc;
+}
+
+.c10 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #FFF;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c10:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+}
+
+.c10:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c9 {
+  padding: 0px;
+  height: auto;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+.c7 {
+  position: relative;
+  display: inline-block;
+  padding: 2px;
+}
+
+.c8 {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.c11 {
+  position: absolute;
+  z-index: 0;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-radius: 100px;
+  background: linear-gradient(25deg,#651fff,#D500F9);
+  opacity: 0;
+  -webkit-transition: opacity 350ms;
+  transition: opacity 350ms;
+}
+
+.c12 {
+  margin-top: 6px;
+  color: #cc004a;
+}
+
+.c6 {
+  -webkit-transform: translateY(5px);
+  -ms-transform: translateY(5px);
+  transform: translateY(5px);
+}
+
+<ProjectName
+  handleBlur={[MockFunction]}
+  handleChange={[MockFunction]}
+  handleFocus={[MockFunction]}
+  handleSubmit={[MockFunction]}
+  isFocused={true}
+  isProjectNameTaken={true}
+  name=""
+>
+  <FormField
+    hasError={true}
+    isFocused={true}
+    label="Project Name"
+    spacing={15}
+    useLabelTag={true}
+  >
+    <styled.label
+      spacing={15}
+    >
+      <label
+        className="c0"
+        spacing={15}
+      >
+        <Styled(styled.div)
+          hasError={true}
+          isFocused={true}
+        >
+          <styled.div
+            className="c1"
+            hasError={true}
+            isFocused={true}
+          >
+            <div
+              className="c1 c2"
+            >
+              Project Name
+            </div>
+          </styled.div>
+        </Styled(styled.div)>
+        <styled.div>
+          <div
+            className="c3"
+          >
+            <TextInput
+              hasError={true}
+              innerRef={[Function]}
+              isFocused={true}
+              onBlur={[MockFunction]}
+              onChange={[Function]}
+              onFocus={[MockFunction]}
+              onKeyPress={[Function]}
+              placeholder="Your Amazing Project Name"
+              type="text"
+              value=""
+            >
+              <styled.div
+                hasError={true}
+                isFocused={true}
+              >
+                <div
+                  className="c4"
+                >
+                  <styled.input
+                    innerRef={[Function]}
+                    onBlur={[MockFunction]}
+                    onChange={[Function]}
+                    onFocus={[MockFunction]}
+                    onKeyPress={[Function]}
+                    placeholder="Your Amazing Project Name"
+                    type="text"
+                    value=""
+                  >
+                    <input
+                      className="c5"
+                      onBlur={[MockFunction]}
+                      onChange={[Function]}
+                      onFocus={[MockFunction]}
+                      onKeyPress={[Function]}
+                      placeholder="Your Amazing Project Name"
+                      type="text"
+                      value=""
+                    />
+                  </styled.input>
+                  <styled.div>
+                    <div
+                      className="c6"
+                    >
+                      <mockConstructor
+                        animation="shift"
+                        arrow={true}
+                        delay={100}
+                        distance={24}
+                        duration={200}
+                        open={false}
+                        title="Generate a random code-name"
+                        trigger="manual"
+                      >
+                        <div>
+                          <HoverableOutlineButton
+                            noPadding={true}
+                            onClick={[Function]}
+                            onMouseDown={[Function]}
+                            style={
+                              Object {
+                                "height": 32,
+                                "width": 32,
+                              }
+                            }
+                          >
+                            <StrokeButton
+                              fillColor="#FFF"
+                              noPadding={true}
+                              onClick={[Function]}
+                              onMouseDown={[Function]}
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              showStroke={false}
+                              strokeColors={
+                                Array [
+                                  "#651fff",
+                                  "#D500F9",
+                                ]
+                              }
+                              style={
+                                Object {
+                                  "height": 32,
+                                  "width": 32,
+                                }
+                              }
+                            >
+                              <DetectActive
+                                className=""
+                              >
+                                <span
+                                  className=""
+                                  onMouseDown={[Function]}
+                                  onMouseLeave={[Function]}
+                                  onMouseOver={[Function]}
+                                  onMouseUp={[Function]}
+                                >
+                                  <styled.div>
+                                    <div
+                                      className="c7"
+                                    >
+                                      <styled.span>
+                                        <span
+                                          className="c8"
+                                        >
+                                          <ButtonBase
+                                            background="#FFF"
+                                            noPadding={true}
+                                            onClick={[Function]}
+                                            onMouseDown={[Function]}
+                                            onMouseEnter={[Function]}
+                                            onMouseLeave={[Function]}
+                                            size="medium"
+                                            style={
+                                              Object {
+                                                "height": 32,
+                                                "width": 32,
+                                              }
+                                            }
+                                            textColor="#111111"
+                                          >
+                                            <Styled(styled.button)
+                                              background="#FFF"
+                                              noPadding={true}
+                                              onClick={[Function]}
+                                              onMouseDown={[Function]}
+                                              onMouseEnter={[Function]}
+                                              onMouseLeave={[Function]}
+                                              style={
+                                                Object {
+                                                  "height": 32,
+                                                  "width": 32,
+                                                }
+                                              }
+                                              textColor="#111111"
+                                            >
+                                              <styled.button
+                                                background="#FFF"
+                                                className="c9"
+                                                noPadding={true}
+                                                onClick={[Function]}
+                                                onMouseDown={[Function]}
+                                                onMouseEnter={[Function]}
+                                                onMouseLeave={[Function]}
+                                                style={
+                                                  Object {
+                                                    "height": 32,
+                                                    "width": 32,
+                                                  }
+                                                }
+                                                textColor="#111111"
+                                              >
+                                                <button
+                                                  className="c9 c10"
+                                                  onClick={[Function]}
+                                                  onMouseDown={[Function]}
+                                                  onMouseEnter={[Function]}
+                                                  onMouseLeave={[Function]}
+                                                  style={
+                                                    Object {
+                                                      "height": 32,
+                                                      "width": 32,
+                                                    }
+                                                  }
+                                                >
+                                                  <span
+                                                    style={
+                                                      Object {
+                                                        "display": "block",
+                                                      }
+                                                    }
+                                                  >
+                                                    <Icon
+                                                      fill="currentColor"
+                                                      icon={
+                                                        Object {
+                                                          "children": Array [
+                                                            Object {
+                                                              "attribs": Object {
+                                                                "d": "M908 1927q-77-202-157-323t-190.5-230.5T294 1171l-112-67 112-68q209-124 363.5-305T910 280q100 275 251.5 454t360.5 302l114 68-114 67q-209 125-361.5 304T908 1927zm-429-823q136 98 243.5 212.5T908 1557q74-118 182.5-235.5T1338 1104q-132-93-242-211T908 650q-82 133-191.5 248T479 1104zm1939 475l-126 62q-130 63-227.5 155T1892 2060q-62-154-158-250.5T1493 1641l-125-62 125-62q138-67 235-165.5t165-253.5q66 153 161.5 251.5T2292 1517zm-525 207q34-44 90.5-99t139.5-108q-83-53-139.5-108t-90.5-99q-35 44-92 99.5T1662 1579q82 52 139 107.5t92 99.5zm-598-176q64 188 141.5 285.5T1626 2063l95 58-95 59q-111 69-188 166t-143 288q-63-183-140-282.5T963 2180l-95-59 95-58q112-70 191-170.5t141-282.5zm0 702q28-41 71.5-91.5T1470 2121q-59-47-102.5-96.5T1295 1932q-29 43-73 92t-104 97q61 49 105 99.5t72 91.5z",
+                                                              },
+                                                              "children": Array [],
+                                                              "name": "path",
+                                                            },
+                                                          ],
+                                                          "viewBox": "0 0 2600 2760.837",
+                                                        }
+                                                      }
+                                                      size={22}
+                                                    >
+                                                      <div
+                                                        fill="currentColor"
+                                                        size={22}
+                                                        style={
+                                                          Object {
+                                                            "alignItems": "center",
+                                                            "display": "inline-flex",
+                                                            "justifyContent": "center",
+                                                          }
+                                                        }
+                                                      >
+                                                        <SvgIcon
+                                                          icon={
+                                                            Object {
+                                                              "children": Array [
+                                                                Object {
+                                                                  "attribs": Object {
+                                                                    "d": "M908 1927q-77-202-157-323t-190.5-230.5T294 1171l-112-67 112-68q209-124 363.5-305T910 280q100 275 251.5 454t360.5 302l114 68-114 67q-209 125-361.5 304T908 1927zm-429-823q136 98 243.5 212.5T908 1557q74-118 182.5-235.5T1338 1104q-132-93-242-211T908 650q-82 133-191.5 248T479 1104zm1939 475l-126 62q-130 63-227.5 155T1892 2060q-62-154-158-250.5T1493 1641l-125-62 125-62q138-67 235-165.5t165-253.5q66 153 161.5 251.5T2292 1517zm-525 207q34-44 90.5-99t139.5-108q-83-53-139.5-108t-90.5-99q-35 44-92 99.5T1662 1579q82 52 139 107.5t92 99.5zm-598-176q64 188 141.5 285.5T1626 2063l95 58-95 59q-111 69-188 166t-143 288q-63-183-140-282.5T963 2180l-95-59 95-58q112-70 191-170.5t141-282.5zm0 702q28-41 71.5-91.5T1470 2121q-59-47-102.5-96.5T1295 1932q-29 43-73 92t-104 97q61 49 105 99.5t72 91.5z",
+                                                                  },
+                                                                  "children": Array [],
+                                                                  "name": "path",
+                                                                },
+                                                              ],
+                                                              "viewBox": "0 0 2600 2760.837",
+                                                            }
+                                                          }
+                                                          size={22}
+                                                        >
+                                                          <svg
+                                                            fill="currentColor"
+                                                            height={22}
+                                                            style={
+                                                              Object {
+                                                                "display": "inline-block",
+                                                                "verticalAlign": "middle",
+                                                              }
+                                                            }
+                                                            viewBox="0 0 2600 2760.837"
+                                                            width={22}
+                                                          >
+                                                            <path
+                                                              d="M908 1927q-77-202-157-323t-190.5-230.5T294 1171l-112-67 112-68q209-124 363.5-305T910 280q100 275 251.5 454t360.5 302l114 68-114 67q-209 125-361.5 304T908 1927zm-429-823q136 98 243.5 212.5T908 1557q74-118 182.5-235.5T1338 1104q-132-93-242-211T908 650q-82 133-191.5 248T479 1104zm1939 475l-126 62q-130 63-227.5 155T1892 2060q-62-154-158-250.5T1493 1641l-125-62 125-62q138-67 235-165.5t165-253.5q66 153 161.5 251.5T2292 1517zm-525 207q34-44 90.5-99t139.5-108q-83-53-139.5-108t-90.5-99q-35 44-92 99.5T1662 1579q82 52 139 107.5t92 99.5zm-598-176q64 188 141.5 285.5T1626 2063l95 58-95 59q-111 69-188 166t-143 288q-63-183-140-282.5T963 2180l-95-59 95-58q112-70 191-170.5t141-282.5zm0 702q28-41 71.5-91.5T1470 2121q-59-47-102.5-96.5T1295 1932q-29 43-73 92t-104 97q61 49 105 99.5t72 91.5z"
+                                                              key="0"
+                                                            />
+                                                          </svg>
+                                                        </SvgIcon>
+                                                      </div>
+                                                    </Icon>
+                                                  </span>
+                                                </button>
+                                              </styled.button>
+                                            </Styled(styled.button)>
+                                          </ButtonBase>
+                                        </span>
+                                      </styled.span>
+                                      <styled.div
+                                        colors={
+                                          Array [
+                                            "#651fff",
+                                            "#D500F9",
+                                          ]
+                                        }
+                                        isActive={false}
+                                        isVisible={false}
+                                      >
+                                        <div
+                                          className="c11"
+                                        />
+                                      </styled.div>
+                                    </div>
+                                  </styled.div>
+                                </span>
+                              </DetectActive>
+                            </StrokeButton>
+                          </HoverableOutlineButton>
+                        </div>
+                      </mockConstructor>
+                    </div>
+                  </styled.div>
+                </div>
+              </styled.div>
+            </TextInput>
+            <styled.div>
+              <div
+                className="c12"
+              >
+                Sorry, a project with this name already exists.
+              </div>
+            </styled.div>
+          </div>
+        </styled.div>
+      </label>
+    </styled.label>
+  </FormField>
+</ProjectName>
+`;
+
+exports[`ProjectName component Rendering should render input 1`] = `
+.c2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c0 {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.c1 {
+  -webkit-flex-basis: px;
+  -ms-flex-preferred-size: px;
+  flex-basis: px;
+  color: #4919b7;
+  padding: 0px 5px;
+}
+
+.c3 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0px 5px 5px;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  border-bottom: 2px solid #4919b7;
+}
+
+.c5 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 8px 0px;
+  border: none;
+  border-radius: 0px;
+  outline: none;
+  font-size: 21px;
+}
+
+.c5::-webkit-input-placeholder {
+  color: #cccccc;
+}
+
+.c5::-moz-placeholder {
+  color: #cccccc;
+}
+
+.c5:-ms-input-placeholder {
+  color: #cccccc;
+}
+
+.c5::placeholder {
+  color: #cccccc;
+}
+
+.c10 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #FFF;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c10:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+}
+
+.c10:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c9 {
+  padding: 0px;
+  height: auto;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+.c7 {
+  position: relative;
+  display: inline-block;
+  padding: 2px;
+}
+
+.c8 {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.c11 {
+  position: absolute;
+  z-index: 0;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-radius: 100px;
+  background: linear-gradient(25deg,#651fff,#D500F9);
+  opacity: 0;
+  -webkit-transition: opacity 350ms;
+  transition: opacity 350ms;
+}
+
+.c6 {
+  -webkit-transform: translateY(5px);
+  -ms-transform: translateY(5px);
+  transform: translateY(5px);
+}
+
+<ProjectName
+  handleBlur={[MockFunction]}
+  handleChange={[MockFunction]}
+  handleFocus={[MockFunction]}
+  handleSubmit={[MockFunction]}
+  isFocused={true}
+  isProjectNameTaken={false}
+  name=""
+>
+  <FormField
+    hasError={false}
+    isFocused={true}
+    label="Project Name"
+    spacing={15}
+    useLabelTag={true}
+  >
+    <styled.label
+      spacing={15}
+    >
+      <label
+        className="c0"
+        spacing={15}
+      >
+        <Styled(styled.div)
+          hasError={false}
+          isFocused={true}
+        >
+          <styled.div
+            className="c1"
+            hasError={false}
+            isFocused={true}
+          >
+            <div
+              className="c1 c2"
+            >
+              Project Name
+            </div>
+          </styled.div>
+        </Styled(styled.div)>
+        <styled.div>
+          <div
+            className="c3"
+          >
+            <TextInput
+              hasError={false}
+              innerRef={[Function]}
+              isFocused={true}
+              onBlur={[MockFunction]}
+              onChange={[Function]}
+              onFocus={[MockFunction]}
+              onKeyPress={[Function]}
+              placeholder="Your Amazing Project Name"
+              type="text"
+              value=""
+            >
+              <styled.div
+                hasError={false}
+                isFocused={true}
+              >
+                <div
+                  className="c4"
+                >
+                  <styled.input
+                    innerRef={[Function]}
+                    onBlur={[MockFunction]}
+                    onChange={[Function]}
+                    onFocus={[MockFunction]}
+                    onKeyPress={[Function]}
+                    placeholder="Your Amazing Project Name"
+                    type="text"
+                    value=""
+                  >
+                    <input
+                      className="c5"
+                      onBlur={[MockFunction]}
+                      onChange={[Function]}
+                      onFocus={[MockFunction]}
+                      onKeyPress={[Function]}
+                      placeholder="Your Amazing Project Name"
+                      type="text"
+                      value=""
+                    />
+                  </styled.input>
+                  <styled.div>
+                    <div
+                      className="c6"
+                    >
+                      <mockConstructor
+                        animation="shift"
+                        arrow={true}
+                        delay={100}
+                        distance={24}
+                        duration={200}
+                        open={false}
+                        title="Generate a random code-name"
+                        trigger="manual"
+                      >
+                        <div>
+                          <HoverableOutlineButton
+                            noPadding={true}
+                            onClick={[Function]}
+                            onMouseDown={[Function]}
+                            style={
+                              Object {
+                                "height": 32,
+                                "width": 32,
+                              }
+                            }
+                          >
+                            <StrokeButton
+                              fillColor="#FFF"
+                              noPadding={true}
+                              onClick={[Function]}
+                              onMouseDown={[Function]}
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              showStroke={false}
+                              strokeColors={
+                                Array [
+                                  "#651fff",
+                                  "#D500F9",
+                                ]
+                              }
+                              style={
+                                Object {
+                                  "height": 32,
+                                  "width": 32,
+                                }
+                              }
+                            >
+                              <DetectActive
+                                className=""
+                              >
+                                <span
+                                  className=""
+                                  onMouseDown={[Function]}
+                                  onMouseLeave={[Function]}
+                                  onMouseOver={[Function]}
+                                  onMouseUp={[Function]}
+                                >
+                                  <styled.div>
+                                    <div
+                                      className="c7"
+                                    >
+                                      <styled.span>
+                                        <span
+                                          className="c8"
+                                        >
+                                          <ButtonBase
+                                            background="#FFF"
+                                            noPadding={true}
+                                            onClick={[Function]}
+                                            onMouseDown={[Function]}
+                                            onMouseEnter={[Function]}
+                                            onMouseLeave={[Function]}
+                                            size="medium"
+                                            style={
+                                              Object {
+                                                "height": 32,
+                                                "width": 32,
+                                              }
+                                            }
+                                            textColor="#111111"
+                                          >
+                                            <Styled(styled.button)
+                                              background="#FFF"
+                                              noPadding={true}
+                                              onClick={[Function]}
+                                              onMouseDown={[Function]}
+                                              onMouseEnter={[Function]}
+                                              onMouseLeave={[Function]}
+                                              style={
+                                                Object {
+                                                  "height": 32,
+                                                  "width": 32,
+                                                }
+                                              }
+                                              textColor="#111111"
+                                            >
+                                              <styled.button
+                                                background="#FFF"
+                                                className="c9"
+                                                noPadding={true}
+                                                onClick={[Function]}
+                                                onMouseDown={[Function]}
+                                                onMouseEnter={[Function]}
+                                                onMouseLeave={[Function]}
+                                                style={
+                                                  Object {
+                                                    "height": 32,
+                                                    "width": 32,
+                                                  }
+                                                }
+                                                textColor="#111111"
+                                              >
+                                                <button
+                                                  className="c9 c10"
+                                                  onClick={[Function]}
+                                                  onMouseDown={[Function]}
+                                                  onMouseEnter={[Function]}
+                                                  onMouseLeave={[Function]}
+                                                  style={
+                                                    Object {
+                                                      "height": 32,
+                                                      "width": 32,
+                                                    }
+                                                  }
+                                                >
+                                                  <span
+                                                    style={
+                                                      Object {
+                                                        "display": "block",
+                                                      }
+                                                    }
+                                                  >
+                                                    <Icon
+                                                      fill="currentColor"
+                                                      icon={
+                                                        Object {
+                                                          "children": Array [
+                                                            Object {
+                                                              "attribs": Object {
+                                                                "d": "M908 1927q-77-202-157-323t-190.5-230.5T294 1171l-112-67 112-68q209-124 363.5-305T910 280q100 275 251.5 454t360.5 302l114 68-114 67q-209 125-361.5 304T908 1927zm-429-823q136 98 243.5 212.5T908 1557q74-118 182.5-235.5T1338 1104q-132-93-242-211T908 650q-82 133-191.5 248T479 1104zm1939 475l-126 62q-130 63-227.5 155T1892 2060q-62-154-158-250.5T1493 1641l-125-62 125-62q138-67 235-165.5t165-253.5q66 153 161.5 251.5T2292 1517zm-525 207q34-44 90.5-99t139.5-108q-83-53-139.5-108t-90.5-99q-35 44-92 99.5T1662 1579q82 52 139 107.5t92 99.5zm-598-176q64 188 141.5 285.5T1626 2063l95 58-95 59q-111 69-188 166t-143 288q-63-183-140-282.5T963 2180l-95-59 95-58q112-70 191-170.5t141-282.5zm0 702q28-41 71.5-91.5T1470 2121q-59-47-102.5-96.5T1295 1932q-29 43-73 92t-104 97q61 49 105 99.5t72 91.5z",
+                                                              },
+                                                              "children": Array [],
+                                                              "name": "path",
+                                                            },
+                                                          ],
+                                                          "viewBox": "0 0 2600 2760.837",
+                                                        }
+                                                      }
+                                                      size={22}
+                                                    >
+                                                      <div
+                                                        fill="currentColor"
+                                                        size={22}
+                                                        style={
+                                                          Object {
+                                                            "alignItems": "center",
+                                                            "display": "inline-flex",
+                                                            "justifyContent": "center",
+                                                          }
+                                                        }
+                                                      >
+                                                        <SvgIcon
+                                                          icon={
+                                                            Object {
+                                                              "children": Array [
+                                                                Object {
+                                                                  "attribs": Object {
+                                                                    "d": "M908 1927q-77-202-157-323t-190.5-230.5T294 1171l-112-67 112-68q209-124 363.5-305T910 280q100 275 251.5 454t360.5 302l114 68-114 67q-209 125-361.5 304T908 1927zm-429-823q136 98 243.5 212.5T908 1557q74-118 182.5-235.5T1338 1104q-132-93-242-211T908 650q-82 133-191.5 248T479 1104zm1939 475l-126 62q-130 63-227.5 155T1892 2060q-62-154-158-250.5T1493 1641l-125-62 125-62q138-67 235-165.5t165-253.5q66 153 161.5 251.5T2292 1517zm-525 207q34-44 90.5-99t139.5-108q-83-53-139.5-108t-90.5-99q-35 44-92 99.5T1662 1579q82 52 139 107.5t92 99.5zm-598-176q64 188 141.5 285.5T1626 2063l95 58-95 59q-111 69-188 166t-143 288q-63-183-140-282.5T963 2180l-95-59 95-58q112-70 191-170.5t141-282.5zm0 702q28-41 71.5-91.5T1470 2121q-59-47-102.5-96.5T1295 1932q-29 43-73 92t-104 97q61 49 105 99.5t72 91.5z",
+                                                                  },
+                                                                  "children": Array [],
+                                                                  "name": "path",
+                                                                },
+                                                              ],
+                                                              "viewBox": "0 0 2600 2760.837",
+                                                            }
+                                                          }
+                                                          size={22}
+                                                        >
+                                                          <svg
+                                                            fill="currentColor"
+                                                            height={22}
+                                                            style={
+                                                              Object {
+                                                                "display": "inline-block",
+                                                                "verticalAlign": "middle",
+                                                              }
+                                                            }
+                                                            viewBox="0 0 2600 2760.837"
+                                                            width={22}
+                                                          >
+                                                            <path
+                                                              d="M908 1927q-77-202-157-323t-190.5-230.5T294 1171l-112-67 112-68q209-124 363.5-305T910 280q100 275 251.5 454t360.5 302l114 68-114 67q-209 125-361.5 304T908 1927zm-429-823q136 98 243.5 212.5T908 1557q74-118 182.5-235.5T1338 1104q-132-93-242-211T908 650q-82 133-191.5 248T479 1104zm1939 475l-126 62q-130 63-227.5 155T1892 2060q-62-154-158-250.5T1493 1641l-125-62 125-62q138-67 235-165.5t165-253.5q66 153 161.5 251.5T2292 1517zm-525 207q34-44 90.5-99t139.5-108q-83-53-139.5-108t-90.5-99q-35 44-92 99.5T1662 1579q82 52 139 107.5t92 99.5zm-598-176q64 188 141.5 285.5T1626 2063l95 58-95 59q-111 69-188 166t-143 288q-63-183-140-282.5T963 2180l-95-59 95-58q112-70 191-170.5t141-282.5zm0 702q28-41 71.5-91.5T1470 2121q-59-47-102.5-96.5T1295 1932q-29 43-73 92t-104 97q61 49 105 99.5t72 91.5z"
+                                                              key="0"
+                                                            />
+                                                          </svg>
+                                                        </SvgIcon>
+                                                      </div>
+                                                    </Icon>
+                                                  </span>
+                                                </button>
+                                              </styled.button>
+                                            </Styled(styled.button)>
+                                          </ButtonBase>
+                                        </span>
+                                      </styled.span>
+                                      <styled.div
+                                        colors={
+                                          Array [
+                                            "#651fff",
+                                            "#D500F9",
+                                          ]
+                                        }
+                                        isActive={false}
+                                        isVisible={false}
+                                      >
+                                        <div
+                                          className="c11"
+                                        />
+                                      </styled.div>
+                                    </div>
+                                  </styled.div>
+                                </span>
+                              </DetectActive>
+                            </StrokeButton>
+                          </HoverableOutlineButton>
+                        </div>
+                      </mockConstructor>
+                    </div>
+                  </styled.div>
+                </div>
+              </styled.div>
+            </TextInput>
+          </div>
+        </styled.div>
+      </label>
+    </styled.label>
+  </FormField>
+</ProjectName>
+`;

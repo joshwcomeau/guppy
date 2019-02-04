@@ -28,7 +28,7 @@ import type { Field, Status, Step } from './types';
 import type { ProjectType, ProjectInternal, AppSettings } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
-const FORM_STEPS: Array<Field> = [
+export const FORM_STEPS: Array<Field> = [
   'projectName',
   'projectType',
   'projectIcon',

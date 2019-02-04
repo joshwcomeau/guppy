@@ -1,11 +1,11 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 const path = require('path');
 
 // This is a custom Jest transformer turning file imports into filenames.
 // http://facebook.github.io/jest/docs/en/webpack.html
 
 module.exports = {
-  process(src: any, filename: string) {
+  process(src, filename) {
     const assetFilename = JSON.stringify(path.basename(filename));
 
     if (filename.match(/\.svg$/)) {

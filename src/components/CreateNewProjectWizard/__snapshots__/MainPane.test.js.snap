@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MainPane component Rendering should render step projectIcon 1`] = `
+Object {
+  "lastIndex": 3,
+  "steps": Array [
+    <styled.div>
+      <FormField
+        isFocused={false}
+        label="Project Type"
+        spacing={10}
+      >
+        <ProjectTypeSelection
+          onProjectTypeSelect={[Function]}
+          projectType="gatsby"
+        />
+      </FormField>
+    </styled.div>,
+    <styled.div>
+      <FormField
+        focusOnClick={false}
+        isFocused={true}
+        label="Project Icon"
+        spacing={10}
+      >
+        <ProjectIconSelection
+          limitTo={9}
+          onSelectIcon={[Function]}
+          randomize={true}
+          selectedIcon="an-icon"
+        />
+      </FormField>
+    </styled.div>,
+  ],
+}
+`;
+
+exports[`MainPane component Rendering should render step projectName 1`] = `
+Object {
+  "lastIndex": 3,
+  "steps": Array [],
+}
+`;
+
+exports[`MainPane component Rendering should render step projectStarter 1`] = `
+Object {
+  "lastIndex": 3,
+  "steps": Array [
+    <styled.div>
+      <FormField
+        isFocused={false}
+        label="Project Type"
+        spacing={10}
+      >
+        <ProjectTypeSelection
+          onProjectTypeSelect={[Function]}
+          projectType="gatsby"
+        />
+      </FormField>
+    </styled.div>,
+    <styled.div>
+      <FormField
+        focusOnClick={false}
+        isFocused={false}
+        label="Project Icon"
+        spacing={10}
+      >
+        <ProjectIconSelection
+          limitTo={9}
+          onSelectIcon={[Function]}
+          randomize={true}
+          selectedIcon="an-icon"
+        />
+      </FormField>
+    </styled.div>,
+    <styled.div>
+      <FormField
+        isFocused={true}
+        label="Project Starter"
+        spacing={15}
+      >
+        <ProjectStarter
+          handleFocus={[Function]}
+          isFocused={true}
+          onSelect={[Function]}
+          projectStarter={null}
+        />
+      </FormField>
+    </styled.div>,
+  ],
+}
+`;
+
+exports[`MainPane component Rendering should render step projectType 1`] = `
+Object {
+  "lastIndex": 3,
+  "steps": Array [
+    <styled.div>
+      <FormField
+        isFocused={true}
+        label="Project Type"
+        spacing={10}
+      >
+        <ProjectTypeSelection
+          onProjectTypeSelect={[Function]}
+          projectType="gatsby"
+        />
+      </FormField>
+    </styled.div>,
+  ],
+}
+`;

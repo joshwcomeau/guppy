@@ -157,6 +157,8 @@ class ProjectName extends PureComponent<Props, State> {
     }
   };
 
+  setRef = (node: HTMLElement) => (this.node = node);
+
   render() {
     const {
       name,
@@ -176,7 +178,7 @@ class ProjectName extends PureComponent<Props, State> {
         spacing={15}
       >
         <TextInput
-          innerRef={node => (this.node = node)}
+          innerRef={this.setRef}
           type="text"
           value={randomizedOverrideName || name}
           isFocused={isFocused}
