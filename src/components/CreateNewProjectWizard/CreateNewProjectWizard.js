@@ -43,7 +43,10 @@ export const dialogOptionsFolderExists = {
   buttons: ['OK'],
 };
 
-export const dialogCallbackFolderExists = (resolve, reject) => result => {
+export const dialogCallbackFolderExists = (
+  resolve: (result: any) => void,
+  reject: (error: any) => void
+) => (result: number) => {
   if (result === 0) {
     return reject();
   }
@@ -51,7 +54,7 @@ export const dialogCallbackFolderExists = (resolve, reject) => result => {
   resolve();
 };
 
-export const dialogStarterNotFoundErrorArgs = projectStarter => [
+export const dialogStarterNotFoundErrorArgs = (projectStarter: string) => [
   `Starter ${projectStarter} not found`,
   'Please check your starter url or use the starter selection to pick a starter.',
 ];
@@ -138,7 +141,7 @@ export class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   checkProjectLocationUsage = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const projectName = getProjectNameSlug(this.state.projectName);
       if (checkIfProjectExists(this.props.projectHomePath, projectName)) {
         // show warning that the project folder already exists & stop creation
