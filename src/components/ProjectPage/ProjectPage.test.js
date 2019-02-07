@@ -12,6 +12,10 @@ import {
 
 jest.mock('../../services/shell.service');
 
+jest.mock('../../services/platform.service', () => ({
+  getCopyForOpeningFolder: () => 'Open folder',
+}));
+
 const initialState = {
   projects: {
     byId: {
