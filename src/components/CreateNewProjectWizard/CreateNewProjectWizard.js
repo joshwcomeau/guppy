@@ -34,6 +34,28 @@ export const FORM_STEPS: Array<Field> = [
   'projectIcon',
   'projectStarter',
 ];
+
+export const dialogOptionsFolderExists = {
+  type: 'warning',
+  title: 'Project directory exists',
+  message:
+    "Looks like there's already a project with that name. Did you mean to import it instead?",
+  buttons: ['OK'],
+};
+
+export const dialogCallbackFolderExists = (resolve, reject) => result => {
+  if (result === 0) {
+    return reject();
+  }
+
+  resolve();
+};
+
+export const dialogStarterNotFoundErrorArgs = projectStarter => [
+  `Starter ${projectStarter} not found`,
+  'Please check your starter url or use the starter selection to pick a starter.',
+];
+
 const { dialog } = remote;
 
 type Props = {
@@ -71,7 +93,7 @@ const initialState = {
   settings: null,
 };
 
-class CreateNewProjectWizard extends PureComponent<Props, State> {
+export class CreateNewProjectWizard extends PureComponent<Props, State> {
   state = initialState;
   timeoutId: number;
 
@@ -121,20 +143,8 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       if (checkIfProjectExists(this.props.projectHomePath, projectName)) {
         // show warning that the project folder already exists & stop creation
         dialog.showMessageBox(
-          {
-            type: 'warning',
-            title: 'Project directory exists',
-            message:
-              "Looks like there's already a project with that name. Did you mean to import it instead?",
-            buttons: ['OK'],
-          },
-          result => {
-            if (result === 0) {
-              return reject();
-            }
-
-            resolve();
-          }
+          dialogOptionsFolderExists,
+          dialogCallbackFolderExists(resolve, reject)
         );
       } else {
         resolve();
@@ -157,10 +167,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
     if (!exists) {
       // starter not found
-      dialog.showErrorBox(
-        `Starter ${projectStarter} not found`,
-        'Please check your starter url or use the starter selection to pick a starter.'
-      );
+      dialog.showErrorBox(...dialogStarterNotFoundErrorArgs(projectStarter));
       throw new Error('starter-not-found');
     }
   };
