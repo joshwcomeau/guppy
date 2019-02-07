@@ -55,7 +55,7 @@ describe('MainPane component', () => {
     it('should render ProjectName & ProjectPath', () => {
       wrapper = shallowRenderMainPane(0)
         .find(Spring)
-        .renderProp('render')({ offset: 50 });
+        .renderProp('children')({ offset: 50 });
       expect(wrapper.find(ProjectName).exists()).toBe(true);
       expect(wrapper.find(ProjectPath).exists()).toBe(true);
     });

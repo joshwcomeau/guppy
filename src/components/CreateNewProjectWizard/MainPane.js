@@ -150,7 +150,8 @@ class MainPane extends PureComponent<Props> {
           from={{ offset: currentStepIndex === 0 ? 0 : 50 }}
           to={{ offset: currentStepIndex === 0 ? 50 : 0 }}
           native
-          render={({ offset }) => (
+        >
+          {({ offset }) => (
             <Wrapper translateY={offset}>
               <ProjectName
                 name={projectName}
@@ -166,7 +167,7 @@ class MainPane extends PureComponent<Props> {
               {steps}
             </Wrapper>
           )}
-        />
+        </Spring>
         <SubmitButtonWrapper>
           <SubmitButton
             isDisabled={
