@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BuildStepProgress component should render done 1`] = `
+<styled.div
+  isUpcoming={false}
+>
+  <styled.div>
+    <Styled(Icon)
+      icon={
+        Object {
+          "attribs": Object {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+          },
+          "children": Array [
+            Object {
+              "attribs": Object {
+                "points": "20 6 9 17 4 12",
+              },
+              "children": Array [],
+              "name": "polyline",
+            },
+          ],
+          "viewBox": "0 0 24 24",
+        }
+      }
+      size={32}
+    />
+  </styled.div>
+  <styled.div>
+    <styled.div>
+      Building...
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`BuildStepProgress component should render in-progress 1`] = `
+<styled.div
+  isUpcoming={false}
+>
+  <styled.div>
+    <Spinner
+      size={20}
+    />
+  </styled.div>
+  <styled.div>
+    <styled.div>
+      Building...
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`BuildStepProgress component should render upcoming 1`] = `
+<styled.div
+  isUpcoming={true}
+>
+  <styled.div />
+  <styled.div>
+    <styled.div>
+      Building...
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;

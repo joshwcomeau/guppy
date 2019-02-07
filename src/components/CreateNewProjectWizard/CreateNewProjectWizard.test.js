@@ -155,6 +155,13 @@ describe('CreateNewProjectWizard component', () => {
 
     expect(instance.checkIfStarterUrlExists()).resolves.not.toThrow();
 
+    // should return undefined for empty starter
+    wrapper.setState({
+      projectStarter: '',
+    });
+
+    expect(await instance.checkIfStarterUrlExists()).toBeUndefined();
+
     wrapper.setState({
       projectStarter: 'not-existing-starter',
     });
@@ -190,8 +197,8 @@ describe('CreateNewProjectWizard component', () => {
     expect(instance.reinitialize).toBeCalled();
   });
 
-  xit('should throw error if projectType not defined (finishBuilding)', () => {
-    expect(instance.finishBuilding(newProject)).toThrow(
+  it('should throw error if projectType not defined (finishBuilding)', () => {
+    expect(instance.finishBuilding).toThrow(
       'Project created without projectType'
     );
   });

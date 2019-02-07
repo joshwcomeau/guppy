@@ -1,7 +1,6 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import ProjectName from './ProjectName';
-import TextInput from '../TextInput';
 import lolex from 'lolex';
 
 jest.mock('react-tippy', () => ({
