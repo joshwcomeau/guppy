@@ -8,9 +8,9 @@ import Modal from '../Modal';
 import ModalHeader from '../ModalHeader';
 import Spacer from '../Spacer';
 import FadeOnChange from '../FadeOnChange';
-import AddDependencySearchBox from '../AddDependencySearchBox';
-import AddDependencySearchResult from '../AddDependencySearchResult';
-import AddDependencyInitialScreen from '../AddDependencyInitialScreen';
+import AddDependencySearchBox from './AddDependencySearchBox';
+import AddDependencySearchResult from './AddDependencySearchResult';
+import AddDependencyInitialScreen from './AddDependencyInitialScreen';
 
 type Props = {
   isVisible: boolean,

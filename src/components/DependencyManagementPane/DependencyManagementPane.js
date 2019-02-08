@@ -10,10 +10,10 @@ import { getOnlineState } from '../../reducers/app-status.reducer';
 import { COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
-import AddDependencyModal from '../AddDependencyModal';
-import AddDependencySearchProvider from '../AddDependencySearchProvider';
-import DependencyDetails from '../DependencyDetails';
-import DependencyInstalling from '../DependencyInstalling/DependencyInstalling';
+import AddDependencyModal from './AddDependencyModal';
+import AddDependencySearchProvider from './AddDependencySearchProvider';
+import DependencyDetails from './DependencyDetails';
+import DependencyInstalling from './DependencyInstalling';
 import Card from '../Card';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
