@@ -28,7 +28,7 @@ type Props = {
   abortTask: Dispatch<typeof actions.abortTask>,
 };
 
-class DevelopmentServerPane extends PureComponent<Props> {
+export class DevelopmentServerPane extends PureComponent<Props> {
   handleToggle = (isToggled: boolean) => {
     const { task, launchDevServer, abortTask, project } = this.props;
 
