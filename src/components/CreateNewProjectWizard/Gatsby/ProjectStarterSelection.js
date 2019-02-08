@@ -3,6 +3,7 @@ import React, { Fragment, Component } from 'react';
 import fetch from 'node-fetch'; // Note: This is using net.request from Node. Browser fetch throws CORS error.
 import yaml from 'js-yaml';
 import Fuse from 'fuse.js';
+import validUrl from 'valid-url';
 
 import TextInputWithButton from '../../TextInputWithButton';
 import SelectStarterList from './SelectStarterList';
@@ -89,12 +90,38 @@ class ProjectStarter extends Component<Props, State> {
     }));
   };
 
+  isExactMatch = (filterString: string) => {
+    const { starters } = this.state;
+
+    return starters.find(
+      starter =>
+        starter.repo === filterString ||
+        (starter.repo
+          .split('/')
+          .pop()
+          .toString() === filterString &&
+          !filterString.includes('http'))
+    );
+  };
+
   updateSearchString = (filterString: string) => {
-    const { projectStarter } = this.props;
+    const { projectStarter, onSelect } = this.props;
+
     this.setState({
       starterListVisible: filterString !== '' || !!projectStarter,
       filterString,
     });
+
+    // Check if filterString matches a url in starters array or a name (last part of url with-out http).
+    // Automatically selects starter on match
+    const matchedStarter = this.isExactMatch(filterString);
+    if (matchedStarter) {
+      onSelect(matchedStarter.repo);
+    } else if (validUrl.isUri(filterString)) {
+      // We're selecting the filterString as starter here as it's not matching a starter from the list but it's a url
+      // Before building we're doing an final check if it exists
+      onSelect(filterString);
+    }
   };
 
   render() {

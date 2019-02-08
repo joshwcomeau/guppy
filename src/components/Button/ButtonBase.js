@@ -92,28 +92,28 @@ const ButtonBaseStyles = styled.button`
   }
 `;
 
-const XSmallButton = styled(ButtonBaseStyles)`
+export const XSmallButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0px 12px')};
   height: ${props => (props.noPadding ? 'auto' : '22px')};
   border-radius: 15px;
   font-size: 12px;
 `;
 
-const SmallButton = styled(ButtonBaseStyles)`
+export const SmallButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0px 14px')};
   height: ${props => (props.noPadding ? 'auto' : '30px')};
   border-radius: 17px;
   font-size: 14px;
 `;
 
-const MediumButton = styled(ButtonBaseStyles)`
+export const MediumButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0px 20px')};
   height: ${props => (props.noPadding ? 'auto' : '38px')};
   border-radius: 19px;
   font-size: 16px;
 `;
 
-const LargeButton = styled(ButtonBaseStyles)`
+export const LargeButton = styled(ButtonBaseStyles)`
   padding: ${props => (props.noPadding ? '0px' : '0 32px')};
   height: ${props => (props.noPadding ? 'auto' : '48px')};
   border-radius: 24px;

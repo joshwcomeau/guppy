@@ -64,7 +64,7 @@ const Foreground = styled.span`
   z-index: 1;
 `;
 
-const Background = styled.div`
+export const Background = styled.div`
   position: absolute;
   z-index: 0;
   top: ${props => (props.isActive ? -2 : 0)}px;

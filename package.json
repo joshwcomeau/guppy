@@ -28,7 +28,7 @@
     "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl -c.extraMetadata.main=build/electron.js",
     "publish": "yarn dist --publish always",
     "publish:all": "yarn dist:all --publish always",
-    "test": "node scripts/test.js --env=node",
+    "test": "node scripts/test.js --maxWorkers=2 --env=node",
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
     "flow": "flow",
@@ -57,7 +57,7 @@
     "fuse.js": "3.3.0",
     "gatsby-cli": "1.1.58",
     "js-yaml": "3.12.0",
-    "ps-tree": "1.1.0",
+    "ps-tree": "1.2.0",
     "react-custom-scrollbars": "4.2.1",
     "rimraf": "2.6.2",
     "yarn": "1.12.3"
@@ -163,6 +163,7 @@
     "uglifyjs-webpack-plugin": "1.1.6",
     "url-loader": "0.6.2",
     "uuid": "3.3.2",
+    "valid-url": "1.0.9",
     "webpack": "3.10.0",
     "webpack-dev-server": "2.11.0",
     "webpack-manifest-plugin": "1.3.2"
@@ -204,7 +205,7 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "^.+\\.module\\.css$": "identity-obj-proxy"
+      "^.+\\.module\\.css\\.gif$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
       "web.js",

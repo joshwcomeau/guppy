@@ -12,8 +12,9 @@ import { COLORS } from '../../constants';
 const createProps = props => ({
   selectedProjectId: null,
   projects: [],
-  onboardingStatus: 'done',
-  isVisible: true,
+  onboardingStatus:
+    props && props.onboardingStatus ? props.onboardingStatus : 'done',
+  isVisible: props && props.isVisible ? props.isVisible : true,
   createNewProjectStart: jest.fn(),
   selectProject: jest.fn(),
   ...props,
@@ -56,5 +57,56 @@ describe('Sidebar', () => {
     const wrapper = mount(<Sidebar {...props} />);
     const intro = wrapper.find(IntroductionBlurb);
     expect(intro.text()).toMatch(/Your new project was just added.*/);
+  });
+
+  describe('Sidebar props', () => {
+    let wrapper, instance;
+    beforeEach(() => {
+      // fake setTimeout - could be removed of the timeouts are refactored with componentDidUpdate
+      jest.useFakeTimers();
+
+      const props = createProps({
+        onboardingStatus: 'brand-new',
+        isVisible: false,
+      });
+      wrapper = mount(<Sidebar {...props} />);
+      instance = wrapper.instance();
+    });
+
+    it('update in sequence on initial display', () => {
+      expect(instance.state).toEqual({
+        introSequenceStep: null,
+      });
+      // toggle visibility
+      wrapper.setProps({
+        isVisible: true,
+      });
+      expect(instance.state).toEqual({
+        introSequenceStep: 'sidebar-slide-in',
+      });
+      expect(setTimeout).toHaveBeenCalledTimes(2);
+      // Fast forward and exhaust only currently pending timers
+      // (but not any new timers that get created during that process)
+      jest.runOnlyPendingTimers(); // just runs the first timeout
+
+      // Now first timeout is done
+      expect(instance.state).toEqual({
+        introSequenceStep: 'first-project-fall-in',
+      });
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 600);
+
+      // Run remaining timer
+      jest.runAllTimers();
+      expect(instance.state).toEqual({
+        introSequenceStep: 'add-projects-fade-in',
+      });
+    });
+    it(`should reset introSequenceStep if onboardingStatus changes to 'brand-new'`, () => {
+      wrapper.setProps({ isVisible: true });
+      jest.runAllTimers();
+      // introSequenceStep is 'add-projects-fade-in'
+      wrapper.setProps({ onboardingStatus: 'brand-new' }); // triggers reset
+      expect(instance.state).toEqual({ introSequenceStep: null });
+    });
   });
 });

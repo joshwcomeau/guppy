@@ -107,6 +107,25 @@ describe('ProjectStarterSelection component', () => {
     expect(instance.state.starterListVisible).toBeFalsy();
   });
 
+  it('should select starter (with https) from list', () => {
+    const starter = 'https://github.com/wonism/gatsby-advanced-blog';
+    instance.updateSearchString(starter);
+    expect(mockedOnSelect).toBeCalledWith(starter);
+  });
+
+  it('should select starter (with repo name) in list', () => {
+    const starter = 'https://github.com/wonism/gatsby-advanced-blog';
+    instance.updateSearchString('gatsby-advanced-blog');
+    expect(mockedOnSelect).toBeCalledWith(starter);
+  });
+
+  it('should select starter (with https) not in list', () => {
+    const starter =
+      'https://github.com/2manyprojects2littletime/gatsby-starter-blog';
+    instance.updateSearchString(starter);
+    expect(mockedOnSelect).toBeCalledWith(starter);
+  });
+
   it('should move the selected starter to first entry of starter list', () => {
     const blogStarterUrl = 'https://github.com/dschau/gatsby-blog-starter-kit';
     wrapper.setProps({ projectStarter: blogStarterUrl });
