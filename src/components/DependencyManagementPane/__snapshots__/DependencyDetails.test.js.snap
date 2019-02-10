@@ -23,7 +23,7 @@ exports[`DependencyDetails component should render 1`] = `
         Object {
           "humanDownloadsLast30Days": 1000000,
           "license": "MIT",
-          "modified": 1549828926465,
+          "modified": 1549828927372,
           "name": "React",
           "version": "16.0.0",
         }
@@ -39,7 +39,7 @@ exports[`DependencyDetails component should render 1`] = `
         Object {
           "humanDownloadsLast30Days": 1000000,
           "license": "MIT",
-          "modified": 1549828926465,
+          "modified": 1549828927372,
           "name": "React",
           "version": "16.0.0",
         }
