@@ -63,7 +63,13 @@ type Props = {
   },
 };
 
-export const StatsItem = ({ icon, children }) => (
+export const StatsItem = ({
+  icon,
+  children,
+}: {
+  icon: React$Node,
+  children: React$Node,
+}) => (
   <StatsItemElem>
     <IconBase icon={icon} size={24} />
     <Spacer size={6} />
