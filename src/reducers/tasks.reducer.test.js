@@ -10,7 +10,7 @@ import {
 import reducer, { getTaskDescription, initialState } from './tasks.reducer';
 
 describe('Tasks reducer', () => {
-  describe(REFRESH_PROJECTS_FINISH, () => {
+  describe(`${REFRESH_PROJECTS_FINISH}`, () => {
     it('captures task data from new projects', () => {
       const prevState = reducer();
 
@@ -170,7 +170,7 @@ describe('Tasks reducer', () => {
     });
   });
 
-  describe(ADD_PROJECT, () => {
+  describe(`${ADD_PROJECT}`, () => {
     it('generates initial task data for a new project', () => {
       const timestamp = new Date();
 
@@ -232,7 +232,7 @@ describe('Tasks reducer', () => {
     });
   });
 
-  describe(RUN_TASK, () => {
+  describe(`${RUN_TASK}`, () => {
     it('marks a task as running', () => {
       const mainTask = {
         projectId: 'foo',
@@ -301,7 +301,7 @@ describe('Tasks reducer', () => {
     });
   });
 
-  describe(COMPLETE_TASK, () => {
+  describe(`${COMPLETE_TASK}`, () => {
     it('marks a sustained task as idle, when it was successful', () => {
       const mainTask = {
         projectId: 'foo',
@@ -519,7 +519,7 @@ describe('Tasks reducer', () => {
     });
   });
 
-  describe(RESET_ALL_STATE, () => {
+  describe(`${RESET_ALL_STATE}`, () => {
     it('resets to initialState', () => {
       const prevState = {
         'foo-start': {},

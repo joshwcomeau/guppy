@@ -94,13 +94,13 @@ describe('TaskRunnerPane component', () => {
     it('should toggle task to active', () => {
       instance.handleToggleTask('build');
 
-      expect(mockActions.runTask).toBeCalledWith(tasks[0], new Date());
+      expect(mockActions.runTask).toHaveBeenCalledWith(tasks[0], new Date());
     });
 
     it('should abort task', () => {
       instance.handleToggleTask('devServer');
 
-      expect(mockActions.abortTask).toBeCalledWith(
+      expect(mockActions.abortTask).toHaveBeenCalledWith(
         tasks[1],
         project.type,
         new Date()
