@@ -1,0 +1,256 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddDependencySearchResult component Rendering should render a Description 1`] = `
+<styled.div>
+  <AlgoliaHighlighter(CustomHighlight)
+    attribute="description"
+    hit={
+      Object {
+        "humanDownloadsLast30Days": 1000000,
+        "license": "MIT",
+        "modified": 1549828927372,
+        "name": "React",
+        "version": "16.0.0",
+      }
+    }
+  />
+</styled.div>
+`;
+
+exports[`AddDependencySearchResult component Rendering should render a StatsRow 1`] = `
+<styled.div>
+  <StatsItem
+    icon={
+      Object {
+        "children": Array [
+          Object {
+            "attribs": Object {
+              "d": "M2367 2413q21 0 35.5 14.5t14.5 34.5q0 21-14.5 35.5T2367 2512H232q-21 0-35.5-14.5T182 2462V342q0-21 14.5-35.5T232 292q20 0 34.5 14.5T281 342v1644l236-241q19-21 47-21 26 0 46 16l211 177 435-1318q7-18 23-32t36-14q24 0 39.5 9t26.5 26l310 561 179-518q9-21 26-35l392-272q19-13 40-13 26 0 47 19.5t21 49.5q0 17-7 31t-22 25l-374 262-224 641q-6 19-22.5 33t-36.5 14q-28 0-42.5-9.5T1644 1350l-307-558-416 1265q-8 20-25.5 34t-40.5 14q-25 0-44-17l-241-201-289 295v231h2086z",
+            },
+            "children": Array [],
+            "name": "path",
+          },
+        ],
+        "viewBox": "0 0 2600 2760.837",
+      }
+    }
+  >
+    <styled.span
+      style={
+        Object {
+          "color": "#00C853",
+        }
+      }
+    >
+      1000000
+    </styled.span>
+     
+    downloads a month
+  </StatsItem>
+  <Middot />
+  <License
+    license="MIT"
+    withIcon={true}
+  />
+  <Middot />
+  <StatsItem
+    icon={
+      Object {
+        "children": Array [
+          Object {
+            "attribs": Object {
+              "d": "M2255.5 1982q-148.5 256-405 404.5T1299 2535t-551-148.5T343.5 1982 195 1431t148.5-551.5 404.5-405T1299 326t551.5 148.5 405 405T2404 1431t-148.5 551zm-92-1050.5q-134.5-230.5-365-365T1299 432q-268 0-498.5 134t-365 365T301 1431q0 267 134 497.5T799.5 2294t499.5 135 499.5-134 365-364.5T2298 1431t-134.5-499.5zM1467 1437l370 212-79 138-370-213q-19 12-41.5 19t-47.5 7q-69 0-119-50t-50-119q0-48 24.5-87.5t64.5-61.5V520h159v762q41 22 66 61.5t25 87.5q0 3-2 6zm219.5-800q19.5-18 45.5-18 28 0 45.5 19.5T1795 683q0 28-20 45.5t-45 17.5q-26 0-44.5-18t-18.5-45q0-28 19.5-46zm316.5 408.5q-19-17.5-19-45.5 0-25 17.5-45t45.5-20q23 0 43 17t20 46q0 27-18.5 46t-44.5 19q-25 0-44-17.5zm-1091-409q20 17.5 20 46.5 0 24-18 43.5T867 746q-23 0-43-17.5T804 683t18.5-46 43.5-18q26 0 46 17.5zm1178 1273q-20 16.5-43 16.5-28 0-45.5-20t-17.5-43q0-29 18.5-47t44.5-18q27 0 45 19t18 47q0 29-20 45.5zM1344 2339q-19 18-45 18t-44.5-18-18.5-45q0-26 18-45t45-19q26 0 45 19t19 45q0 27-19 45zm-863-863.5q-19 18.5-45 18.5-27 0-45-18.5t-18-44.5 18-45 45-19q26 0 45 19t19 45-19 44.5zm1294 657q20 17.5 20 46.5 0 25-19 44t-46 19q-23 0-43-17.5t-20-45.5q0-27 18-45.5t45-18.5q25 0 45 17.5zM594.5 1046q-20.5 17-43.5 17-28 0-45.5-20t-17.5-43q0-27 19-46t44-19q29 0 46.5 19.5T615 1000q0 29-20.5 46zM912 2225q-20 17-43 17-28 0-46.5-19.5T804 2178q0-28 20-45.5t43-17.5q28 0 46.5 18t18.5 46q0 29-20 46zm-316.5-409.5Q615 1833 615 1863q0 23-17.5 43t-46.5 20q-25 0-44-18.5t-19-46.5 19.5-45.5T551 1798q25 0 44.5 17.5zm1612-340Q2189 1494 2162 1494q-26 0-44.5-18.5T2099 1431t18.5-45 44.5-19q27 0 45.5 19t18.5 45-18.5 44.5zm-863.5.5q19-18 19-45 0-26-19-45t-45-19q-23 0-43 18t-20 46q0 25 17.5 44t45.5 19q26 0 45-18z",
+            },
+            "children": Array [],
+            "name": "path",
+          },
+        ],
+        "viewBox": "0 0 2600 2760.837",
+      }
+    }
+  >
+    Published 
+    in 49 years
+  </StatsItem>
+</styled.div>
+`;
+
+exports[`AddDependencySearchResult component Rendering should render a header (currentStatus idle) 1`] = `
+<styled.header>
+  <styled.div>
+    <ExternalLink
+      color="#304FFE"
+      display="inline"
+      hoverColor="#3f6cff"
+      href="https://www.npmjs.org/package/React"
+    >
+      <styled.span
+        size="small"
+      >
+        React
+      </styled.span>
+    </ExternalLink>
+    <styled.div
+      inline={true}
+      size={15}
+    />
+    <styled.span>
+      v
+      16.0.0
+    </styled.span>
+  </styled.div>
+  <styled.div>
+    <Icon
+      fill="currentColor"
+      icon={
+        Object {
+          "attribs": Object {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+          },
+          "children": Array [
+            Object {
+              "attribs": Object {
+                "points": "20 6 9 17 4 12",
+              },
+              "children": Array [],
+              "name": "polyline",
+            },
+          ],
+          "viewBox": "0 0 24 24",
+        }
+      }
+      size={24}
+      style={
+        Object {
+          "color": "#00E676",
+        }
+      }
+    />
+    <styled.div
+      size={6}
+    />
+    Installed
+  </styled.div>
+</styled.header>
+`;
+
+exports[`AddDependencySearchResult component Rendering should render a header (currentStatus installing) 1`] = `
+<styled.header>
+  <styled.div>
+    <ExternalLink
+      color="#304FFE"
+      display="inline"
+      hoverColor="#3f6cff"
+      href="https://www.npmjs.org/package/React"
+    >
+      <styled.span
+        size="small"
+      >
+        React
+      </styled.span>
+    </ExternalLink>
+    <styled.div
+      inline={true}
+      size={15}
+    />
+    <styled.span>
+      v
+      16.0.0
+    </styled.span>
+  </styled.div>
+  <styled.div>
+    <Spinner
+      size={24}
+    />
+    <styled.div
+      size={6}
+    />
+    Installing…
+  </styled.div>
+</styled.header>
+`;
+
+exports[`AddDependencySearchResult component Rendering should render a header (default) 1`] = `
+<styled.header>
+  <styled.div>
+    <ExternalLink
+      color="#304FFE"
+      display="inline"
+      hoverColor="#3f6cff"
+      href="https://www.npmjs.org/package/React"
+    >
+      <styled.span
+        size="small"
+      >
+        React
+      </styled.span>
+    </ExternalLink>
+    <styled.div
+      inline={true}
+      size={15}
+    />
+    <styled.span>
+      v
+      16.0.0
+    </styled.span>
+  </styled.div>
+  <StrokeButton
+    fillColor="#FFF"
+    onClick={[Function]}
+    showStroke={true}
+    size="small"
+    strokeColors={
+      Array [
+        "#00C853",
+        "#69db0d",
+      ]
+    }
+    textColor="#00C853"
+  >
+    Add To Project
+  </StrokeButton>
+</styled.header>
+`;
+
+exports[`AddDependencySearchResult component should create a colored download number 4999 1`] = `"#cc004a"`;
+
+exports[`AddDependencySearchResult component should create a colored download number 49999 1`] = `"#FF9100"`;
+
+exports[`AddDependencySearchResult component should create a colored download number 50000 1`] = `"#00C853"`;
+
+exports[`AddDependencySearchResult component should render a StatsItem 1`] = `
+<styled.span>
+  <Icon
+    fill="currentColor"
+    icon={
+      <Icon
+        fill="currentColor"
+        icon={
+          Object {
+            "children": Array [
+              Object {
+                "attribs": Object {
+                  "d": "M2367 2413q21 0 35.5 14.5t14.5 34.5q0 21-14.5 35.5T2367 2512H232q-21 0-35.5-14.5T182 2462V342q0-21 14.5-35.5T232 292q20 0 34.5 14.5T281 342v1644l236-241q19-21 47-21 26 0 46 16l211 177 435-1318q7-18 23-32t36-14q24 0 39.5 9t26.5 26l310 561 179-518q9-21 26-35l392-272q19-13 40-13 26 0 47 19.5t21 49.5q0 17-7 31t-22 25l-374 262-224 641q-6 19-22.5 33t-36.5 14q-28 0-42.5-9.5T1644 1350l-307-558-416 1265q-8 20-25.5 34t-40.5 14q-25 0-44-17l-241-201-289 295v231h2086z",
+                },
+                "children": Array [],
+                "name": "path",
+              },
+            ],
+            "viewBox": "0 0 2600 2760.837",
+          }
+        }
+        size={16}
+      />
+    }
+    size={24}
+  />
+  <styled.div
+    size={6}
+  />
+  10 downloads a month
+</styled.span>
+`;

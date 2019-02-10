@@ -33,7 +33,7 @@ class AddDependencyInitialScreen extends Component<Props> {
   }
 }
 
-const InstructionsParagraph = Paragraph.extend`
+export const InstructionsParagraph = Paragraph.extend`
   font-size: 1.4rem;
   color: ${COLORS.gray[600]};
 `;
@@ -48,7 +48,7 @@ const EmptyState = styled.div`
   text-align: center;
 `;
 
-const PoweredByWrapper = styled.div`
+export const PoweredByWrapper = styled.div`
   position: absolute;
   left: 0;
   right: 0;

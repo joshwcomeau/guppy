@@ -63,7 +63,7 @@ type Props = {
   },
 };
 
-const StatsItem = ({ icon, children }) => (
+export const StatsItem = ({ icon, children }) => (
   <StatsItemElem>
     <IconBase icon={icon} size={24} />
     <Spacer size={6} />
@@ -71,7 +71,7 @@ const StatsItem = ({ icon, children }) => (
   </StatsItemElem>
 );
 
-const getColorForDownloadNumber = (num: number) => {
+export const getColorForDownloadNumber = (num: number) => {
   if (num < 5000) {
     return COLORS.pink[700];
   } else if (num < 50000) {
@@ -81,7 +81,7 @@ const getColorForDownloadNumber = (num: number) => {
   }
 };
 
-class AddDependencySearchResult extends PureComponent<Props> {
+export class AddDependencySearchResult extends PureComponent<Props> {
   renderActionArea() {
     const { hit, projectId, currentStatus, addDependency } = this.props;
     const isAlreadyInstalled = currentStatus === 'idle';
@@ -173,7 +173,7 @@ const Wrapper = styled.div`
   padding-top: 25px;
 `;
 
-const Header = styled.header`
+export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -195,7 +195,7 @@ const Version = styled.span`
   font-size: 20px;
 `;
 
-const StatsRow = styled.div`
+export const StatsRow = styled.div`
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -207,7 +207,7 @@ const StatsItemElem = styled.span`
   align-items: center;
 `;
 
-const Description = styled.div`
+export const Description = styled.div`
   font-size: 18px;
   margin-right: 120px;
 `;

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddDependencySearchBox component should render SearchBox 1`] = `
+<styled.div>
+  <AlgoliaSearchBox(Translatable(SearchBox))
+    autoFocus={true}
+    placeholder="eg. redux, react-router..."
+  />
+</styled.div>
+`;

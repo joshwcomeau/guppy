@@ -21,7 +21,7 @@ type Props = {
   },
 };
 
-class AddDependencyModal extends Component<Props> {
+export class AddDependencyModal extends Component<Props> {
   render() {
     const { isVisible, onDismiss, searchResults } = this.props;
 

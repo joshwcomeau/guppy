@@ -13,4 +13,12 @@ module.exports = {
     'flowtype/space-after-type-colon': 0,
     'flowtype/generic-spacing': 0,
   },
+  overrides: [
+    {
+      files: ['*.test.js', '*.spec.js'],
+      rules: {
+        'flowtype/require-valid-file-annotation': 0,
+      },
+    },
+  ],
 };
