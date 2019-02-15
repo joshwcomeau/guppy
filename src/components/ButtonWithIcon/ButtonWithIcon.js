@@ -10,6 +10,7 @@ type Props = StrokeButtonProps & {
   icon: React$Node,
 };
 
+// Nit: noPadding prop seems unavailable on StrokeButton component. Should we remove it here?
 const ButtonWithIcon = ({ icon, children, ...delegated }: Props) => (
   // TODO: Support other sizes
   <StrokeButton noPadding {...delegated}>
@@ -20,7 +21,7 @@ const ButtonWithIcon = ({ icon, children, ...delegated }: Props) => (
   </StrokeButton>
 );
 
-const InnerWrapper = styled.div`
+export const InnerWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;

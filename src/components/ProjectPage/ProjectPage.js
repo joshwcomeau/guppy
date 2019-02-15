@@ -77,12 +77,65 @@ export class ProjectPage extends PureComponent<Props> {
     }
   }
 
-  render() {
+  renderConditionally = () => {
     const {
       project,
       reinstallDependencies,
       dependenciesLoadingStatus,
     } = this.props;
+    // Conditionally render depending on dependenciesLoadingStatus
+    return {
+      loading: (
+        <MountAfter
+          delay={100}
+          reason={`Don't show spinner if we're really fast.`}
+        >
+          <SpinnerWrapper>
+            <Spinner size={50} />
+          </SpinnerWrapper>
+        </MountAfter>
+      ),
+      done: (
+        <Fragment>
+          <DevelopmentServerPane leftSideWidth={300} />
+
+          <Spacer size={30} />
+          <TaskRunnerPane leftSideWidth={200} />
+          <Spacer size={30} />
+          <DependencyManagementPane />
+        </Fragment>
+      ),
+      fail: (
+        <Card>
+          <BaseWrapper>
+            <DependencyMissingIcon />
+          </BaseWrapper>
+
+          <Paragraph>
+            <strong>Oh no!</strong> Looks like your project dependencies are
+            missing.
+          </Paragraph>
+          <Paragraph>
+            This can happen if you've freshly cloned a project from GitHub. In
+            order to run scripts in Guppy, you'll need to install them now.
+          </Paragraph>
+          <Spacer size={30} />
+          <InstallWrapper>
+            <FillButton
+              size="large"
+              colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+              onClick={() => reinstallDependencies(project.id)}
+            >
+              Install Dependencies
+            </FillButton>
+          </InstallWrapper>
+        </Card>
+      ),
+    }[dependenciesLoadingStatus];
+  };
+
+  render() {
+    const { project } = this.props;
     const { path } = project;
 
     return (
@@ -125,58 +178,7 @@ export class ProjectPage extends PureComponent<Props> {
           </ProjectActionBar>
 
           <Spacer size={30} />
-          {
-            // Conditionally render depending on dependenciesLoadingStatus
-            {
-              loading: (
-                <MountAfter
-                  delay={100}
-                  reason={`Don't show spinner if we're really fast.`}
-                >
-                  <SpinnerWrapper>
-                    <Spinner size={50} />
-                  </SpinnerWrapper>
-                </MountAfter>
-              ),
-              done: (
-                <Fragment>
-                  <DevelopmentServerPane leftSideWidth={300} />
-
-                  <Spacer size={30} />
-                  <TaskRunnerPane leftSideWidth={200} />
-                  <Spacer size={30} />
-                  <DependencyManagementPane />
-                </Fragment>
-              ),
-              fail: (
-                <Card>
-                  <BaseWrapper>
-                    <DependencyMissingIcon />
-                  </BaseWrapper>
-
-                  <Paragraph>
-                    <strong>Oh no!</strong> Looks like your project dependencies
-                    are missing.
-                  </Paragraph>
-                  <Paragraph>
-                    This can happen if you've freshly cloned a project from
-                    GitHub. In order to run scripts in Guppy, you'll need to
-                    install them now.
-                  </Paragraph>
-                  <Spacer size={30} />
-                  <InstallWrapper>
-                    <FillButton
-                      size="large"
-                      colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-                      onClick={() => reinstallDependencies(project.id)}
-                    >
-                      Install Dependencies
-                    </FillButton>
-                  </InstallWrapper>
-                </Card>
-              ),
-            }[dependenciesLoadingStatus]
-          }
+          {this.renderConditionally()}
           <Spacer size={60} />
         </MainContentWrapper>
       </FadeIn>
@@ -184,7 +186,7 @@ export class ProjectPage extends PureComponent<Props> {
   }
 }
 
-const FlexRow = styled.div`
+export const FlexRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

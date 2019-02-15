@@ -2,7 +2,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { ProjectPage } from './ProjectPage';
+import { ProjectPage, FlexRow } from './ProjectPage';
 import FillButton from '../Button/FillButton';
 
 import {
@@ -64,13 +64,17 @@ describe('ProjectPage component', () => {
     instance = wrapper.instance();
   });
 
-  describe('Rendering cases', () => {
+  describe('Rendering', () => {
     loadingStates.forEach(dependencyLoadingStatus => {
       it(`should render project page (${dependencyLoadingStatus})`, () => {
         wrapper = mountWithStatus(dependencyLoadingStatus, mockActions);
-        expect(wrapper).toMatchSnapshot();
+        expect(wrapper.instance().renderConditionally()).toMatchSnapshot();
       });
     });
+  });
+
+  it('should render header FlexRow', () => {
+    expect(wrapper.find(FlexRow)).toMatchSnapshot();
   });
 
   it('should dispatch loadDependencyInfoFromDisk on mount', () => {
