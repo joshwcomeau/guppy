@@ -52,6 +52,7 @@ class DependencyInfoFromNpm extends Component<Props> {
         <Configure
           attributesToRetrieve={['name', 'version', 'modified']}
           hitsPerPage={1}
+          analyticsTags={['guppy', 'guppy-details']}
         />
         <FilterByIds attribute="objectID" defaultRefinement={[packageName]} />
         <Result packageName={packageName}>{children}</Result>
