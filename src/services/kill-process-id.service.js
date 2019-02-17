@@ -20,7 +20,7 @@ const killProcessId = doomedProcessId => {
     // We use /f for focefully terminate process because it ask for confirmation
     // We use /t to kill all child processes
     // More info https://ss64.com/nt/taskkill.html
-    childProcess.spawn('taskkill', ['/pid', doomedProcessId, '/f', '/t']);
+    childProcess.spawnSync('taskkill', ['/pid', doomedProcessId, '/f', '/t']);
   } else {
     // Child node processes will persist after their parent's death
     // if they are not killed first, so we need to use `psTree` to build
@@ -31,7 +31,7 @@ const killProcessId = doomedProcessId => {
       }
 
       const childrenPIDs = children.map(child => child.PID);
-      childProcess.spawn('kill', ['-9', doomedProcessId, ...childrenPIDs]);
+      childProcess.spawnSync('kill', ['-9', doomedProcessId, ...childrenPIDs]);
     });
   }
 };
