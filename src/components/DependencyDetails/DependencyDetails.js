@@ -16,6 +16,7 @@ import type { NpmResult } from '../DependencyInfoFromNpm';
 type Props = {
   projectId: string,
   dependency: Dependency,
+  isOnline: boolean,
 };
 
 class DependencyDetails extends PureComponent<Props> {
@@ -24,6 +25,7 @@ class DependencyDetails extends PureComponent<Props> {
 
     return (
       <DependencyInfoFromNpm packageName={dependency.name}>
+        {' '}
         {({ name, latestVersion, lastUpdatedAt, isLoading }: NpmResult) => (
           <Fragment>
             <Header>
@@ -32,31 +34,29 @@ class DependencyDetails extends PureComponent<Props> {
                 reason="Optical symmetry between top and left edge of parent"
               >
                 <HeaderText>
-                  <Name size="small">{dependency.name}</Name>
-                  <Description>{dependency.description}</Description>
-                </HeaderText>
-              </PixelShifter>
+                  <Name size="small"> {dependency.name} </Name>{' '}
+                  <Description> {dependency.description} </Description>{' '}
+                </HeaderText>{' '}
+              </PixelShifter>{' '}
             </Header>
-
             <VersionsWrapper>
               <DependencyUpdateRow
                 projectId={projectId}
                 dependency={dependency}
                 isLoadingNpmInfo={isLoading}
                 latestVersion={latestVersion}
-              />
+              />{' '}
             </VersionsWrapper>
-
             <MainContent>
               <DependencyDetailsTable
                 projectId={projectId}
                 dependency={dependency}
                 lastUpdatedAt={lastUpdatedAt}
                 isOnline={isOnline}
-              />
-            </MainContent>
+              />{' '}
+            </MainContent>{' '}
           </Fragment>
-        )}
+        )}{' '}
       </DependencyInfoFromNpm>
     );
   }
