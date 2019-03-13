@@ -19,6 +19,7 @@ type Props = {
   projectId: string,
   dependency: Dependency,
   lastUpdatedAt: number,
+  isOnline: boolean,
 };
 
 class DependencyDetailsTable extends Component<Props> {
@@ -42,78 +43,82 @@ class DependencyDetailsTable extends Component<Props> {
           <tr>
             <FirstCell>
               <Label>
-                Location
+                Location{' '}
                 <HelpButton
                   size={16}
                   href={`${GUPPY_REPO_URL}/blob/master/docs/understanding-package.json.md#dependencies-vs-devdependencies`}
-                />
-              </Label>
-            </FirstCell>
+                />{' '}
+              </Label>{' '}
+            </FirstCell>{' '}
             <FirstCell>
               <DependencyLocationLabel
                 isDevDependency={dependency.location === 'devDependencies'}
               >
-                {dependency.location}
-              </DependencyLocationLabel>
-            </FirstCell>
+                {dependency.location}{' '}
+              </DependencyLocationLabel>{' '}
+            </FirstCell>{' '}
           </tr>
-
           <tr>
             <Cell>
-              <Label>Last Published</Label>
-            </Cell>
+              <Label> Last Published </Label>{' '}
+            </Cell>{' '}
             <Cell>
+              {' '}
               {lastUpdatedAt ? (
                 moment(lastUpdatedAt).fromNow()
               ) : isOnline ? (
                 <Spinner size={15} />
               ) : (
                 '–'
-              )}
-            </Cell>
+              )}{' '}
+            </Cell>{' '}
           </tr>
-
           <tr>
             <Cell>
-              <Label>License</Label>
-            </Cell>
+              <Label> License </Label>{' '}
+            </Cell>{' '}
             <Cell>
-              <License license={dependency.license} />
-            </Cell>
+              <License license={dependency.license} />{' '}
+            </Cell>{' '}
           </tr>
-
           <tr>
             <Cell>
-              <Label>Resources</Label>
-            </Cell>
+              <Label> Resources </Label>{' '}
+            </Cell>{' '}
             <Cell>
-              <ExternalLink href={packageHref}>NPM</ExternalLink>
-              {githubHref && <Middot />}
+              <ExternalLink href={packageHref}> NPM </ExternalLink>{' '}
+              {githubHref && <Middot />}{' '}
               {githubHref && (
-                <ExternalLink href={githubHref}>GitHub</ExternalLink>
-              )}
-              {dependency.homepage && <Middot />}
+                <ExternalLink href={githubHref}> GitHub </ExternalLink>
+              )}{' '}
+              {dependency.homepage && <Middot />}{' '}
               {dependency.homepage && (
                 <ExternalLink href={dependency.homepage}>
-                  Official Website
+                  Official Website{' '}
                 </ExternalLink>
-              )}
-            </Cell>
+              )}{' '}
+            </Cell>{' '}
           </tr>
-
           <tr>
             <LastCell>
-              <Label style={{ color: COLORS.pink[500] }}>Danger Zone</Label>
-            </LastCell>
+              <Label
+                style={{
+                  color: COLORS.pink[500],
+                }}
+              >
+                {' '}
+                Danger Zone{' '}
+              </Label>{' '}
+            </LastCell>{' '}
             <LastCell>
               <DeleteDependencyButton
                 projectId={projectId}
                 dependencyName={dependency.name}
                 dependencyStatus={dependency.status}
-              />
-            </LastCell>
-          </tr>
-        </tbody>
+              />{' '}
+            </LastCell>{' '}
+          </tr>{' '}
+        </tbody>{' '}
       </Table>
     );
   }

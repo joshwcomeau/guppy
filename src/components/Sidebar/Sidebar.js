@@ -1,3 +1,4 @@
+/* eslint-disable no-unexpected-multiline */
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -34,6 +35,7 @@ type Props = {
   isVisible: boolean,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   selectProject: Dispatch<typeof actions.selectProject>,
+  isOnline: boolean,
 };
 
 type State = {
@@ -78,7 +80,9 @@ export class Sidebar extends PureComponent<Props, State> {
 
   componentWillReceiveProps(nextProps: Props) {
     if (!this.props.isVisible && nextProps.isVisible) {
-      this.setState({ introSequenceStep: 'sidebar-slide-in' });
+      this.setState({
+        introSequenceStep: 'sidebar-slide-in',
+      });
 
       // HACK: timeout-based spring animations are a no-no, but I'm in a hurry.
       // Maybe `StaggeredMotion` could help, but it's really meant for things
@@ -87,10 +91,14 @@ export class Sidebar extends PureComponent<Props, State> {
       // are all state-dependent.
       // TODO: Move this to `componentDidUpdate` to avoid setTimeouts.
       this.timeoutId = window.setTimeout(() => {
-        this.setState({ introSequenceStep: 'first-project-fall-in' });
+        this.setState({
+          introSequenceStep: 'first-project-fall-in',
+        });
 
         this.timeoutId = window.setTimeout(() => {
-          this.setState({ introSequenceStep: 'add-projects-fade-in' });
+          this.setState({
+            introSequenceStep: 'add-projects-fade-in',
+          });
         }, 600);
       }, 125);
     }
@@ -98,7 +106,9 @@ export class Sidebar extends PureComponent<Props, State> {
     // Reset all!
     // Required to hide the IntroductionBlurb after `Reset state`.
     if (this.props.isVisible && nextProps.onboardingStatus === 'brand-new') {
-      this.setState({ introSequenceStep: null });
+      this.setState({
+        introSequenceStep: null,
+      });
     }
   }
 
@@ -128,6 +138,7 @@ export class Sidebar extends PureComponent<Props, State> {
         }}
         config={springConfig}
       >
+        {' '}
         {interpolated => (
           <Fragment>
             <Wrapper offset={`${interpolated.sidebarOffsetPercentage}%`}>
@@ -147,14 +158,19 @@ export class Sidebar extends PureComponent<Props, State> {
                   />
                 )}
                 renderTrackHorizontal={props => (
-                  <div {...props} style={{ display: 'none' }} />
+                  <div
+                    {...props}
+                    style={{
+                      display: 'none',
+                    }}
+                  />
                 )}
               >
                 <IntroductionBlurb
                   isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
                 />
-
                 <Projects offset={`${interpolated.firstProjectPosition}px`}>
+                  {' '}
                   {projects.map(project => (
                     <Fragment key={project.id}>
                       <Tooltip
@@ -173,11 +189,11 @@ export class Sidebar extends PureComponent<Props, State> {
                             project.id === selectedProjectId
                           }
                           handleSelect={() => selectProject(project.id)}
-                        />
-                      </Tooltip>
-                      <Spacer size={18} />
+                        />{' '}
+                      </Tooltip>{' '}
+                      <Spacer size={18} />{' '}
                     </Fragment>
-                  ))}
+                  ))}{' '}
                   <AddProjectButton
                     size={SIDEBAR_ICON_SIZE}
                     onClick={createNewProjectStart}
@@ -185,13 +201,13 @@ export class Sidebar extends PureComponent<Props, State> {
                       finishedOnboarding || introSequenceStepIndex >= 2
                     }
                     isOnline={isOnline}
-                  />
-                </Projects>
-              </ScrollbarOnlyVertical>
-            </Wrapper>
-            {isVisible && <SidebarSpacer />}
+                  />{' '}
+                </Projects>{' '}
+              </ScrollbarOnlyVertical>{' '}
+            </Wrapper>{' '}
+            {isVisible && <SidebarSpacer />}{' '}
           </Fragment>
-        )}
+        )}{' '}
       </Spring>
     );
   }

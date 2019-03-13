@@ -39,13 +39,16 @@ const { dialog } = remote;
 
 type Props = {
   settings: AppSettings,
-  projects: { [projectId: string]: ProjectInternal },
+  projects: {
+    [projectId: string]: ProjectInternal,
+  },
   projectHomePath: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
   addProject: Dispatch<typeof actions.addProject>,
   createNewProjectCancel: Dispatch<typeof actions.createNewProjectCancel>,
   createNewProjectFinish: Dispatch<typeof actions.createNewProjectFinish>,
+  isOnline: boolean,
 };
 
 type State = {
@@ -85,7 +88,10 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   }
 
   updateFieldValue = (field: Field, value: any) => {
-    this.setState({ [field]: value, activeField: field });
+    this.setState({
+      [field]: value,
+      activeField: field,
+    });
 
     if (field === 'projectName') {
       this.verifyProjectNameUniqueness(value);
@@ -93,7 +99,9 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   focusField = (field: ?Field) => {
-    this.setState({ activeField: field });
+    this.setState({
+      activeField: field,
+    });
   };
 
   verifyProjectNameUniqueness = (name: string) => {
@@ -106,13 +114,17 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     );
 
     if (isAlreadyTaken) {
-      this.setState({ isProjectNameTaken: true });
+      this.setState({
+        isProjectNameTaken: true,
+      });
       return;
     }
 
     // If this update fixes the problem, unset the error status
     if (!isAlreadyTaken && this.state.isProjectNameTaken) {
-      this.setState({ isProjectNameTaken: false });
+      this.setState({
+        isProjectNameTaken: false,
+      });
     }
   };
 
@@ -244,12 +256,18 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       isProjectNameTaken,
     } = this.state;
 
-    const project = { projectName, projectType, projectIcon, projectStarter };
+    const project = {
+      projectName,
+      projectType,
+      projectIcon,
+      projectStarter,
+    };
 
     const readyToBeBuilt = status !== 'filling-in-form';
 
     return (
       <Transition in={isVisible} timeout={300}>
+        {' '}
         {transitionState => (
           <Fragment>
             <TwoPaneModal
@@ -263,7 +281,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                     currentStep={currentStep}
                     activeField={activeField}
                     projectType={projectType}
-                  />
+                  />{' '}
                 </Debounced>
               }
               rightPane={
@@ -288,9 +306,9 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                   handleCompleteBuild={this.finishBuilding}
                 />
               }
-            />
+            />{' '}
           </Fragment>
-        )}
+        )}{' '}
       </Transition>
     );
   }

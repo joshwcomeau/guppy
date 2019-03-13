@@ -24,6 +24,7 @@ import type { Project } from '../../types';
 
 type Props = {
   project: Project,
+  isOnline: boolean,
 };
 
 type State = {
@@ -59,7 +60,9 @@ class DependencyManagementPane extends PureComponent<Props, State> {
           )
       );
 
-      this.setState({ selectedDependencyIndex: newDependencyIndex });
+      this.setState({
+        selectedDependencyIndex: newDependencyIndex,
+      });
     }
 
     // If the last dependency was deleted, we need to shift focus to the new last dependency
@@ -91,15 +94,21 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     const index = this.props.project.dependencies.findIndex(
       ({ name }) => name === dependencyName
     );
-    this.setState({ selectedDependencyIndex: index });
+    this.setState({
+      selectedDependencyIndex: index,
+    });
   };
 
   openAddNewDependencyModal = () => {
-    this.setState({ addingNewDependency: true });
+    this.setState({
+      addingNewDependency: true,
+    });
   };
 
   closeAddNewDependencyModal = () => {
-    this.setState({ addingNewDependency: false });
+    this.setState({
+      addingNewDependency: false,
+    });
   };
 
   renderListAddon = (dependency, isSelected) => {
@@ -114,7 +123,8 @@ class DependencyManagementPane extends PureComponent<Props, State> {
 
     return (
       <DependencyVersion isSelected={isSelected}>
-        {dependency.version}
+        {' '}
+        {dependency.version}{' '}
       </DependencyVersion>
     );
   };
@@ -154,20 +164,21 @@ class DependencyManagementPane extends PureComponent<Props, State> {
         <Wrapper>
           <DependencyList>
             <Dependencies>
+              {' '}
               {dependencies.map((dependency, index) => (
                 <DependencyButton
                   key={dependency.name}
                   isSelected={selectedDependencyIndex === index}
                   onClick={() => this.selectDependency(dependency.name)}
                 >
-                  <DependencyName>{dependency.name}</DependencyName>
+                  <DependencyName> {dependency.name} </DependencyName>{' '}
                   {this.renderListAddon(
                     dependency,
                     selectedDependencyIndex === index
-                  )}
+                  )}{' '}
                 </DependencyButton>
-              ))}
-            </Dependencies>
+              ))}{' '}
+            </Dependencies>{' '}
             <MountAfter
               delay={1000}
               reason={`
@@ -190,26 +201,30 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 isOnline={this.props.isOnline}
                 onClick={this.openAddNewDependencyModal}
               >
-                <IconBase icon={plus} size={20} />
-                <Spacer size={6} />
-                Add New
-                <OnlyOn size="mdMin" style={{ paddingLeft: 3 }}>
-                  Dependency
-                </OnlyOn>
-              </AddDependencyButton>
-            </MountAfter>
-          </DependencyList>
+                <IconBase icon={plus} size={20} /> <Spacer size={6} />
+                Add New{' '}
+                <OnlyOn
+                  size="mdMin"
+                  style={{
+                    paddingLeft: 3,
+                  }}
+                >
+                  Dependency{' '}
+                </OnlyOn>{' '}
+              </AddDependencyButton>{' '}
+            </MountAfter>{' '}
+          </DependencyList>{' '}
           <MainContent>
-            {this.renderMainContents(selectedDependency, id, isOnline)}
-          </MainContent>
+            {' '}
+            {this.renderMainContents(selectedDependency, id, isOnline)}{' '}
+          </MainContent>{' '}
         </Wrapper>
-
         <AddDependencySearchProvider>
           <AddDependencyModal
             isVisible={addingNewDependency}
             onDismiss={this.closeAddNewDependencyModal}
-          />
-        </AddDependencySearchProvider>
+          />{' '}
+        </AddDependencySearchProvider>{' '}
       </Module>
     );
   }
