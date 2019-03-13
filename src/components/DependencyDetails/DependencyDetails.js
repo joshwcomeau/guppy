@@ -20,7 +20,7 @@ type Props = {
 
 class DependencyDetails extends PureComponent<Props> {
   render() {
-    const { projectId, dependency } = this.props;
+    const { projectId, dependency, isOnline } = this.props;
 
     return (
       <DependencyInfoFromNpm packageName={dependency.name}>
@@ -52,6 +52,7 @@ class DependencyDetails extends PureComponent<Props> {
                 projectId={projectId}
                 dependency={dependency}
                 lastUpdatedAt={lastUpdatedAt}
+                isOnline={isOnline}
               />
             </MainContent>
           </Fragment>

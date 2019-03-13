@@ -23,7 +23,7 @@ type Props = {
 
 class DependencyDetailsTable extends Component<Props> {
   render() {
-    const { projectId, dependency, lastUpdatedAt } = this.props;
+    const { projectId, dependency, lastUpdatedAt, isOnline } = this.props;
 
     const packageHref = `https://www.npmjs.org/package/${dependency.name}`;
     let githubHref;
@@ -65,8 +65,10 @@ class DependencyDetailsTable extends Component<Props> {
             <Cell>
               {lastUpdatedAt ? (
                 moment(lastUpdatedAt).fromNow()
-              ) : (
+              ) : isOnline ? (
                 <Spinner size={15} />
+              ) : (
+                '–'
               )}
             </Cell>
           </tr>

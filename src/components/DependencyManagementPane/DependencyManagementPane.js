@@ -6,6 +6,7 @@ import IconBase from 'react-icons-kit';
 import { plus } from 'react-icons-kit/feather/plus';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 import { COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
@@ -118,7 +119,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     );
   };
 
-  renderMainContents = (selectedDependency, projectId) => {
+  renderMainContents = (selectedDependency, projectId, isOnline) => {
     if (
       selectedDependency.status === 'installing' ||
       selectedDependency.status === 'queued-install'
@@ -133,6 +134,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
 
     return (
       <DependencyDetails
+        isOnline={isOnline}
         projectId={projectId}
         dependency={selectedDependency}
       />
@@ -142,9 +144,8 @@ class DependencyManagementPane extends PureComponent<Props, State> {
   render() {
     const { id, dependencies } = this.props.project;
     const { selectedDependencyIndex, addingNewDependency } = this.state;
-
     const selectedDependency = dependencies[selectedDependencyIndex];
-
+    const { isOnline } = this.props;
     return (
       <Module
         title="Dependencies"
@@ -185,7 +186,10 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 See the bug in action: https://imgur.com/a/SanrY61
               `}
             >
-              <AddDependencyButton onClick={this.openAddNewDependencyModal}>
+              <AddDependencyButton
+                isOnline={this.props.isOnline}
+                onClick={this.openAddNewDependencyModal}
+              >
                 <IconBase icon={plus} size={20} />
                 <Spacer size={6} />
                 Add New
@@ -196,7 +200,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
             </MountAfter>
           </DependencyList>
           <MainContent>
-            {this.renderMainContents(selectedDependency, id)}
+            {this.renderMainContents(selectedDependency, id, isOnline)}
           </MainContent>
         </Wrapper>
 
@@ -293,7 +297,8 @@ const AddDependencyButton = styled.button`
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
-
+  opacity: ${props => (props.isOnline ? 1 : 0.5)};
+  pointer-events: ${props => (props.isOnline ? 'auto' : 'none')};
   &:hover {
     border: 2px dashed ${COLORS.gray[400]};
     color: ${COLORS.gray[600]};
@@ -327,6 +332,7 @@ const MainContent = Card.extend`
 
 const mapStateToProps = state => ({
   project: getSelectedProject(state),
+  isOnline: getOnlineState(state),
 });
 
 export default connect(mapStateToProps)(DependencyManagementPane);
