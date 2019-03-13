@@ -11,8 +11,6 @@ import { Z_INDICES, COLORS } from '../../constants';
 import * as actions from '../../actions';
 import { getOnlineState } from '../../reducers/app-status.reducer';
 
-import type { Dispatch } from '../../actions/types';
-
 const InfoBar = styled.div`
   width: 100vw;
   display: flex;
@@ -34,14 +32,7 @@ const SVG = styled.svg`
   margin: 2px 8px;
 `;
 
-type Props = {
-  isOnline: boolean,
-  isOnlineCheck: Dispatch<typeof actions.isOnlineCheck>,
-};
-
-type State = {};
-
-class OnlineChecker extends React.PureComponent<Props, State> {
+class OnlineChecker extends React.PureComponent {
   componentDidMount() {
     window.addEventListener('online', this.check);
     window.addEventListener('offline', this.check);
@@ -60,18 +51,9 @@ class OnlineChecker extends React.PureComponent<Props, State> {
         <InfoBar>
           <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
             <path d="M10.9,1H5.1L1,5.1v5.8L5.1,15h5.8L15,10.9V5.1ZM9,12H7V10H9ZM9,9H7V4H9Z" />
-            <rect
-              width="16"
-              height="16"
-              style={{
-                fill: 'none',
-              }}
-            />{' '}
-          </SVG>{' '}
-          <p>
-            {' '}
-            You are currently offline, some functions will not be available{' '}
-          </p>{' '}
+            <rect width="16" height="16" style={{ fill: 'none' }} />
+          </SVG>
+          <p>You are currently offline, some functions will not be available</p>
         </InfoBar>
       );
     }
@@ -85,7 +67,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {
-    isOnlineCheck: actions.isOnlineCheck,
-  }
+  { isOnlineCheck: actions.isOnlineCheck }
 )(OnlineChecker);

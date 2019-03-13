@@ -29,7 +29,6 @@ type Props = {
   updateFieldValue: (field: Field, value: any) => void,
   focusField: (field: ?Field) => void,
   handleSubmit: () => Promise<any> | void,
-  isOnline: boolean,
 };
 
 class MainPane extends PureComponent<Props> {
@@ -60,8 +59,8 @@ class MainPane extends PureComponent<Props> {
             handleFocus={this.handleFocusStarter}
             onSelect={this.updateGatsbyStarter}
             projectStarter={projectStarter}
-          />{' '}
-        </FormField>{' '}
+          />
+        </FormField>
       </FadeIn>
     );
   }
@@ -89,8 +88,8 @@ class MainPane extends PureComponent<Props> {
               onProjectTypeSelect={selectedProjectType =>
                 this.updateProjectType(selectedProjectType)
               }
-            />{' '}
-          </FormField>{' '}
+            />
+          </FormField>
         </FadeIn>
       );
     }
@@ -109,8 +108,8 @@ class MainPane extends PureComponent<Props> {
               randomize={true}
               limitTo={9}
               onSelectIcon={this.updateProjectIcon}
-            />{' '}
-          </FormField>{' '}
+            />
+          </FormField>
         </FadeIn>
       );
     }
@@ -149,12 +148,8 @@ class MainPane extends PureComponent<Props> {
     return (
       <Fragment>
         <Spring
-          from={{
-            offset: currentStepIndex === 0 ? 0 : 50,
-          }}
-          to={{
-            offset: currentStepIndex === 0 ? 50 : 0,
-          }}
+          from={{ offset: currentStepIndex === 0 ? 0 : 50 }}
+          to={{ offset: currentStepIndex === 0 ? 50 : 0 }}
           native
         >
           {({ offset }) => (
@@ -167,12 +162,13 @@ class MainPane extends PureComponent<Props> {
                 handleChange={this.updateProjectName}
                 handleSubmit={handleSubmit}
                 isProjectNameTaken={isProjectNameTaken}
-              />{' '}
+              />
               <ProjectPath projectName={projectName} />
-              {steps}{' '}
+
+              {steps}
             </Wrapper>
-          )}{' '}
-        </Spring>{' '}
+          )}
+        </Spring>
         <SubmitButtonWrapper>
           <SubmitButton
             isDisabled={
@@ -184,8 +180,8 @@ class MainPane extends PureComponent<Props> {
             readyToBeSubmitted={currentStepIndex >= lastIndex}
             hasBeenSubmitted={hasBeenSubmitted}
             onSubmit={handleSubmit}
-          />{' '}
-        </SubmitButtonWrapper>{' '}
+          />
+        </SubmitButtonWrapper>
       </Fragment>
     );
   }

@@ -21,7 +21,6 @@ export type NpmResult = {
 type Props = {
   packageName: string,
   children: (info: NpmResult) => React$Node,
-  isOnline: boolean,
 };
 
 const FilterByIds = connectRefinementList(() => null);
@@ -34,9 +33,7 @@ const Result = connectHits(({ hits, packageName, children }: any) => {
   if (!hit || hit.name !== packageName) {
     // TODO: Presumably there's a HOC to figure out loading state, I should
     // use that instead of just assuming if it doesn't exist, it's loading.
-    return children({
-      isLoading: true,
-    });
+    return children({ isLoading: true });
   }
 
   const info = {
@@ -51,8 +48,8 @@ const Result = connectHits(({ hits, packageName, children }: any) => {
 
 class DependencyInfoFromNpm extends Component<Props> {
   /*
-   * Requires internal state to handle the refresh of the cache.
-   */
+  * Requires internal state to handle the refresh of the cache.
+  */
   constructor(props) {
     super(props);
     this.state = {
@@ -60,25 +57,18 @@ class DependencyInfoFromNpm extends Component<Props> {
     };
   }
   /*
-   * When the app is offline and comes back online this will refresh the cache and search again for updates
-   * This is particularly important when the app is launched offline and then connects to internet.
-   */
+  * When the app is offline and comes back online this will refresh the cache and search again for updates
+  * This is particularly important when the app is launched offline and then connects to internet.
+  */
   componentDidUpdate(prevProps) {
     if (this.props.isOnline && this.props.isOnline !== prevProps.isOnline) {
       this.refreshCache();
     }
   }
   refreshCache = () => {
-    this.setState(
-      {
-        refresh: true,
-      },
-      () => {
-        this.setState({
-          refresh: false,
-        });
-      }
-    );
+    this.setState({ refresh: true }, () => {
+      this.setState({ refresh: false });
+    });
   };
   render() {
     const { packageName, children, isOnline } = this.props;
@@ -87,12 +77,11 @@ class DependencyInfoFromNpm extends Component<Props> {
         <Configure
           attributesToRetrieve={['name', 'version', 'modified']}
           hitsPerPage={1}
-        />{' '}
-        <FilterByIds attribute="objectID" defaultRefinement={[packageName]} />{' '}
+        />
+        <FilterByIds attribute="objectID" defaultRefinement={[packageName]} />
         <Result packageName={packageName} isOnline={isOnline}>
-          {' '}
-          {children}{' '}
-        </Result>{' '}
+          {children}
+        </Result>
       </InstantSearch>
     );
   }

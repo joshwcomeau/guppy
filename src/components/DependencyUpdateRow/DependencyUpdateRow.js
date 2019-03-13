@@ -24,7 +24,6 @@ type Props = {
   dependency: Dependency,
   isLoadingNpmInfo: boolean,
   latestVersion: ?string,
-  isOnline: boolean,
   // From redux:
   updateDependency: Dispatch<typeof actions.updateDependency>,
 };
@@ -44,7 +43,7 @@ class DependencyUpdateRow extends Component<Props> {
       if (isLoadingNpmInfo || !latestVersion) {
         return (
           <FadeIn duration={500}>
-            <Spinner size={22} />{' '}
+            <Spinner size={22} />
           </FadeIn>
         );
       }
@@ -55,28 +54,20 @@ class DependencyUpdateRow extends Component<Props> {
 
     return isUpToDate ? (
       <UpToDate>
-        <IconBase
-          icon={check}
-          size={24}
-          style={{
-            color: COLORS.green[500],
-          }}
-        />{' '}
+        <IconBase icon={check} size={24} style={{ color: COLORS.green[500] }} />
         <Spacer size={6} />
-        Up - to - date{' '}
+        Up-to-date
       </UpToDate>
     ) : (
       <FillButton
         size="small"
         colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-        style={{
-          width: 80,
-        }}
+        style={{ width: 80 }}
         onClick={() =>
           updateDependency(projectId, dependency.name, latestVersion)
         }
       >
-        {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}{' '}
+        {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}
       </FillButton>
     );
   }
@@ -87,14 +78,16 @@ class DependencyUpdateRow extends Component<Props> {
     return (
       <Wrapper>
         <Col>
-          <VersionLabel> Latest Version </VersionLabel>{' '}
-          <VersionNum> {latestVersion || '--'} </VersionNum>{' '}
+          <VersionLabel>Latest Version</VersionLabel>
+          <VersionNum>{latestVersion || '--'}</VersionNum>
         </Col>
+
         <Col>
-          <VersionLabel> Installed Version </VersionLabel>{' '}
-          <VersionNum> {dependency.version} </VersionNum>{' '}
+          <VersionLabel>Installed Version</VersionLabel>
+          <VersionNum>{dependency.version}</VersionNum>
         </Col>
-        <UpdateCol isOnline={isOnline}> {this.renderActionColumn()} </UpdateCol>{' '}
+
+        <UpdateCol isOnline={isOnline}>{this.renderActionColumn()}</UpdateCol>
       </Wrapper>
     );
   }
@@ -145,7 +138,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {
-    updateDependency: actions.updateDependency,
-  }
+  { updateDependency: actions.updateDependency }
 )(DependencyUpdateRow);

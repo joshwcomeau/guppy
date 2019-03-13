@@ -10,7 +10,7 @@ type Props = {
   hoverColors?: Array<string>,
   textColor: string,
   children: React$Node,
-  disabled?: boolean,
+  disabled: boolean,
 };
 
 export const wrapColorsInGradient = (colors?: Array<string> | string) => {
@@ -47,8 +47,7 @@ class FillButton extends Component<Props> {
         hoverBackground={hoverBackground}
         {...delegated}
       >
-        {' '}
-        {children}{' '}
+        {children}
       </ButtonBase>
     );
   }
