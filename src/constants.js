@@ -126,6 +126,7 @@ export const Z_INDICES = {
   modal: 1000,
   loadingScreen: 2000,
   titlebar: 10000,
+  infoBanner: 99999,
 };
 
 // NOTE: This looks private, but it's not :)
