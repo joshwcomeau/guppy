@@ -141,6 +141,7 @@ class MainPane extends PureComponent<Props> {
       hasBeenSubmitted,
       isProjectNameTaken,
       handleSubmit,
+      isOnline,
     } = this.props;
 
     const { lastIndex, steps } = this.renderConditionalSteps(currentStepIndex);
@@ -175,6 +176,7 @@ class MainPane extends PureComponent<Props> {
               !projectName ||
               this.isSubmitDisabled(currentStepIndex, lastIndex)
             }
+            isOnline={isOnline}
             readyToBeSubmitted={currentStepIndex >= lastIndex}
             hasBeenSubmitted={hasBeenSubmitted}
             onSubmit={handleSubmit}

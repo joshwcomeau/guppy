@@ -10,6 +10,7 @@ import {
   getDefaultProjectPath,
 } from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { checkIfProjectExists } from '../../services/create-project.service';
@@ -226,7 +227,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   render() {
-    const { isVisible, createNewProjectCancel, projectHomePath } = this.props;
+    const {
+      isVisible,
+      createNewProjectCancel,
+      projectHomePath,
+      isOnline,
+    } = this.props;
     const {
       projectName,
       projectType,
@@ -271,6 +277,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                   handleSubmit={this.handleSubmit}
                   hasBeenSubmitted={status !== 'filling-in-form'}
                   isProjectNameTaken={isProjectNameTaken}
+                  isOnline={isOnline}
                 />
               }
               backface={
@@ -295,6 +302,7 @@ const mapStateToProps = state => ({
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
   settings: getAppSettings(state),
+  isOnline: getOnlineState(state),
 });
 
 const mapDispatchToProps = {

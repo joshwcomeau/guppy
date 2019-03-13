@@ -84,6 +84,7 @@ const ButtonBaseStyles = styled.button`
   &:disabled {
     filter: grayscale(100%);
     opacity: 0.75;
+    cursor: initial;
   }
 
   &:not(:disabled):active {
