@@ -16,6 +16,7 @@ import {
   getOnboardingStatus,
   getSidebarVisibility,
 } from '../../reducers/onboarding-status.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 
 import Spacer from '../Spacer';
 import SidebarProjectIcon from './SidebarProjectIcon';
@@ -109,6 +110,7 @@ export class Sidebar extends PureComponent<Props, State> {
       onboardingStatus,
       createNewProjectStart,
       selectProject,
+      isOnline,
     } = this.props;
     const { introSequenceStep } = this.state;
 
@@ -117,7 +119,6 @@ export class Sidebar extends PureComponent<Props, State> {
     );
 
     const finishedOnboarding = onboardingStatus === 'done';
-
     return (
       <Spring
         to={{
@@ -183,6 +184,7 @@ export class Sidebar extends PureComponent<Props, State> {
                     isVisible={
                       finishedOnboarding || introSequenceStepIndex >= 2
                     }
+                    isOnline={isOnline}
                   />
                 </Projects>
               </ScrollbarOnlyVertical>
@@ -212,6 +214,7 @@ const Wrapper = animated(styled.nav.attrs({
     ${COLORS.blue[900]},
     ${COLORS.blue[700]}
   );
+  transform: translateX(${props => props.offset});
   will-change: transform;
   height: 100vh;
 `);
@@ -245,6 +248,7 @@ const mapStateToProps = state => ({
   onboardingStatus: getOnboardingStatus(state),
   isVisible: getSidebarVisibility(state),
   selectedProjectId: getSelectedProjectId(state),
+  isOnline: getOnlineState(state),
 });
 
 const mapDispatchToProps = {
