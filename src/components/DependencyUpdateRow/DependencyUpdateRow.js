@@ -23,7 +23,7 @@ type Props = {
   projectId: string,
   dependency: Dependency,
   isLoadingNpmInfo: boolean,
-  latestVersion: string,
+  latestVersion: ?string,
   isOnline: boolean,
   // From redux:
   updateDependency: Dispatch<typeof actions.updateDependency>,
@@ -76,12 +76,7 @@ class DependencyUpdateRow extends Component<Props> {
           updateDependency(projectId, dependency.name, latestVersion)
         }
       >
-        {' '}
-        {isUpdating ? (
-          <Spinner size={16} color={COLORS.white} />
-        ) : (
-          'Update'
-        )}{' '}
+        {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}{' '}
       </FillButton>
     );
   }
@@ -94,11 +89,11 @@ class DependencyUpdateRow extends Component<Props> {
         <Col>
           <VersionLabel> Latest Version </VersionLabel>{' '}
           <VersionNum> {latestVersion || '--'} </VersionNum>{' '}
-        </Col>{' '}
+        </Col>
         <Col>
           <VersionLabel> Installed Version </VersionLabel>{' '}
           <VersionNum> {dependency.version} </VersionNum>{' '}
-        </Col>{' '}
+        </Col>
         <UpdateCol isOnline={isOnline}> {this.renderActionColumn()} </UpdateCol>{' '}
       </Wrapper>
     );
@@ -123,7 +118,6 @@ const UpdateCol = styled.div`
   pointer-events: ${props => (props.isOnline ? 'auto' : 'none')};
 `;
 
-// eslint-disable-next-line no-unexpected-multiline
 const VersionLabel = styled(Label)`
   color: ${COLORS.gray[600]};
 `;
