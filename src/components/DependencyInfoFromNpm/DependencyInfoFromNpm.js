@@ -24,6 +24,10 @@ type Props = {
   isOnline: boolean,
 };
 
+type State = {
+  refresh: boolean,
+};
+
 const FilterByIds = connectRefinementList(() => null);
 
 const Result = connectHits(({ hits, packageName, children }: any) => {
@@ -49,7 +53,7 @@ const Result = connectHits(({ hits, packageName, children }: any) => {
   return children(info);
 });
 
-class DependencyInfoFromNpm extends Component<Props> {
+class DependencyInfoFromNpm extends Component<Props, State> {
   /*
    * Requires internal state to handle the refresh of the cache.
    */
