@@ -7,6 +7,7 @@ import {
   REINSTALL_DEPENDENCIES_FINISH,
   SET_STATUS_TEXT,
   RESET_STATUS_TEXT,
+  IS_ONLINE_CHECK,
 } from '../actions';
 
 import type { Action } from '../actions/types';
@@ -14,11 +15,13 @@ import type { Action } from '../actions/types';
 type State = {
   blockingActionActive: boolean,
   statusText: string,
+  isOnline: boolean,
 };
 
 export const initialState = {
   blockingActionActive: false,
   statusText: 'Please wait...',
+  isOnline: navigator.onLine,
 };
 
 export default (state: State = initialState, action: Action = {}) => {
@@ -55,6 +58,11 @@ export default (state: State = initialState, action: Action = {}) => {
         statusText: initialState.statusText,
       };
 
+    case IS_ONLINE_CHECK:
+      return {
+        ...state,
+        isOnline: action.onlineBool,
+      };
     default:
       return initialState;
   }
@@ -71,3 +79,5 @@ export const getStatusText = (state: any) => state.appStatus.statusText;
 
 export const getReinstallingActive = (state: any) =>
   state.appStatus.reinstallingActive;
+
+export const getOnlineState = (state: any) => state.appStatus.isOnline;

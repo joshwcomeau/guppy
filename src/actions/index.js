@@ -15,6 +15,7 @@ import type {
 //
 // Action Types
 //
+export const IS_ONLINE_CHECK = 'IS_ONLINE_CHECK';
 export const REFRESH_PROJECTS_START = 'REFRESH_PROJECTS_START';
 export const REFRESH_PROJECTS_ERROR = 'REFRESH_PROJECTS_ERROR';
 export const REFRESH_PROJECTS_FINISH = 'REFRESH_PROJECTS_FINISH';
@@ -89,6 +90,11 @@ export const RESET_STATUS_TEXT = 'RESET_STATUS_TEXT';
 //
 // Action Creators
 //
+export const isOnlineCheck = (onlineBool: boolean) => ({
+  type: IS_ONLINE_CHECK,
+  onlineBool,
+});
+
 export const addProject = (
   project: ProjectInternal,
   projectHomePath: string,

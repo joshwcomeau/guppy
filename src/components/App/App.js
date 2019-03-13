@@ -17,6 +17,7 @@ import AppSettingsModal from '../AppSettingsModal';
 import Initialization from '../Initialization';
 import LoadingScreen from '../LoadingScreen';
 import FeedbackButton from '../FeedbackButton';
+import OnlineChecker from '../OnlineChecker';
 
 import type { Project } from '../../types';
 
@@ -33,6 +34,7 @@ class App extends PureComponent<Props> {
         {wasSuccessfullyInitialized =>
           wasSuccessfullyInitialized && (
             <Fragment>
+              <OnlineChecker />
               <Titlebar />
               <Wrapper>
                 <ApplicationMenu />
