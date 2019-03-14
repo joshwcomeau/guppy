@@ -17,7 +17,7 @@ const InfoBar = styled.div`
   width: 100vw;
   display: flex;
   justify-content: center;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   z-index: ${Z_INDICES.infoBanner};
