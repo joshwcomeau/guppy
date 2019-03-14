@@ -280,7 +280,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                     currentStep={currentStep}
                     activeField={activeField}
                     projectType={projectType}
-                  />{' '}
+                  />
                 </Debounced>
               }
               rightPane={
@@ -305,9 +305,9 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                   handleCompleteBuild={this.finishBuilding}
                 />
               }
-            />{' '}
+            />
           </Fragment>
-        )}{' '}
+        )}
       </Transition>
     );
   }
