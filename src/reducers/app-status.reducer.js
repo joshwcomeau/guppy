@@ -15,7 +15,7 @@ import type { Action } from '../actions/types';
 type State = {
   blockingActionActive: boolean,
   statusText: string,
-  isOnline: boolean,
+  onlineStatus: boolean,
 };
 
 export const initialState = {
