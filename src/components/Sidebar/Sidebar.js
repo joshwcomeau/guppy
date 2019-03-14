@@ -138,7 +138,6 @@ export class Sidebar extends PureComponent<Props, State> {
         }}
         config={springConfig}
       >
-        {' '}
         {interpolated => (
           <Fragment>
             <Wrapper offset={`${interpolated.sidebarOffsetPercentage}%`}>
@@ -170,7 +169,6 @@ export class Sidebar extends PureComponent<Props, State> {
                   isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
                 />
                 <Projects offset={`${interpolated.firstProjectPosition}px`}>
-                  {' '}
                   {projects.map(project => (
                     <Fragment key={project.id}>
                       <Tooltip
@@ -189,11 +187,11 @@ export class Sidebar extends PureComponent<Props, State> {
                             project.id === selectedProjectId
                           }
                           handleSelect={() => selectProject(project.id)}
-                        />{' '}
-                      </Tooltip>{' '}
-                      <Spacer size={18} />{' '}
+                        />
+                      </Tooltip>
+                      <Spacer size={18} />
                     </Fragment>
-                  ))}{' '}
+                  ))}
                   <AddProjectButton
                     size={SIDEBAR_ICON_SIZE}
                     onClick={createNewProjectStart}
@@ -201,13 +199,13 @@ export class Sidebar extends PureComponent<Props, State> {
                       finishedOnboarding || introSequenceStepIndex >= 2
                     }
                     isOnline={isOnline}
-                  />{' '}
-                </Projects>{' '}
-              </ScrollbarOnlyVertical>{' '}
-            </Wrapper>{' '}
-            {isVisible && <SidebarSpacer />}{' '}
+                  />
+                </Projects>
+              </ScrollbarOnlyVertical>
+            </Wrapper>
+            {isVisible && <SidebarSpacer />}
           </Fragment>
-        )}{' '}
+        )}
       </Spring>
     );
   }

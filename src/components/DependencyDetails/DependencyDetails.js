@@ -25,7 +25,6 @@ class DependencyDetails extends PureComponent<Props> {
 
     return (
       <DependencyInfoFromNpm packageName={dependency.name}>
-        {' '}
         {({ name, latestVersion, lastUpdatedAt, isLoading }: NpmResult) => (
           <Fragment>
             <Header>
@@ -34,10 +33,10 @@ class DependencyDetails extends PureComponent<Props> {
                 reason="Optical symmetry between top and left edge of parent"
               >
                 <HeaderText>
-                  <Name size="small"> {dependency.name} </Name>{' '}
-                  <Description> {dependency.description} </Description>{' '}
-                </HeaderText>{' '}
-              </PixelShifter>{' '}
+                  <Name size="small"> {dependency.name} </Name>
+                  <Description> {dependency.description} </Description>
+                </HeaderText>
+              </PixelShifter>
             </Header>
             <VersionsWrapper>
               <DependencyUpdateRow
@@ -45,7 +44,7 @@ class DependencyDetails extends PureComponent<Props> {
                 dependency={dependency}
                 isLoadingNpmInfo={isLoading}
                 latestVersion={latestVersion}
-              />{' '}
+              />
             </VersionsWrapper>
             <MainContent>
               <DependencyDetailsTable
@@ -53,10 +52,10 @@ class DependencyDetails extends PureComponent<Props> {
                 dependency={dependency}
                 lastUpdatedAt={lastUpdatedAt}
                 isOnline={isOnline}
-              />{' '}
-            </MainContent>{' '}
+              />
+            </MainContent>
           </Fragment>
-        )}{' '}
+        )}
       </DependencyInfoFromNpm>
     );
   }

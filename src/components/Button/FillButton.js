@@ -47,8 +47,7 @@ class FillButton extends Component<Props> {
         hoverBackground={hoverBackground}
         {...delegated}
       >
-        {' '}
-        {children}{' '}
+        {children}
       </ButtonBase>
     );
   }

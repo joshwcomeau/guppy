@@ -91,12 +91,11 @@ class DependencyInfoFromNpm extends Component<Props, State> {
         <Configure
           attributesToRetrieve={['name', 'version', 'modified']}
           hitsPerPage={1}
-        />{' '}
-        <FilterByIds attribute="objectID" defaultRefinement={[packageName]} />{' '}
+        />
+        <FilterByIds attribute="objectID" defaultRefinement={[packageName]} />
         <Result packageName={packageName} isOnline={isOnline}>
-          {' '}
-          {children}{' '}
-        </Result>{' '}
+          {children}
+        </Result>
       </InstantSearch>
     );
   }

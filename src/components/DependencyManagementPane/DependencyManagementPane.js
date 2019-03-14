@@ -123,8 +123,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
 
     return (
       <DependencyVersion isSelected={isSelected}>
-        {' '}
-        {dependency.version}{' '}
+        {dependency.version}
       </DependencyVersion>
     );
   };
@@ -164,21 +163,20 @@ class DependencyManagementPane extends PureComponent<Props, State> {
         <Wrapper>
           <DependencyList>
             <Dependencies>
-              {' '}
               {dependencies.map((dependency, index) => (
                 <DependencyButton
                   key={dependency.name}
                   isSelected={selectedDependencyIndex === index}
                   onClick={() => this.selectDependency(dependency.name)}
                 >
-                  <DependencyName> {dependency.name} </DependencyName>{' '}
+                  <DependencyName> {dependency.name} </DependencyName>
                   {this.renderListAddon(
                     dependency,
                     selectedDependencyIndex === index
-                  )}{' '}
+                  )}
                 </DependencyButton>
-              ))}{' '}
-            </Dependencies>{' '}
+              ))}
+            </Dependencies>
             <MountAfter
               delay={1000}
               reason={`
@@ -202,29 +200,28 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 onClick={this.openAddNewDependencyModal}
               >
                 <IconBase icon={plus} size={20} /> <Spacer size={6} />
-                Add New{' '}
+                Add New
                 <OnlyOn
                   size="mdMin"
                   style={{
                     paddingLeft: 3,
                   }}
                 >
-                  Dependency{' '}
-                </OnlyOn>{' '}
-              </AddDependencyButton>{' '}
-            </MountAfter>{' '}
-          </DependencyList>{' '}
+                  Dependency
+                </OnlyOn>
+              </AddDependencyButton>
+            </MountAfter>
+          </DependencyList>
           <MainContent>
-            {' '}
-            {this.renderMainContents(selectedDependency, id, isOnline)}{' '}
-          </MainContent>{' '}
+            {this.renderMainContents(selectedDependency, id, isOnline)}
+          </MainContent>
         </Wrapper>
         <AddDependencySearchProvider>
           <AddDependencyModal
             isVisible={addingNewDependency}
             onDismiss={this.closeAddNewDependencyModal}
-          />{' '}
-        </AddDependencySearchProvider>{' '}
+          />
+        </AddDependencySearchProvider>
       </Module>
     );
   }

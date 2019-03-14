@@ -267,7 +267,6 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
     return (
       <Transition in={isVisible} timeout={300}>
-        {' '}
         {transitionState => (
           <Fragment>
             <TwoPaneModal

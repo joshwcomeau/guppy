@@ -36,7 +36,7 @@ const SVG = styled.svg`
 
 type Props = {
   isOnline: boolean,
-  isOnlineCheck: Dispatch<typeof actions.isOnlineCheck>,
+  setOnlineStatus: Dispatch<typeof actions.setOnlineStatus>,
 };
 
 type State = {};
@@ -47,7 +47,7 @@ class OnlineChecker extends React.PureComponent<Props, State> {
     window.addEventListener('offline', this.check);
   }
   check = () => {
-    this.props.isOnlineCheck(navigator.onLine);
+    this.props.setOnlineStatus(navigator.onLine);
   };
   componentWillUnmount() {
     window.removeEventListener('online', this.check);
@@ -66,12 +66,9 @@ class OnlineChecker extends React.PureComponent<Props, State> {
               style={{
                 fill: 'none',
               }}
-            />{' '}
-          </SVG>{' '}
-          <p>
-            {' '}
-            You are currently offline, some functions will not be available{' '}
-          </p>{' '}
+            />
+          </SVG>
+          <p>You are currently offline, some functions will not be available</p>
         </InfoBar>
       );
     }
@@ -86,6 +83,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    isOnlineCheck: actions.isOnlineCheck,
+    setOnlineStatus: actions.setOnlineStatus,
   }
 )(OnlineChecker);
