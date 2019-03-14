@@ -44,7 +44,7 @@ class DependencyUpdateRow extends Component<Props> {
       if (isLoadingNpmInfo || !latestVersion) {
         return (
           <FadeIn duration={500}>
-            <Spinner size={22} />{' '}
+            <Spinner size={22} />
           </FadeIn>
         );
       }
@@ -61,9 +61,9 @@ class DependencyUpdateRow extends Component<Props> {
           style={{
             color: COLORS.green[500],
           }}
-        />{' '}
+        />
         <Spacer size={6} />
-        Up - to - date{' '}
+        Up - to - date
       </UpToDate>
     ) : (
       <FillButton
@@ -76,12 +76,7 @@ class DependencyUpdateRow extends Component<Props> {
           updateDependency(projectId, dependency.name, latestVersion)
         }
       >
-        {' '}
-        {isUpdating ? (
-          <Spinner size={16} color={COLORS.white} />
-        ) : (
-          'Update'
-        )}{' '}
+        {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}
       </FillButton>
     );
   }
@@ -92,14 +87,14 @@ class DependencyUpdateRow extends Component<Props> {
     return (
       <Wrapper>
         <Col>
-          <VersionLabel> Latest Version </VersionLabel>{' '}
-          <VersionNum> {latestVersion || '--'} </VersionNum>{' '}
-        </Col>{' '}
+          <VersionLabel> Latest Version </VersionLabel>
+          <VersionNum> {latestVersion || '--'} </VersionNum>
+        </Col>
         <Col>
-          <VersionLabel> Installed Version </VersionLabel>{' '}
-          <VersionNum> {dependency.version} </VersionNum>{' '}
-        </Col>{' '}
-        <UpdateCol isOnline={isOnline}> {this.renderActionColumn()} </UpdateCol>{' '}
+          <VersionLabel> Installed Version </VersionLabel>
+          <VersionNum> {dependency.version} </VersionNum>
+        </Col>
+        <UpdateCol isOnline={isOnline}> {this.renderActionColumn()} </UpdateCol>
       </Wrapper>
     );
   }
