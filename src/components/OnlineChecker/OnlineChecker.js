@@ -13,35 +13,12 @@ import { getOnlineState } from '../../reducers/app-status.reducer';
 
 import type { Dispatch } from '../../actions/types';
 
-const InfoBar = styled.div`
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: ${Z_INDICES.infoBanner};
-  background-color: ${COLORS.white};
-  padding: 16px;
-  align-content: center;
-  box-shadow: 0px 2px 2px 0px ${COLORS.transparentBlack[900]};
-`;
-
-const SVG = styled.svg`
-  width: 16px;
-  height: 16px;
-  fill: ${COLORS.red[500]};
-  margin: 2px 8px;
-`;
-
 type Props = {
   isOnline: boolean,
   setOnlineStatus: Dispatch<typeof actions.setOnlineStatus>,
 };
 
-type State = {};
-
-class OnlineChecker extends React.PureComponent<Props, State> {
+class OnlineChecker extends React.PureComponent<Props> {
   componentDidMount() {
     window.addEventListener('online', this.check);
     window.addEventListener('offline', this.check);
@@ -75,6 +52,27 @@ class OnlineChecker extends React.PureComponent<Props, State> {
     return null;
   }
 }
+
+const InfoBar = styled.div`
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: ${Z_INDICES.infoBanner};
+  background-color: ${COLORS.transparentWhite[100]};
+  padding: 16px;
+  align-content: center;
+  box-shadow: 0px 2px 2px 0px ${COLORS.transparentBlack[900]};
+`;
+
+const SVG = styled.svg`
+  width: 16px;
+  height: 16px;
+  fill: ${COLORS.red[500]};
+  margin: 2px 8px;
+`;
 
 const mapStateToProps = state => ({
   isOnline: getOnlineState(state),
