@@ -57,6 +57,7 @@ exports[`StrokeButton component should render button with stroke outline 1`] = `
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c3:not(:disabled):active {

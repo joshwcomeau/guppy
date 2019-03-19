@@ -1,3 +1,4 @@
+/* eslint-disable no-unexpected-multiline */
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -16,6 +17,7 @@ import {
   getOnboardingStatus,
   getSidebarVisibility,
 } from '../../reducers/onboarding-status.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 
 import Spacer from '../Spacer';
 import SidebarProjectIcon from './SidebarProjectIcon';
@@ -33,6 +35,7 @@ type Props = {
   isVisible: boolean,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   selectProject: Dispatch<typeof actions.selectProject>,
+  isOnline: boolean,
 };
 
 type State = {
@@ -77,7 +80,9 @@ export class Sidebar extends PureComponent<Props, State> {
 
   componentWillReceiveProps(nextProps: Props) {
     if (!this.props.isVisible && nextProps.isVisible) {
-      this.setState({ introSequenceStep: 'sidebar-slide-in' });
+      this.setState({
+        introSequenceStep: 'sidebar-slide-in',
+      });
 
       // HACK: timeout-based spring animations are a no-no, but I'm in a hurry.
       // Maybe `StaggeredMotion` could help, but it's really meant for things
@@ -86,10 +91,14 @@ export class Sidebar extends PureComponent<Props, State> {
       // are all state-dependent.
       // TODO: Move this to `componentDidUpdate` to avoid setTimeouts.
       this.timeoutId = window.setTimeout(() => {
-        this.setState({ introSequenceStep: 'first-project-fall-in' });
+        this.setState({
+          introSequenceStep: 'first-project-fall-in',
+        });
 
         this.timeoutId = window.setTimeout(() => {
-          this.setState({ introSequenceStep: 'add-projects-fade-in' });
+          this.setState({
+            introSequenceStep: 'add-projects-fade-in',
+          });
         }, 600);
       }, 125);
     }
@@ -97,7 +106,9 @@ export class Sidebar extends PureComponent<Props, State> {
     // Reset all!
     // Required to hide the IntroductionBlurb after `Reset state`.
     if (this.props.isVisible && nextProps.onboardingStatus === 'brand-new') {
-      this.setState({ introSequenceStep: null });
+      this.setState({
+        introSequenceStep: null,
+      });
     }
   }
 
@@ -109,6 +120,7 @@ export class Sidebar extends PureComponent<Props, State> {
       onboardingStatus,
       createNewProjectStart,
       selectProject,
+      isOnline,
     } = this.props;
     const { introSequenceStep } = this.state;
 
@@ -117,7 +129,6 @@ export class Sidebar extends PureComponent<Props, State> {
     );
 
     const finishedOnboarding = onboardingStatus === 'done';
-
     return (
       <Spring
         to={{
@@ -146,13 +157,17 @@ export class Sidebar extends PureComponent<Props, State> {
                   />
                 )}
                 renderTrackHorizontal={props => (
-                  <div {...props} style={{ display: 'none' }} />
+                  <div
+                    {...props}
+                    style={{
+                      display: 'none',
+                    }}
+                  />
                 )}
               >
                 <IntroductionBlurb
                   isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
                 />
-
                 <Projects offset={`${interpolated.firstProjectPosition}px`}>
                   {projects.map(project => (
                     <Fragment key={project.id}>
@@ -183,6 +198,7 @@ export class Sidebar extends PureComponent<Props, State> {
                     isVisible={
                       finishedOnboarding || introSequenceStepIndex >= 2
                     }
+                    isOnline={isOnline}
                   />
                 </Projects>
               </ScrollbarOnlyVertical>
@@ -212,6 +228,7 @@ const Wrapper = animated(styled.nav.attrs({
     ${COLORS.blue[900]},
     ${COLORS.blue[700]}
   );
+  transform: translateX(${props => props.offset});
   will-change: transform;
   height: 100vh;
 `);
@@ -245,6 +262,7 @@ const mapStateToProps = state => ({
   onboardingStatus: getOnboardingStatus(state),
   isVisible: getSidebarVisibility(state),
   selectedProjectId: getSelectedProjectId(state),
+  isOnline: getOnlineState(state),
 });
 
 const mapDispatchToProps = {

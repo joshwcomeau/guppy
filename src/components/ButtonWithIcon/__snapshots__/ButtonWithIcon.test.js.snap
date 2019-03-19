@@ -27,6 +27,7 @@ exports[`ButtonWithIcon component should render button with icon 1`] = `
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c3:not(:disabled):active {

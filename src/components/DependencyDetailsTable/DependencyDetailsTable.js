@@ -19,11 +19,12 @@ type Props = {
   projectId: string,
   dependency: Dependency,
   lastUpdatedAt: number,
+  isOnline: boolean,
 };
 
 class DependencyDetailsTable extends Component<Props> {
   render() {
-    const { projectId, dependency, lastUpdatedAt } = this.props;
+    const { projectId, dependency, lastUpdatedAt, isOnline } = this.props;
 
     const packageHref = `https://www.npmjs.org/package/${dependency.name}`;
     let githubHref;
@@ -57,38 +58,37 @@ class DependencyDetailsTable extends Component<Props> {
               </DependencyLocationLabel>
             </FirstCell>
           </tr>
-
           <tr>
             <Cell>
-              <Label>Last Published</Label>
+              <Label> Last Published </Label>
             </Cell>
             <Cell>
               {lastUpdatedAt ? (
                 moment(lastUpdatedAt).fromNow()
-              ) : (
+              ) : isOnline ? (
                 <Spinner size={15} />
+              ) : (
+                '–'
               )}
             </Cell>
           </tr>
-
           <tr>
             <Cell>
-              <Label>License</Label>
+              <Label> License </Label>
             </Cell>
             <Cell>
               <License license={dependency.license} />
             </Cell>
           </tr>
-
           <tr>
             <Cell>
-              <Label>Resources</Label>
+              <Label> Resources </Label>
             </Cell>
             <Cell>
-              <ExternalLink href={packageHref}>NPM</ExternalLink>
+              <ExternalLink href={packageHref}> NPM </ExternalLink>
               {githubHref && <Middot />}
               {githubHref && (
-                <ExternalLink href={githubHref}>GitHub</ExternalLink>
+                <ExternalLink href={githubHref}> GitHub </ExternalLink>
               )}
               {dependency.homepage && <Middot />}
               {dependency.homepage && (
@@ -98,10 +98,15 @@ class DependencyDetailsTable extends Component<Props> {
               )}
             </Cell>
           </tr>
-
           <tr>
             <LastCell>
-              <Label style={{ color: COLORS.pink[500] }}>Danger Zone</Label>
+              <Label
+                style={{
+                  color: COLORS.pink[500],
+                }}
+              >
+                Danger Zone
+              </Label>
             </LastCell>
             <LastCell>
               <DeleteDependencyButton
