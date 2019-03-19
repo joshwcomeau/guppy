@@ -10,6 +10,7 @@ import {
   getDefaultProjectPath,
 } from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { checkIfProjectExists } from '../../services/create-project.service';
@@ -38,13 +39,16 @@ const { dialog } = remote;
 
 type Props = {
   settings: AppSettings,
-  projects: { [projectId: string]: ProjectInternal },
+  projects: {
+    [projectId: string]: ProjectInternal,
+  },
   projectHomePath: string,
   isVisible: boolean,
   isOnboardingCompleted: boolean,
   addProject: Dispatch<typeof actions.addProject>,
   createNewProjectCancel: Dispatch<typeof actions.createNewProjectCancel>,
   createNewProjectFinish: Dispatch<typeof actions.createNewProjectFinish>,
+  isOnline: boolean,
 };
 
 type State = {
@@ -84,7 +88,10 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   }
 
   updateFieldValue = (field: Field, value: any) => {
-    this.setState({ [field]: value, activeField: field });
+    this.setState({
+      [field]: value,
+      activeField: field,
+    });
 
     if (field === 'projectName') {
       this.verifyProjectNameUniqueness(value);
@@ -92,7 +99,9 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   focusField = (field: ?Field) => {
-    this.setState({ activeField: field });
+    this.setState({
+      activeField: field,
+    });
   };
 
   verifyProjectNameUniqueness = (name: string) => {
@@ -105,13 +114,17 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
     );
 
     if (isAlreadyTaken) {
-      this.setState({ isProjectNameTaken: true });
+      this.setState({
+        isProjectNameTaken: true,
+      });
       return;
     }
 
     // If this update fixes the problem, unset the error status
     if (!isAlreadyTaken && this.state.isProjectNameTaken) {
-      this.setState({ isProjectNameTaken: false });
+      this.setState({
+        isProjectNameTaken: false,
+      });
     }
   };
 
@@ -226,7 +239,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   render() {
-    const { isVisible, createNewProjectCancel, projectHomePath } = this.props;
+    const {
+      isVisible,
+      createNewProjectCancel,
+      projectHomePath,
+      isOnline,
+    } = this.props;
     const {
       projectName,
       projectType,
@@ -238,7 +256,12 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
       isProjectNameTaken,
     } = this.state;
 
-    const project = { projectName, projectType, projectIcon, projectStarter };
+    const project = {
+      projectName,
+      projectType,
+      projectIcon,
+      projectStarter,
+    };
 
     const readyToBeBuilt = status !== 'filling-in-form';
 
@@ -271,6 +294,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
                   handleSubmit={this.handleSubmit}
                   hasBeenSubmitted={status !== 'filling-in-form'}
                   isProjectNameTaken={isProjectNameTaken}
+                  isOnline={isOnline}
                 />
               }
               backface={
@@ -295,6 +319,7 @@ const mapStateToProps = state => ({
   isVisible: state.modal === 'new-project-wizard',
   isOnboardingCompleted: getOnboardingCompleted(state),
   settings: getAppSettings(state),
+  isOnline: getOnlineState(state),
 });
 
 const mapDispatchToProps = {

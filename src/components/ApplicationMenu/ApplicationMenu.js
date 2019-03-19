@@ -22,6 +22,7 @@ import {
   getProjectsArray,
 } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 
 import type { Project, Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
@@ -32,6 +33,7 @@ type Props = {
   projects: Array<Project>,
   selectedProject: ?Project,
   devServerTask: ?Task,
+  isOnline: boolean,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   showImportExistingProjectPrompt: Dispatch<
     typeof actions.showImportExistingProjectPrompt
@@ -53,7 +55,10 @@ class ApplicationMenu extends Component<Props> {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.selectedProject !== prevProps.selectedProject) {
+    if (
+      this.props.selectedProject !== prevProps.selectedProject ||
+      this.props.isOnline !== prevProps.isOnline
+    ) {
       this.buildMenu(this.props);
     }
   }
@@ -76,6 +81,7 @@ class ApplicationMenu extends Component<Props> {
       selectProject,
       projects,
       reinstallDependencies,
+      isOnline,
     } = props;
 
     const template = [
@@ -87,6 +93,7 @@ class ApplicationMenu extends Component<Props> {
             label: isMac ? 'Create New Project' : 'Create &new project',
             click: createNewProjectStart,
             accelerator: 'CmdOrCtrl+N',
+            enabled: isOnline,
           },
           {
             label: isMac
@@ -94,6 +101,7 @@ class ApplicationMenu extends Component<Props> {
               : '&Import existing project...',
             click: showImportExistingProjectPrompt,
             accelerator: 'CmdOrCtrl+I',
+            enabled: isOnline,
           },
         ],
       },
@@ -233,6 +241,7 @@ class ApplicationMenu extends Component<Props> {
           label: isMac ? 'Reinstall Dependencies' : 'Reinstall dependencies',
           click: () => reinstallDependencies(selectedProject.id),
           accelerator: 'CmdOrCtrl+alt+R',
+          enabled: isOnline,
         },
         { type: 'separator' },
       ];
@@ -308,7 +317,12 @@ const mapStateToProps = state => {
     : null;
 
   const projects = getProjectsArray(state);
-  return { selectedProject, devServerTask, projects };
+  return {
+    selectedProject,
+    devServerTask,
+    projects,
+    isOnline: getOnlineState(state),
+  };
 };
 
 const mapDispatchToProps = {

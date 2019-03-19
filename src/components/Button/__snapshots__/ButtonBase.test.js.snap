@@ -27,6 +27,7 @@ exports[`ButtonBase component Button with size prop should render button for lar
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
@@ -91,6 +92,7 @@ exports[`ButtonBase component Button with size prop should render button for lar
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
@@ -158,6 +160,7 @@ exports[`ButtonBase component Button with size prop should render button for med
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
@@ -222,6 +225,7 @@ exports[`ButtonBase component Button with size prop should render button for med
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
@@ -289,6 +293,7 @@ exports[`ButtonBase component Button with size prop should render button for sma
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
@@ -353,6 +358,7 @@ exports[`ButtonBase component Button with size prop should render button for sma
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
@@ -420,6 +426,7 @@ exports[`ButtonBase component Button with size prop should render button for xsm
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
@@ -484,6 +491,7 @@ exports[`ButtonBase component Button with size prop should render button for xsm
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {

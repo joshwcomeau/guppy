@@ -6,6 +6,7 @@ import IconBase from 'react-icons-kit';
 import { plus } from 'react-icons-kit/feather/plus';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 import { COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
@@ -23,6 +24,7 @@ import type { Project } from '../../types';
 
 type Props = {
   project: Project,
+  isOnline: boolean,
 };
 
 type State = {
@@ -58,7 +60,9 @@ class DependencyManagementPane extends PureComponent<Props, State> {
           )
       );
 
-      this.setState({ selectedDependencyIndex: newDependencyIndex });
+      this.setState({
+        selectedDependencyIndex: newDependencyIndex,
+      });
     }
 
     // If the last dependency was deleted, we need to shift focus to the new last dependency
@@ -90,15 +94,21 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     const index = this.props.project.dependencies.findIndex(
       ({ name }) => name === dependencyName
     );
-    this.setState({ selectedDependencyIndex: index });
+    this.setState({
+      selectedDependencyIndex: index,
+    });
   };
 
   openAddNewDependencyModal = () => {
-    this.setState({ addingNewDependency: true });
+    this.setState({
+      addingNewDependency: true,
+    });
   };
 
   closeAddNewDependencyModal = () => {
-    this.setState({ addingNewDependency: false });
+    this.setState({
+      addingNewDependency: false,
+    });
   };
 
   renderListAddon = (dependency, isSelected) => {
@@ -118,7 +128,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     );
   };
 
-  renderMainContents = (selectedDependency, projectId) => {
+  renderMainContents = (selectedDependency, projectId, isOnline) => {
     if (
       selectedDependency.status === 'installing' ||
       selectedDependency.status === 'queued-install'
@@ -133,6 +143,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
 
     return (
       <DependencyDetails
+        isOnline={isOnline}
         projectId={projectId}
         dependency={selectedDependency}
       />
@@ -142,9 +153,8 @@ class DependencyManagementPane extends PureComponent<Props, State> {
   render() {
     const { id, dependencies } = this.props.project;
     const { selectedDependencyIndex, addingNewDependency } = this.state;
-
     const selectedDependency = dependencies[selectedDependencyIndex];
-
+    const { isOnline } = this.props;
     return (
       <Module
         title="Dependencies"
@@ -159,7 +169,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                   isSelected={selectedDependencyIndex === index}
                   onClick={() => this.selectDependency(dependency.name)}
                 >
-                  <DependencyName>{dependency.name}</DependencyName>
+                  <DependencyName> {dependency.name} </DependencyName>
                   {this.renderListAddon(
                     dependency,
                     selectedDependencyIndex === index
@@ -185,21 +195,27 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                 See the bug in action: https://imgur.com/a/SanrY61
               `}
             >
-              <AddDependencyButton onClick={this.openAddNewDependencyModal}>
-                <IconBase icon={plus} size={20} />
-                <Spacer size={6} />
+              <AddDependencyButton
+                isOnline={this.props.isOnline}
+                onClick={this.openAddNewDependencyModal}
+              >
+                <IconBase icon={plus} size={20} /> <Spacer size={6} />
                 Add New
-                <OnlyOn size="mdMin" style={{ paddingLeft: 3 }}>
+                <OnlyOn
+                  size="mdMin"
+                  style={{
+                    paddingLeft: 3,
+                  }}
+                >
                   Dependency
                 </OnlyOn>
               </AddDependencyButton>
             </MountAfter>
           </DependencyList>
           <MainContent>
-            {this.renderMainContents(selectedDependency, id)}
+            {this.renderMainContents(selectedDependency, id, isOnline)}
           </MainContent>
         </Wrapper>
-
         <AddDependencySearchProvider>
           <AddDependencyModal
             isVisible={addingNewDependency}
@@ -293,7 +309,8 @@ const AddDependencyButton = styled.button`
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
-
+  opacity: ${props => (props.isOnline ? 1 : 0.5)};
+  pointer-events: ${props => (props.isOnline ? 'auto' : 'none')};
   &:hover {
     border: 2px dashed ${COLORS.gray[400]};
     color: ${COLORS.gray[600]};
@@ -327,6 +344,7 @@ const MainContent = Card.extend`
 
 const mapStateToProps = state => ({
   project: getSelectedProject(state),
+  isOnline: getOnlineState(state),
 });
 
 export default connect(mapStateToProps)(DependencyManagementPane);

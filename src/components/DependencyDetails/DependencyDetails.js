@@ -16,11 +16,12 @@ import type { NpmResult } from '../DependencyInfoFromNpm';
 type Props = {
   projectId: string,
   dependency: Dependency,
+  isOnline: boolean,
 };
 
 class DependencyDetails extends PureComponent<Props> {
   render() {
-    const { projectId, dependency } = this.props;
+    const { projectId, dependency, isOnline } = this.props;
 
     return (
       <DependencyInfoFromNpm packageName={dependency.name}>
@@ -32,12 +33,11 @@ class DependencyDetails extends PureComponent<Props> {
                 reason="Optical symmetry between top and left edge of parent"
               >
                 <HeaderText>
-                  <Name size="small">{dependency.name}</Name>
-                  <Description>{dependency.description}</Description>
+                  <Name size="small"> {dependency.name} </Name>
+                  <Description> {dependency.description} </Description>
                 </HeaderText>
               </PixelShifter>
             </Header>
-
             <VersionsWrapper>
               <DependencyUpdateRow
                 projectId={projectId}
@@ -46,12 +46,12 @@ class DependencyDetails extends PureComponent<Props> {
                 latestVersion={latestVersion}
               />
             </VersionsWrapper>
-
             <MainContent>
               <DependencyDetailsTable
                 projectId={projectId}
                 dependency={dependency}
                 lastUpdatedAt={lastUpdatedAt}
+                isOnline={isOnline}
               />
             </MainContent>
           </Fragment>

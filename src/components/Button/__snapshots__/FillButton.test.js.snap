@@ -31,6 +31,7 @@ exports[`FillButton component should render button filled 1`] = `
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
+  cursor: initial;
 }
 
 .c1:not(:disabled):active {
