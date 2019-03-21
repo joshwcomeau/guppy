@@ -173,7 +173,7 @@ export class DependencyManagementPane extends PureComponent<Props, State> {
                   isSelected={selectedDependencyIndex === index}
                   onClick={() => this.selectDependency(dependency.name)}
                 >
-                  <DependencyName> {dependency.name} </DependencyName>
+                  <DependencyName>{dependency.name}</DependencyName>
                   {this.renderListAddon(
                     dependency,
                     selectedDependencyIndex === index

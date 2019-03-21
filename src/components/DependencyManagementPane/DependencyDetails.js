@@ -33,8 +33,8 @@ class DependencyDetails extends PureComponent<Props> {
                 reason="Optical symmetry between top and left edge of parent"
               >
                 <HeaderText>
-                  <Name size="small"> {dependency.name} </Name>
-                  <Description> {dependency.description} </Description>
+                  <Name size="small">{dependency.name}</Name>
+                  <Description>{dependency.description}</Description>
                 </HeaderText>
               </PixelShifter>
             </Header>
