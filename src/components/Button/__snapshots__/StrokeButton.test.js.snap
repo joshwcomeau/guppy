@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StrokeButton component should render background with active style 1`] = `
+exports[`StrokeButton component should render background (active) 1`] = `
 .c0 {
   position: absolute;
   z-index: 0;
@@ -10,7 +10,7 @@ exports[`StrokeButton component should render background with active style 1`] =
   bottom: -2px;
   border-radius: 100px;
   background: linear-gradient(25deg,#651fff,#D500F9);
-  opacity: 0;
+  opacity: 1;
   -webkit-transition: opacity 350ms;
   transition: opacity 350ms;
 }
@@ -23,6 +23,7 @@ exports[`StrokeButton component should render background with active style 1`] =
     ]
   }
   isActive={true}
+  isVisible={true}
 >
   <div
     className="c0"
@@ -30,8 +31,39 @@ exports[`StrokeButton component should render background with active style 1`] =
 </styled.div>
 `;
 
-exports[`StrokeButton component should render button with stroke outline 1`] = `
-.c3 {
+exports[`StrokeButton component should render background (inactive) 1`] = `
+.c0 {
+  position: absolute;
+  z-index: 0;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-radius: 100px;
+  background: linear-gradient(25deg,#651fff,#D500F9);
+  opacity: 1;
+  -webkit-transition: opacity 350ms;
+  transition: opacity 350ms;
+}
+
+<styled.div
+  colors={
+    Array [
+      "#651fff",
+      "#D500F9",
+    ]
+  }
+  isActive={false}
+  isVisible={true}
+>
+  <div
+    className="c0"
+  />
+</styled.div>
+`;
+
+exports[`StrokeButton component should render foreground (active) 1`] = `
+.c2 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -53,20 +85,20 @@ exports[`StrokeButton component should render button with stroke outline 1`] = `
   white-space: nowrap;
 }
 
-.c3:disabled {
+.c2:disabled {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
   cursor: initial;
 }
 
-.c3:not(:disabled):active {
+.c2:not(:disabled):active {
   -webkit-transform-origin: center center;
   -ms-transform-origin: center center;
   transform-origin: center center;
 }
 
-.c2 {
+.c1 {
   padding: 0px 20px;
   height: 38px;
   border-radius: 19px;
@@ -74,106 +106,128 @@ exports[`StrokeButton component should render button with stroke outline 1`] = `
 }
 
 .c0 {
-  position: relative;
-  display: inline-block;
-  padding: 2px;
-}
-
-.c1 {
   display: block;
   position: relative;
   z-index: 1;
 }
 
-.c4 {
-  position: absolute;
-  z-index: 0;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  border-radius: 100px;
-  background: linear-gradient(25deg,#651fff,#D500F9);
-  opacity: 1;
-  -webkit-transition: opacity 350ms;
-  transition: opacity 350ms;
+<styled.span>
+  <span
+    className="c0"
+  >
+    <ButtonBase
+      background="#FFF"
+      size="medium"
+      textColor="#111111"
+    >
+      <Styled(styled.button)
+        background="#FFF"
+        textColor="#111111"
+      >
+        <styled.button
+          background="#FFF"
+          className="c1"
+          textColor="#111111"
+        >
+          <button
+            className="c1 c2"
+          >
+            <span
+              style={
+                Object {
+                  "display": "block",
+                }
+              }
+            />
+          </button>
+        </styled.button>
+      </Styled(styled.button)>
+    </ButtonBase>
+  </span>
+</styled.span>
+`;
+
+exports[`StrokeButton component should render foreground (inactive) 1`] = `
+.c2 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #FFF;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
 }
 
-<StrokeButton
-  fillColor="#FFF"
-  showStroke={true}
-  strokeColors={
-    Array [
-      "#651fff",
-      "#D500F9",
-    ]
-  }
->
-  <DetectActive
-    className=""
+.c2:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c2:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c1 {
+  padding: 0px 20px;
+  height: 38px;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+.c0 {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+<styled.span>
+  <span
+    className="c0"
   >
-    <span
-      className=""
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onMouseUp={[Function]}
+    <ButtonBase
+      background="#FFF"
+      size="medium"
+      textColor="#111111"
     >
-      <styled.div>
-        <div
-          className="c0"
+      <Styled(styled.button)
+        background="#FFF"
+        textColor="#111111"
+      >
+        <styled.button
+          background="#FFF"
+          className="c1"
+          textColor="#111111"
         >
-          <styled.span>
-            <span
-              className="c1"
-            >
-              <ButtonBase
-                background="#FFF"
-                size="medium"
-                textColor="#111111"
-              >
-                <Styled(styled.button)
-                  background="#FFF"
-                  textColor="#111111"
-                >
-                  <styled.button
-                    background="#FFF"
-                    className="c2"
-                    textColor="#111111"
-                  >
-                    <button
-                      className="c2 c3"
-                    >
-                      <span
-                        style={
-                          Object {
-                            "display": "block",
-                          }
-                        }
-                      />
-                    </button>
-                  </styled.button>
-                </Styled(styled.button)>
-              </ButtonBase>
-            </span>
-          </styled.span>
-          <styled.div
-            colors={
-              Array [
-                "#651fff",
-                "#D500F9",
-              ]
-            }
-            isActive={false}
-            isVisible={true}
+          <button
+            className="c1 c2"
           >
-            <div
-              className="c4"
+            <span
+              style={
+                Object {
+                  "display": "block",
+                }
+              }
             />
-          </styled.div>
-        </div>
-      </styled.div>
-    </span>
-  </DetectActive>
-</StrokeButton>
+          </button>
+        </styled.button>
+      </Styled(styled.button)>
+    </ButtonBase>
+  </span>
+</styled.span>
 `;

@@ -57,7 +57,7 @@ describe('ProjectStarterSelection component', () => {
       .children()
       .first();
     showMoreButton.simulate('click');
-    expect(mockHandleShowMore).toBeCalled();
+    expect(mockHandleShowMore).toHaveBeenCalled();
   });
 
   it('should call updateStarter', () => {
@@ -69,9 +69,9 @@ describe('ProjectStarterSelection component', () => {
       .find(StarterItemHeading)
       .first()
       .simulate('click');
-    expect(mockUpdateStarter).toBeCalledWith(starters[0].repo, false);
+    expect(mockUpdateStarter).toHaveBeenCalledWith(starters[0].repo, false);
     // check scrollTop call
-    expect(instance.node.scrollTop).toBeCalledWith(0);
+    expect(instance.node.scrollTop).toHaveBeenCalledWith(0);
   });
 
   it('should replace github.com with github in Codesandbox url', () => {

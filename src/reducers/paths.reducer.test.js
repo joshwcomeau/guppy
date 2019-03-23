@@ -27,7 +27,7 @@ describe('Paths reducer', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  describe(ADD_PROJECT, () => {
+  describe(`${ADD_PROJECT}`, () => {
     it('adds path info for new projects', () => {
       const prevState = platformSafeInitialState;
 
@@ -53,7 +53,7 @@ Object {
     });
   });
 
-  describe(IMPORT_EXISTING_PROJECT_FINISH, () => {
+  describe(`${IMPORT_EXISTING_PROJECT_FINISH}`, () => {
     it('adds path info for imported projects', () => {
       const prevState = platformSafeInitialState;
 
@@ -79,7 +79,7 @@ Object {
     });
   });
 
-  describe(SAVE_PROJECT_SETTINGS_FINISH, () => {
+  describe(`${SAVE_PROJECT_SETTINGS_FINISH}`, () => {
     it('saves a new path for an existing project', () => {
       const prevState = {
         ...platformSafeInitialState,
@@ -110,7 +110,7 @@ Object {
     });
   });
 
-  describe(FINISH_DELETING_PROJECT, () => {
+  describe(`${FINISH_DELETING_PROJECT}`, () => {
     it('removes the specified project ID from `byId`', () => {
       const prevState = {
         ...platformSafeInitialState,
@@ -135,7 +135,7 @@ Object {
     });
   });
 
-  describe(RESET_ALL_STATE, () => {
+  describe(`${RESET_ALL_STATE}`, () => {
     it('restores the original state', () => {
       const prevState = {
         ...platformSafeInitialState,

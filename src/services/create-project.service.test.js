@@ -5,8 +5,6 @@ import {
   getBuildInstructions,
 } from './create-project.service';
 
-import { substituteConfigVariables } from './config-variables.service';
-
 jest.mock('os', () => ({
   homedir: jest.fn(),
   platform: () => process.platform,
@@ -54,7 +52,7 @@ describe('getBuildInstructions', () => {
   it('should throw an exception when passed an unknown project type', () => {
     const projectType = 'some-unknown-project-type';
 
-    expect(() => getBuildInstructions(projectType, path)).toThrowError(
+    expect(() => getBuildInstructions(projectType, path)).toThrow(
       `Unrecognized project type: ${projectType}`
     );
   });
