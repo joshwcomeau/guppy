@@ -18,7 +18,7 @@ describe('ProjectConfigurationModal component', () => {
     projectIcon: 'icon',
   };
 
-  const shallowRender = (installActive: boolean = false) => {
+  const shallowRender = (installActive = false) => {
     mockActions = {
       hideModal: jest.fn(),
       saveProjectSettings: jest.fn(),
