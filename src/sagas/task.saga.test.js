@@ -105,7 +105,7 @@ describe('task saga', () => {
         clone.next(port);
         // destructuring undefined should throw
         clone.next(undefined);
-        expect(console.error).toBeCalled();
+        expect(console.error).toHaveBeenCalled();
       } finally {
         // restore `console.error` to its original function
         global.console.error = consoleErrorOriginal;

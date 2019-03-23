@@ -10,10 +10,16 @@ type Props = {
   size: number,
   isVisible: boolean,
   onClick: () => void,
+  isOnline: boolean,
 };
 
-const AddProjectButton = ({ size, isVisible, onClick }: Props) => (
-  <Button size={size} isVisible={isVisible} onClick={onClick}>
+const AddProjectButton = ({ size, isVisible, onClick, isOnline }: Props) => (
+  <Button
+    isOnline={isOnline}
+    size={size}
+    isVisible={isVisible}
+    onClick={onClick}
+  >
     <IconWrapper>
       <IconBase size={30} icon={plus} style={{ color: COLORS.white }} />
     </IconWrapper>
@@ -29,6 +35,8 @@ const Button = styled.button`
   border: none;
   background: none;
   cursor: pointer;
+  opacity: ${props => (props.isOnline ? 1 : 0.5)};
+  pointer-events: ${props => (props.isOnline ? 'auto' : 'none')};
 `;
 
 const Background = styled.div`

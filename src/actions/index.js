@@ -15,6 +15,7 @@ import type {
 //
 // Action Types
 //
+export const SET_ONLINE_STATUS = 'SET_ONLINE_STATUS';
 export const REFRESH_PROJECTS_START = 'REFRESH_PROJECTS_START';
 export const REFRESH_PROJECTS_ERROR = 'REFRESH_PROJECTS_ERROR';
 export const REFRESH_PROJECTS_FINISH = 'REFRESH_PROJECTS_FINISH';
@@ -89,6 +90,11 @@ export const RESET_STATUS_TEXT = 'RESET_STATUS_TEXT';
 //
 // Action Creators
 //
+export const setOnlineStatus = (onlineStatus: boolean) => ({
+  type: SET_ONLINE_STATUS,
+  onlineStatus,
+});
+
 export const addProject = (
   project: ProjectInternal,
   projectHomePath: string,
@@ -447,7 +453,9 @@ export const showResetStatePrompt = () => ({
   type: SHOW_RESET_STATE_PROMPT,
 });
 
-export const resetAllState = () => ({ type: RESET_ALL_STATE });
+export const resetAllState = () => ({
+  type: RESET_ALL_STATE,
+});
 
 // Status text for Loading screen
 // todo: Check if we need a better naming as there are probably more status messages in the future.

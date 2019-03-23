@@ -33,7 +33,7 @@ describe('EjectButton component', () => {
     });
 
     it('should display dialog', () => {
-      expect(dialog.showMessageBox).toBeCalledWith(
+      expect(dialog.showMessageBox).toHaveBeenCalledWith(
         dialogOptions,
         expect.anything()
       );

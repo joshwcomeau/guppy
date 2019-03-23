@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DevelopmentServerPane component Rendering should render 1`] = `
+<Pane
+  moreInfoHref="https://github.com/joshwcomeau/guppy/blob/master/docs/getting-started.md#development-server"
+  primaryActionChildren={
+    <Toggle
+      isToggled={false}
+      onToggle={[Function]}
+      padding={2}
+      size={32}
+    />
+  }
+  title="Development Server"
+>
+  <OnlyOn
+    display="inline"
+    size="mdMin"
+  >
+    <styled.div>
+      <styled.div>
+        <styled.div>
+          Runs a local development server that updates whenever you make changes to the files.
+        </styled.div>
+        <DevelopmentServerStatus
+          status="idle"
+        />
+        <styled.div>
+          <ExternalLink
+            color="#304FFE"
+            display="inline-block"
+            hoverColor="#3f6cff"
+            href="https://github.com/facebook/create-react-app#user-guide"
+          >
+            View Documentation
+          </ExternalLink>
+        </styled.div>
+      </styled.div>
+      <styled.div>
+        <Connect(TerminalOutput)
+          height={300}
+          task={
+            Object {
+              "name": "start",
+              "status": "idle",
+            }
+          }
+          title="Server Logs"
+        />
+      </styled.div>
+    </styled.div>
+  </OnlyOn>
+  <OnlyOn
+    display="inline"
+    size="sm"
+  >
+    <styled.div>
+      <styled.div>
+        <styled.div>
+          <styled.div>
+            Runs a local development server that updates whenever you make changes to the files.
+          </styled.div>
+          <styled.div
+            size={10}
+          />
+          <styled.div>
+            <ExternalLink
+              color="#304FFE"
+              display="inline-block"
+              hoverColor="#3f6cff"
+              href="https://github.com/facebook/create-react-app#user-guide"
+            >
+              View Documentation
+            </ExternalLink>
+          </styled.div>
+        </styled.div>
+      </styled.div>
+      <styled.div>
+        <Connect(TerminalOutput)
+          height={300}
+          task={
+            Object {
+              "name": "start",
+              "status": "idle",
+            }
+          }
+        />
+      </styled.div>
+    </styled.div>
+  </OnlyOn>
+</Pane>
+`;

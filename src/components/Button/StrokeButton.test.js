@@ -1,17 +1,28 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import { mount } from 'enzyme';
-import StrokeButton, { Background } from './StrokeButton';
+import DetectActive from '../DetectActive';
+import StrokeButton, { Foreground, Background } from './StrokeButton';
 
 describe('StrokeButton component', () => {
-  it('should render button with stroke outline', () => {
-    const wrapper = mount(<StrokeButton />);
-    expect(wrapper).toMatchSnapshot();
+  let wrapper;
+  let renderProp;
+  beforeEach(() => {
+    wrapper = mount(<StrokeButton />);
+    renderProp = wrapper.find(DetectActive).renderProp('children');
   });
 
-  it('should render background with active style', () => {
-    const colors = StrokeButton.defaultProps.strokeColors;
-    const background = mount(<Background isActive colors={colors} />);
-    expect(background).toMatchSnapshot();
+  it('should render foreground (inactive)', () => {
+    expect(renderProp(false).find(Foreground)).toMatchSnapshot();
+  });
+  it('should render background (inactive)', () => {
+    expect(renderProp(false).find(Background)).toMatchSnapshot();
+  });
+
+  it('should render foreground (active)', () => {
+    expect(renderProp(true).find(Foreground)).toMatchSnapshot();
+  });
+  it('should render background (active)', () => {
+    expect(renderProp(true).find(Background)).toMatchSnapshot();
   });
 });

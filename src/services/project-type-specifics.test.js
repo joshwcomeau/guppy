@@ -15,7 +15,7 @@ describe('getDocumentationLink', () => {
   it('should throw an exception if passed a project type that is not defined', () => {
     const unknownProjectType = 'some-unknown-project-type';
 
-    expect(() => getDocumentationLink(unknownProjectType)).toThrowError(
+    expect(() => getDocumentationLink(unknownProjectType)).toThrow(
       `Unrecognized project type: ${unknownProjectType}`
     );
   });
