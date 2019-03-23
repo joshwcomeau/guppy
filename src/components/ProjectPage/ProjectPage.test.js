@@ -2,7 +2,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { ProjectPage } from './ProjectPage';
+import { ProjectPage, FlexRow } from './ProjectPage';
 import FillButton from '../Button/FillButton';
 
 import {
@@ -64,17 +64,21 @@ describe('ProjectPage component', () => {
     instance = wrapper.instance();
   });
 
-  describe('Rendering cases', () => {
+  describe('Rendering', () => {
     loadingStates.forEach(dependencyLoadingStatus => {
       it(`should render project page (${dependencyLoadingStatus})`, () => {
         wrapper = mountWithStatus(dependencyLoadingStatus, mockActions);
-        expect(wrapper).toMatchSnapshot();
+        expect(wrapper.instance().renderConditionally()).toMatchSnapshot();
       });
     });
   });
 
+  it('should render header FlexRow', () => {
+    expect(wrapper.find(FlexRow)).toMatchSnapshot();
+  });
+
   it('should dispatch loadDependencyInfoFromDisk on mount', () => {
-    expect(mockActions.loadDependencyInfoFromDisk).toBeCalledWith(
+    expect(mockActions.loadDependencyInfoFromDisk).toHaveBeenCalledWith(
       'a-project',
       project.path
     );
@@ -82,7 +86,7 @@ describe('ProjectPage component', () => {
 
   it('should scroll window to top on mount', () => {
     // Note: Would be nice if we would export the object literal so we can use it here
-    expect(window.scroll).toBeCalledWith({
+    expect(window.scroll).toHaveBeenCalledWith({
       top: 0,
       left: 0,
       behavior: 'smooth',
@@ -96,7 +100,7 @@ describe('ProjectPage component', () => {
         id: 'new-project',
       },
     });
-    expect(mockActions.loadDependencyInfoFromDisk).toBeCalledTimes(2);
+    expect(mockActions.loadDependencyInfoFromDisk).toHaveBeenCalledTimes(2);
   });
 
   it('should not load dependency if no new project', () => {
@@ -104,17 +108,17 @@ describe('ProjectPage component', () => {
       project,
       dependenciesLoadingStatus: 'done',
     });
-    expect(mockActions.loadDependencyInfoFromDisk).toBeCalledTimes(1);
+    expect(mockActions.loadDependencyInfoFromDisk).toHaveBeenCalledTimes(1);
   });
 
   it('should trigger open editor', () => {
     instance.openIDE();
-    expect(openProjectInEditor).toBeCalledWith(project);
+    expect(openProjectInEditor).toHaveBeenCalledWith(project);
   });
 
   it('should trigger open folder', () => {
     instance.openFolder();
-    expect(openProjectInFolder).toBeCalledWith(project);
+    expect(openProjectInFolder).toHaveBeenCalledWith(project);
   });
 
   it('should trigger reinstall on click (if node_modules missing)', () => {
@@ -126,6 +130,6 @@ describe('ProjectPage component', () => {
     const button = wrapper.find(FillButton).last();
     button.simulate('click');
 
-    expect(reinstallDependenciesMock).toBeCalled();
+    expect(reinstallDependenciesMock).toHaveBeenCalled();
   });
 });

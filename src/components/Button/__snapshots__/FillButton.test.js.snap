@@ -50,16 +50,20 @@ exports[`FillButton component should render button filled 1`] = `
   font-size: 16px;
 }
 
-<FillButton
-  colors={
-    Array [
-      "#651fff",
-      "#D500F9",
-    ]
-  }
+<ButtonBase
+  activeSplat={true}
+  background="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+  hoverBackground="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+  size="medium"
   textColor="#FFF"
 >
-  <ButtonBase
+  <Styled(styled.button)
     activeSplat={true}
     background="linear-gradient(
     45deg,
@@ -69,39 +73,25 @@ exports[`FillButton component should render button filled 1`] = `
     45deg,
     #651fff,#D500F9
   )"
-    size="medium"
     textColor="#FFF"
   >
-    <Styled(styled.button)
+    <styled.button
       activeSplat={true}
       background="linear-gradient(
     45deg,
     #651fff,#D500F9
   )"
+      className="c0"
       hoverBackground="linear-gradient(
     45deg,
     #651fff,#D500F9
   )"
       textColor="#FFF"
     >
-      <styled.button
-        activeSplat={true}
-        background="linear-gradient(
-    45deg,
-    #651fff,#D500F9
-  )"
-        className="c0"
-        hoverBackground="linear-gradient(
-    45deg,
-    #651fff,#D500F9
-  )"
-        textColor="#FFF"
-      >
-        <button
-          className="c0 c1"
-        />
-      </styled.button>
-    </Styled(styled.button)>
-  </ButtonBase>
-</FillButton>
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
 `;

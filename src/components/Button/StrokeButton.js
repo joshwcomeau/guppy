@@ -58,7 +58,7 @@ const Wrapper = styled.div`
   padding: 2px;
 `;
 
-const Foreground = styled.span`
+export const Foreground = styled.span`
   display: block;
   position: relative;
   z-index: 1;
