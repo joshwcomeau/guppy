@@ -83,7 +83,7 @@ describe('ProjectConfigurationModal component', () => {
         preventDefault: jest.fn(),
       });
 
-      expect(mockActions.saveProjectSettings).toBeCalledWith(
+      expect(mockActions.saveProjectSettings).toHaveBeenCalledWith(
         instance.state.newName,
         instance.state.projectIcon,
         project
@@ -96,7 +96,7 @@ describe('ProjectConfigurationModal component', () => {
           preventDefault: jest.fn(),
           key: 'Enter',
         });
-        expect(mockActions.saveProjectSettings).toBeCalled();
+        expect(mockActions.saveProjectSettings).toHaveBeenCalled();
       });
 
       it('should not save on other keypress', () => {
@@ -104,7 +104,7 @@ describe('ProjectConfigurationModal component', () => {
           preventDefault: jest.fn(),
           key: 'a',
         });
-        expect(mockActions.saveProjectSettings).not.toBeCalled();
+        expect(mockActions.saveProjectSettings).not.toHaveBeenCalled();
       });
 
       it('should updateProject icon in local state', () => {
