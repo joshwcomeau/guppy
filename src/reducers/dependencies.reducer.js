@@ -19,7 +19,6 @@ import {
   RESET_ALL_STATE,
 } from '../actions';
 
-import type { Action } from '../actions/types';
 import type { Dependency } from '../types';
 
 type DependencyMap = {

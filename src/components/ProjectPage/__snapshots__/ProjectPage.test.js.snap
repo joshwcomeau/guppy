@@ -1,326 +1,124 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProjectPage component Rendering cases should render project page (done) 1`] = `
-<styled.div>
-  <styled.div>
-    <styled.div>
-      <PixelShifter
-        reason="Align left edge of title with the modules on page"
-        x={-2}
-      >
-        <Tooltip
-          animateFill={true}
-          animation="shift"
-          arrow={false}
-          arrowSize="regular"
-          className=""
-          delay={0}
-          disabled={false}
-          distance={10}
-          duration={375}
-          followCursor={false}
-          hideDelay={0}
-          hideDuration={375}
-          hideOnClick={true}
-          html={null}
-          inertia={false}
-          interactive={false}
-          interactiveBorder={2}
-          multiple={false}
-          offset={0}
-          onHidden={[Function]}
-          onHide={[Function]}
-          onRequestClose={[Function]}
-          onShow={[Function]}
-          onShown={[Function]}
-          popperOptions={Object {}}
-          position="bottom"
-          size="regular"
-          sticky={false}
-          stickyDuration={200}
-          style={Object {}}
-          theme="dark"
-          title="path/to/project"
-          touchHold={false}
-          trigger="mouseenter focus"
-          unmountHTMLWhenHide={false}
-        >
-          <Heading
-            size="xlarge"
-            style={
-              Object {
-                "color": "#651fff",
-              }
-            }
-          />
-        </Tooltip>
-      </PixelShifter>
-      <Connect(SettingsButton) />
-    </styled.div>
-    <styled.div>
-      <FillButton
-        colors="#eaeaea"
-        hoverColors="#cccccc"
-        onClick={[Function]}
-        size="small"
-        textColor="#111111"
-      >
-        Open folder
-      </FillButton>
-      <styled.div
-        size={15}
-      />
-      <FillButton
-        colors="#eaeaea"
-        hoverColors="#cccccc"
-        onClick={[Function]}
-        size="small"
-        textColor="#111111"
-      >
-        Open in Editor
-      </FillButton>
-    </styled.div>
-    <styled.div
-      size={30}
-    />
-    <Connect(DevelopmentServerPane)
-      leftSideWidth={300}
-    />
-    <styled.div
-      size={30}
-    />
-    <Connect(TaskRunnerPane)
-      leftSideWidth={200}
-    />
-    <styled.div
-      size={30}
-    />
-    <Connect(DependencyManagementPane) />
-    <styled.div
-      size={60}
-    />
-  </styled.div>
-</styled.div>
+exports[`ProjectPage component Rendering should render project page (done) 1`] = `
+<React.Fragment>
+  <Connect(DevelopmentServerPane)
+    leftSideWidth={300}
+  />
+  <styled.div
+    size={30}
+  />
+  <Connect(TaskRunnerPane)
+    leftSideWidth={200}
+  />
+  <styled.div
+    size={30}
+  />
+  <Connect(DependencyManagementPane) />
+</React.Fragment>
 `;
 
-exports[`ProjectPage component Rendering cases should render project page (fail) 1`] = `
+exports[`ProjectPage component Rendering should render project page (fail) 1`] = `
 <styled.div>
   <styled.div>
-    <styled.div>
-      <PixelShifter
-        reason="Align left edge of title with the modules on page"
-        x={-2}
-      >
-        <Tooltip
-          animateFill={true}
-          animation="shift"
-          arrow={false}
-          arrowSize="regular"
-          className=""
-          delay={0}
-          disabled={false}
-          distance={10}
-          duration={375}
-          followCursor={false}
-          hideDelay={0}
-          hideDuration={375}
-          hideOnClick={true}
-          html={null}
-          inertia={false}
-          interactive={false}
-          interactiveBorder={2}
-          multiple={false}
-          offset={0}
-          onHidden={[Function]}
-          onHide={[Function]}
-          onRequestClose={[Function]}
-          onShow={[Function]}
-          onShown={[Function]}
-          popperOptions={Object {}}
-          position="bottom"
-          size="regular"
-          sticky={false}
-          stickyDuration={200}
-          style={Object {}}
-          theme="dark"
-          title="path/to/project"
-          touchHold={false}
-          trigger="mouseenter focus"
-          unmountHTMLWhenHide={false}
-        >
-          <Heading
-            size="xlarge"
-            style={
-              Object {
-                "color": "#651fff",
-              }
-            }
-          />
-        </Tooltip>
-      </PixelShifter>
-      <Connect(SettingsButton) />
-    </styled.div>
-    <styled.div>
-      <FillButton
-        colors="#eaeaea"
-        hoverColors="#cccccc"
-        onClick={[Function]}
-        size="small"
-        textColor="#111111"
-      >
-        Open folder
-      </FillButton>
-      <styled.div
-        size={15}
-      />
-      <FillButton
-        colors="#eaeaea"
-        hoverColors="#cccccc"
-        onClick={[Function]}
-        size="small"
-        textColor="#111111"
-      >
-        Open in Editor
-      </FillButton>
-    </styled.div>
-    <styled.div
-      size={30}
-    />
-    <styled.div>
-      <styled.div>
-        <Styled(Icon) />
-      </styled.div>
-      <styled.div>
-        <strong>
-          Oh no!
-        </strong>
-         Looks like your project dependencies are missing.
-      </styled.div>
-      <styled.div>
-        This can happen if you've freshly cloned a project from GitHub. In order to run scripts in Guppy, you'll need to install them now.
-      </styled.div>
-      <styled.div
-        size={30}
-      />
-      <Styled(styled.div)>
-        <FillButton
-          colors={
-            Array [
-              "#00C853",
-              "#69db0d",
-            ]
-          }
-          onClick={[Function]}
-          size="large"
-          textColor="#FFF"
-        >
-          Install Dependencies
-        </FillButton>
-      </Styled(styled.div)>
-    </styled.div>
-    <styled.div
-      size={60}
-    />
+    <Styled(Icon) />
   </styled.div>
-</styled.div>
-`;
-
-exports[`ProjectPage component Rendering cases should render project page (loading) 1`] = `
-<styled.div>
   <styled.div>
-    <styled.div>
-      <PixelShifter
-        reason="Align left edge of title with the modules on page"
-        x={-2}
-      >
-        <Tooltip
-          animateFill={true}
-          animation="shift"
-          arrow={false}
-          arrowSize="regular"
-          className=""
-          delay={0}
-          disabled={false}
-          distance={10}
-          duration={375}
-          followCursor={false}
-          hideDelay={0}
-          hideDuration={375}
-          hideOnClick={true}
-          html={null}
-          inertia={false}
-          interactive={false}
-          interactiveBorder={2}
-          multiple={false}
-          offset={0}
-          onHidden={[Function]}
-          onHide={[Function]}
-          onRequestClose={[Function]}
-          onShow={[Function]}
-          onShown={[Function]}
-          popperOptions={Object {}}
-          position="bottom"
-          size="regular"
-          sticky={false}
-          stickyDuration={200}
-          style={Object {}}
-          theme="dark"
-          title="path/to/project"
-          touchHold={false}
-          trigger="mouseenter focus"
-          unmountHTMLWhenHide={false}
-        >
-          <Heading
-            size="xlarge"
-            style={
-              Object {
-                "color": "#651fff",
-              }
-            }
-          />
-        </Tooltip>
-      </PixelShifter>
-      <Connect(SettingsButton) />
-    </styled.div>
-    <styled.div>
-      <FillButton
-        colors="#eaeaea"
-        hoverColors="#cccccc"
-        onClick={[Function]}
-        size="small"
-        textColor="#111111"
-      >
-        Open folder
-      </FillButton>
-      <styled.div
-        size={15}
-      />
-      <FillButton
-        colors="#eaeaea"
-        hoverColors="#cccccc"
-        onClick={[Function]}
-        size="small"
-        textColor="#111111"
-      >
-        Open in Editor
-      </FillButton>
-    </styled.div>
-    <styled.div
-      size={30}
-    />
-    <MountAfter
-      delay={100}
-      reason="Don't show spinner if we're really fast."
+    <strong>
+      Oh no!
+    </strong>
+     Looks like your project dependencies are missing.
+  </styled.div>
+  <styled.div>
+    This can happen if you've freshly cloned a project from GitHub. In order to run scripts in Guppy, you'll need to install them now.
+  </styled.div>
+  <styled.div
+    size={30}
+  />
+  <Styled(styled.div)>
+    <FillButton
+      colors={
+        Array [
+          "#00C853",
+          "#69db0d",
+        ]
+      }
+      onClick={[Function]}
+      size="large"
+      textColor="#FFF"
     >
-      <Styled(styled.div)>
-        <Spinner
-          size={50}
-        />
-      </Styled(styled.div)>
-    </MountAfter>
-    <styled.div
-      size={60}
+      Install Dependencies
+    </FillButton>
+  </Styled(styled.div)>
+</styled.div>
+`;
+
+exports[`ProjectPage component Rendering should render project page (loading) 1`] = `
+<MountAfter
+  delay={100}
+  reason="Don't show spinner if we're really fast."
+>
+  <Styled(styled.div)>
+    <Spinner
+      size={50}
     />
-  </styled.div>
+  </Styled(styled.div)>
+</MountAfter>
+`;
+
+exports[`ProjectPage component should render header FlexRow 1`] = `
+<styled.div>
+  <PixelShifter
+    reason="Align left edge of title with the modules on page"
+    x={-2}
+  >
+    <Tooltip
+      animateFill={true}
+      animation="shift"
+      arrow={false}
+      arrowSize="regular"
+      className=""
+      delay={0}
+      disabled={false}
+      distance={10}
+      duration={375}
+      followCursor={false}
+      hideDelay={0}
+      hideDuration={375}
+      hideOnClick={true}
+      html={null}
+      inertia={false}
+      interactive={false}
+      interactiveBorder={2}
+      multiple={false}
+      offset={0}
+      onHidden={[Function]}
+      onHide={[Function]}
+      onRequestClose={[Function]}
+      onShow={[Function]}
+      onShown={[Function]}
+      popperOptions={Object {}}
+      position="bottom"
+      size="regular"
+      sticky={false}
+      stickyDuration={200}
+      style={Object {}}
+      theme="dark"
+      title="path/to/project"
+      touchHold={false}
+      trigger="mouseenter focus"
+      unmountHTMLWhenHide={false}
+    >
+      <Heading
+        size="xlarge"
+        style={
+          Object {
+            "color": "#651fff",
+          }
+        }
+      />
+    </Tooltip>
+  </PixelShifter>
+  <Connect(SettingsButton) />
 </styled.div>
 `;

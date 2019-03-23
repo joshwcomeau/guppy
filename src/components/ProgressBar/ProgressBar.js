@@ -25,7 +25,7 @@ class ProgressBar extends Component<Props> {
   };
 
   render() {
-    const { height, progress, stiffness, damping, colors, reset } = this.props;
+    const { height, progress, stiffness, damping, colors } = this.props;
 
     return (
       <Wrapper height={height}>

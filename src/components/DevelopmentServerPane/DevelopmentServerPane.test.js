@@ -46,12 +46,15 @@ describe('DevelopmentServerPane component', () => {
   describe('Component logic', () => {
     it('should start devServer', () => {
       instance.handleToggle(true);
-      expect(mockActions.launchDevServer).toBeCalledWith(task, new Date());
+      expect(mockActions.launchDevServer).toHaveBeenCalledWith(
+        task,
+        new Date()
+      );
     });
 
     it('should abort task', () => {
       instance.handleToggle(false);
-      expect(mockActions.abortTask).toBeCalledWith(
+      expect(mockActions.abortTask).toHaveBeenCalledWith(
         task,
         project.type,
         new Date()

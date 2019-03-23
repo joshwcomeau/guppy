@@ -18,7 +18,7 @@ import reducer, {
 
 describe('Projects Reducer', () => {
   [ADD_PROJECT, IMPORT_EXISTING_PROJECT_FINISH].forEach(ACTION => {
-    describe(ACTION, () => {
+    describe(`${ACTION}`, () => {
       const testProject = {
         name: 'testing',
         guppy: { id: 'best-id' },
@@ -121,7 +121,7 @@ describe('Projects Reducer', () => {
     });
   });
 
-  describe(INSTALL_DEPENDENCIES_FINISH, () => {
+  describe(`${INSTALL_DEPENDENCIES_FINISH}`, () => {
     it('adds dependency to project dependencies', () => {
       const action = {
         type: INSTALL_DEPENDENCIES_FINISH,
@@ -172,7 +172,7 @@ describe('Projects Reducer', () => {
     });
   });
 
-  describe(REFRESH_PROJECTS_FINISH, () => {
+  describe(`${REFRESH_PROJECTS_FINISH}`, () => {
     it('returns a null selectedId if selected project does not exist in the list of projects', () => {
       const prevState = {
         ...initialState,
@@ -239,7 +239,7 @@ describe('Projects Reducer', () => {
     });
   });
 
-  describe(SELECT_PROJECT, () => {
+  describe(`${SELECT_PROJECT}`, () => {
     it('selects the projectId as the selectedId', () => {
       const action = {
         type: SELECT_PROJECT,
@@ -255,7 +255,7 @@ describe('Projects Reducer', () => {
     });
   });
 
-  describe(RESET_ALL_STATE, () => {
+  describe(`${RESET_ALL_STATE}`, () => {
     it('resets to initialState', () => {
       const prevState = {
         byId: {
@@ -276,7 +276,7 @@ describe('Projects Reducer', () => {
     });
   });
 
-  describe(SAVE_PROJECT_SETTINGS_FINISH, () => {
+  describe(`${SAVE_PROJECT_SETTINGS_FINISH}`, () => {
     it('should update state', () => {
       const prevState = {
         byId: {
