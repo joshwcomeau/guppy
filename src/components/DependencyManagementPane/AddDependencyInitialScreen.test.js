@@ -6,6 +6,8 @@ import AddDependencyInitialScreen, {
   PoweredByWrapper,
 } from './AddDependencyInitialScreen';
 
+jest.mock('./AlgoliaLogo', () => 'svg');
+
 describe('AddDependencyInitialScreen component', () => {
   let wrapper;
   beforeEach(() => {

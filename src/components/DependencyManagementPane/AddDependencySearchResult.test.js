@@ -60,7 +60,7 @@ describe('AddDependencySearchResult component', () => {
   it('should add dependency on click', () => {
     const button = wrapper.find(Header).find(StrokeButton);
     button.simulate('click');
-    expect(mockAddDependency).toBeCalledWith(
+    expect(mockAddDependency).toHaveBeenCalledWith(
       projectId,
       mockReactHit.name,
       mockReactHit.version
