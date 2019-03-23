@@ -84,12 +84,12 @@ describe('ProjectStarterSelection component', () => {
   it('should deselect starter if selectedStarter clicked', () => {
     wrapper.setProps({ projectStarter: 'blog' });
     instance.handleOnSelect('blog', true);
-    expect(mockedOnSelect).toBeCalledWith('');
+    expect(mockedOnSelect).toHaveBeenCalledWith('');
   });
 
   it('should update projectStarter', () => {
     instance.handleOnSelect('blog', false);
-    expect(mockedOnSelect).toBeCalledWith('blog');
+    expect(mockedOnSelect).toHaveBeenCalledWith('blog');
   });
 
   it('should update search string & display starter list', () => {
@@ -110,20 +110,20 @@ describe('ProjectStarterSelection component', () => {
   it('should select starter (with https) from list', () => {
     const starter = 'https://github.com/wonism/gatsby-advanced-blog';
     instance.updateSearchString(starter);
-    expect(mockedOnSelect).toBeCalledWith(starter);
+    expect(mockedOnSelect).toHaveBeenCalledWith(starter);
   });
 
   it('should select starter (with repo name) in list', () => {
     const starter = 'https://github.com/wonism/gatsby-advanced-blog';
     instance.updateSearchString('gatsby-advanced-blog');
-    expect(mockedOnSelect).toBeCalledWith(starter);
+    expect(mockedOnSelect).toHaveBeenCalledWith(starter);
   });
 
   it('should select starter (with https) not in list', () => {
     const starter =
       'https://github.com/2manyprojects2littletime/gatsby-starter-blog';
     instance.updateSearchString(starter);
-    expect(mockedOnSelect).toBeCalledWith(starter);
+    expect(mockedOnSelect).toHaveBeenCalledWith(starter);
   });
 
   it('should move the selected starter to first entry of starter list', () => {

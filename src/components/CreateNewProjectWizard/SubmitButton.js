@@ -13,6 +13,7 @@ import Spinner from '../Spinner';
 type Props = {
   readyToBeSubmitted: boolean,
   hasBeenSubmitted: boolean,
+  isOnline: boolean,
   isDisabled: boolean,
   onSubmit: () => ?Promise<any>,
 };
@@ -22,6 +23,7 @@ const SubmitButton = ({
   hasBeenSubmitted,
   isDisabled,
   onSubmit,
+  isOnline,
 }: Props) => {
   const buttonText = hasBeenSubmitted
     ? 'Building...'
@@ -31,7 +33,11 @@ const SubmitButton = ({
 
   return (
     <FillButton
-      disabled={isDisabled || hasBeenSubmitted}
+      disabled={
+        isDisabled ||
+        hasBeenSubmitted ||
+        (!isOnline && buttonText === "Let's do this")
+      }
       size="large"
       colors={[
         readyToBeSubmitted ? COLORS.green[700] : COLORS.blue[700],

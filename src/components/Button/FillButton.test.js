@@ -2,11 +2,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import FillButton, { wrapColorsInGradient } from './FillButton';
+import ButtonBase from './ButtonBase';
 
 describe('FillButton component', () => {
   it('should render button filled', () => {
     const wrapper = mount(<FillButton />);
-    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.find(ButtonBase)).toMatchSnapshot();
   });
 
   describe('Wrap colors in gradient', () => {

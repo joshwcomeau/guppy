@@ -29,6 +29,7 @@ type Props = {
   updateFieldValue: (field: Field, value: any) => void,
   focusField: (field: ?Field) => void,
   handleSubmit: () => Promise<any> | void,
+  isOnline: boolean,
 };
 
 class MainPane extends PureComponent<Props> {
@@ -141,14 +142,19 @@ class MainPane extends PureComponent<Props> {
       hasBeenSubmitted,
       isProjectNameTaken,
       handleSubmit,
+      isOnline,
     } = this.props;
 
     const { lastIndex, steps } = this.renderConditionalSteps(currentStepIndex);
     return (
       <Fragment>
         <Spring
-          from={{ offset: currentStepIndex === 0 ? 0 : 50 }}
-          to={{ offset: currentStepIndex === 0 ? 50 : 0 }}
+          from={{
+            offset: currentStepIndex === 0 ? 0 : 50,
+          }}
+          to={{
+            offset: currentStepIndex === 0 ? 50 : 0,
+          }}
           native
         >
           {({ offset }) => (
@@ -163,7 +169,6 @@ class MainPane extends PureComponent<Props> {
                 isProjectNameTaken={isProjectNameTaken}
               />
               <ProjectPath projectName={projectName} />
-
               {steps}
             </Wrapper>
           )}
@@ -175,6 +180,7 @@ class MainPane extends PureComponent<Props> {
               !projectName ||
               this.isSubmitDisabled(currentStepIndex, lastIndex)
             }
+            isOnline={isOnline}
             readyToBeSubmitted={currentStepIndex >= lastIndex}
             hasBeenSubmitted={hasBeenSubmitted}
             onSubmit={handleSubmit}

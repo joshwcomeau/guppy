@@ -221,15 +221,9 @@ const canApplicationBeMoved = () => {
     process.platform === 'darwin' &&
     typeof app.isInApplicationsFolder === 'function';
 
-  // NOTE: Because this file isn't compiled by Webpack, `process.env.NODE_ENV`
-  // will be undefined in the bundled application. Rather than check to see if
-  // it's set to `production`, we just care that it ISN'T set to `development`
-  // (development is set in package.json when running the 'start' script).
-  const isProduction = process.env.NODE_ENV !== 'development';
-
   if (
     hasApplicationsFolder &&
-    isProduction &&
+    app.isPackaged &&
     !app.isInApplicationsFolder() &&
     !electronStore.has(MOVE_TO_APP_FOLDER_KEY)
   ) {
