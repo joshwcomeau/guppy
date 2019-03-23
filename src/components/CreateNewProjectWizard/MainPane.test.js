@@ -72,22 +72,22 @@ describe('MainPane component', () => {
 
     it('should trigger projectName focus', () => {
       instance.handleFocusProjectName();
-      expect(mockActions.focusField).toBeCalledWith('projectName');
+      expect(mockActions.focusField).toHaveBeenCalledWith('projectName');
     });
 
     it('should trigger projectName blur', () => {
       instance.handleBlurProjectName();
-      expect(mockActions.focusField).toBeCalledWith(null);
+      expect(mockActions.focusField).toHaveBeenCalledWith(null);
     });
 
     it('should trigger projectStarter focus', () => {
       instance.handleFocusStarter();
-      expect(mockActions.focusField).toBeCalledWith('projectStarter');
+      expect(mockActions.focusField).toHaveBeenCalledWith('projectStarter');
     });
 
     it('should update projectName', () => {
       instance.updateProjectName('New name');
-      expect(mockActions.updateFieldValue).toBeCalledWith(
+      expect(mockActions.updateFieldValue).toHaveBeenCalledWith(
         'projectName',
         'New name'
       );
@@ -95,7 +95,7 @@ describe('MainPane component', () => {
 
     it('should update projectType', () => {
       instance.updateProjectType('create-react-app');
-      expect(mockActions.updateFieldValue).toBeCalledWith(
+      expect(mockActions.updateFieldValue).toHaveBeenCalledWith(
         'projectType',
         'create-react-app'
       );
@@ -103,7 +103,7 @@ describe('MainPane component', () => {
 
     it('should update projectIcon', () => {
       instance.updateProjectIcon('new-icon');
-      expect(mockActions.updateFieldValue).toBeCalledWith(
+      expect(mockActions.updateFieldValue).toHaveBeenCalledWith(
         'projectIcon',
         'new-icon'
       );
@@ -111,7 +111,7 @@ describe('MainPane component', () => {
 
     it('should update projectStarter', () => {
       instance.updateGatsbyStarter('gatsby-blog-starter');
-      expect(mockActions.updateFieldValue).toBeCalledWith(
+      expect(mockActions.updateFieldValue).toHaveBeenCalledWith(
         'projectStarter',
         'gatsby-blog-starter'
       );

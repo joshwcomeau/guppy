@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { remote } from 'electron'; // Mocked
 
 import {
@@ -26,8 +26,6 @@ jest.mock('../../services/check-if-url-exists.service', () => ({
   urlExists: jest.fn(starterUrl =>
     Promise.resolve(starterUrl.includes('gatsby-blog-starter'))
   ),
-  // .mockResolvedValue(true)
-  // .mockResolvedValueOnce(false),
 }));
 
 jest.useFakeTimers();
@@ -88,12 +86,12 @@ describe('CreateNewProjectWizard component', () => {
   it('should initialize on mount', () => {
     instance.reinitialize = jest.fn();
     instance.componentDidMount();
-    expect(instance.reinitialize).toBeCalled();
+    expect(instance.reinitialize).toHaveBeenCalled();
   });
 
   it('should clear timeout on unmount', () => {
     instance.componentWillUnmount();
-    expect(window.clearTimeout).toBeCalledWith(instance.timeoutId);
+    expect(window.clearTimeout).toHaveBeenCalledWith(instance.timeoutId);
   });
 
   it('should update field and check uniqueness of projectName', () => {
@@ -102,12 +100,14 @@ describe('CreateNewProjectWizard component', () => {
     instance.updateFieldValue('projectName', newProjectName);
     expect(instance.state.projectName).toEqual(newProjectName);
     expect(instance.state.activeField).toEqual('projectName');
-    expect(instance.verifyProjectNameUniqueness).toBeCalledWith(newProjectName);
+    expect(instance.verifyProjectNameUniqueness).toHaveBeenCalledWith(
+      newProjectName
+    );
 
     // update other field
     instance.verifyProjectNameUniqueness = jest.fn();
     instance.updateFieldValue('projectIcon', 'new-icon');
-    expect(instance.verifyProjectNameUniqueness).not.toBeCalled();
+    expect(instance.verifyProjectNameUniqueness).not.toHaveBeenCalled();
   });
 
   it('should set foucs', () => {
@@ -127,7 +127,7 @@ describe('CreateNewProjectWizard component', () => {
       projectName: 'first-project',
     });
     instance.checkProjectLocationUsage();
-    expect(dialog.showMessageBox).toBeCalledWith(
+    expect(dialog.showMessageBox).toHaveBeenCalledWith(
       dialogOptionsFolderExists,
       expect.anything()
     );
@@ -135,10 +135,10 @@ describe('CreateNewProjectWizard component', () => {
     const resolveMock = jest.fn();
     const rejectMock = jest.fn();
     dialogCallbackFolderExists(resolveMock, rejectMock).call(instance, 0);
-    expect(rejectMock).toBeCalled();
+    expect(rejectMock).toHaveBeenCalled();
 
     dialogCallbackFolderExists(resolveMock, rejectMock).call(instance, 1);
-    expect(resolveMock).toBeCalled();
+    expect(resolveMock).toHaveBeenCalled();
   });
 
   it('should check project location usage (new project)', async () => {
@@ -170,7 +170,7 @@ describe('CreateNewProjectWizard component', () => {
       'starter-not-found'
     );
 
-    expect(dialog.showErrorBox).toBeCalledWith(
+    expect(dialog.showErrorBox).toHaveBeenCalledWith(
       ...dialogStarterNotFoundErrorArgs(
         'https://github.com/gatsbyjs/not-existing-starter'
       )
@@ -185,16 +185,16 @@ describe('CreateNewProjectWizard component', () => {
     instance.reinitialize = jest.fn();
 
     instance.finishBuilding(newProject);
-    expect(mockActions.createNewProjectFinish).toBeCalled();
+    expect(mockActions.createNewProjectFinish).toHaveBeenCalled();
 
     jest.runAllTimers();
-    expect(mockActions.addProject).toBeCalledWith(
+    expect(mockActions.addProject).toHaveBeenCalledWith(
       newProject,
       projectHomePath,
       projectType,
       true
     );
-    expect(instance.reinitialize).toBeCalled();
+    expect(instance.reinitialize).toHaveBeenCalled();
   });
 
   it('should throw error if projectType not defined (finishBuilding)', () => {
@@ -227,8 +227,8 @@ describe('CreateNewProjectWizard component', () => {
         projectType: 'gatsby',
       });
       await instance.handleSubmit();
-      expect(instance.checkProjectLocationUsage).toBeCalled();
-      expect(instance.checkIfStarterUrlExists).toBeCalled();
+      expect(instance.checkProjectLocationUsage).toHaveBeenCalled();
+      expect(instance.checkIfStarterUrlExists).toHaveBeenCalled();
       expect(instance.state.status).toEqual('building-project');
     });
   });

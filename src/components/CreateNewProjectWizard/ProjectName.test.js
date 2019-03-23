@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import ProjectName from './ProjectName';
+import ProjectName, { ErrorMessage } from './ProjectName';
 import lolex from 'lolex';
 
 jest.mock('react-tippy', () => ({
@@ -34,11 +34,11 @@ describe('ProjectName component', () => {
   describe('Rendering', () => {
     it('should render input', () => {
       wrapper = mountProjectName(false);
-      expect(wrapper).toMatchSnapshot();
+      expect(wrapper.exists()).toBe(true);
     });
-    it('should render input (projectName already taken)', () => {
+    it('should render error message "projectName already taken"', () => {
       wrapper = mountProjectName(true);
-      expect(wrapper).toMatchSnapshot();
+      expect(wrapper.find(ErrorMessage).exists()).toBe(true);
     });
   });
 
@@ -62,7 +62,7 @@ describe('ProjectName component', () => {
 
     it('should focus input & show tooltip after a delay (after mount)', () => {
       instance.componentDidMount();
-      expect(mockFocus).toBeCalled();
+      expect(mockFocus).toHaveBeenCalled();
 
       // Check tooltip
       expect(instance.state.showRandomizeTooltip).toBeFalsy();
@@ -72,22 +72,22 @@ describe('ProjectName component', () => {
 
     it('should clearTimout on unmount', () => {
       instance.componentWillUnmount();
-      expect(window.clearTimeout).toBeCalledWith(instance.timeoutId);
+      expect(window.clearTimeout).toHaveBeenCalledWith(instance.timeoutId);
     });
 
     it('should remove tooltip', () => {
       jest.runAllTimers();
       expect(instance.state.showRandomizeTooltip).toBeTruthy();
       instance.getRidOfRandomizeTooltip();
-      expect(window.clearTimeout).toBeCalledWith(instance.timeoutId);
+      expect(window.clearTimeout).toHaveBeenCalledWith(instance.timeoutId);
       expect(instance.state.showRandomizeTooltip).toBeFalsy();
     });
 
     it('should create a random name', () => {
       instance.handleRandomize();
 
-      expect(mockActions.handleChange).toBeCalledWith(expect.anything());
-      expect(mockFocus).toBeCalledTimes(1);
+      expect(mockActions.handleChange).toHaveBeenCalledWith(expect.anything());
+      expect(mockFocus).toHaveBeenCalledTimes(1);
     });
 
     // Todo: Check what is submitted with handleSubmit?
@@ -95,16 +95,16 @@ describe('ProjectName component', () => {
       instance.maybeHandleSubmit({
         key: 'Enter',
       });
-      expect(mockActions.handleSubmit).toBeCalled();
-      expect(mockBlur).toBeCalled();
+      expect(mockActions.handleSubmit).toHaveBeenCalled();
+      expect(mockBlur).toHaveBeenCalled();
     });
 
     it('should not submit on any other key', () => {
       instance.maybeHandleSubmit({
         key: 'a',
       });
-      expect(mockActions.handleSubmit).not.toBeCalled();
-      expect(mockBlur).not.toBeCalled();
+      expect(mockActions.handleSubmit).not.toHaveBeenCalled();
+      expect(mockBlur).not.toHaveBeenCalled();
     });
 
     // Note: Scramble method is not tested yet - would be nice to have.
@@ -112,6 +112,6 @@ describe('ProjectName component', () => {
     //       randomizeCount starts with zero and will be set to new name length
     //       after first run - so it will scramble from this to a new name
     //       --> why is the if-else there?
-    xit('should scramble string', () => {});
+    // it('should scramble string', () => {});
   });
 });

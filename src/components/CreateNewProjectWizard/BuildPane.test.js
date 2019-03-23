@@ -50,7 +50,7 @@ describe('BuildPane component', () => {
       status: 'building-project',
     });
     jest.runAllTimers();
-    expect(createProject).toBeCalled();
+    expect(createProject).toHaveBeenCalled();
   });
 
   it('should throw error if a project prop is missing', () => {
@@ -74,7 +74,7 @@ describe('BuildPane component', () => {
     //       once the service finished the work.
     instance.handleComplete(newProject);
     jest.runAllTimers();
-    expect(mockHandleCompleteBuild).toBeCalledWith(newProject);
+    expect(mockHandleCompleteBuild).toHaveBeenCalledWith(newProject);
   });
 
   it('should handle error message', () => {

@@ -21,7 +21,6 @@ const { dialog } = remote;
 
 describe('ProjectPath component', () => {
   let wrapper;
-  let instance;
   let mockChangeDefaultProjectPath;
   const projectHome = 'homedir/user/guppy-dev'; // 22 chars
   const shallowRender = name => {
@@ -65,13 +64,12 @@ describe('ProjectPath component', () => {
   describe('Component logic', () => {
     beforeEach(() => {
       wrapper = shallowRender(shortName);
-      instance = wrapper.instance();
     });
 
     it('should show dialog', () => {
       wrapper.find(DirectoryButton).simulate('click');
 
-      expect(dialog.showOpenDialog).toBeCalledWith(
+      expect(dialog.showOpenDialog).toHaveBeenCalledWith(
         dialogOptions,
         expect.anything()
       );
@@ -79,12 +77,12 @@ describe('ProjectPath component', () => {
 
     it('should change default project path if picked a path', () => {
       dialogCallback.call(wrapper.instance(), ['/some/path']);
-      expect(mockChangeDefaultProjectPath).toBeCalledWith('/some/path');
+      expect(mockChangeDefaultProjectPath).toHaveBeenCalledWith('/some/path');
     });
 
     it(`shouldn't change default project path if no path selected`, () => {
       dialogCallback.call(wrapper.instance(), null);
-      expect(mockChangeDefaultProjectPath).not.toBeCalled();
+      expect(mockChangeDefaultProjectPath).not.toHaveBeenCalled();
     });
   });
 });

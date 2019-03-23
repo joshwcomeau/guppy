@@ -52,6 +52,6 @@ describe('SubmitButton component', () => {
   it('should submit', () => {
     wrapper = shallowRender(true, true);
     wrapper.simulate('click');
-    expect(mockSubmit).toBeCalled();
+    expect(mockSubmit).toHaveBeenCalled();
   });
 });

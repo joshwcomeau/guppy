@@ -55,7 +55,7 @@ describe('BuildStepProgress component', () => {
     it('should clear timeout on unmount', () => {
       window.clearTimeout = jest.fn();
       instance.componentWillUnmount();
-      expect(window.clearTimeout).toBeCalledWith(instance.timeoutId);
+      expect(window.clearTimeout).toHaveBeenCalledWith(instance.timeoutId);
     });
   });
 });
