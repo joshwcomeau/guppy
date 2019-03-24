@@ -228,7 +228,6 @@ const Wrapper = animated(styled.nav.attrs({
     ${COLORS.blue[900]},
     ${COLORS.blue[700]}
   );
-  transform: translateX(${props => props.offset});
   will-change: transform;
   height: 100vh;
 `);

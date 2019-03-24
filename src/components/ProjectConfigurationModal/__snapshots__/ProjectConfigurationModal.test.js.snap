@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectConfigurationModal component Rendering should render 1`] = `
+<Modal
+  isVisible={true}
+  onDismiss={[MockFunction]}
+  width={750}
+>
+  <ModalHeader
+    theme="standard"
+    title="Project settings"
+  />
+  <styled.section>
+    <form
+      onSubmit={[Function]}
+    >
+      <FormField
+        focusOnClick={false}
+        label="Project name"
+        spacing={30}
+      >
+        <TextInput
+          autoFocus={true}
+          isFocused={true}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyPress={[Function]}
+          value=""
+        />
+      </FormField>
+      <styled.div
+        size={10}
+      />
+      <FormField
+        focusOnClick={false}
+        isFocused={false}
+        label="Project Icon"
+        spacing={30}
+      >
+        <ProjectIconSelection
+          limitTo={21}
+          onSelectIcon={[Function]}
+          selectedIcon=""
+        />
+      </FormField>
+      <styled.div>
+        <FillButton
+          colors={
+            Array [
+              "#00C853",
+              "#69db0d",
+            ]
+          }
+          disabled={false}
+          size="large"
+          textColor="#FFF"
+        >
+          Save Project
+        </FillButton>
+      </styled.div>
+    </form>
+  </styled.section>
+</Modal>
+`;
+
+exports[`ProjectConfigurationModal component Rendering should render with active dependency installation (save disabled) 1`] = `
+<Modal
+  isVisible={true}
+  onDismiss={[MockFunction]}
+  width={750}
+>
+  <ModalHeader
+    theme="standard"
+    title="Project settings"
+  />
+  <styled.section>
+    <form
+      onSubmit={[Function]}
+    >
+      <FormField
+        focusOnClick={false}
+        label="Project name"
+        spacing={30}
+      >
+        <TextInput
+          autoFocus={true}
+          isFocused={true}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyPress={[Function]}
+          value=""
+        />
+      </FormField>
+      <styled.div
+        size={10}
+      />
+      <FormField
+        focusOnClick={false}
+        isFocused={false}
+        label="Project Icon"
+        spacing={30}
+      >
+        <ProjectIconSelection
+          limitTo={21}
+          onSelectIcon={[Function]}
+          selectedIcon=""
+        />
+      </FormField>
+      <styled.div>
+        <FillButton
+          colors={
+            Array [
+              "#00C853",
+              "#69db0d",
+            ]
+          }
+          disabled={true}
+          size="large"
+          textColor="#FFF"
+        >
+          Save Project
+        </FillButton>
+        <styled.div>
+          Waiting for pending tasks to finish…
+        </styled.div>
+      </styled.div>
+    </form>
+  </styled.section>
+</Modal>
+`;
