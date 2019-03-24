@@ -59,9 +59,9 @@ const unixLineAndColumnMatchIndex = 11;
 const lineAndColumnClauseGroupCount = 6;
 
 /** Higher than local link, lower than hypertext */
-const CUSTOM_LINK_PRIORITY = -1;
+// const CUSTOM_LINK_PRIORITY = -1;
 /** Lowest */
-const LOCAL_LINK_PRIORITY = -2;
+// const LOCAL_LINK_PRIORITY = -2;
 
 export type LineColumnInfo = {
   lineNumber: number,
