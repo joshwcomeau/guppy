@@ -109,13 +109,15 @@ class TerminalOutput extends PureComponent<Props, State> {
       }
     }
 
-    if (
-      prevProps.width !== this.props.width ||
-      prevProps.height !== this.props.height
-    ) {
-      // size changed
-      this.xterm.fit();
-    }
+    // if (
+    //   prevProps.width !== this.props.width ||
+    //   prevProps.height !== this.props.height
+    // ) {
+    //   // size changed
+    //   setTimeout(() => {
+    //     this.xterm.fit();
+    //   }, 0);
+    // }
   }
 
   componentWillUnmount() {
@@ -152,6 +154,12 @@ class TerminalOutput extends PureComponent<Props, State> {
     this.renderedLogs = {};
 
     clearConsole(task);
+  };
+
+  handleResize = () => {
+    setTimeout(() => {
+      this.xterm && this.xterm.fit();
+    }, 0);
   };
 
   write(data: any) {
@@ -191,7 +199,7 @@ class TerminalOutput extends PureComponent<Props, State> {
           height={height}
           innerRef={node => (this.node = node)}
         />
-        <ResizeObserver onResize={() => this.xterm && this.xterm.fit()} />
+        <ResizeObserver onResize={this.handleResize} />
       </div>
     );
   }
