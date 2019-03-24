@@ -34,14 +34,16 @@ type State = {
   activeField: string,
 };
 
-class ProjectConfigurationModal extends PureComponent<Props, State> {
-  state = {
-    newName: '',
-    projectIcon: '',
-    activeField: 'projectName',
-  };
+export const initialState = {
+  newName: '',
+  projectIcon: '',
+  activeField: 'projectName',
+};
 
-  componentWillReceiveProps(nextProps) {
+export class ProjectConfigurationModal extends PureComponent<Props, State> {
+  state = initialState;
+
+  componentWillReceiveProps(nextProps: Props) {
     if (!nextProps.project) {
       return;
     }
@@ -80,12 +82,12 @@ class ProjectConfigurationModal extends PureComponent<Props, State> {
     }
   };
 
-  updateProjectIcon = (src: string, ev) => {
+  updateProjectIcon = (src: string, ev: SyntheticEvent<*>) => {
     ev.preventDefault();
 
-    this.setState(prevState => ({
+    this.setState({
       projectIcon: src,
-    }));
+    });
   };
 
   setActive = (name: string) => {
