@@ -113,6 +113,7 @@ class TerminalOutput extends PureComponent<Props, State> {
     //   prevProps.width !== this.props.width ||
     //   prevProps.height !== this.props.height
     // ) {
+    //   console.log('size changed', this.props.width);
     //   // size changed
     //   setTimeout(() => {
     //     this.xterm.fit();
@@ -156,9 +157,14 @@ class TerminalOutput extends PureComponent<Props, State> {
     clearConsole(task);
   };
 
-  handleResize = () => {
+  handleResize = evt => {
+    if (!this.xterm) return;
+    this.xterm.element.style.width = this.props.width;
+    this.xterm.element.style.height = this.props.height;
+
     setTimeout(() => {
-      this.xterm && this.xterm.fit();
+      this.xterm.fit();
+      console.log('xterm', this.xterm);
     }, 0);
   };
 
@@ -195,8 +201,9 @@ class TerminalOutput extends PureComponent<Props, State> {
           </PixelShifter>
         </Header>
         <XtermContainer
-          width={width}
-          height={height}
+          style={{ width: `${width}px`, height: `${height}px` }}
+          // width={width}
+          // height={height}
           innerRef={node => (this.node = node)}
         />
         <ResizeObserver onResize={this.handleResize} />
