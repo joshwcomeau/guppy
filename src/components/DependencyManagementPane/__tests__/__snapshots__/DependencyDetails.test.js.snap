@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DependencyDetails component should render 1`] = `
+<Fragment>
+  <styled.header>
+    <PixelShifter
+      reason="Optical symmetry between top and left edge of parent"
+      y={-4}
+    >
+      <styled.div>
+        <Styled(Heading)
+          size="small"
+        >
+          React
+        </Styled(Heading)>
+        <styled.div />
+      </styled.div>
+    </PixelShifter>
+  </styled.header>
+  <styled.div>
+    <Connect(DependencyUpdateRow)
+      dependency={
+        Object {
+          "humanDownloadsLast30Days": 1000000,
+          "license": "MIT",
+          "modified": 1549828927372,
+          "name": "React",
+          "version": "16.0.0",
+        }
+      }
+      isLoadingNpmInfo={false}
+      latestVersion="16.8.0"
+      projectId="a-project"
+    />
+  </styled.div>
+  <styled.div>
+    <DependencyDetailsTable
+      dependency={
+        Object {
+          "humanDownloadsLast30Days": 1000000,
+          "license": "MIT",
+          "modified": 1549828927372,
+          "name": "React",
+          "version": "16.0.0",
+        }
+      }
+      lastUpdatedAt={0}
+      projectId="a-project"
+    />
+  </styled.div>
+</Fragment>
+`;

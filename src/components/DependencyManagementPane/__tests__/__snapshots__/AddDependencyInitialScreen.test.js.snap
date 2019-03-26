@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddDependencyInitialScreen component should render instruction paragraphs 1`] = `
+Array [
+  .c0 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  color: #666666;
+}
+
+<styled.div>
+    <div
+      className="c0"
+    >
+      You can use the input above to search the Node Package Manager (NPM) registry for packages that have been published.
+    </div>
+  </styled.div>,
+  .c0 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  color: #666666;
+}
+
+<styled.div>
+    <div
+      className="c0"
+    >
+      Search by package name, description, keyword, or author.
+    </div>
+  </styled.div>,
+]
+`;
+
+exports[`AddDependencyInitialScreen component should render powered by Algolia link 1`] = `
+.c1 {
+  position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #304FFE;
+}
+
+.c1:hover {
+  color: #3f6cff;
+}
+
+.c0 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  text-align: center;
+  color: #666666;
+}
+
+<styled.div>
+  <div
+    className="c0"
+  >
+    <ExternalLink
+      color="#304FFE"
+      display="inline-block"
+      hoverColor="#3f6cff"
+      href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
+    >
+      <styled.a
+        color="#304FFE"
+        hoverColor="#3f6cff"
+        href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
+        onClick={[Function]}
+        style={
+          Object {
+            "display": "inline-block",
+          }
+        }
+      >
+        <a
+          className="c1"
+          color="#304FFE"
+          href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
+          onClick={[Function]}
+          style={
+            Object {
+              "display": "inline-block",
+            }
+          }
+        >
+          <styled.div>
+            <div
+              className="c2"
+            >
+              <svg />
+            </div>
+          </styled.div>
+        </a>
+      </styled.a>
+    </ExternalLink>
+  </div>
+</styled.div>
+`;

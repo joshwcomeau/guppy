@@ -29,6 +29,7 @@
     "publish": "yarn dist --publish always",
     "publish:all": "yarn dist:all --publish always",
     "test": "node scripts/test.js --maxWorkers=2 --env=node",
+    "test:dev": "yarn test --verbose=false",
     "coverage": "yarn test --coverage",
     "report-coverage": "yarn coverage && codecov",
     "flow": "flow",

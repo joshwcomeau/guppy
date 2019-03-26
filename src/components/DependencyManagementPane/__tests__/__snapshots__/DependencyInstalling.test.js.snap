@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DependencyInstalling component should render (installing) 1`] = `
+<styled.div>
+  <styled.div>
+    <styled.img
+      src="guppy-loader.gif"
+    />
+    <styled.div
+      size={50}
+    />
+    <Heading
+      size="small"
+    >
+      Installing 
+      <span
+        style={
+          Object {
+            "color": "#651fff",
+          }
+        }
+      >
+        React
+      </span>
+      ...
+    </Heading>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`DependencyInstalling component should render (queued) 1`] = `
+<styled.div>
+  <styled.div>
+    <styled.img
+      src="guppy-loader.gif"
+    />
+    <styled.div
+      size={50}
+    />
+    <Heading
+      size="small"
+    >
+      <span
+        style={
+          Object {
+            "color": "#651fff",
+          }
+        }
+      >
+        React
+      </span>
+       is queued for install...
+    </Heading>
+  </styled.div>
+</styled.div>
+`;

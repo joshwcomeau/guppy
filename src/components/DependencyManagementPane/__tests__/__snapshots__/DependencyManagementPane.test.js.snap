@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DependencyManagement component Rendering should render a dependency list with two buttons 1`] = `
+<styled.div>
+  <styled.button
+    isSelected={true}
+    key="React"
+    onClick={[Function]}
+  >
+    <styled.span>
+      React
+    </styled.span>
+    <styled.span
+      isSelected={true}
+    >
+      16.0.0
+    </styled.span>
+  </styled.button>
+  <styled.button
+    isSelected={false}
+    key="Redux"
+    onClick={[Function]}
+  >
+    <styled.span>
+      Redux
+    </styled.span>
+    <styled.span
+      isSelected={false}
+    >
+      4.0.0
+    </styled.span>
+  </styled.button>
+</styled.div>
+`;
+
+exports[`DependencyManagement component Rendering should render list addon for React dependency (not selected) 1`] = `
+.c0 {
+  padding-left: 10px;
+  font-size: 16px;
+  color: rgba(0,0,0,0.66);
+}
+
+<styled.span
+  isSelected={false}
+>
+  <span
+    className="c0"
+  >
+    16.0.0
+  </span>
+</styled.span>
+`;
+
+exports[`DependencyManagement component Rendering should render list addon for React dependency (selected) 1`] = `
+.c0 {
+  padding-left: 10px;
+  font-size: 16px;
+  color: rgba(255,255,255,0.66);
+}
+
+<styled.span
+  isSelected={true}
+>
+  <span
+    className="c0"
+  >
+    16.0.0
+  </span>
+</styled.span>
+`;
+
+exports[`DependencyManagement component Rendering should render main content for selected dependency (default) 1`] = `
+<styled.div>
+  <DependencyDetails
+    dependency={
+      Object {
+        "location": "dependencies",
+        "name": "React",
+        "status": "idle",
+        "version": "16.0.0",
+      }
+    }
+    projectId="projectId"
+  />
+</styled.div>
+`;
+
+exports[`DependencyManagement component Rendering should render main content for selected dependency (installing) 1`] = `
+<styled.div>
+  <DependencyInstalling
+    name="React"
+    queued={false}
+  />
+</styled.div>
+`;
