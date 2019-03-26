@@ -7,8 +7,8 @@ import {
   Dependencies,
   MainContent,
   AddDependencyButton,
-} from './DependencyManagementPane';
-import AddDependencyModal from './AddDependencyModal';
+} from '../DependencyManagementPane';
+import AddDependencyModal from '../AddDependencyModal';
 
 describe('DependencyManagement component', () => {
   let wrapper;

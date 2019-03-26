@@ -4,9 +4,9 @@ import { mount } from 'enzyme';
 import AddDependencyInitialScreen, {
   InstructionsParagraph,
   PoweredByWrapper,
-} from './AddDependencyInitialScreen';
+} from '../AddDependencyInitialScreen';
 
-jest.mock('./AlgoliaLogo', () => 'svg');
+jest.mock('../AlgoliaLogo', () => 'svg');
 
 describe('AddDependencyInitialScreen component', () => {
   let wrapper;

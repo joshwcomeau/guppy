@@ -2,8 +2,8 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { InfiniteHits } from 'react-instantsearch/dom';
 
-import { AddDependencyModal } from './AddDependencyModal';
-import AddDependencyInitialScreen from './AddDependencyInitialScreen';
+import { AddDependencyModal } from '../AddDependencyModal';
+import AddDependencyInitialScreen from '../AddDependencyInitialScreen';
 
 describe('AddDependencyModal component', () => {
   let wrapper;

@@ -2,8 +2,8 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import lolex from 'lolex';
 
-import DependencyDetails from './DependencyDetails';
-import { mockReactHit } from './__mocks__/dependency';
+import DependencyDetails from '../DependencyDetails';
+import { mockReactHit } from '../__mocks__/dependency';
 
 describe('DependencyDetails component', () => {
   lolex.install();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import AddDependencySearchProvider from './AddDependencySearchProvider';
+import AddDependencySearchProvider from '../AddDependencySearchProvider';
 
 describe('AddDependencySearchProvider component', () => {
   const wrapper = shallow(

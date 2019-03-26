@@ -11,11 +11,11 @@ import {
   Header,
   Description,
   StatsRow,
-} from './AddDependencySearchResult';
-import Divider from '../Divider';
-import Spacer from '../Spacer';
-import { StrokeButton } from '../Button';
-import { mockReactHit } from './__mocks__/dependency';
+} from '../AddDependencySearchResult';
+import Divider from '../../Divider';
+import Spacer from '../../Spacer';
+import { StrokeButton } from '../../Button';
+import { mockReactHit } from '../__mocks__/dependency';
 
 describe('AddDependencySearchResult component', () => {
   lolex.install();

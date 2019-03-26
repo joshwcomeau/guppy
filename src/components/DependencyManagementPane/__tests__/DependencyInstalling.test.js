@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import DependencyInstalling from './DependencyInstalling';
-import { mockReactHit } from './__mocks__/dependency';
+import DependencyInstalling from '../DependencyInstalling';
+import { mockReactHit } from '../__mocks__/dependency';
 
 describe('DependencyInstalling component', () => {
   const wrapper = shallow(<DependencyInstalling name={mockReactHit.name} />);
