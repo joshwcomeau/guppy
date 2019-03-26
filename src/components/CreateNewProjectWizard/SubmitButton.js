@@ -72,7 +72,7 @@ const SubmitButtonIconWrapper = styled.div`
   margin: auto;
 `;
 
-const ChildWrapper = styled.div`
+export const ChildWrapper = styled.div`
   line-height: 48px;
 `;
 

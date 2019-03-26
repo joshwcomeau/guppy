@@ -29,12 +29,37 @@ import type { Field, Status, Step } from './types';
 import type { ProjectType, ProjectInternal, AppSettings } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
-const FORM_STEPS: Array<Field> = [
+export const FORM_STEPS: Array<Field> = [
   'projectName',
   'projectType',
   'projectIcon',
   'projectStarter',
 ];
+
+export const dialogOptionsFolderExists = {
+  type: 'warning',
+  title: 'Project directory exists',
+  message:
+    "Looks like there's already a project with that name. Did you mean to import it instead?",
+  buttons: ['OK'],
+};
+
+export const dialogCallbackFolderExists = (
+  resolve: (result: any) => void,
+  reject: (error: any) => void
+) => (result: number) => {
+  if (result === 0) {
+    return reject();
+  }
+
+  resolve();
+};
+
+export const dialogStarterNotFoundErrorArgs = (projectStarter: string) => [
+  `Starter ${projectStarter} not found`,
+  'Please check your starter url or use the starter selection to pick a starter.',
+];
+
 const { dialog } = remote;
 
 type Props = {
@@ -75,7 +100,7 @@ const initialState = {
   settings: null,
 };
 
-class CreateNewProjectWizard extends PureComponent<Props, State> {
+export class CreateNewProjectWizard extends PureComponent<Props, State> {
   state = initialState;
   timeoutId: number;
 
@@ -129,25 +154,13 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
   };
 
   checkProjectLocationUsage = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const projectName = getProjectNameSlug(this.state.projectName);
       if (checkIfProjectExists(this.props.projectHomePath, projectName)) {
         // show warning that the project folder already exists & stop creation
         dialog.showMessageBox(
-          {
-            type: 'warning',
-            title: 'Project directory exists',
-            message:
-              "Looks like there's already a project with that name. Did you mean to import it instead?",
-            buttons: ['OK'],
-          },
-          result => {
-            if (result === 0) {
-              return reject();
-            }
-
-            resolve();
-          }
+          dialogOptionsFolderExists,
+          dialogCallbackFolderExists(resolve, reject)
         );
       } else {
         resolve();
@@ -170,10 +183,7 @@ class CreateNewProjectWizard extends PureComponent<Props, State> {
 
     if (!exists) {
       // starter not found
-      dialog.showErrorBox(
-        `Starter ${projectStarter} not found`,
-        'Please check your starter url or use the starter selection to pick a starter.'
-      );
+      dialog.showErrorBox(...dialogStarterNotFoundErrorArgs(projectStarter));
       throw new Error('starter-not-found');
     }
   };

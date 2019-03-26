@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateNewProjectWizard component should render TwoPaneModal 1`] = `
+<Fragment>
+  <TwoPaneModal
+    backface={
+      <BuildPane
+        handleCompleteBuild={[Function]}
+        projectHomePath="/users/guppy-dev"
+        projectIcon={null}
+        projectName=""
+        projectStarter=""
+        status="filling-in-form"
+      />
+    }
+    isDismissable={true}
+    isFolded={false}
+    leftPane={
+      <Debounced
+        duration={40}
+        on="projectName"
+      >
+        <SummaryPane
+          activeField="projectName"
+          currentStep="projectName"
+        />
+      </Debounced>
+    }
+    onDismiss={[MockFunction]}
+    rightPane={
+      <MainPane
+        activeField="projectName"
+        currentStepIndex={0}
+        focusField={[Function]}
+        handleSubmit={[Function]}
+        hasBeenSubmitted={false}
+        isProjectNameTaken={false}
+        projectIcon={null}
+        projectName=""
+        projectStarter=""
+        status="filling-in-form"
+        updateFieldValue={[Function]}
+      />
+    }
+    transitionState={true}
+  />
+</Fragment>
+`;

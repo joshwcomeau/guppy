@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectPath component Rendering should render clamped 1`] = `
+<styled.div>
+  Project will be created in
+   
+  <Tooltip
+    animateFill={true}
+    animation="shift"
+    arrow={false}
+    arrowSize="regular"
+    className=""
+    delay={0}
+    disabled={false}
+    distance={10}
+    duration={375}
+    followCursor={false}
+    hideDelay={0}
+    hideDuration={375}
+    hideOnClick={true}
+    html={null}
+    inertia={false}
+    interactive={false}
+    interactiveBorder={2}
+    multiple={false}
+    offset={0}
+    onHidden={[Function]}
+    onHide={[Function]}
+    onRequestClose={[Function]}
+    onShow={[Function]}
+    onShown={[Function]}
+    popperOptions={Object {}}
+    position="bottom"
+    size="regular"
+    sticky={false}
+    stickyDuration={200}
+    style={Object {}}
+    theme="dark"
+    title="homedir/user/guppy-dev/magical-summer-fox/"
+    touchHold={false}
+    trigger="mouseenter focus"
+    unmountHTMLWhenHide={false}
+  >
+    <Styled(styled.button)
+      onClick={[Function]}
+    >
+      homedir/user/guppy-dev/magic…
+    </Styled(styled.button)>
+  </Tooltip>
+</styled.div>
+`;
+
+exports[`ProjectPath component Rendering should render path with-out clamping 1`] = `
+<styled.div>
+  Project will be created in
+   
+  <Tooltip
+    animateFill={true}
+    animation="shift"
+    arrow={false}
+    arrowSize="regular"
+    className=""
+    delay={0}
+    disabled={false}
+    distance={10}
+    duration={375}
+    followCursor={false}
+    hideDelay={0}
+    hideDuration={375}
+    hideOnClick={true}
+    html={null}
+    inertia={false}
+    interactive={false}
+    interactiveBorder={2}
+    multiple={false}
+    offset={0}
+    onHidden={[Function]}
+    onHide={[Function]}
+    onRequestClose={[Function]}
+    onShow={[Function]}
+    onShown={[Function]}
+    popperOptions={Object {}}
+    position="bottom"
+    size="regular"
+    sticky={false}
+    stickyDuration={200}
+    style={Object {}}
+    theme="dark"
+    title="homedir/user/guppy-dev/demo/"
+    touchHold={false}
+    trigger="mouseenter focus"
+    unmountHTMLWhenHide={false}
+  >
+    <Styled(styled.button)
+      onClick={[Function]}
+    >
+      homedir/user/guppy-dev/demo/
+    </Styled(styled.button)>
+  </Tooltip>
+</styled.div>
+`;

@@ -13,7 +13,7 @@ type Props = {
   isOnboarding: boolean,
 };
 
-const ImportExisting = ({ isOnboarding }: Props) => {
+export const ImportExisting = ({ isOnboarding }: Props) => {
   if (isOnboarding) {
     // When the user is onboarding, there's a much more prominent prompt to
     // import existing projects, so we don't need this extra snippet.

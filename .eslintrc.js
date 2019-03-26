@@ -17,4 +17,12 @@ module.exports = {
     'flowtype/generic-spacing': 0,
     'jest/no-large-snapshots': ['warn', { maxSize: 100 }],
   },
+  overrides: [
+    {
+      files: ['*.test.js', '*.spec.js'],
+      rules: {
+        'flowtype/require-valid-file-annotation': 0,
+      },
+    },
+  ],
 };
