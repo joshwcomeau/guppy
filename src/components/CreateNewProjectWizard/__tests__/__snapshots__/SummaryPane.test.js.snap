@@ -1,0 +1,176 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SummaryPane component should render summary for projectIcon 1`] = `
+<styled.div>
+  <styled.div
+    key="s3t"
+  >
+    <styled.h1>
+      Project Icon
+    </styled.h1>
+    <styled.div>
+      Choose an icon, to help you recognize this project from a list.
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`SummaryPane component should render summary for projectName 1`] = `
+<styled.div>
+  <styled.div>
+    <styled.div
+      key="intro-t"
+    >
+      <Logo
+        size="large"
+      />
+      <styled.div
+        size={30}
+      />
+      <styled.h1>
+        Create new project
+      </styled.h1>
+      <styled.div>
+        Let's start by giving your new project a name.
+      </styled.div>
+      <styled.div
+        size={130}
+      />
+      <Connect(ImportExisting) />
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`SummaryPane component should render summary for projectStarter 1`] = `
+<styled.div>
+  <styled.div>
+    <styled.h1>
+      Gatsby Starter
+    </styled.h1>
+    <styled.div>
+      Please enter a starter for your project (e.g. gatsby-starter-blog or repo. url) or pick one from the starters list.
+    </styled.div>
+    <styled.div>
+      This step is optional. Just leave the field empty to use the default Gatsby starter. But picking a starter will help to bootstrap your project e.g. you can easily create your own blog by picking one of the blog starter templates.
+    </styled.div>
+    <styled.div>
+      For a better overview you can also have a look at the
+       
+      <ExternalLink
+        color="#FFF"
+        display="inline-block"
+        hoverColor="#FFF"
+        href="https://www.gatsbyjs.org/starters/"
+      >
+        Gatsby starters library
+      </ExternalLink>
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`SummaryPane component should render summary for projectType 1`] = `
+<styled.div>
+  <styled.div
+    key="s2t"
+  >
+    <styled.h1>
+      Project Type
+    </styled.h1>
+    <styled.div>
+      <strong>
+        Vanilla React
+      </strong>
+    </styled.div>
+    <styled.div>
+      Vanilla React projects use create-react-app, an official command-line tool built by Facebook for bootstrapping React applications.
+    </styled.div>
+    <styled.div>
+      It's a fantastic general-purpose tool, and is the recommended approach if you're looking to become a skilled React developer.
+    </styled.div>
+    <styled.div>
+      <ExternalLink
+        color="#FFF"
+        display="inline-block"
+        hoverColor="#FFF"
+        href="https://github.com/facebook/create-react-app"
+      >
+        <strong>
+          Learn more about create-react-app.
+        </strong>
+      </ExternalLink>
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`SummaryPane component should render summary for projectType 2`] = `
+<styled.div>
+  <styled.div
+    key="s2t"
+  >
+    <styled.h1>
+      Project Type
+    </styled.h1>
+    <styled.div>
+      <strong>
+        Gatsby
+      </strong>
+    </styled.div>
+    <styled.div>
+      Gatsby is a blazing fast static site generator for React.
+    </styled.div>
+    <styled.div>
+      It's great for building blogs and personal websites, and provides amazing performance out-of-the-box. A great choice for quickly getting products built.
+    </styled.div>
+    <styled.div>
+      <ExternalLink
+        color="#FFF"
+        display="inline-block"
+        hoverColor="#FFF"
+        href="https://www.gatsbyjs.org/"
+      >
+        <strong>
+          Learn more about Gatsby.
+        </strong>
+      </ExternalLink>
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`SummaryPane component should render summary for projectType 3`] = `
+<styled.div>
+  <styled.div
+    key="s2t"
+  >
+    <styled.h1>
+      Project Type
+    </styled.h1>
+    <styled.div>
+      <strong>
+        Next.js
+      </strong>
+    </styled.div>
+    <styled.div>
+      Next.js is a lightweight framework for static and server-rendered applications.
+    </styled.div>
+    <styled.div>
+      Server-rendered by default. No need to worry about routing. A great choice for quickly getting products built with server-side rendering by a Node.js server.
+    </styled.div>
+    <styled.div>
+      <ExternalLink
+        color="#FFF"
+        display="inline-block"
+        hoverColor="#FFF"
+        href="https://nextjs.org/learn/"
+      >
+        <strong>
+          Learn more about Next.js.
+        </strong>
+      </ExternalLink>
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;

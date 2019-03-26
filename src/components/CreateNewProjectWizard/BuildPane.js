@@ -31,7 +31,7 @@ const BUILD_STEPS = {
   },
 };
 
-const BUILD_STEP_KEYS: Array<BuildStep> = Object.keys(BUILD_STEPS);
+export const BUILD_STEP_KEYS: Array<BuildStep> = Object.keys(BUILD_STEPS);
 
 type Props = {
   projectName: string,

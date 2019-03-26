@@ -21,25 +21,28 @@ type Props = {
   changeDefaultProjectPath: Dispatch<typeof changeDefaultProjectPath>,
 };
 
-class ProjectPath extends PureComponent<Props> {
-  updatePath = () => {
-    remote.dialog.showOpenDialog(
-      {
-        message: 'Select the directory of Project',
-        properties: ['openDirectory'],
-      },
-      (paths: ?[string]) => {
-        // The user might cancel out without selecting a directory.
-        // In that case, do nothing.
-        if (!paths) {
-          return;
-        }
+export const CLAMP_AT = 29;
 
-        // Only a single path should be selected
-        const [firstPath] = paths;
-        this.props.changeDefaultProjectPath(firstPath);
-      }
-    );
+export const dialogOptions = {
+  message: 'Select the directory of Project',
+  properties: ['openDirectory'],
+};
+
+export function dialogCallback(paths: ?[string]) {
+  // The user might cancel out without selecting a directory.
+  // In that case, do nothing.
+  if (!paths) {
+    return;
+  }
+
+  // Only a single path should be selected
+  const [firstPath] = paths;
+  this.props.changeDefaultProjectPath(firstPath);
+}
+
+export class ProjectPath extends PureComponent<Props> {
+  updatePath = () => {
+    remote.dialog.showOpenDialog(dialogOptions, dialogCallback.bind(this));
   };
 
   render() {
@@ -55,7 +58,6 @@ class ProjectPath extends PureComponent<Props> {
 
     // Using CSS text-overflow is proving challenging, so we'll just crop it
     // with JS.
-    const CLAMP_AT = 29;
     let displayedProjectPath = fullProjectPath;
     if (displayedProjectPath.length > CLAMP_AT) {
       displayedProjectPath = `${displayedProjectPath.slice(0, CLAMP_AT - 1)}…`;
@@ -81,7 +83,7 @@ const MainText = styled.div`
   color: ${COLORS.gray[400]};
 `;
 
-const DirectoryButton = styled(TextButton)`
+export const DirectoryButton = styled(TextButton)`
   font-family: 'Fira Mono';
   font-size: 12px;
   color: ${COLORS.gray[600]};

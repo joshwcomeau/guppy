@@ -1,0 +1,357 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BuildPane component should handle status updated 1`] = `"installingDependencies"`;
+
+exports[`BuildPane component should handle status updated 2`] = `"guppification"`;
+
+exports[`BuildPane component should render build step creatingProjectDirectory 1`] = `
+<styled.div>
+  <styled.div
+    isVisible={false}
+  >
+    <styled.div>
+      <Icon
+        fill="currentColor"
+        icon={
+          Object {
+            "attribs": Object {
+              "fill": "none",
+              "stroke": "currentColor",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+            },
+            "children": Array [
+              Object {
+                "attribs": Object {
+                  "points": "20 6 9 17 4 12",
+                },
+                "children": Array [],
+                "name": "polyline",
+              },
+            ],
+            "viewBox": "0 0 24 24",
+          }
+        }
+        size={128}
+      />
+      <styled.div
+        size={20}
+      />
+      Project Created!
+    </styled.div>
+  </styled.div>
+  <styled.h1>
+    Building Project...
+  </styled.h1>
+  <styled.div>
+    <WhimsicalInstaller
+      isRunning={false}
+      width={420}
+    />
+  </styled.div>
+  <styled.div>
+    <BuildStepProgress
+      key="installingCliTool"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Installing build tool",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="creatingProjectDirectory"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Creating project directory",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="installingDependencies"
+      status="upcoming"
+      step={
+        Object {
+          "additionalCopy": "This step can take a while...",
+          "copy": "Installing dependencies",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="guppification"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Persisting project info",
+        }
+      }
+    />
+  </styled.div>
+</styled.div>
+`;
+
+exports[`BuildPane component should render build step guppification 1`] = `
+<styled.div>
+  <styled.div
+    isVisible={false}
+  >
+    <styled.div>
+      <Icon
+        fill="currentColor"
+        icon={
+          Object {
+            "attribs": Object {
+              "fill": "none",
+              "stroke": "currentColor",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+            },
+            "children": Array [
+              Object {
+                "attribs": Object {
+                  "points": "20 6 9 17 4 12",
+                },
+                "children": Array [],
+                "name": "polyline",
+              },
+            ],
+            "viewBox": "0 0 24 24",
+          }
+        }
+        size={128}
+      />
+      <styled.div
+        size={20}
+      />
+      Project Created!
+    </styled.div>
+  </styled.div>
+  <styled.h1>
+    Building Project...
+  </styled.h1>
+  <styled.div>
+    <WhimsicalInstaller
+      isRunning={false}
+      width={420}
+    />
+  </styled.div>
+  <styled.div>
+    <BuildStepProgress
+      key="installingCliTool"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Installing build tool",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="creatingProjectDirectory"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Creating project directory",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="installingDependencies"
+      status="upcoming"
+      step={
+        Object {
+          "additionalCopy": "This step can take a while...",
+          "copy": "Installing dependencies",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="guppification"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Persisting project info",
+        }
+      }
+    />
+  </styled.div>
+</styled.div>
+`;
+
+exports[`BuildPane component should render build step installingCliTool 1`] = `
+<styled.div>
+  <styled.div
+    isVisible={false}
+  >
+    <styled.div>
+      <Icon
+        fill="currentColor"
+        icon={
+          Object {
+            "attribs": Object {
+              "fill": "none",
+              "stroke": "currentColor",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+            },
+            "children": Array [
+              Object {
+                "attribs": Object {
+                  "points": "20 6 9 17 4 12",
+                },
+                "children": Array [],
+                "name": "polyline",
+              },
+            ],
+            "viewBox": "0 0 24 24",
+          }
+        }
+        size={128}
+      />
+      <styled.div
+        size={20}
+      />
+      Project Created!
+    </styled.div>
+  </styled.div>
+  <styled.h1>
+    Building Project...
+  </styled.h1>
+  <styled.div>
+    <WhimsicalInstaller
+      isRunning={false}
+      width={420}
+    />
+  </styled.div>
+  <styled.div>
+    <BuildStepProgress
+      key="installingCliTool"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Installing build tool",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="creatingProjectDirectory"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Creating project directory",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="installingDependencies"
+      status="upcoming"
+      step={
+        Object {
+          "additionalCopy": "This step can take a while...",
+          "copy": "Installing dependencies",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="guppification"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Persisting project info",
+        }
+      }
+    />
+  </styled.div>
+</styled.div>
+`;
+
+exports[`BuildPane component should render build step installingDependencies 1`] = `
+<styled.div>
+  <styled.div
+    isVisible={false}
+  >
+    <styled.div>
+      <Icon
+        fill="currentColor"
+        icon={
+          Object {
+            "attribs": Object {
+              "fill": "none",
+              "stroke": "currentColor",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+            },
+            "children": Array [
+              Object {
+                "attribs": Object {
+                  "points": "20 6 9 17 4 12",
+                },
+                "children": Array [],
+                "name": "polyline",
+              },
+            ],
+            "viewBox": "0 0 24 24",
+          }
+        }
+        size={128}
+      />
+      <styled.div
+        size={20}
+      />
+      Project Created!
+    </styled.div>
+  </styled.div>
+  <styled.h1>
+    Building Project...
+  </styled.h1>
+  <styled.div>
+    <WhimsicalInstaller
+      isRunning={false}
+      width={420}
+    />
+  </styled.div>
+  <styled.div>
+    <BuildStepProgress
+      key="installingCliTool"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Installing build tool",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="creatingProjectDirectory"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Creating project directory",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="installingDependencies"
+      status="upcoming"
+      step={
+        Object {
+          "additionalCopy": "This step can take a while...",
+          "copy": "Installing dependencies",
+        }
+      }
+    />
+    <BuildStepProgress
+      key="guppification"
+      status="upcoming"
+      step={
+        Object {
+          "copy": "Persisting project info",
+        }
+      }
+    />
+  </styled.div>
+</styled.div>
+`;
