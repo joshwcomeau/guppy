@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import BuildStepProgress from './BuildStepProgress';
+import BuildStepProgress from '../BuildStepProgress';
 
 describe('BuildStepProgress component', () => {
   let wrapper;

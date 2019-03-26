@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import SubmitButton, { ChildWrapper } from './SubmitButton';
+import SubmitButton, { ChildWrapper } from '../SubmitButton';
 
 describe('SubmitButton component', () => {
   let wrapper;

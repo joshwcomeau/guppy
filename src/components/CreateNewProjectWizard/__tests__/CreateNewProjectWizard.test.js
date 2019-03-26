@@ -8,21 +8,21 @@ import {
   dialogCallbackFolderExists,
   dialogStarterNotFoundErrorArgs,
   FORM_STEPS,
-} from './CreateNewProjectWizard';
-import { initialState as appSettingsInitialState } from '../../reducers/app-settings.reducer';
+} from '../CreateNewProjectWizard';
+import { initialState as appSettingsInitialState } from '../../../reducers/app-settings.reducer';
 
 const projectHomePath = '/users/guppy-dev';
 
-jest.mock('../../services/create-project.service', () => ({
+jest.mock('../../../services/create-project.service', () => ({
   checkIfProjectExists: jest.fn(
     (path, name) => path === '/users/guppy-dev' && name === 'first-project'
   ),
   getProjectNameSlug: jest.requireActual(
-    '../../services/create-project.service'
+    '../../../services/create-project.service'
   ).getProjectNameSlug,
 }));
 
-jest.mock('../../services/check-if-url-exists.service', () => ({
+jest.mock('../../../services/check-if-url-exists.service', () => ({
   urlExists: jest.fn(starterUrl =>
     Promise.resolve(starterUrl.includes('gatsby-blog-starter'))
   ),
@@ -110,7 +110,7 @@ describe('CreateNewProjectWizard component', () => {
     expect(instance.verifyProjectNameUniqueness).not.toHaveBeenCalled();
   });
 
-  it('should set foucs', () => {
+  it('should set focus', () => {
     instance.focusField('projectName');
     expect(instance.state.activeField).toEqual('projectName');
   });

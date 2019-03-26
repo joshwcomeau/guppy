@@ -3,10 +3,10 @@ import { shallow } from 'enzyme';
 import { Spring } from 'react-spring';
 import lolex from 'lolex';
 
-import MainPane from './MainPane';
-import ProjectName from './ProjectName';
-import ProjectPath from './ProjectPath';
-import { FORM_STEPS } from './CreateNewProjectWizard';
+import MainPane from '../MainPane';
+import ProjectName from '../ProjectName';
+import ProjectPath from '../ProjectPath';
+import { FORM_STEPS } from '../CreateNewProjectWizard';
 
 describe('MainPane component', () => {
   let wrapper;

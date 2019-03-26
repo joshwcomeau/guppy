@@ -9,8 +9,8 @@ import {
   CLAMP_AT,
   dialogOptions,
   dialogCallback,
-} from './ProjectPath';
-import { getProjectNameSlug } from '../../services/create-project.service';
+} from '../ProjectPath';
+import { getProjectNameSlug } from '../../../services/create-project.service';
 
 jest.mock('path', () => ({
   join: (...args) => args.join('/').concat('/'),

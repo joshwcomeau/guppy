@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import BuildPane, { BUILD_STEP_KEYS } from './BuildPane';
-import createProject from '../../services/create-project.service';
+import BuildPane, { BUILD_STEP_KEYS } from '../BuildPane';
+import createProject from '../../../services/create-project.service';
 
-jest.mock('../../services/create-project.service');
+jest.mock('../../../services/create-project.service');
 
 describe('BuildPane component', () => {
   let wrapper;
@@ -34,6 +34,14 @@ describe('BuildPane component', () => {
   beforeEach(() => {
     wrapper = shallowRenderBuildPane(newProject);
     instance = wrapper.instance();
+
+    // Mock console errors so they don't output while running the test
+    jest.spyOn(console, 'error');
+    console.error.mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    console.error.mockRestore();
   });
 
   BUILD_STEP_KEYS.forEach(buildStep => {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import SummaryPane from './SummaryPane';
-import projectTypes from '../../config/project-types';
+import SummaryPane from '../SummaryPane';
+import projectTypes from '../../../config/project-types';
 
 describe('SummaryPane component', () => {
   let wrapper;

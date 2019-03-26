@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import ProjectName, { ErrorMessage } from './ProjectName';
+import ProjectName, { ErrorMessage } from '../ProjectName';
 import lolex from 'lolex';
 
 jest.mock('react-tippy', () => ({

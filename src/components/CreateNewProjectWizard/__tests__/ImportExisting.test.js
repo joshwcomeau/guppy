@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { ImportExisting } from './ImportExisting';
+import { ImportExisting } from '../ImportExisting';
 
 describe('ImportExisting component', () => {
   let wrapper;
