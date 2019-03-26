@@ -8,7 +8,7 @@ import { COLORS, GUPPY_REPO_URL } from '../../constants';
 import ExternalLink from '../ExternalLink';
 import Label from '../Label';
 import Middot from '../Middot';
-import DeleteDependencyButton from '../DeleteDependencyButton';
+import DeleteDependencyButton from './DeleteDependencyButton';
 import Spinner from '../Spinner';
 import License from '../License';
 import HelpButton from '../HelpButton';

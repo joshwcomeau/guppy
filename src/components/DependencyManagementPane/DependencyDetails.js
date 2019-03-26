@@ -6,12 +6,12 @@ import { COLORS } from '../../constants';
 
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
-import DependencyDetailsTable from '../DependencyDetailsTable';
-import DependencyInfoFromNpm from '../DependencyInfoFromNpm';
-import DependencyUpdateRow from '../DependencyUpdateRow';
+import DependencyDetailsTable from './DependencyDetailsTable';
+import DependencyInfoFromNpm from './DependencyInfoFromNpm';
+import DependencyUpdateRow from './DependencyUpdateRow';
 
 import type { Dependency } from '../../types';
-import type { NpmResult } from '../DependencyInfoFromNpm';
+import type { NpmResult } from './DependencyInfoFromNpm';
 
 type Props = {
   projectId: string,
@@ -33,8 +33,8 @@ class DependencyDetails extends PureComponent<Props> {
                 reason="Optical symmetry between top and left edge of parent"
               >
                 <HeaderText>
-                  <Name size="small"> {dependency.name} </Name>
-                  <Description> {dependency.description} </Description>
+                  <Name size="small">{dependency.name}</Name>
+                  <Description>{dependency.description}</Description>
                 </HeaderText>
               </PixelShifter>
             </Header>

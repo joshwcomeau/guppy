@@ -10,17 +10,17 @@ import { getOnlineState } from '../../reducers/app-status.reducer';
 import { COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
-import AddDependencyModal from '../AddDependencyModal';
-import AddDependencySearchProvider from '../AddDependencySearchProvider';
-import DependencyDetails from '../DependencyDetails';
-import DependencyInstalling from '../DependencyInstalling/DependencyInstalling';
+import AddDependencyModal from './AddDependencyModal';
+import AddDependencySearchProvider from './AddDependencySearchProvider';
+import DependencyDetails from './DependencyDetails';
+import DependencyInstalling from './DependencyInstalling';
 import Card from '../Card';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import OnlyOn from '../OnlyOn';
 import MountAfter from '../MountAfter';
 
-import type { Project } from '../../types';
+import type { Dependency, Project } from '../../types';
 
 type Props = {
   project: Project,
@@ -32,7 +32,7 @@ type State = {
   addingNewDependency: boolean,
 };
 
-class DependencyManagementPane extends PureComponent<Props, State> {
+export class DependencyManagementPane extends PureComponent<Props, State> {
   state = {
     selectedDependencyIndex: 0,
     addingNewDependency: false,
@@ -111,7 +111,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     });
   };
 
-  renderListAddon = (dependency, isSelected) => {
+  renderListAddon = (dependency: Dependency, isSelected: boolean) => {
     if (
       dependency.status === 'installing' ||
       dependency.status.match(/^queued-/)
@@ -128,7 +128,11 @@ class DependencyManagementPane extends PureComponent<Props, State> {
     );
   };
 
-  renderMainContents = (selectedDependency, projectId, isOnline) => {
+  renderMainContents = (
+    selectedDependency: Dependency,
+    projectId: string,
+    isOnline: boolean
+  ) => {
     if (
       selectedDependency.status === 'installing' ||
       selectedDependency.status === 'queued-install'
@@ -169,7 +173,7 @@ class DependencyManagementPane extends PureComponent<Props, State> {
                   isSelected={selectedDependencyIndex === index}
                   onClick={() => this.selectDependency(dependency.name)}
                 >
-                  <DependencyName> {dependency.name} </DependencyName>
+                  <DependencyName>{dependency.name}</DependencyName>
                   {this.renderListAddon(
                     dependency,
                     selectedDependencyIndex === index
@@ -232,13 +236,13 @@ const Wrapper = styled.div`
   max-height: 475px;
 `;
 
-const DependencyList = Card.extend`
+export const DependencyList = Card.extend`
   flex: 6;
   display: flex;
   flex-direction: column;
 `;
 
-const Dependencies = styled.div`
+export const Dependencies = styled.div`
   overflow: auto;
   /*
     flex-shrink is needed to ensure that the list doesn't clobber the
@@ -247,7 +251,7 @@ const Dependencies = styled.div`
   flex-shrink: 8;
 `;
 
-const DependencyButton = styled.button`
+export const DependencyButton = styled.button`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -293,7 +297,7 @@ const DependencyButton = styled.button`
   }
 `;
 
-const AddDependencyButton = styled.button`
+export const AddDependencyButton = styled.button`
   width: 100%;
   height: 42px;
   padding: 8px 10px;
@@ -335,7 +339,7 @@ const DependencyVersion = styled.span`
       : COLORS.transparentBlack[400]}};
 `;
 
-const MainContent = Card.extend`
+export const MainContent = Card.extend`
   flex: 12;
   margin-left: 15px;
   padding: 0;
