@@ -15,6 +15,7 @@ describe('AppSettingsModal component', () => {
   let instance;
   let mockedHideModal;
   let mockedSaveAppSettings;
+  let mockFs;
 
   const DEFAULT_SETTINGS = {
     general: {
@@ -27,7 +28,7 @@ describe('AppSettingsModal component', () => {
   };
 
   beforeEach(() => {
-    fs.existsSync = jest.fn(() => true);
+    mockFs = jest.spyOn(fs, 'existsSync').mockImplementation(() => true);
     mockedHideModal = jest.fn();
     mockedSaveAppSettings = jest.fn();
     wrapper = shallow(
@@ -41,12 +42,16 @@ describe('AppSettingsModal component', () => {
     instance = wrapper.instance();
   });
 
+  afterEach(() => {
+    mockFs.mockRestore();
+  });
+
   it('should render', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
   it('should show dialog if path not exists', () => {
-    fs.existsSync = jest.fn(() => false);
+    jest.spyOn(fs, 'existsSync').mockImplementation(() => false);
     instance.saveSettings({ preventDefault: jest.fn() });
 
     expect(dialog.showErrorBox).toHaveBeenCalledWith(
