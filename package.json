@@ -42,11 +42,13 @@
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "lint-staged": {
-    "*.{js,jsx,mjs}": [
-      "npm run prettier",
-      "eslint",
-      "git add"
-    ]
+    "linters": {
+      "*.{js,jsx,mjs}": [
+        "npm run prettier",
+        "eslint",
+        "git add"
+      ]
+    }
   },
   "dependencies": {
     "create-react-app": "1.5.2",
@@ -119,7 +121,7 @@
     "jest-styled-components": "6.2.2",
     "jsdom": "13.0.0",
     "jsdom-global": "3.0.2",
-    "lint-staged": "7.2.0",
+    "lint-staged": "7.3.0",
     "loader-utils": "1.1.0",
     "lolex": "3.0.0",
     "mixpanel-browser": "2.22.4",
