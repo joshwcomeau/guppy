@@ -60,7 +60,7 @@ class DependencyDetailsTable extends Component<Props> {
           </tr>
           <tr>
             <Cell>
-              <Label> Last Published </Label>
+              <Label>Last Published</Label>
             </Cell>
             <Cell>
               {lastUpdatedAt ? (
@@ -74,7 +74,7 @@ class DependencyDetailsTable extends Component<Props> {
           </tr>
           <tr>
             <Cell>
-              <Label> License </Label>
+              <Label>License</Label>
             </Cell>
             <Cell>
               <License license={dependency.license} />
@@ -82,13 +82,13 @@ class DependencyDetailsTable extends Component<Props> {
           </tr>
           <tr>
             <Cell>
-              <Label> Resources </Label>
+              <Label>Resources</Label>
             </Cell>
             <Cell>
-              <ExternalLink href={packageHref}> NPM </ExternalLink>
+              <ExternalLink href={packageHref}>NPM</ExternalLink>
               {githubHref && <Middot />}
               {githubHref && (
-                <ExternalLink href={githubHref}> GitHub </ExternalLink>
+                <ExternalLink href={githubHref}>GitHub</ExternalLink>
               )}
               {dependency.homepage && <Middot />}
               {dependency.homepage && (
