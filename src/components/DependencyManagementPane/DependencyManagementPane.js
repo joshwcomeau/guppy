@@ -203,7 +203,8 @@ export class DependencyManagementPane extends PureComponent<Props, State> {
                 isOnline={this.props.isOnline}
                 onClick={this.openAddNewDependencyModal}
               >
-                <IconBase icon={plus} size={20} /> <Spacer size={6} />
+                <IconBase icon={plus} size={20} />
+                <Spacer size={6} />
                 Add New
                 <OnlyOn
                   size="mdMin"
