@@ -63,7 +63,7 @@ class DependencyUpdateRow extends Component<Props> {
           }}
         />
         <Spacer size={6} />
-        Up - to - date
+        Up-to-date
       </UpToDate>
     ) : (
       <FillButton
@@ -87,12 +87,12 @@ class DependencyUpdateRow extends Component<Props> {
     return (
       <Wrapper>
         <Col>
-          <VersionLabel> Latest Version </VersionLabel>
-          <VersionNum> {latestVersion || '--'} </VersionNum>
+          <VersionLabel>Latest Version</VersionLabel>
+          <VersionNum>{latestVersion || '--'}</VersionNum>
         </Col>
         <Col>
-          <VersionLabel> Installed Version </VersionLabel>
-          <VersionNum> {dependency.version} </VersionNum>
+          <VersionLabel>Installed Version</VersionLabel>
+          <VersionNum>{dependency.version}</VersionNum>
         </Col>
         <UpdateCol isOnline={isOnline}> {this.renderActionColumn()} </UpdateCol>
       </Wrapper>
