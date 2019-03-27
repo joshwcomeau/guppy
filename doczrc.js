@@ -1,4 +1,6 @@
+// @flow
 import { COLORS } from './src/constants';
+import { css } from 'docz-plugin-css';
 
 export default {
   title: 'Guppy',
@@ -10,20 +12,6 @@ export default {
       primary: COLORS.blue[700],
     },
   },
-  modifyBundlerConfig: config => {
-    config.module.rules.push({
-      test: /\.css/i,
-      use: [
-        require.resolve('style-loader'),
-        {
-          loader: require.resolve('css-loader'),
-          options: {
-            importLoaders: 1,
-          },
-        },
-      ],
-    });
-
-    return config;
-  },
+  plugins: [css()],
+  menu: ['Guppy Style Guide', 'Components', 'Reusable Components', 'Shared'],
 };
