@@ -25,10 +25,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: yarn test
-
-      # report coverage
-      - run: yarn report-coverage
+      - run: yarn test:report-coverage
 
       # Flowjs check
       - run: yarn flow
