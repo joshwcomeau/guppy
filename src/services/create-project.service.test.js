@@ -1,9 +1,23 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {
+import fs from 'fs';
+import createProjectSvc, {
   possibleProjectColors,
   getColorForProject,
   getBuildInstructions,
+  DISABLE,
 } from './create-project.service';
+
+import { FAKE_CRA_PROJECT } from './create-project.fixtures';
+import { createProject } from './../test-helpers/factories';
+
+jest.mock('fs', () => ({
+  existsSync: jest.fn(() => false),
+  // jest
+  //   .fn()
+  //   .mockReturnValueOnce(false)
+  //   .mockReturnValueOnce(true),
+  mkdirSync: () => 'projectHomePath/',
+}));
 
 jest.mock('os', () => ({
   homedir: jest.fn(),
@@ -12,6 +26,7 @@ jest.mock('os', () => ({
 
 jest.mock('../services/platform.service', () => ({
   formatCommandForPlatform: cmd => cmd,
+  getBaseProjectEnvironment: jest.fn(),
 }));
 
 describe('getColorForProject', () => {
@@ -56,4 +71,45 @@ describe('getBuildInstructions', () => {
       `Unrecognized project type: ${projectType}`
     );
   });
+});
+
+describe('CreateProject', () => {
+  const newProject = {
+    projectName: 'Awesome project',
+    projectType: 'gatsby',
+    projectIcon: 'Icon',
+    ProjectStarter: null,
+  };
+  let mockStatusUpdate;
+  let mockErrorHandler;
+  let mockCompleteHandler;
+  let callParams;
+
+  beforeEach(() => {
+    mockStatusUpdate = jest.fn();
+    mockErrorHandler = jest.fn();
+    mockCompleteHandler = jest.fn();
+
+    callParams = [
+      newProject,
+      'newProjectHomePath/',
+      mockStatusUpdate,
+      mockErrorHandler,
+      mockCompleteHandler,
+    ];
+    DISABLE.status = false;
+  });
+
+  it('should create a fake project for debugging', () => {
+    DISABLE.status = true;
+    createProjectSvc.apply(null, callParams);
+
+    expect(mockCompleteHandler).toHaveBeenCalledWith(FAKE_CRA_PROJECT);
+  });
+
+  // it('should create home directory if it does not exist', () => {
+  //   createProjectSvc.apply(null, callParams);
+  //   //console.log(fs.existsSync);
+  //   expect(fs.existsSync).toHaveBeenLastCalledWith('projectHomePath');
+  // });
 });

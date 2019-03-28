@@ -23,7 +23,16 @@ import type { ProjectType, ProjectInternal } from '../types';
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
 // to be created every time.
-const DISABLE = false;
+// Note: Added set/get for unit testing.
+export const DISABLE = {
+  _status: false, // change _status to true here to enable fakeProject
+  set status(value) {
+    this._status = value;
+  },
+  get() {
+    return this._status;
+  },
+};
 
 type ProjectInfo = {
   projectName: string,
@@ -69,7 +78,9 @@ export default (
 
   // Create the projects directory, if this is the first time creating a
   // project.
+  console.log('about to call', fs.existsSync);
   if (!fs.existsSync(projectHomePath)) {
+    console.log('Create');
     fs.mkdirSync(projectHomePath);
   }
 
