@@ -4,7 +4,7 @@ import random from 'random-seed';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as uuid from 'uuid/v1';
+import uuid from 'uuid/v1';
 import projectConfigs from '../config/project-types';
 import { processLogger } from './process-logger.service';
 import { substituteConfigVariables } from './config-variables.service';
@@ -29,7 +29,7 @@ export const DISABLE = {
   set status(value) {
     this._status = value;
   },
-  get() {
+  get status() {
     return this._status;
   },
 };
@@ -71,16 +71,14 @@ export default (
   onError: (err: string) => void,
   onComplete: (packageJson: ProjectInternal) => void
 ) => {
-  if (DISABLE) {
+  if (DISABLE.status) {
     onComplete(FAKE_CRA_PROJECT);
     return;
   }
 
   // Create the projects directory, if this is the first time creating a
   // project.
-  console.log('about to call', fs.existsSync);
   if (!fs.existsSync(projectHomePath)) {
-    console.log('Create');
     fs.mkdirSync(projectHomePath);
   }
 

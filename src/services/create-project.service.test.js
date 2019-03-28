@@ -1,5 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import fs from 'fs';
+import childProcess from 'child_process';
+
 import createProjectSvc, {
   possibleProjectColors,
   getColorForProject,
@@ -8,20 +10,54 @@ import createProjectSvc, {
 } from './create-project.service';
 
 import { FAKE_CRA_PROJECT } from './create-project.fixtures';
-import { createProject } from './../test-helpers/factories';
+
+const eventMap = { stdout: {}, stderr: {}, close: {} };
+
+const mockProcess = {
+  on: jest.fn((event, cb) => {
+    eventMap[event] = cb;
+  }),
+  stdout: {
+    on: jest.fn((event, cb) => {
+      eventMap.stdout[event] = cb;
+    }),
+  },
+  stderr: {
+    on: jest.fn((event, cb) => {
+      eventMap.stderr[event] = cb;
+    }),
+  },
+};
+
+jest.mock('uuid/v1', () => () => 'mocked-uuid-v1');
 
 jest.mock('fs', () => ({
   existsSync: jest.fn(() => false),
-  // jest
-  //   .fn()
-  //   .mockReturnValueOnce(false)
-  //   .mockReturnValueOnce(true),
-  mkdirSync: () => 'projectHomePath/',
+  mkdirSync: jest.fn(() => 'projectHomePath/'),
+  readFile: jest
+    .fn()
+    .mockImplementationOnce((path, encoding, cb) => cb(true))
+    .mockImplementationOnce((path, encoding, cb) =>
+      cb(
+        null,
+        JSON.stringify({
+          name: 'demo',
+          productName: 'Demo',
+          version: '0.0.1',
+        })
+      )
+    ),
+  writeFile: jest.fn((path, data, cb) => cb(null)),
 }));
 
 jest.mock('os', () => ({
   homedir: jest.fn(),
   platform: () => process.platform,
+}));
+
+jest.mock('child_process', () => ({
+  spawn: jest.fn(() => mockProcess),
+  exec: jest.fn(),
 }));
 
 jest.mock('../services/platform.service', () => ({
@@ -76,7 +112,7 @@ describe('getBuildInstructions', () => {
 describe('CreateProject', () => {
   const newProject = {
     projectName: 'Awesome project',
-    projectType: 'gatsby',
+    projectType: 'create-react-app',
     projectIcon: 'Icon',
     ProjectStarter: null,
   };
@@ -86,18 +122,24 @@ describe('CreateProject', () => {
   let callParams;
 
   beforeEach(() => {
+    global.console.error = jest.fn();
+
     mockStatusUpdate = jest.fn();
     mockErrorHandler = jest.fn();
     mockCompleteHandler = jest.fn();
 
     callParams = [
       newProject,
-      'newProjectHomePath/',
+      'projectHomePath/',
       mockStatusUpdate,
       mockErrorHandler,
       mockCompleteHandler,
     ];
     DISABLE.status = false;
+  });
+
+  afterAll(() => {
+    jest.unmock(global.console.error);
   });
 
   it('should create a fake project for debugging', () => {
@@ -107,9 +149,45 @@ describe('CreateProject', () => {
     expect(mockCompleteHandler).toHaveBeenCalledWith(FAKE_CRA_PROJECT);
   });
 
-  // it('should create home directory if it does not exist', () => {
-  //   createProjectSvc.apply(null, callParams);
-  //   //console.log(fs.existsSync);
-  //   expect(fs.existsSync).toHaveBeenLastCalledWith('projectHomePath');
-  // });
+  it('should create home directory if it does not exist', () => {
+    createProjectSvc.apply(null, callParams);
+
+    expect(fs.existsSync).toHaveBeenLastCalledWith('projectHomePath/');
+    expect(fs.mkdirSync).toHaveBeenLastCalledWith('projectHomePath/');
+    expect(mockStatusUpdate).toHaveBeenLastCalledWith(
+      expect.stringMatching(/created parent directory/i)
+    );
+  });
+
+  it('should listen to process stdout & stderr', () => {
+    createProjectSvc.apply(null, callParams);
+
+    eventMap.stdout.data('some data');
+    expect(mockStatusUpdate).toHaveBeenCalledWith('some data');
+
+    eventMap.stderr.data('an error');
+    expect(mockErrorHandler).toHaveBeenCalledWith('an error');
+  });
+
+  it('should listen to process close event', () => {
+    createProjectSvc.apply(null, callParams);
+
+    eventMap.close();
+
+    expect(mockStatusUpdate).toHaveBeenLastCalledWith(
+      expect.stringMatching(/dependencies installed/i)
+    );
+    // read failure
+    expect(global.console.error).toHaveBeenCalled();
+
+    // new close event & test onComplete
+    eventMap.close();
+    expect(mockCompleteHandler).toHaveBeenCalled();
+  });
+
+  it('should add a commit for create-react-app', () => {
+    createProjectSvc.apply(null, callParams);
+    eventMap.close();
+    expect(childProcess.exec).toHaveBeenCalled();
+  });
 });
