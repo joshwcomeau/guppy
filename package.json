@@ -31,7 +31,7 @@
     "test": "node scripts/test.js --maxWorkers=2 --env=node",
     "test:dev": "yarn test --verbose=false",
     "test:coverage": "yarn test --coverage",
-    "test:report-coverage": "yarn coverage && codecov",
+    "test:report-coverage": "yarn test:coverage && codecov",
     "flow": "flow",
     "lint": "eslint src/**/*.js src/**/*.snap config/**/*.js",
     "prettier": "prettier --write",
