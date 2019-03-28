@@ -190,9 +190,10 @@ function attachIpcMainListeners(ipcMainHandle, notifyCallback) {
 
   ipcMainHandle.on('killAllRunningProcesses', event => {
     if (processIds.length) {
-      killAllRunningProcesses();
+      killAllRunningProcesses().then(app.quit);
+    } else {
+      app.quit();
     }
-    app.quit();
     notify('killAllRunningProcesses', processIds);
   });
 
@@ -207,15 +208,17 @@ function attachIpcMainListeners(ipcMainHandle, notifyCallback) {
   });
 }
 
-const killAllRunningProcesses = () => {
+const killAllRunningProcesses = async () => {
   try {
-    processIds.forEach(processId => {
-      killProcessId(processId);
+    await Promise.all(
+      processIds.map(processId => {
+        // Remove the parent or any children PIDs from the list of tracked
+        // IDs, since they're killed now.
+        processIds = processIds.filter(id => id !== processId);
 
-      // Remove the parent or any children PIDs from the list of tracked
-      // IDs, since they're killed now.
-      processIds = processIds.filter(id => id !== processId);
-    });
+        return killProcessId(processId);
+      })
+    );
   } catch (err) {
     console.error('Got error when trying to kill children', err);
   }
