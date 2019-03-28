@@ -4841,6 +4841,11 @@ electron-download@^4.1.0:
     semver "^5.4.1"
     sumchecker "^2.0.2"
 
+electron-ipc-mock@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/electron-ipc-mock/-/electron-ipc-mock-0.0.3.tgz#eec117c5510eeca7da68291a8a41bfc7868d3e03"
+  integrity sha1-7sEXxVEO7KfaaCkaikG/x4aNPgM=
+
 electron-is-accelerator@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/electron-is-accelerator/-/electron-is-accelerator-0.1.2.tgz#509e510c26a56b55e17f863a4b04e111846ab27b"

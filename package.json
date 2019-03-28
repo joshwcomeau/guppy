@@ -92,6 +92,7 @@
     "dotenv-expand": "4.2.0",
     "electron": "4.0.0",
     "electron-builder": "20.28.4",
+    "electron-ipc-mock": "0.0.3",
     "electron-log": "2.2.17",
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "1.8.0",
