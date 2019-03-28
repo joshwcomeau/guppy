@@ -1,5 +1,4 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-jest.genMockFromModule('child_process');
 jest.mock('child_process');
 
 const createOsMock = osName => {
@@ -25,7 +24,7 @@ describe('killProcessId', () => {
     const killProcessId = await import('./kill-process-id.service');
     const childProcess = await import('child_process');
 
-    killProcessId(id);
+    await killProcessId(id);
     expect(childProcess.spawnSync).toHaveBeenCalledWith('taskkill', [
       '/pid',
       id,
@@ -43,7 +42,7 @@ describe('killProcessId', () => {
     const childProcess = await import('child_process');
     const psTree = await import('ps-tree');
 
-    killProcessId(id);
+    await killProcessId(id);
     expect(psTree).toBeCalledWith(id, expect.any(Function));
     expect(childProcess.spawnSync).toHaveBeenCalledWith('kill', [
       '-9',
