@@ -189,14 +189,11 @@ function attachIpcMainListeners(ipcMainHandle, notifyCallback) {
   });
 
   ipcMainHandle.on('killAllRunningProcesses', async event => {
-    // create a shallow copy of `processIds` since it will be cleared
-    // by `killAllRunningProcesses`
-    const doomedProcessIds = [...processIds];
     if (processIds.length) {
       await killAllRunningProcesses();
     }
     app.quit();
-    notify('killAllRunningProcesses', doomedProcessIds);
+    notify('killAllRunningProcesses', processIds);
   });
 
   ipcMainHandle.on('triggerClose', (e, proceed) => {
