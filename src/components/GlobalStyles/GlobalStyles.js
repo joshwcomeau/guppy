@@ -1,11 +1,11 @@
 // @flow
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import 'react-tippy/dist/tippy.css';
-import { COLORS } from './constants';
-import './fonts.css';
-import './base.css';
+import { COLORS } from '../../constants';
+import '../../fonts.css';
+import '../../base.css';
 
-injectGlobal`
+const GlobalStyles = createGlobalStyle`
   html,
   body,
   input,
@@ -20,3 +20,5 @@ injectGlobal`
     background: ${COLORS.gray[50]};
   }
 `;
+
+export default GlobalStyles;

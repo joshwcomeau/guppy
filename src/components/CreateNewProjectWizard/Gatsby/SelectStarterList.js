@@ -73,7 +73,7 @@ class SelectStarterList extends PureComponent<Props> {
 
     return (
       <MainContent isVisible={isVisible}>
-        <ScrollContainer innerRef={node => (this.node = node)}>
+        <ScrollContainer ref={node => (this.node = node)}>
           <StarterList>
             {starters.map((starter, index) => (
               <StarterItem key={index}>

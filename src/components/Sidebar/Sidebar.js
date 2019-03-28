@@ -211,11 +211,11 @@ export class Sidebar extends PureComponent<Props, State> {
   }
 }
 
-const Wrapper = animated(styled.nav.attrs({
-  style: props => ({
+const Wrapper = animated(styled.nav.attrs(props => ({
+  style: {
     transform: `translateX(${props.offset})`,
-  }),
-})`
+  },
+}))`
   position: fixed;
   z-index: ${Z_INDICES.sidebar};
   top: 0;
@@ -245,11 +245,11 @@ const ScrollbarOnlyVertical = styled(Scrollbars)`
   }
 `;
 
-const Projects = styled.div.attrs({
-  style: props => ({
+const Projects = styled.div.attrs(props => ({
+  style: {
     transform: `translateY(${props.offset})`,
-  }),
-})`
+  },
+}))`
   display: flex;
   flex-direction: column;
   align-items: center;

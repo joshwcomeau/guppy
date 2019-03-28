@@ -37,11 +37,13 @@ class ProjectName extends PureComponent<Props, State> {
     showRandomizeTooltip: false,
   };
 
-  node: HTMLElement;
+  node: ?HTMLElement;
   timeoutId: number;
 
   componentDidMount() {
-    this.node.focus();
+    if (this.node) {
+      this.node.focus();
+    }
 
     this.timeoutId = window.setTimeout(() => {
       this.setState({ showRandomizeTooltip: true });
@@ -157,8 +159,6 @@ class ProjectName extends PureComponent<Props, State> {
     }
   };
 
-  setRef = (node: HTMLElement) => (this.node = node);
-
   render() {
     const {
       name,
@@ -178,7 +178,7 @@ class ProjectName extends PureComponent<Props, State> {
         spacing={15}
       >
         <TextInput
-          innerRef={this.setRef}
+          ref={node => (this.node = node)}
           type="text"
           value={randomizedOverrideName || name}
           isFocused={isFocused}

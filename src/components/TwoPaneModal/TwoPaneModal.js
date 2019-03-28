@@ -150,12 +150,12 @@ class TwoPaneModal extends PureComponent<Props, State> {
   }
 }
 
-const Wrapper = animated(styled.div.attrs({
-  style: props => ({
+const Wrapper = animated(styled.div.attrs(props => ({
+  style: {
     opacity: props.opacity,
     pointerEvents: props.clickable ? 'auto' : 'none',
-  }),
-})`
+  },
+}))`
   position: fixed;
   z-index: ${Z_INDICES.modal};
   top: 0;
@@ -178,14 +178,14 @@ const Backdrop = styled.div`
   background: rgba(230, 230, 230, 0.8);
 `;
 
-const PaneWrapper = styled.div.attrs({
-  style: props => ({
+const PaneWrapper = styled.div.attrs(props => ({
+  style: {
     transform: `translate(
       ${props.translateX}%,
       ${props.translateY}%
     )`,
-  }),
-})`
+  },
+}))`
   position: relative;
   z-index: 2;
   width: 850px;
@@ -194,12 +194,12 @@ const PaneWrapper = styled.div.attrs({
   will-change: transform;
 `;
 
-const LeftHalf = styled.div.attrs({
-  style: props => ({
+const LeftHalf = styled.div.attrs(props => ({
+  style: {
     transform: `perspective(2000px) rotateY(${props.foldDegrees}deg)`,
     pointerEvents: props.isFolded ? 'none' : 'auto',
-  }),
-})`
+  },
+}))`
   position: relative;
   z-index: 2;
   flex: 1;
@@ -230,11 +230,11 @@ const RightPaneWrapper = styled.div`
   border-radius: 0 8px 8px 0;
 `;
 
-const BackfaceWrapper = styled.div.attrs({
-  style: props => ({
+const BackfaceWrapper = styled.div.attrs(props => ({
+  style: {
     pointerEvents: props.isFolded ? 'auto' : 'none',
-  }),
-})`
+  },
+}))`
   position: absolute;
   z-index: 3;
   top: 0;

@@ -52,16 +52,16 @@ export const Wrapper = styled.div`
   width: 100%;
 `;
 
-const ProgressGradient = animated(styled.div.attrs({
-  style: props => ({
+const ProgressGradient = animated(styled.div.attrs(props => ({
+  style: {
     clipPath: `polygon(
       0% 0%,
       ${props.progress * 100}% 0%,
       ${props.progress * 100}% 100%,
       0% 100%
     `,
-  }),
-})`
+  },
+}))`
   position: absolute;
   top: 0;
   left: 0;

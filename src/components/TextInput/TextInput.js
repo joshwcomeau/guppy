@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
@@ -10,11 +10,13 @@ type Props = {
   children?: React$Node,
 };
 
-const TextInput = ({ isFocused, hasError, children, ...delegated }: Props) => (
-  <Wrapper isFocused={isFocused} hasError={hasError}>
-    <InputElem {...delegated} />
-    {children}
-  </Wrapper>
+const TextInput = forwardRef<Props, Wrapper>(
+  ({ isFocused, hasError, children, ...delegated }: Props, ref) => (
+    <Wrapper ref={ref} isFocused={isFocused} hasError={hasError}>
+      <InputElem {...delegated} />
+      {children}
+    </Wrapper>
+  )
 );
 
 const getBorderColor = (props: Props) => {

@@ -40,7 +40,7 @@ describe('ProjectStarterSelection component', () => {
   });
 
   it('should add node reference to ScrollContainer', () => {
-    // Mount required so innerRef will be set
+    // Mount required so ref will be set
     const mountedWrapper = mount(
       <SelectStarterList
         starters={starters}

@@ -191,11 +191,11 @@ class MainPane extends PureComponent<Props> {
   }
 }
 
-const Wrapper = animated(styled.div.attrs({
-  style: props => ({
+const Wrapper = animated(styled.div.attrs(props => ({
+  style: {
     transform: `translateY(${props.translateY}px)`,
-  }),
-})`
+  },
+}))`
   height: 75vh;
   will-change: transform;
 `);

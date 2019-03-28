@@ -148,10 +148,11 @@ const DependencyLocationLabel = styled.span`
 
 // TODO: Feels gross to be doing this manually when `tr:first-child td`
 // would work.
-const FirstCell = Cell.extend`
+const FirstCell = styled(Cell)`
   padding-top: 0;
 `;
-const LastCell = Cell.extend`
+
+const LastCell = styled(Cell)`
   padding-bottom: 0;
   border-bottom: none;
 `;

@@ -41,14 +41,14 @@ class IntroductionBlurb extends PureComponent<Props> {
   }
 }
 
-const Wrapper = styled.div.attrs({
-  style: props => ({
+const Wrapper = styled.div.attrs(props => ({
+  style: {
     opacity: props.isVisible ? 1 : 0,
     transition: props.isVisible ? '2000ms 100ms' : '250ms',
     transform: props.isVisible ? 'translateX(100%)' : 'translateX(105%)',
     pointerEvents: props.isVisible ? 'auto' : 'none',
-  }),
-})`
+  },
+}))`
   position: absolute;
   top: 36px;
   right: 0;

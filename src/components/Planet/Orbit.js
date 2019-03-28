@@ -45,7 +45,7 @@ class PlanetCloud extends Component<Props> {
     const { duration, delay, planetSize, children, ...delegated } = this.props;
 
     return (
-      <Orbiter innerRef={node => (this.node = node)} {...delegated}>
+      <Orbiter ref={node => (this.node = node)} {...delegated}>
         {children}
       </Orbiter>
     );

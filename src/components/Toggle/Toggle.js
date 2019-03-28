@@ -114,14 +114,14 @@ const Pulsing = styled.div`
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
 
-const Ball = animated(styled.div.attrs({
-  style: props => ({
+const Ball = animated(styled.div.attrs(props => ({
+  style: {
     transform: `
       translateX(${props.translate}%)
       scaleX(${props.stretch})
     `,
-  }),
-})`
+  },
+}))`
   position: relative;
   z-index: 2;
   width: ${props => props.size}px;

@@ -87,11 +87,7 @@ class TerminalOutput extends PureComponent<Props> {
             </FillButton>
           </PixelShifter>
         </Header>
-        <Wrapper
-          width={width}
-          height={height}
-          innerRef={node => (this.node = node)}
-        >
+        <Wrapper width={width} height={height} ref={node => (this.node = node)}>
           <TableWrapper height={height}>
             <LogWrapper>
               {task.logs.map(log => (

@@ -117,7 +117,7 @@ export class DevelopmentServerPane extends PureComponent<Props> {
   }
 }
 
-const Wrapper = Card.extend`
+const Wrapper = styled(Card)`
   display: flex;
 
   @media ${BREAKPOINTS.sm} {

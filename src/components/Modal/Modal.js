@@ -129,12 +129,12 @@ class Modal extends PureComponent<Props, State> {
   }
 }
 
-const Wrapper = animated(styled.div.attrs({
-  style: props => ({
+const Wrapper = animated(styled.div.attrs(props => ({
+  style: {
     opacity: props.opacity,
     pointerEvents: props.clickable ? 'auto' : 'none',
-  }),
-})`
+  },
+}))`
   position: fixed;
   z-index: ${Z_INDICES.modal};
   top: 0;
@@ -162,13 +162,13 @@ const Backdrop = styled.div`
   background: rgba(230, 230, 230, 0.8);
 `;
 
-const PaneWrapper = animated(styled.div.attrs({
-  style: props => ({
+const PaneWrapper = animated(styled.div.attrs(props => ({
+  style: {
     width: props.width,
     height: props.height,
     transform: `translateY(${props.translateY}px)`,
-  }),
-})`
+  },
+}))`
   position: relative;
   z-index: 2;
   max-width: 100%;
