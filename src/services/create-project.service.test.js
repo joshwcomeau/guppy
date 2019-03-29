@@ -148,13 +148,13 @@ describe('CreateProject', () => {
 
   it('should create a fake project for debugging', () => {
     DISABLE.status = true;
-    createProjectSvc.apply(null, callParams);
+    createProjectSvc(...callParams);
 
     expect(mockCompleteHandler).toHaveBeenCalledWith(FAKE_CRA_PROJECT);
   });
 
   it('should create home directory if it does not exist', () => {
-    createProjectSvc.apply(null, callParams);
+    createProjectSvc(...callParams);
 
     expect(fs.existsSync).toHaveBeenLastCalledWith('projectHomePath/');
     expect(fs.mkdirSync).toHaveBeenLastCalledWith('projectHomePath/');
@@ -164,7 +164,7 @@ describe('CreateProject', () => {
   });
 
   it('should listen to process stdout & stderr', () => {
-    createProjectSvc.apply(null, callParams);
+    createProjectSvc(...callParams);
 
     eventMap.stdout.data('some data');
     expect(mockStatusUpdate).toHaveBeenCalledWith('some data');
@@ -174,7 +174,7 @@ describe('CreateProject', () => {
   });
 
   it('should listen to process close event', () => {
-    createProjectSvc.apply(null, callParams);
+    createProjectSvc(...callParams);
 
     eventMap.close();
 
@@ -190,7 +190,7 @@ describe('CreateProject', () => {
   });
 
   it('should add a commit for create-react-app', () => {
-    createProjectSvc.apply(null, callParams);
+    createProjectSvc(...callParams);
     eventMap.close();
     expect(childProcess.exec).toHaveBeenCalledWith(
       expect.stringMatching('Add Guppy data to package.json'),
