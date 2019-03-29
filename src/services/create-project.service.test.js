@@ -60,6 +60,10 @@ jest.mock('child_process', () => ({
   exec: jest.fn(),
 }));
 
+jest.mock('path', () => ({
+  join: (...args) => args.join(''),
+}));
+
 jest.mock('../services/platform.service', () => ({
   formatCommandForPlatform: cmd => cmd,
   getBaseProjectEnvironment: jest.fn(),
@@ -188,6 +192,9 @@ describe('CreateProject', () => {
   it('should add a commit for create-react-app', () => {
     createProjectSvc.apply(null, callParams);
     eventMap.close();
-    expect(childProcess.exec).toHaveBeenCalled();
+    expect(childProcess.exec).toHaveBeenCalledWith(
+      expect.stringMatching('Add Guppy data to package.json'),
+      { cwd: 'projectHomePath/awesome-project' }
+    );
   });
 });
