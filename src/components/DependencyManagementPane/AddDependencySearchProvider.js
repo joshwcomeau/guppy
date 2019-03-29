@@ -21,6 +21,7 @@ class AddDependencySearchProvider extends Component<Props> {
             'humanDownloadsLast30Days',
             'license',
           ]}
+          analyticsTags={['guppy', 'guppy-search']}
           hitsPerPage={10}
         />
         {this.props.children}
