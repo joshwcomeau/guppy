@@ -141,7 +141,7 @@ export class Sidebar extends PureComponent<Props, State> {
       >
         {interpolated => (
           <Fragment>
-            <Wrapper offset={`${sidebarOffsetPercentage}%`}>
+            <Wrapper offset={`${interpolated.sidebarOffsetPercentage}%`}>
               <IntroductionBlurb
                 isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
               />
@@ -150,7 +150,9 @@ export class Sidebar extends PureComponent<Props, State> {
                   <Droppable droppableId="droppable">
                     {provided => (
                       <div ref={provided.innerRef}>
-                        <Projects offset={`${firstProjectPosition}px`}>
+                        <Projects
+                          offset={`${interpolated.firstProjectPosition}px`}
+                        >
                           {projects.map((project, index) => (
                             <Draggable
                               key={project.id}
