@@ -33,7 +33,7 @@ type SelectedId = ?string;
 type State = {
   byId: ById,
   selectedId: SelectedId,
-  order: string[],
+  order: Array<string>,
 };
 
 export const initialState = {
