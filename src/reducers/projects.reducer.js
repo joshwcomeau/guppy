@@ -13,6 +13,7 @@ import {
   SAVE_PROJECT_SETTINGS_FINISH,
   SELECT_PROJECT,
   RESET_ALL_STATE,
+  REARRANGE_PROJECTS_IN_SIDEBAR,
 } from '../actions';
 import { getTasks, getTasksForProjectId } from './tasks.reducer';
 import {
@@ -39,6 +40,7 @@ type State = {
 export const initialState = {
   byId: {},
   selectedId: null,
+  order: [],
 };
 
 const byIdReducer = (state: ById = initialState.byId, action: Action = {}) => {
@@ -208,6 +210,7 @@ const orderReducer = (state = initialState.order, action: Action = {}) => {
 export default combineReducers({
   byId: byIdReducer,
   selectedId: selectedIdReducer,
+  order: orderReducer,
 });
 
 //
@@ -255,6 +258,7 @@ const prepareProjectForConsumption = (
 };
 
 export const getById = (state: GlobalState) => state.projects.byId;
+export const getOrder = (state: GlobalState) => state.projects.order;
 export const getSelectedProjectId = (state: GlobalState) =>
   state.projects.selectedId;
 
@@ -264,8 +268,8 @@ export const getInternalProjectById = (
 ) => getById(state)[props.projectId];
 
 export const getProjectsArray = createSelector(
-  [getById, getTasks, getDependencies, getPaths],
-  (byId, tasks, dependencies, paths) => {
+  [getById, getTasks, getDependencies, getPaths, getOrder],
+  (byId, tasks, dependencies, paths, order) => {
     return Object.keys(byId)
       .map(projectId => {
         const project = byId[projectId];

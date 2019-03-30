@@ -6,6 +6,7 @@ import { Spring, animated, config } from 'react-spring';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { COLORS, Z_INDICES } from '../../constants';
 import * as actions from '../../actions';
@@ -36,7 +37,7 @@ type Props = {
   isOnline: boolean,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   selectProject: Dispatch<typeof actions.selectProject>,
-  rearrangeProjects: (originalIndex: number, newIndex: number) => Action,
+  rearrangeProjects: Dispatch<typeof actions.rearrangeProjectsInSidebar>,
 };
 
 type State = {
@@ -112,6 +113,15 @@ export class Sidebar extends PureComponent<Props, State> {
       });
     }
   }
+
+  onDragEnd = result => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    this.props.rearrangeProjects(result.source.index, result.destination.index);
+  };
 
   render() {
     const {
@@ -269,6 +279,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   createNewProjectStart: actions.createNewProjectStart,
   selectProject: actions.selectProject,
+  rearrangeProjects: actions.rearrangeProjectsInSidebar,
 };
 
 export default connect(
