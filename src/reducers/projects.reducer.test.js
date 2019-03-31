@@ -4,9 +4,11 @@ import {
   INSTALL_DEPENDENCIES_FINISH,
   REFRESH_PROJECTS_FINISH,
   SAVE_PROJECT_SETTINGS_FINISH,
+  FINISH_DELETING_PROJECT,
   SELECT_PROJECT,
   ADD_PROJECT,
   RESET_ALL_STATE,
+  REARRANGE_PROJECTS_IN_SIDEBAR,
 } from '../actions';
 
 import reducer, {
@@ -45,6 +47,7 @@ describe('Projects Reducer', () => {
               scripts,
             },
           },
+          order: ['best-id'],
           selectedId: null,
         });
       });
@@ -67,6 +70,7 @@ describe('Projects Reducer', () => {
               scripts,
             },
           },
+          order: ['best-id'],
           selectedId: guppy.id,
         });
       });
@@ -82,6 +86,7 @@ describe('Projects Reducer', () => {
               },
             },
           },
+          order: ['best-id'],
           selectedId: 'preexisting',
         };
 
@@ -115,6 +120,7 @@ describe('Projects Reducer', () => {
               scripts,
             },
           },
+          order: ['next-project', 'best-id'],
           selectedId: guppy.id,
         });
       });
@@ -167,6 +173,7 @@ describe('Projects Reducer', () => {
             },
           },
         },
+        order: [],
         selectedId: null,
       });
     });
@@ -222,6 +229,7 @@ describe('Projects Reducer', () => {
             },
           },
         },
+        order: ['foo'],
         selectedId: 'foo',
       };
 
@@ -235,6 +243,55 @@ describe('Projects Reducer', () => {
       expect(actualState).toEqual({
         ...prevState,
         selectedId: prevState.selectedId,
+      });
+    });
+
+    it('should update but maintain the order', () => {
+      const testProject = {
+        name: 'testing',
+        guppy: { id: 'best-id' },
+        scripts: {
+          start: 'react-scripts start',
+        },
+      };
+
+      const prevState = {
+        byId: {
+          'first-id': {
+            name: 'foo',
+            guppy: { id: 'first-id', icon: null },
+            scripts: { start: 'command it' },
+          },
+          'second-id': {
+            name: 'foo',
+            guppy: { id: 'second-id', icon: null },
+            scripts: { start: 'command it' },
+          },
+          'third-id': {
+            name: 'foo',
+            guppy: { id: 'third-id', icon: null },
+            scripts: { start: 'command it' },
+          },
+        },
+        order: ['second-id', 'first-id', 'third-id'], // re-ordered intentionally
+        selectedId: null,
+      };
+
+      const projects = { ...prevState.byId, 'best-id': { ...testProject } };
+
+      const refreshAction = {
+        type: REFRESH_PROJECTS_FINISH,
+        projects,
+      };
+      const actualState = reducer(prevState, refreshAction);
+
+      expect(actualState).toEqual({
+        ...actualState,
+        byId: {
+          ...prevState.byId,
+          'best-id': { ...testProject },
+        },
+        order: ['best-id', 'second-id', 'first-id', 'third-id'], // keep previous order & add new project as first item
       });
     });
   });
@@ -304,7 +361,45 @@ describe('Projects Reducer', () => {
         byId: {
           'uuidv1-id': newProject,
         },
+        order: [],
         selectedId: 'uuidv1-id',
+      });
+    });
+  });
+
+  describe(`${REARRANGE_PROJECTS_IN_SIDEBAR}`, () => {
+    it('should change order', () => {
+      const prevState = {
+        order: ['first-id', 'second-id', 'third-id'],
+      };
+      const action = {
+        type: REARRANGE_PROJECTS_IN_SIDEBAR,
+        originalIndex: 0,
+        newIndex: 1,
+      };
+      const actualState = reducer(prevState, action);
+
+      expect(actualState).toEqual({
+        ...initialState,
+        order: ['second-id', 'first-id', 'third-id'],
+      });
+    });
+  });
+
+  describe(`${FINISH_DELETING_PROJECT}`, () => {
+    it('should remove deleted item from order', () => {
+      const prevState = {
+        order: ['first-id', 'second-id', 'third-id'],
+      };
+      const action = {
+        type: FINISH_DELETING_PROJECT,
+        projectId: 'second-id',
+      };
+      const actualState = reducer(prevState, action);
+
+      expect(actualState).toEqual({
+        ...initialState,
+        order: ['first-id', 'third-id'],
       });
     });
   });
@@ -328,7 +423,9 @@ describe('helpers', () => {
   describe('getInternalProjectById', () => {
     it('gets project by id', () => {
       const id = 'test-id';
-      const state = { projects: { byId: { [id]: 'testing' } } };
+      const state = {
+        projects: { byId: { [id]: 'testing' }, order: ['best-id'] },
+      };
       expect(getInternalProjectById(state, { projectId: id })).toBe('testing');
     });
   });
