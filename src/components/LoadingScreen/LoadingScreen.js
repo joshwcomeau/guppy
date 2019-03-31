@@ -68,7 +68,7 @@ class LoadingScreen extends PureComponent<Props, State> {
       <Backdrop isVisible={showLoadingScreen}>
         <StyledCard>
           <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />
-          {progress > 0 && (
+          {progress > 0 ? (
             <Fragment>
               <ProgressBarWrapper>
                 <ProgressBar height={18} progress={progress} reset={reset} />
@@ -78,6 +78,8 @@ class LoadingScreen extends PureComponent<Props, State> {
                 <InfoText>{progress * 100}%</InfoText>
               </InfoWrapper>
             </Fragment>
+          ) : (
+            <InfoText>{shortenedText}</InfoText>
           )}
         </StyledCard>
       </Backdrop>
@@ -115,7 +117,6 @@ const InfoWrapper = styled.div`
 
 const InfoText = styled.div`
   color: ${COLORS.black};
-  display: flex;
   padding: 0;
 `;
 
