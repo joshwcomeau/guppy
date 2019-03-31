@@ -2,6 +2,7 @@
 import {
   IMPORT_EXISTING_PROJECT_FINISH,
   INSTALL_DEPENDENCIES_FINISH,
+  UNINSTALL_DEPENDENCIES_FINISH,
   REFRESH_PROJECTS_FINISH,
   SAVE_PROJECT_SETTINGS_FINISH,
   FINISH_DELETING_PROJECT,
@@ -16,6 +17,9 @@ import reducer, {
   getById,
   getSelectedProjectId,
   getInternalProjectById,
+  prepareProjectForConsumption,
+  getProjectsArray,
+  getProjectById,
 } from './projects.reducer';
 
 describe('Projects Reducer', () => {
@@ -175,6 +179,87 @@ describe('Projects Reducer', () => {
         },
         order: [],
         selectedId: null,
+      });
+    });
+  });
+
+  describe(`${UNINSTALL_DEPENDENCIES_FINISH}`, () => {
+    it('removes dependency', () => {
+      const initialDependencies = {
+        package: {
+          description: 'Package',
+          homepage: 'http://example.com/',
+          keywords: [],
+          license: 'MIT',
+          name: 'package',
+          repository: {},
+          status: 'idle',
+          version: '4.0.0',
+        },
+        'another-package': {
+          description: 'Another Package',
+          homepage: 'http://example-package.com/',
+          keywords: [],
+          license: 'MIT',
+          name: 'another-package',
+          repository: {},
+          status: 'idle',
+          version: '4.0.0',
+        },
+      };
+      const prevState = {
+        ...initialState,
+        byId: {
+          foo: {
+            dependencies: { ...initialDependencies },
+            guppy: {
+              color: 'black',
+              createdAt: 12345,
+              icon: 'http://example.com/link/to/pic',
+              id: 'foo',
+              name: 'Foo',
+              type: 'create-react-app',
+            },
+          },
+        },
+      };
+      const action = {
+        type: UNINSTALL_DEPENDENCIES_FINISH,
+        projectId: 'foo',
+        dependencies: [
+          {
+            description: 'Another Package',
+            homepage: 'http://example-package.com/',
+            keywords: [],
+            license: 'MIT',
+            name: 'another-package',
+            repository: {},
+            status: 'idle',
+            version: '4.0.0',
+          },
+        ],
+      };
+      const actualState = reducer(prevState, action);
+
+      expect(actualState).toEqual({
+        ...prevState,
+        byId: {
+          foo: {
+            ...prevState.byId.foo,
+            dependencies: {
+              package: {
+                description: 'Package',
+                homepage: 'http://example.com/',
+                keywords: [],
+                license: 'MIT',
+                name: 'package',
+                repository: {},
+                status: 'idle',
+                version: '4.0.0',
+              },
+            },
+          },
+        },
       });
     });
   });
@@ -405,6 +490,89 @@ describe('Projects Reducer', () => {
   });
 });
 
+describe('Selectors', () => {
+  const mockDependencies = {
+    foo: {
+      'first-dep': {},
+      'second-dep': {},
+    },
+    bar: {
+      'first-dep': {},
+      'second-dep': {},
+    },
+  };
+
+  it('should getProjectsArray', () => {
+    const commonProjectKeys = {
+      type: 'create-react-app',
+      color: 'black',
+      icon: 'http://example.com/link/to/pic',
+      createdAt: 12345,
+    };
+    const mockParameters = {
+      byId: {
+        foo: {
+          name: 'foo',
+          guppy: { id: 'foo', name: 'Foo', ...commonProjectKeys },
+          scripts: {
+            start: 'command it',
+          },
+        },
+        bar: {
+          name: 'bar',
+          guppy: { id: 'bar', name: 'Bar', ...commonProjectKeys },
+          scripts: {
+            start: 'command it',
+          },
+        },
+      },
+      tasks: {},
+      dependencies: {
+        ...mockDependencies,
+      },
+      paths: ['project-path/'],
+      order: ['foo', 'bar'],
+    };
+    const selected = getProjectsArray.resultFunc(
+      mockParameters.byId,
+      mockParameters.tasks,
+      mockParameters.dependencies,
+      mockParameters.paths,
+      mockParameters.order
+    );
+    expect(selected).toMatchSnapshot();
+  });
+
+  it('should getProjectById', () => {
+    const mockParameters = {
+      internalProject: {
+        guppy: {
+          id: 'test-id',
+          name: 'test',
+          type: 'create-react-app',
+          color: 'black',
+          icon: 'http://example.com/link/to/pic',
+          createdAt: 12345,
+        },
+      },
+      tasks: {},
+      dependencies: {
+        ...mockDependencies,
+      },
+      path: 'project-path/',
+    };
+    const selected = getProjectById.resultFunc(
+      mockParameters.internalProject,
+      mockParameters.tasks,
+      mockParameters.dependencies,
+      mockParameters.path
+    );
+
+    expect(getProjectById.resultFunc(null)).toBeNull();
+    expect(selected).toMatchSnapshot();
+  });
+});
+
 describe('helpers', () => {
   describe('getById', () => {
     it('gets projects by id', () => {
@@ -427,6 +595,39 @@ describe('helpers', () => {
         projects: { byId: { [id]: 'testing' }, order: ['best-id'] },
       };
       expect(getInternalProjectById(state, { projectId: id })).toBe('testing');
+    });
+  });
+
+  describe('prepareProjectForConsumption', () => {
+    it('prepares project for consumption', () => {
+      // Note: It combines project, tasks, dependencies, path into a project
+      const project = {
+        guppy: {
+          id: 'test-id',
+          name: 'test',
+          type: 'create-react-app',
+          color: 'black',
+          icon: 'http://example.com/link/to/pic',
+          createdAt: 12345,
+        },
+      };
+      const tasks = {};
+      const dependencies = {};
+      const path = 'user/guppy-projects';
+      expect(prepareProjectForConsumption(project, tasks, dependencies, path))
+        .toMatchInlineSnapshot(`
+Object {
+  "color": "black",
+  "createdAt": 12345,
+  "dependencies": Array [],
+  "icon": "http://example.com/link/to/pic",
+  "id": "test-id",
+  "name": "test",
+  "path": "user/guppy-projects",
+  "tasks": Array [],
+  "type": "create-react-app",
+}
+`);
     });
   });
 });

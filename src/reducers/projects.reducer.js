@@ -231,7 +231,7 @@ type GlobalState = { projects: State };
 //  - Fetch the project's on-disk path from `paths.reducer`
 //  - Serve a minimal subset of the `project` fields, avoiding the weirdness
 //    with multiple names, and all the raw unnecessary package.json data.
-const prepareProjectForConsumption = (
+export const prepareProjectForConsumption = (
   project,
   tasks,
   dependencies,
