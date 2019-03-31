@@ -170,6 +170,7 @@ export class Sidebar extends PureComponent<Props, State> {
                               draggableId={project.id}
                               index={index}
                               disableInteractiveElementBlocking
+                              isDragDisabled={projects.length === 1}
                             >
                               {providedInn => (
                                 <div
