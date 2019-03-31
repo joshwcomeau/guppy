@@ -4,7 +4,7 @@ import random from 'random-seed';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as uuid from 'uuid/v1';
+import uuid from 'uuid/v1';
 import projectConfigs from '../config/project-types';
 import { processLogger } from './process-logger.service';
 import { substituteConfigVariables } from './config-variables.service';
@@ -23,7 +23,9 @@ import type { ProjectType, ProjectInternal } from '../types';
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
 // to be created every time.
-const DISABLE = false;
+export const DISABLE = {
+  status: false, // change status to true here to enable fakeProject
+};
 
 type ProjectInfo = {
   projectName: string,
@@ -62,7 +64,7 @@ export default (
   onError: (err: string) => void,
   onComplete: (packageJson: ProjectInternal) => void
 ) => {
-  if (DISABLE) {
+  if (DISABLE.status) {
     onComplete(FAKE_CRA_PROJECT);
     return;
   }

@@ -40,7 +40,7 @@ type State = {
   activeField: FormFields,
 };
 
-class AppSettingsModal extends PureComponent<Props, State> {
+export class AppSettingsModal extends PureComponent<Props, State> {
   state = {
     newSettings: this.props.settings,
     activeField: 'directoryPicker',
