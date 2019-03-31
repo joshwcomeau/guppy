@@ -40,7 +40,7 @@ export default (state: State = initialState, action: Action = {}) => {
 
     case SET_STATUS_TEXT:
       const newStatus = action.statusText;
-      if (newStatus === '') {
+      if (!newStatus) {
         return state;
       }
 

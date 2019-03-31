@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -20,13 +20,11 @@ type Props = {
 };
 
 type State = {
-  showStatus: boolean,
   reset: boolean,
 };
 
 class LoadingScreen extends PureComponent<Props, State> {
   state = {
-    showStatus: false,
     reset: false,
   };
 
@@ -35,12 +33,6 @@ class LoadingScreen extends PureComponent<Props, State> {
   };
 
   progress: number = 0;
-
-  toggleStatus = () => {
-    this.setState(state => ({
-      showStatus: !state.showStatus,
-    }));
-  };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.statusText !== this.props.statusText) {
@@ -73,31 +65,46 @@ class LoadingScreen extends PureComponent<Props, State> {
     const shortenedText = ellipsify(statusText, 100);
 
     return (
-      <Window isVisible={showLoadingScreen}>
-        <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />
-        <ProgressBarWrapper>
-          <ProgressBar height={18} progress={progress} reset={reset} />
-        </ProgressBarWrapper>
-        <InfoWrapper>
-          <InfoText>{shortenedText}</InfoText>
-          <InfoText>{progress * 100}%</InfoText>
-        </InfoWrapper>
-      </Window>
+      <Backdrop isVisible={showLoadingScreen}>
+        <StyledCard>
+          <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />
+          {progress > 0 && (
+            <Fragment>
+              <ProgressBarWrapper>
+                <ProgressBar height={18} progress={progress} reset={reset} />
+              </ProgressBarWrapper>
+              <InfoWrapper>
+                <InfoText>{shortenedText}</InfoText>
+                <InfoText>{progress * 100}%</InfoText>
+              </InfoWrapper>
+            </Fragment>
+          )}
+        </StyledCard>
+      </Backdrop>
     );
   }
 }
 
-const Window = styled(Card)`
+const Backdrop = styled.div`
   align-items: center;
+  background: ${COLORS.transparentWhite[300]};
   display: ${props => (props.isVisible ? 'flex' : 'none')};
-  flex-direction: column;
-  height: 300px;
-  left: calc(50% - 300px);
+  height: 100vh;
   justify-content: center;
   position: fixed;
-  top: calc(50% - 150px);
-  width: 600px;
+  width: 100vw;
   z-index: ${Z_INDICES.loadingScreen};
+`;
+
+const StyledCard = styled(Card)`
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  width: 600px;
+  z-index: +1;
+  padding: 30px;
 `;
 
 const InfoWrapper = styled.div`
