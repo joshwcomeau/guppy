@@ -1,4 +1,3 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import { mount } from 'enzyme';
 
@@ -17,6 +16,7 @@ const createProps = props => ({
   isVisible: props && props.isVisible ? props.isVisible : true,
   createNewProjectStart: jest.fn(),
   selectProject: jest.fn(),
+  rearrangeProjects: jest.fn(),
   ...props,
 });
 
@@ -107,6 +107,25 @@ describe('Sidebar', () => {
       // introSequenceStep is 'add-projects-fade-in'
       wrapper.setProps({ onboardingStatus: 'brand-new' }); // triggers reset
       expect(instance.state).toEqual({ introSequenceStep: null });
+    });
+  });
+
+  describe('Sidebar drag & drop', () => {
+    it('should rearrange onDragEnd', () => {
+      const props = createProps();
+      const wrapper = mount(<Sidebar {...props} />);
+      const instance = wrapper.instance();
+
+      expect(instance.onDragEnd({ destination: null })).toBeUndefined();
+      instance.onDragEnd({
+        source: {
+          index: 0,
+        },
+        destination: {
+          index: 1,
+        },
+      });
+      expect(wrapper.prop('rearrangeProjects')).toHaveBeenLastCalledWith(0, 1);
     });
   });
 });

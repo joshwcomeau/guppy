@@ -49,7 +49,7 @@ const SidebarProjectIcon = ({
   );
 };
 
-const ProjectNameIcon = styled.div`
+export const ProjectNameIcon = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
