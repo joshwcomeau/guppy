@@ -233,7 +233,7 @@ type GlobalState = { projects: State };
 //    with multiple names, and all the raw unnecessary package.json data.
 export const prepareProjectForConsumption = (
   project: ProjectInternal,
-  tasks: Array<Task>,
+  tasks: { [key: string]: Task },
   dependencies: { [key: string]: Dependency },
   path: string
 ): Project => {
@@ -244,7 +244,6 @@ export const prepareProjectForConsumption = (
     color: project.guppy.color,
     icon: project.guppy.icon,
     createdAt: project.guppy.createdAt,
-    // prettier-ignore $FlowFixMe
     tasks: tasks ? Object.keys(tasks).map(taskId => tasks[taskId]) : [],
     dependencies: dependencies
       ? Object.keys(dependencies).map(
@@ -271,7 +270,6 @@ export const getProjectsArray = createSelector(
     return Object.keys(byId)
       .map(projectId => {
         const project = byId[projectId];
-
         return prepareProjectForConsumption(
           project,
           tasks[projectId],
