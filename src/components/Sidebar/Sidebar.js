@@ -28,6 +28,7 @@ import IntroductionBlurb from './IntroductionBlurb';
 import type { Project } from '../../types';
 import type { Dispatch } from '../../actions/types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
+import type { Responders } from 'react-beautiful-dnd';
 
 type Props = {
   projects: Array<Project>,
@@ -114,7 +115,7 @@ export class Sidebar extends PureComponent<Props, State> {
     }
   }
 
-  onDragEnd = result => {
+  onDragEnd = (result: Responders.onDragEnd) => {
     // dropped outside the list
     if (!result.destination) {
       return;

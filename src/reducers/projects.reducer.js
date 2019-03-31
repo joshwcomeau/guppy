@@ -23,7 +23,7 @@ import {
 import { getPaths, getPathForProjectId } from './paths.reducer';
 
 import type { Action } from '../actions/types';
-import type { ProjectInternal, Project } from '../types';
+import type { ProjectInternal, Project, Task, Dependency } from '../types';
 
 type ById = {
   [key: string]: ProjectInternal,
@@ -232,10 +232,10 @@ type GlobalState = { projects: State };
 //  - Serve a minimal subset of the `project` fields, avoiding the weirdness
 //    with multiple names, and all the raw unnecessary package.json data.
 export const prepareProjectForConsumption = (
-  project,
-  tasks,
-  dependencies,
-  path
+  project: ProjectInternal,
+  tasks: Array<Task>,
+  dependencies: { [key: string]: Dependency },
+  path: string
 ): Project => {
   return {
     id: project.guppy.id,
@@ -244,10 +244,8 @@ export const prepareProjectForConsumption = (
     color: project.guppy.color,
     icon: project.guppy.icon,
     createdAt: project.guppy.createdAt,
-    // prettier-ignore
-    tasks: tasks
-      ? Object.keys(tasks).map(taskId => tasks[taskId])
-      : [],
+    // prettier-ignore $FlowFixMe
+    tasks: tasks ? Object.keys(tasks).map(taskId => tasks[taskId]) : [],
     dependencies: dependencies
       ? Object.keys(dependencies).map(
           dependencyId => dependencies[dependencyId]
