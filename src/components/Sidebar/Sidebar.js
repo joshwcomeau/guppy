@@ -207,6 +207,7 @@ export class Sidebar extends PureComponent<Props, State> {
                               )}
                             </Draggable>
                           ))}
+                          {provided.placeholder}
                           <AddProjectButton
                             size={SIDEBAR_ICON_SIZE}
                             onClick={createNewProjectStart}
@@ -216,7 +217,6 @@ export class Sidebar extends PureComponent<Props, State> {
                             isOnline={isOnline}
                           />
                         </Projects>
-                        {provided.placeholder}
                       </div>
                     )}
                   </Droppable>
