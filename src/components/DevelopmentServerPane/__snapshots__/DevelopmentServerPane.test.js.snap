@@ -13,11 +13,11 @@ exports[`DevelopmentServerPane component Rendering should render 1`] = `
   }
   title="Development Server"
 >
-  <OnlyOn
-    display="inline"
-    size="mdMin"
-  >
-    <styled.div>
+  <styled.div>
+    <OnlyOn
+      display="inline"
+      size="mdMin"
+    >
       <styled.div>
         <styled.div>
           Runs a local development server that updates whenever you make changes to the files.
@@ -36,25 +36,11 @@ exports[`DevelopmentServerPane component Rendering should render 1`] = `
           </ExternalLink>
         </styled.div>
       </styled.div>
-      <styled.div>
-        <Connect(TerminalOutput)
-          height={300}
-          task={
-            Object {
-              "name": "start",
-              "status": "idle",
-            }
-          }
-          title="Server Logs"
-        />
-      </styled.div>
-    </styled.div>
-  </OnlyOn>
-  <OnlyOn
-    display="inline"
-    size="sm"
-  >
-    <styled.div>
+    </OnlyOn>
+    <OnlyOn
+      display="inline"
+      size="sm"
+    >
       <styled.div>
         <styled.div>
           <styled.div>
@@ -75,18 +61,19 @@ exports[`DevelopmentServerPane component Rendering should render 1`] = `
           </styled.div>
         </styled.div>
       </styled.div>
-      <styled.div>
-        <Connect(TerminalOutput)
-          height={300}
-          task={
-            Object {
-              "name": "start",
-              "status": "idle",
-            }
+    </OnlyOn>
+    <styled.div>
+      <Connect(TerminalOutput)
+        height={300}
+        task={
+          Object {
+            "name": "start",
+            "status": "idle",
           }
-        />
-      </styled.div>
+        }
+        title="Server Logs"
+      />
     </styled.div>
-  </OnlyOn>
+  </styled.div>
 </Pane>
 `;
