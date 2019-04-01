@@ -52,6 +52,7 @@ class TerminalOutput extends PureComponent<Props, State> {
   xterm: Terminal;
   termWrapperRef: ?HTMLElement = null;
   renderedLogs: any = {}; // used to avoid clearing & only add new lines
+  resizeTimeout: TimeoutID;
 
   componentDidMount() {
     Terminal.applyAddon(webLinks);
