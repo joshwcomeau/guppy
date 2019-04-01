@@ -85,21 +85,16 @@ export class DevelopmentServerPane extends PureComponent<Props> {
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
       >
-        <OnlyOn size="mdMin">
-          <Wrapper>
+        <Wrapper>
+          <OnlyOn size="mdMin">
             <InfoWrapper>
               {description}
               <DevelopmentServerStatus status={task.status} port={task.port} />
               {docLink}
             </InfoWrapper>
-            <TerminalWrapper>
-              <TerminalOutput height={300} title="Server Logs" task={task} />
-            </TerminalWrapper>
-          </Wrapper>
-        </OnlyOn>
+          </OnlyOn>
 
-        <OnlyOn size="sm">
-          <Wrapper>
+          <OnlyOn size="sm">
             <InfoWrapper>
               <SmallInfoWrapper>
                 {description}
@@ -107,11 +102,12 @@ export class DevelopmentServerPane extends PureComponent<Props> {
                 {docLink}
               </SmallInfoWrapper>
             </InfoWrapper>
-            <TerminalWrapper>
-              <TerminalOutput height={300} task={task} />
-            </TerminalWrapper>
-          </Wrapper>
-        </OnlyOn>
+          </OnlyOn>
+
+          <TerminalWrapper>
+            <TerminalOutput height={300} title="Server Logs" task={task} />
+          </TerminalWrapper>
+        </Wrapper>
       </Module>
     );
   }
@@ -135,7 +131,7 @@ const InfoWrapper = styled.div`
   }
 
   @media ${BREAKPOINTS.mdMin} {
-    flex: 6;
+    flex: 3;
   }
 `;
 
@@ -157,7 +153,7 @@ const Description = styled.div`
 
 const TerminalWrapper = styled.div`
   @media ${BREAKPOINTS.mdMin} {
-    flex: 11;
+    flex: 1;
     padding-left: 20px;
     /*
       overflow: hidden is needed so that the column won't expand when the

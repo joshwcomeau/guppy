@@ -50,7 +50,7 @@ class TerminalOutput extends PureComponent<Props, State> {
   };
 
   xterm: Terminal;
-  node: ?HTMLElement;
+  termWrapperRef: ?HTMLElement = null;
   renderedLogs: any = {}; // used to avoid clearing & only add new lines
 
   componentDidMount() {
@@ -70,7 +70,7 @@ class TerminalOutput extends PureComponent<Props, State> {
       foreground: COLORS.white,
     });
 
-    this.xterm.open(this.node);
+    this.xterm.open(this.termWrapperRef);
     this.xterm.fit();
 
     // Init addons
@@ -114,10 +114,7 @@ class TerminalOutput extends PureComponent<Props, State> {
     //   prevProps.height !== this.props.height
     // ) {
     //   console.log('size changed', this.props.width);
-    //   // size changed
-    //   setTimeout(() => {
-    //     this.xterm.fit();
-    //   }, 0);
+    //   this.handleResize();
     // }
   }
 
@@ -159,12 +156,14 @@ class TerminalOutput extends PureComponent<Props, State> {
 
   handleResize = evt => {
     if (!this.xterm) return;
-    this.xterm.element.style.width = this.props.width;
-    this.xterm.element.style.height = this.props.height;
 
-    setTimeout(() => {
+    if (this.resizeTimeout) {
+      return;
+    }
+
+    this.resizeTimeout = setTimeout(() => {
+      delete this.resizeTimeout;
       this.xterm.fit();
-      console.log('xterm', this.xterm);
     }, 0);
   };
 
@@ -180,7 +179,7 @@ class TerminalOutput extends PureComponent<Props, State> {
     const { width, height, title } = this.props;
 
     return (
-      <div>
+      <Wrapper>
         <Header>
           <Heading size="xsmall">{title}</Heading>
           <PixelShifter
@@ -201,16 +200,19 @@ class TerminalOutput extends PureComponent<Props, State> {
           </PixelShifter>
         </Header>
         <XtermContainer
-          style={{ width: `${width}px`, height: `${height}px` }}
-          // width={width}
-          // height={height}
-          innerRef={node => (this.node = node)}
+          width={width}
+          height={height}
+          innerRef={node => (this.termWrapperRef = node)}
         />
         <ResizeObserver onResize={this.handleResize} />
-      </div>
+      </Wrapper>
     );
   }
 }
+
+const Wrapper = styled.div`
+  ${css(xtermCss)};
+`;
 
 const Header = styled.header`
   display: flex;
@@ -220,17 +222,15 @@ const Header = styled.header`
 `;
 
 const XtermContainer = styled.div`
-  ${css(xtermCss)}
-
   width: ${props =>
     typeof props.width === 'number' ? `${props.width}px` : props.width};
   height: ${props => props.height}px;
-  
+
   .terminal {
     /* Colors set with js-API as xterm.js is using style on element */
     padding: 15px;
   }
-  
+
   .xterm .xterm-viewport {
     border-radius: 4px;
     overflow-y: hidden;
