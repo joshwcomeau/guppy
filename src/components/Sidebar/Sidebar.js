@@ -1,6 +1,7 @@
 /* eslint-disable no-unexpected-multiline */
 // @flow
 import React, { PureComponent, Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Spring, animated, config } from 'react-spring';
 import styled from 'styled-components';
@@ -141,6 +142,15 @@ export class Sidebar extends PureComponent<Props, State> {
     );
 
     const finishedOnboarding = onboardingStatus === 'done';
+
+    // Creating a portal to get around an issue with position fixed and transform property
+    // which creates a weird offset while dragging
+    // Ref https://github.com/atlassian/react-beautiful-dnd/issues/499
+    let portal: HTMLElement = document.createElement('div');
+    if (document.body) {
+      document.body.appendChild(portal);
+    }
+
     return (
       <Spring
         to={{
@@ -172,40 +182,48 @@ export class Sidebar extends PureComponent<Props, State> {
                               disableInteractiveElementBlocking
                               isDragDisabled={projects.length === 1}
                             >
-                              {providedInn => (
-                                <div
-                                  ref={providedInn.innerRef}
-                                  {...providedInn.draggableProps}
-                                  {...providedInn.dragHandleProps}
-                                  style={{
-                                    userSelect: 'none',
-                                    ...providedInn.draggableProps.style,
-                                  }}
-                                >
-                                  <Fragment key={project.id}>
-                                    <Tooltip
-                                      title={project.name}
-                                      position="right"
-                                    >
-                                      <SidebarProjectIcon
-                                        size={SIDEBAR_ICON_SIZE}
-                                        id={project.id}
-                                        name={project.name}
-                                        color={project.color}
-                                        iconSrc={project.icon}
-                                        isSelected={
-                                          finishedOnboarding &&
-                                          project.id === selectedProjectId
-                                        }
-                                        handleSelect={() =>
-                                          selectProject(project.id)
-                                        }
-                                      />
-                                    </Tooltip>
-                                    <Spacer size={18} />
-                                  </Fragment>
-                                </div>
-                              )}
+                              {(providedInn, snapshot) => {
+                                const child = (
+                                  <div
+                                    ref={providedInn.innerRef}
+                                    {...providedInn.draggableProps}
+                                    {...providedInn.dragHandleProps}
+                                    style={{
+                                      userSelect: 'none',
+                                      ...providedInn.draggableProps.style,
+                                    }}
+                                  >
+                                    <Fragment key={project.id}>
+                                      <Tooltip
+                                        title={project.name}
+                                        position="right"
+                                      >
+                                        <SidebarProjectIcon
+                                          size={SIDEBAR_ICON_SIZE}
+                                          id={project.id}
+                                          name={project.name}
+                                          color={project.color}
+                                          iconSrc={project.icon}
+                                          isSelected={
+                                            finishedOnboarding &&
+                                            project.id === selectedProjectId
+                                          }
+                                          handleSelect={() =>
+                                            selectProject(project.id)
+                                          }
+                                        />
+                                      </Tooltip>
+                                      <Spacer size={18} />
+                                    </Fragment>
+                                  </div>
+                                );
+
+                                // If it's not dragging, just return the child
+                                if (!snapshot.isDragging) return child;
+
+                                // if dragging - put the item in a portal
+                                return ReactDOM.createPortal(child, portal);
+                              }}
                             </Draggable>
                           ))}
                           {provided.placeholder}
