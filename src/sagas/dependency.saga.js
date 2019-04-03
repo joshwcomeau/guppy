@@ -200,7 +200,8 @@ export function* watchInstallMessages(channel: any): any {
       output = yield take(channel);
       if (!output.hasOwnProperty('exit')) {
         // Not the final message
-        const installMsg = filterYarnInstallMessages(output.data);
+        const installMsg =
+          output.data && filterYarnInstallMessages(output.data);
         yield put(setStatusText(installMsg));
       } else {
         // Yield exit code and complete stdout
