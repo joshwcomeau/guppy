@@ -109,7 +109,6 @@ const StyledCard = styled(Card)`
   justify-content: center;
   position: fixed;
   width: 600px;
-  z-index: +1;
   padding: 30px;
 `;
 
