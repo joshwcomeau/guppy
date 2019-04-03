@@ -2,6 +2,8 @@
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+// import IconBase from 'react-icons-kit';
+// import { info } from 'react-icons-kit/feather/info';
 
 import ProgressBar from '../ProgressBar';
 import Card from '../Card';
@@ -13,6 +15,8 @@ import {
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
 import { COLORS, Z_INDICES } from '../../constants';
 import { ellipsify } from '../../utils';
+
+// const INFOTEXT_HEIGHT = 80;
 
 type Props = {
   showLoadingScreen: boolean,

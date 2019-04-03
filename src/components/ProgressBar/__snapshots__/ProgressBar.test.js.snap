@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProgressBar component should render with 0% 1`] = `
+<styled.div
+  height={8}
+>
+  <Spring
+    config={
+      Object {
+        "friction": 32,
+        "tension": 32,
+      }
+    }
+    from={Object {}}
+    hold={false}
+    immediate={false}
+    impl={[Function]}
+    inject={[Function]}
+    native={true}
+    reset={false}
+    to={
+      Object {
+        "progress": 0,
+      }
+    }
+  >
+    <Component />
+  </Spring>
+</styled.div>
+`;
+
+exports[`ProgressBar component should render with 50% 1`] = `
+<styled.div
+  height={8}
+>
+  <Spring
+    config={
+      Object {
+        "friction": 32,
+        "tension": 32,
+      }
+    }
+    from={Object {}}
+    hold={false}
+    immediate={false}
+    impl={[Function]}
+    inject={[Function]}
+    native={true}
+    reset={false}
+    to={
+      Object {
+        "progress": 0.5,
+      }
+    }
+  >
+    <Component />
+  </Spring>
+</styled.div>
+`;
+
+exports[`ProgressBar component should render with 100% 1`] = `
+<styled.div
+  height={8}
+>
+  <Spring
+    config={
+      Object {
+        "friction": 32,
+        "tension": 32,
+      }
+    }
+    from={Object {}}
+    hold={false}
+    immediate={false}
+    impl={[Function]}
+    inject={[Function]}
+    native={true}
+    reset={false}
+    to={
+      Object {
+        "progress": 1,
+      }
+    }
+  >
+    <Component />
+  </Spring>
+</styled.div>
+`;

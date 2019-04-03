@@ -10,6 +10,8 @@ type Props = StrokeButtonProps & {
   icon: React$Node,
 };
 
+// Note: noPadding prop seems unavailable on StrokeButton component but
+//       it is available as it is passed down with delegated props to ButtonBase component.
 const ButtonWithIcon = ({ icon, children, ...delegated }: Props) => (
   // TODO: Support other sizes
   <StrokeButton noPadding {...delegated}>
@@ -20,7 +22,7 @@ const ButtonWithIcon = ({ icon, children, ...delegated }: Props) => (
   </StrokeButton>
 );
 
-const InnerWrapper = styled.div`
+export const InnerWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;

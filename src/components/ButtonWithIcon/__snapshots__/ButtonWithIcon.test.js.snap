@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonWithIcon component should render button with icon 1`] = `
+.c0 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 34px;
+  padding: 0 10px 0 32px;
+}
+
+.c1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+<styled.div>
+  <div
+    className="c0"
+  >
+    <styled.div>
+      <div
+        className="c1"
+      >
+        <svg />
+      </div>
+    </styled.div>
+  </div>
+</styled.div>
+`;

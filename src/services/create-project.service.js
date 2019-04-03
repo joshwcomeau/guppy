@@ -4,9 +4,10 @@ import random from 'random-seed';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as uuid from 'uuid/v1';
+import uuid from 'uuid/v1';
 import projectConfigs from '../config/project-types';
 import { processLogger } from './process-logger.service';
+import { substituteConfigVariables } from './config-variables.service';
 
 import { COLORS } from '../constants';
 
@@ -22,12 +23,19 @@ import type { ProjectType, ProjectInternal } from '../types';
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
 // to be created every time.
-const DISABLE = false;
+export const DISABLE = {
+  status: false, // change status to true here to enable fakeProject
+};
 
 type ProjectInfo = {
   projectName: string,
   projectType: ProjectType,
   projectIcon: string,
+  projectStarter: ?string,
+};
+
+type BuildOptions = {
+  projectStarter: ?string, // used for gatsby
 };
 
 export const checkIfProjectExists = (dir: string, projectName: string) =>
@@ -50,13 +58,13 @@ export const checkIfProjectExists = (dir: string, projectName: string) =>
  * fire multiple times, to handle updates mid-creation. Maybe an observable?
  */
 export default (
-  { projectName, projectType, projectIcon }: ProjectInfo,
+  { projectName, projectType, projectIcon, projectStarter }: ProjectInfo,
   projectHomePath: string,
   onStatusUpdate: (update: string) => void,
   onError: (err: string) => void,
   onComplete: (packageJson: ProjectInternal) => void
 ) => {
-  if (DISABLE) {
+  if (DISABLE.status) {
     onComplete(FAKE_CRA_PROJECT);
     return;
   }
@@ -75,7 +83,19 @@ export default (
   // To support cross platform with slashes and escapes
   const projectPath = path.join(projectHomePath, projectDirectoryName);
 
-  const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
+  // Add starter for Gatsby. Check is optional as it can't be entered in the build steps for other project types.
+  const buildOptions =
+    projectType === 'gatsby'
+      ? {
+          projectStarter,
+        }
+      : null;
+
+  const [instruction, ...args] = getBuildInstructions(
+    projectType,
+    projectPath,
+    buildOptions
+  );
 
   const process = childProcess.spawn(instruction, args, {
     env: getBaseProjectEnvironment(projectPath),
@@ -185,7 +205,8 @@ export const getColorForProject = (projectName: string) => {
 
 export const getBuildInstructions = (
   projectType: ProjectType,
-  projectPath: string
+  projectPath: string,
+  options: ?BuildOptions
 ) => {
   // For Windows Support
   // Windows tries to run command as a script rather than on a cmd
@@ -195,5 +216,13 @@ export const getBuildInstructions = (
     throw new Error('Unrecognized project type: ' + projectType);
   }
 
-  return [command, ...projectConfigs[projectType].create.args(projectPath)];
+  const createCommand: Object = substituteConfigVariables(
+    projectConfigs[projectType].create,
+    {
+      $projectPath: projectPath,
+      $projectStarter: options && options.projectStarter,
+    }
+  );
+
+  return [command, ...createCommand.args];
 };

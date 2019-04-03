@@ -34,7 +34,7 @@ type State = {
   selectedTaskName: ?string,
 };
 
-class TaskRunnerPane extends Component<Props, State> {
+export class TaskRunnerPane extends Component<Props, State> {
   state = {
     selectedTaskName: null,
   };

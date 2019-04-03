@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddDependencySearchProvider component should render SearchBox 1`] = `
+<CreateInstantSearch
+  apiKey="7492903b80561e70bff1359d7052b4ae"
+  appId="OFCNCOG2CU"
+  indexName="npm-search"
+  refresh={false}
+  root={
+    Object {
+      "Root": "div",
+      "props": Object {
+        "className": "ais-InstantSearch__root",
+      },
+    }
+  }
+>
+  <AlgoliaConfigure(UnknownComponent)
+    analyticsTags={
+      Array [
+        "guppy",
+        "guppy-search",
+      ]
+    }
+    attributesToRetrieve={
+      Array [
+        "name",
+        "version",
+        "description",
+        "modified",
+        "humanDownloadsLast30Days",
+        "license",
+      ]
+    }
+    hitsPerPage={10}
+  />
+  <div />
+</CreateInstantSearch>
+`;

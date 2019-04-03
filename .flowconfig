@@ -3,11 +3,15 @@
 .*/node_modules/electron-packager/test/fixtures/infer-malformed-json/package.json
 
 # Graphql contains a typing error --> ignore it
-.*/node_modules/graphql/**/*.js
+.*/node_modules/graphql/**/**/*.js
 
 # Release builds are git-ignored, and thus can cause problems when checking out
 # new branches, and have Flow run on old files without the same dependencies.
 .*/release-builds/*
+
+# Ignore styled-components as there are many flow errors
+# Maybe related to https://github.com/styled-components/styled-components/issues/302
+.*/node_modules/styled-components/**/*.js
 
 [include]
 

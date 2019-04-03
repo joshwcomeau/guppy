@@ -1,0 +1,533 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonBase component Button with size prop should render button for large size 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0 32px;
+  height: 48px;
+  border-radius: 24px;
+  font-size: 24px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  size="large"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;
+
+exports[`ButtonBase component Button with size prop should render button for large size with-out padding 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0px;
+  height: auto;
+  border-radius: 24px;
+  font-size: 24px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  noPadding={true}
+  size="large"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    noPadding={true}
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      noPadding={true}
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;
+
+exports[`ButtonBase component Button with size prop should render button for medium size 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0px 20px;
+  height: 38px;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  size="medium"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;
+
+exports[`ButtonBase component Button with size prop should render button for medium size with-out padding 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0px;
+  height: auto;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  noPadding={true}
+  size="medium"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    noPadding={true}
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      noPadding={true}
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;
+
+exports[`ButtonBase component Button with size prop should render button for small size 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0px 14px;
+  height: 30px;
+  border-radius: 17px;
+  font-size: 14px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  size="small"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;
+
+exports[`ButtonBase component Button with size prop should render button for small size with-out padding 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0px;
+  height: auto;
+  border-radius: 17px;
+  font-size: 14px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  noPadding={true}
+  size="small"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    noPadding={true}
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      noPadding={true}
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;
+
+exports[`ButtonBase component Button with size prop should render button for xsmall size 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0px 12px;
+  height: 22px;
+  border-radius: 15px;
+  font-size: 12px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  size="xsmall"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;
+
+exports[`ButtonBase component Button with size prop should render button for xsmall size with-out padding 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #eaeaea;
+  color: #111111;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.c0 {
+  padding: 0px;
+  height: auto;
+  border-radius: 15px;
+  font-size: 12px;
+}
+
+<ButtonBase
+  background="#eaeaea"
+  noPadding={true}
+  size="xsmall"
+  textColor="#111111"
+>
+  <Styled(styled.button)
+    background="#eaeaea"
+    noPadding={true}
+    textColor="#111111"
+  >
+    <styled.button
+      background="#eaeaea"
+      className="c0"
+      noPadding={true}
+      textColor="#111111"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;

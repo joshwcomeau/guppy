@@ -28,11 +28,12 @@
     "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl -c.extraMetadata.main=build/electron.js",
     "publish": "yarn dist --publish always",
     "publish:all": "yarn dist:all --publish always",
-    "test": "node scripts/test.js --env=node",
-    "coverage": "yarn test --coverage",
-    "report-coverage": "yarn coverage && codecov",
+    "test": "node scripts/test.js --maxWorkers=2 --env=node",
+    "test:dev": "yarn test --verbose=false",
+    "test:coverage": "yarn test --coverage",
+    "test:report-coverage": "yarn test:coverage && codecov",
     "flow": "flow",
-    "lint": "eslint src/**/*.js config/**/*.js",
+    "lint": "eslint src/**/*.js src/**/*.snap config/**/*.js",
     "prettier": "prettier --write",
     "detect-port": "cross-env ./node_modules/detect-port-alt/bin/detect-port 3000",
     "precommit": "lint-staged",
@@ -41,11 +42,13 @@
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "lint-staged": {
-    "*.{js,jsx,mjs}": [
-      "npm run prettier",
-      "eslint",
-      "git add"
-    ]
+    "linters": {
+      "*.{js,jsx,mjs}": [
+        "npm run prettier",
+        "eslint",
+        "git add"
+      ]
+    }
   },
   "dependencies": {
     "create-react-app": "1.5.2",
@@ -54,11 +57,13 @@
     "electron-store": "2.0.0",
     "electron-updater": "3.1.2",
     "fix-path": "2.1.0",
+    "fuse.js": "3.3.0",
     "gatsby-cli": "1.1.58",
-    "ps-tree": "1.1.0",
+    "js-yaml": "3.12.0",
+    "ps-tree": "1.2.0",
     "react-custom-scrollbars": "4.2.1",
     "rimraf": "2.6.2",
-    "yarn": "1.9.2"
+    "yarn": "1.12.3"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-rc.1",
@@ -85,14 +90,19 @@
     "css-loader": "0.28.9",
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
-    "electron": "2.0.1",
-    "electron-builder": "20.28.4",
-    "electron-log": "^2.2.17",
+    "electron": "4.0.0",
+    "electron-builder": "20.31.3",
+    "electron-ipc-mock": "0.0.3",
+    "electron-log": "2.2.17",
+    "enzyme": "3.8.0",
+    "enzyme-adapter-react-16": "1.8.0",
+    "enzyme-to-json": "3.3.4",
     "eslint": "5.7.0",
     "eslint-config-react-app": "3.0.4",
     "eslint-loader": "1.9.0",
     "eslint-plugin-flowtype": "3.0.0",
     "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-jest": "22.2.2",
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
     "extract-text-webpack-plugin": "3.0.2",
@@ -108,10 +118,16 @@
     "immer": "1.3.1",
     "import-all.macro": "2.0.3",
     "jest": "23.3",
-    "lint-staged": "7.2.0",
+    "jest-fetch-mock": "2.1.0",
+    "jest-styled-components": "6.2.2",
+    "jsdom": "13.0.0",
+    "jsdom-global": "3.0.2",
+    "lint-staged": "7.3.0",
     "loader-utils": "1.1.0",
+    "lolex": "3.0.0",
     "mixpanel-browser": "2.22.4",
     "moment": "2.22.2",
+    "node-fetch": "2.3.0",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.10",
     "prettier": "1.13.7",
@@ -127,6 +143,7 @@
     "react-powerplug": "1.0.0-rc.1",
     "react-redux": "5.0.7",
     "react-spring": "5.3.8",
+    "react-test-renderer": "16.6.0",
     "react-tippy": "1.2.2",
     "react-transition-group": "2.3.1",
     "redux": "4.0.0",
@@ -151,25 +168,33 @@
     "uglifyjs-webpack-plugin": "1.1.6",
     "url-loader": "0.6.2",
     "uuid": "3.3.2",
+    "valid-url": "1.0.9",
     "webpack": "3.10.0",
     "webpack-dev-server": "2.11.0",
     "webpack-manifest-plugin": "1.3.2"
   },
-  "browserslist": "chrome 61",
+  "browserslist": "chrome 69",
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
+      "src/**/*.{js,jsx,mjs}",
+      "!src/**/*.stories.js",
+      "!src/components/**/index.js"
     ],
     "setupFiles": [
       "<rootDir>/config/jest/electron.js",
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/config/enzyme-setup.js"
     ],
+    "setupTestFrameworkScriptFile": "<rootDir>/config/testFrameworkSetup.js",
     "testMatch": [
       "**/__tests__/**/*.{js,jsx,mjs}",
       "**/?(*.)(spec|test).{js,jsx,mjs}"
     ],
     "roots": [
       "<rootDir>/src"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
@@ -185,7 +210,7 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "^.+\\.module\\.css$": "identity-obj-proxy"
+      "^.+\\.module\\.css\\.gif$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
       "web.js",

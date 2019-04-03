@@ -53,8 +53,8 @@ describe('Analytics service', () => {
 
         logger.logEvent('load-application', null);
 
-        expect(console.info).toBeCalled();
-        expect(mixpanel.track).not.toBeCalled();
+        expect(console.info).toHaveBeenCalled();
+        expect(mixpanel.track).not.toHaveBeenCalled();
       } finally {
         // restore `console.info` to its original function
         global.console.info = consoleInfoOriginal;
@@ -74,7 +74,7 @@ describe('Analytics service', () => {
           hi: 5,
         });
 
-        expect(console.info).not.toBeCalled();
+        expect(console.info).not.toHaveBeenCalled();
         expect(mixpanel.track.mock.calls).toEqual([
           ['load-application', { hello: 'world', hi: 5 }],
         ]);
@@ -94,7 +94,7 @@ describe('Analytics service', () => {
         hi: 5,
       });
 
-      expect(mixpanel.track).not.toBeCalled();
+      expect(mixpanel.track).not.toHaveBeenCalled();
     });
   });
 });

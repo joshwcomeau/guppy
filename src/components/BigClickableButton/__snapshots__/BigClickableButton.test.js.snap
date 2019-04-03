@@ -1,0 +1,195 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BigClickableButton component should render pressed 1`] = `
+.c0 {
+  width: 64px;
+  height: 64px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-around;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: space-around;
+  justify-content: space-around;
+  color: #FFF;
+  font-size: 18px;
+  border: none;
+  background: linear-gradient(45deg,#2142ff,#3f6cff);
+  outline: none;
+}
+
+<styled.button
+  background="linear-gradient(45deg, #2142ff, #3f6cff)"
+  height={64}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  width={64}
+>
+  <button
+    className="c0"
+    height={64}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    width={64}
+  />
+</styled.button>
+`;
+
+exports[`BigClickableButton component should render pressed 2`] = `
+.c0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+<styled.div>
+  <div
+    className="c0"
+  >
+    <styled.svg
+      height={72}
+      style={
+        Object {
+          "display": "block",
+        }
+      }
+      width={72}
+    >
+      <svg
+        className=""
+        height={72}
+        style={
+          Object {
+            "display": "block",
+          }
+        }
+        width={72}
+      >
+        <path
+          d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+          fill="rgb(0, 30, 202)"
+        />
+        <path
+          d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+          fill="rgb(0, 52, 223)"
+        />
+      </svg>
+    </styled.svg>
+  </div>
+</styled.div>
+`;
+
+exports[`BigClickableButton component should render released 1`] = `
+.c0 {
+  width: 64px;
+  height: 64px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-around;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: space-around;
+  justify-content: space-around;
+  color: #FFF;
+  font-size: 18px;
+  border: none;
+  background: linear-gradient(45deg,#2142ff,#3f6cff);
+  outline: none;
+}
+
+<styled.button
+  background="linear-gradient(45deg, #2142ff, #3f6cff)"
+  height={64}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  width={64}
+>
+  <button
+    className="c0"
+    height={64}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    width={64}
+  />
+</styled.button>
+`;
+
+exports[`BigClickableButton component should render released 2`] = `
+.c0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+<styled.div>
+  <div
+    className="c0"
+  >
+    <styled.svg
+      height={72}
+      style={
+        Object {
+          "display": "block",
+        }
+      }
+      width={72}
+    >
+      <svg
+        className=""
+        height={72}
+        style={
+          Object {
+            "display": "block",
+          }
+        }
+        width={72}
+      >
+        <path
+          d="
+                      M 0,64
+                      L 64,64
+                      L 72,72
+                      L 6,72
+                    "
+          fill="rgb(0, 30, 202)"
+        />
+        <path
+          d="
+                      M 64,0
+                      L 72,6
+                      L 72,72
+                      L 64, 64
+                    "
+          fill="rgb(0, 52, 223)"
+        />
+      </svg>
+    </styled.svg>
+  </div>
+</styled.div>
+`;

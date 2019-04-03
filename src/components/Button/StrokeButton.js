@@ -58,13 +58,13 @@ const Wrapper = styled.div`
   padding: 2px;
 `;
 
-const Foreground = styled.span`
+export const Foreground = styled.span`
   display: block;
   position: relative;
   z-index: 1;
 `;
 
-const Background = styled.div`
+export const Background = styled.div`
   position: absolute;
   z-index: 0;
   top: ${props => (props.isActive ? -2 : 0)}px;

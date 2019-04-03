@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FillButton component should render button filled 1`] = `
+.c1 {
+  position: relative;
+  border: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: linear-gradient( 45deg, #651fff,#D500F9 );
+  color: #FFF;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.c1:hover {
+  background: linear-gradient( 45deg, #651fff,#D500F9 );
+}
+
+.c1:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c1:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.c0 {
+  padding: 0px 20px;
+  height: 38px;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+<ButtonBase
+  activeSplat={true}
+  background="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+  hoverBackground="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+  size="medium"
+  textColor="#FFF"
+>
+  <Styled(styled.button)
+    activeSplat={true}
+    background="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+    hoverBackground="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+    textColor="#FFF"
+  >
+    <styled.button
+      activeSplat={true}
+      background="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+      className="c0"
+      hoverBackground="linear-gradient(
+    45deg,
+    #651fff,#D500F9
+  )"
+      textColor="#FFF"
+    >
+      <button
+        className="c0 c1"
+      />
+    </styled.button>
+  </Styled(styled.button)>
+</ButtonBase>
+`;

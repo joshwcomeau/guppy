@@ -1,7 +1,8 @@
+/* eslint-disable no-unexpected-multiline */
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Motion, spring } from 'react-motion';
+import { Spring, animated, config } from 'react-spring';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -16,6 +17,7 @@ import {
   getOnboardingStatus,
   getSidebarVisibility,
 } from '../../reducers/onboarding-status.reducer';
+import { getOnlineState } from '../../reducers/app-status.reducer';
 
 import Spacer from '../Spacer';
 import SidebarProjectIcon from './SidebarProjectIcon';
@@ -33,6 +35,7 @@ type Props = {
   isVisible: boolean,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   selectProject: Dispatch<typeof actions.selectProject>,
+  isOnline: boolean,
 };
 
 type State = {
@@ -47,7 +50,14 @@ export const SIDEBAR_WIDTH = 70;
 const SIDEBAR_OVERFLOW = 20;
 const SIDEBAR_ICON_SIZE = 45;
 
-const springSettings = { stiffness: 200, damping: 20, precision: 0.75 };
+const springConfig = key =>
+  key === 'sidebarOffsetPercentage'
+    ? {
+        tension: 200,
+        friction: 20,
+        precision: 0.75,
+      }
+    : config.default;
 
 const INTRO_SEQUENCE_STEPS = [
   'sidebar-slide-in',
@@ -58,7 +68,7 @@ const INTRO_SEQUENCE_STEPS = [
 // TODO: this component re-renders whenever _anything_ with a project changes
 // (like adding a log to a task). It might be prudent to add a selector that
 // only provides the fields necessary for the sidebar.
-class Sidebar extends PureComponent<Props, State> {
+export class Sidebar extends PureComponent<Props, State> {
   static defaultProps = {
     projects: [],
   };
@@ -70,7 +80,9 @@ class Sidebar extends PureComponent<Props, State> {
 
   componentWillReceiveProps(nextProps: Props) {
     if (!this.props.isVisible && nextProps.isVisible) {
-      this.setState({ introSequenceStep: 'sidebar-slide-in' });
+      this.setState({
+        introSequenceStep: 'sidebar-slide-in',
+      });
 
       // HACK: timeout-based spring animations are a no-no, but I'm in a hurry.
       // Maybe `StaggeredMotion` could help, but it's really meant for things
@@ -79,10 +91,14 @@ class Sidebar extends PureComponent<Props, State> {
       // are all state-dependent.
       // TODO: Move this to `componentDidUpdate` to avoid setTimeouts.
       this.timeoutId = window.setTimeout(() => {
-        this.setState({ introSequenceStep: 'first-project-fall-in' });
+        this.setState({
+          introSequenceStep: 'first-project-fall-in',
+        });
 
         this.timeoutId = window.setTimeout(() => {
-          this.setState({ introSequenceStep: 'add-projects-fade-in' });
+          this.setState({
+            introSequenceStep: 'add-projects-fade-in',
+          });
         }, 600);
       }, 125);
     }
@@ -90,7 +106,9 @@ class Sidebar extends PureComponent<Props, State> {
     // Reset all!
     // Required to hide the IntroductionBlurb after `Reset state`.
     if (this.props.isVisible && nextProps.onboardingStatus === 'brand-new') {
-      this.setState({ introSequenceStep: null });
+      this.setState({
+        introSequenceStep: null,
+      });
     }
   }
 
@@ -102,6 +120,7 @@ class Sidebar extends PureComponent<Props, State> {
       onboardingStatus,
       createNewProjectStart,
       selectProject,
+      isOnline,
     } = this.props;
     const { introSequenceStep } = this.state;
 
@@ -110,21 +129,18 @@ class Sidebar extends PureComponent<Props, State> {
     );
 
     const finishedOnboarding = onboardingStatus === 'done';
-
     return (
-      <Motion
-        style={{
-          sidebarOffsetPercentage: finishedOnboarding
-            ? 0
-            : spring(isVisible ? 0 : -100, springSettings),
-          firstProjectPosition: finishedOnboarding
-            ? 0
-            : spring(introSequenceStepIndex >= 1 ? 0 : -150),
+      <Spring
+        to={{
+          sidebarOffsetPercentage: finishedOnboarding || isVisible ? 0 : -100,
+          firstProjectPosition:
+            finishedOnboarding || introSequenceStepIndex >= 1 ? 0 : -150,
         }}
+        config={springConfig}
       >
-        {({ sidebarOffsetPercentage, firstProjectPosition }) => (
+        {interpolated => (
           <Fragment>
-            <Wrapper offset={`${sidebarOffsetPercentage}%`}>
+            <Wrapper offset={`${interpolated.sidebarOffsetPercentage}%`}>
               <ScrollbarOnlyVertical
                 autoHide
                 renderThumbVertical={({ style, ...props }) => (
@@ -141,14 +157,18 @@ class Sidebar extends PureComponent<Props, State> {
                   />
                 )}
                 renderTrackHorizontal={props => (
-                  <div {...props} style={{ display: 'none' }} />
+                  <div
+                    {...props}
+                    style={{
+                      display: 'none',
+                    }}
+                  />
                 )}
               >
                 <IntroductionBlurb
                   isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
                 />
-
-                <Projects offset={`${firstProjectPosition}px`}>
+                <Projects offset={`${interpolated.firstProjectPosition}px`}>
                   {projects.map(project => (
                     <Fragment key={project.id}>
                       <Tooltip
@@ -178,6 +198,7 @@ class Sidebar extends PureComponent<Props, State> {
                     isVisible={
                       finishedOnboarding || introSequenceStepIndex >= 2
                     }
+                    isOnline={isOnline}
                   />
                 </Projects>
               </ScrollbarOnlyVertical>
@@ -185,12 +206,12 @@ class Sidebar extends PureComponent<Props, State> {
             {isVisible && <SidebarSpacer />}
           </Fragment>
         )}
-      </Motion>
+      </Spring>
     );
   }
 }
 
-const Wrapper = styled.nav.attrs({
+const Wrapper = animated(styled.nav.attrs({
   style: props => ({
     transform: `translateX(${props.offset})`,
   }),
@@ -207,10 +228,9 @@ const Wrapper = styled.nav.attrs({
     ${COLORS.blue[900]},
     ${COLORS.blue[700]}
   );
-  transform: translateX(${props => props.offset});
   will-change: transform;
   height: 100vh;
-`;
+`);
 
 const SidebarSpacer = styled.div`
   position: relative;
@@ -241,6 +261,7 @@ const mapStateToProps = state => ({
   onboardingStatus: getOnboardingStatus(state),
   isVisible: getSidebarVisibility(state),
   selectedProjectId: getSelectedProjectId(state),
+  isOnline: getOnlineState(state),
 });
 
 const mapDispatchToProps = {

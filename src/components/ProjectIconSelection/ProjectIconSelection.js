@@ -27,7 +27,7 @@ class ProjectIconSelection extends Component<Props> {
     limitTo: DEFAULT_SUBSET_LENGTH,
   };
 
-  randomizedIcons = shuffle(iconSrcs);
+  randomizedIcons = shuffle<string>(iconSrcs);
 
   render() {
     const { selectedIcon, limitTo, randomize } = this.props;

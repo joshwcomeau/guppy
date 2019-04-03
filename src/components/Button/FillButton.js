@@ -10,9 +10,10 @@ type Props = {
   hoverColors?: Array<string>,
   textColor: string,
   children: React$Node,
+  disabled?: boolean,
 };
 
-const wrapColorsInGradient = colors => {
+export const wrapColorsInGradient = (colors?: Array<string> | string) => {
   if (!Array.isArray(colors)) {
     return colors;
   }
