@@ -69,6 +69,14 @@ const INTRO_SEQUENCE_STEPS = [
   'add-projects-fade-in',
 ];
 
+// Creating a portal to get around an issue with position fixed and transform property
+// which creates a weird offset while dragging
+// Ref https://github.com/atlassian/react-beautiful-dnd/issues/499
+let portal: HTMLElement = document.createElement('div');
+if (document.body) {
+  document.body.appendChild(portal);
+}
+
 // TODO: this component re-renders whenever _anything_ with a project changes
 // (like adding a log to a task). It might be prudent to add a selector that
 // only provides the fields necessary for the sidebar.
@@ -142,14 +150,6 @@ export class Sidebar extends PureComponent<Props, State> {
     );
 
     const finishedOnboarding = onboardingStatus === 'done';
-
-    // Creating a portal to get around an issue with position fixed and transform property
-    // which creates a weird offset while dragging
-    // Ref https://github.com/atlassian/react-beautiful-dnd/issues/499
-    let portal: HTMLElement = document.createElement('div');
-    if (document.body) {
-      document.body.appendChild(portal);
-    }
 
     return (
       <Spring
