@@ -13,6 +13,8 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
+// eslint-disable-next-line jest/no-jest-import
+const jest = require('jest');
 let argv = process.argv.slice(2);
 
 // Watch unless on CI, in coverage mode, or explicitly running all tests

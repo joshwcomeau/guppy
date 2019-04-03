@@ -33,7 +33,7 @@ class ProgressBar extends Component<Props> {
           from={{ progress: 0 }}
           to={{ progress }}
           config={{ tension: stiffness, friction: damping }}
-          //native
+          native
           reset={reset}
         >
           {interpolated => (
