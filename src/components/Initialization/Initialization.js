@@ -37,7 +37,12 @@ class Initialization extends PureComponent<Props, State> {
     initializePath()
       .then(getNodeJsVersion)
       .then(nodeVersion => {
-        this.setState({ wasSuccessfullyInitialized: !!nodeVersion });
+        // the following dialog is just for debugging
+        dialog.showErrorBox('Path', window.process.env.PATH);
+
+        this.setState({
+          wasSuccessfullyInitialized: !!nodeVersion,
+        });
 
         logger.logEvent('load-application', {
           node_version: nodeVersion,

@@ -63,6 +63,7 @@
     "ps-tree": "1.2.0",
     "react-custom-scrollbars": "4.2.1",
     "rimraf": "2.6.2",
+    "shell-path": "^2.1.0",
     "yarn": "1.12.3"
   },
   "devDependencies": {
