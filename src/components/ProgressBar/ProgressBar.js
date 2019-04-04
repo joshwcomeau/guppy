@@ -25,14 +25,16 @@ class ProgressBar extends Component<Props> {
   };
 
   render() {
-    const { height, progress, stiffness, damping, colors } = this.props;
+    const { height, progress, stiffness, damping, colors, reset } = this.props;
 
     return (
       <Wrapper height={height}>
         <Spring
+          from={{ progress: 0 }}
           to={{ progress }}
           config={{ tension: stiffness, friction: damping }}
           native
+          reset={reset}
         >
           {interpolated => (
             <ProgressGradient

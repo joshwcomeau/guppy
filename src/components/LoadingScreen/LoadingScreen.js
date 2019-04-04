@@ -1,12 +1,10 @@
 // @flow
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-// import IconBase from 'react-icons-kit';
-// import { info } from 'react-icons-kit/feather/info';
 
-// import Spacer from '../Spacer';
 import ProgressBar from '../ProgressBar';
+import Card from '../Card';
 import {
   getBlockingStatus,
   getStatusText,
@@ -14,8 +12,7 @@ import {
 
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
 import { COLORS, Z_INDICES } from '../../constants';
-
-// const INFOTEXT_HEIGHT = 80;
+import { ellipsify } from '../../utils';
 
 type Props = {
   showLoadingScreen: boolean,
@@ -23,13 +20,11 @@ type Props = {
 };
 
 type State = {
-  showStatus: boolean,
   reset: boolean,
 };
 
 class LoadingScreen extends PureComponent<Props, State> {
   state = {
-    showStatus: false,
     reset: false,
   };
 
@@ -38,12 +33,6 @@ class LoadingScreen extends PureComponent<Props, State> {
   };
 
   progress: number = 0;
-
-  toggleStatus = () => {
-    this.setState(state => ({
-      showStatus: !state.showStatus,
-    }));
-  };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.statusText !== this.props.statusText) {
@@ -70,35 +59,35 @@ class LoadingScreen extends PureComponent<Props, State> {
   }
 
   render() {
-    const { showLoadingScreen } = this.props;
-    /* 
-    // Todo: Create a better UI. Code commented for now.
-    const {statusText} = this.props;
-    const { showStatus } = this.state;
-    const ellipsis = statusText.length > 220 ? '...' : '';
-    const shortenedText =
-      statusText
-        .split('')
-        .splice(0, 220)
-        .join('') + ellipsis;
-    */
+    const { showLoadingScreen, statusText } = this.props;
+    const { reset } = this.state;
+    const { progress } = this;
+    const shortenedText = ellipsify(statusText, 100);
+
     return (
-      <Window isVisible={showLoadingScreen}>
-        <ProgressBarWrapper>
-          <ProgressBar progress={this.progress} reset={this.state.reset} />
-        </ProgressBarWrapper>
-        {/* 
-        {showStatus && <InfoText>{shortenedText}</InfoText>}
-        <Spacer size={10} />
-        <StatusButton icon={info} onClick={this.toggleStatus} size={16} /> 
-        */}
-        <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />
-      </Window>
+      <Backdrop isVisible={showLoadingScreen}>
+        <StyledCard>
+          <FishSpinner src={guppyLoaderSrc} alt="Fish loader" />
+          {progress > 0 ? (
+            <Fragment>
+              <ProgressBarWrapper>
+                <ProgressBar height={18} progress={progress} reset={reset} />
+              </ProgressBarWrapper>
+              <InfoWrapper>
+                <InfoText>{shortenedText}</InfoText>
+                <InfoText>{progress * 100}%</InfoText>
+              </InfoWrapper>
+            </Fragment>
+          ) : (
+            <InfoText>{shortenedText}</InfoText>
+          )}
+        </StyledCard>
+      </Backdrop>
     );
   }
 }
 
-const Window = styled.div`
+const Backdrop = styled.div`
   align-items: center;
   background: ${COLORS.transparentWhite[300]};
   display: ${props => (props.isVisible ? 'flex' : 'none')};
@@ -109,63 +98,35 @@ const Window = styled.div`
   z-index: ${Z_INDICES.loadingScreen};
 `;
 
-/*
-const InfoText = styled.div`
-  display: flex;
+const StyledCard = styled(Card)`
+  text-align: center;
   align-items: center;
-  position: absolute;
-  top: 30%;
-  margin: 0 auto;
-  border-radius: 10px;
-  color: ${COLORS.white};
-  background: ${COLORS.transparentBlue[400]};
-  width: 500px;
-  height: ${INFOTEXT_HEIGHT}px;
-  padding: 15px;
-
-  &:before,
-  &:after {
-    // bubble styles
-    position: absolute;
-    content: '';
-    background: ${COLORS.transparentBlue[700]};
-    border-radius: 50% 50%;
-  }
-
-  // large bubble
-  &:before {
-    top: ${INFOTEXT_HEIGHT + 10}px;
-    left: 140px;
-    width: 20px;
-    height: 20px;
-  }
-
-  // small bubble
-  &:after {
-    top: ${INFOTEXT_HEIGHT + 40}px;
-    left: 160px;
-    width: 10px;
-    height: 10px;
-  }
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  width: 600px;
+  padding: 30px;
 `;
 
-const StatusButton = styled(IconBase)`
-  margin-bottom: 20px;
-  cursor: pointer;
-  :hover {
-    color: ${COLORS.blue[500]};
-  }
-`;*/
+const InfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const InfoText = styled.div`
+  color: ${COLORS.black};
+  padding: 0;
+`;
 
 const FishSpinner = styled.img`
   width: 150px;
 `;
 
 const ProgressBarWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  margin: 60px 0 10px;
+  position: relative;
+  width: 100%;
 `;
 
 const mapStateToProps = state => ({

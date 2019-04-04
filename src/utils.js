@@ -315,3 +315,13 @@ export const setNested = <T: {}>(obj: T, path: string, value: any): T => {
   pointer[key] = value;
   return obj;
 };
+
+export const ellipsify = (str: string, size: number): string => {
+  const ellipsis = str.length > size ? '...' : '';
+  const formatedString = str
+    .split('')
+    .splice(0, size)
+    .join('');
+
+  return formatedString + ellipsis;
+};
