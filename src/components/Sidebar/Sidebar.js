@@ -73,6 +73,7 @@ const INTRO_SEQUENCE_STEPS = [
 // which creates a weird offset while dragging
 // Ref https://github.com/atlassian/react-beautiful-dnd/issues/499
 let portal: HTMLElement = document.createElement('div');
+portal.id = 'sidebarDndPortal';
 if (document.body) {
   document.body.appendChild(portal);
 }
