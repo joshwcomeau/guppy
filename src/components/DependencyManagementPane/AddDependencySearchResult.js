@@ -13,7 +13,7 @@ import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
 } from '../../reducers/projects.reducer';
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS, GRADIENTS } from '../../constants';
 
 import Divider from '../Divider';
 import Spacer from '../Spacer';
@@ -79,11 +79,11 @@ export const StatsItem = ({
 
 export const getColorForDownloadNumber = (num: number) => {
   if (num < 5000) {
-    return COLORS.pink[700];
+    return COLORS.error;
   } else if (num < 50000) {
-    return COLORS.orange[500];
+    return COLORS.lightWarning;
   } else {
-    return COLORS.green[700];
+    return COLORS.success;
   }
 };
 
@@ -98,7 +98,7 @@ export class AddDependencySearchResult extends PureComponent<Props> {
           <IconBase
             icon={check}
             size={24}
-            style={{ color: COLORS.green[500] }}
+            style={{ color: COLORS.lightSuccess }}
           />
           <Spacer size={6} />
           Installed
@@ -119,8 +119,8 @@ export class AddDependencySearchResult extends PureComponent<Props> {
     return (
       <StrokeButton
         size="small"
-        strokeColors={[COLORS.green[700], COLORS.lightGreen[500]]}
-        textColor={COLORS.green[700]}
+        strokeColors={GRADIENTS.success}
+        textColor={COLORS.success}
         onClick={() => addDependency(projectId, hit.name, hit.version)}
       >
         Add To Project
@@ -192,11 +192,11 @@ const Name = styled.span`
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  color: ${COLORS.blue[700]};
+  color: ${COLORS.link};
 `;
 
 const Version = styled.span`
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
   font-weight: 400;
   font-size: 20px;
 `;
@@ -205,7 +205,7 @@ export const StatsRow = styled.div`
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: ${COLORS.gray[500]};
+  color: ${RAW_COLORS.gray[500]};
 `;
 
 const StatsItemElem = styled.span`
@@ -230,7 +230,7 @@ const NoActionAvailable = styled.div`
   align-items: center;
   width: 135px;
   font-size: 15px;
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
 `;
 
 // TODO: I should be able to reuse the existing button component with
@@ -241,7 +241,7 @@ injectGlobal`
     margin-top: 45px;
     margin-left: 50%;
     background: transparent;
-    border: 2px solid ${COLORS.blue[700]};
+    border: 2px solid ${COLORS.link};
     border-radius: 60px;
     font-size: 18px;
     transform: translateX(-50%);

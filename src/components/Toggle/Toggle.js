@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Spring, animated, interpolate } from 'react-spring';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 type Props = {
   isToggled: boolean,
@@ -75,8 +75,8 @@ const Wrapper = styled.button`
   border-radius: ${props => props.height / 2}px;
   background-image: linear-gradient(
     45deg,
-    ${COLORS.gray[400]},
-    ${COLORS.gray[200]}
+    ${RAW_COLORS.gray[400]},
+    ${RAW_COLORS.gray[200]}
   );
   overflow: hidden; /* Hide 'OnBackground' corners */
   outline: none; /* TODO: better a11y story */
@@ -94,8 +94,8 @@ const OnBackground = styled.div`
   bottom: 0;
   background-image: linear-gradient(
     15deg,
-    ${COLORS.blue[700]},
-    ${COLORS.teal[500]}
+    ${RAW_COLORS.blue[700]},
+    ${RAW_COLORS.teal[500]}
   );
   opacity: ${props => (props.isVisible ? 1 : 0)};
   transition: opacity 300ms;
@@ -109,7 +109,7 @@ const Pulsing = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${COLORS.blue[800]};
+  background: ${RAW_COLORS.blue[800]};
   animation: ${pulse} 2000ms infinite;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
@@ -126,7 +126,7 @@ const Ball = animated(styled.div.attrs({
   z-index: 2;
   width: ${props => props.size}px;
   height: ${props => props.size}px;
-  background: ${COLORS.white};
+  background: ${COLORS.lightBackground};
   border-radius: 50%;
 
   transform-origin: center center;

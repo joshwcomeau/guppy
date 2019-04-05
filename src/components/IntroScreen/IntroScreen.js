@@ -39,7 +39,7 @@ class IntroScreen extends Component<Props> {
             <Spacer size={40} />
             <div>
               Or,{' '}
-              <ImportProjectButton color={COLORS.blue[700]}>
+              <ImportProjectButton color={COLORS.link}>
                 import an existing project
               </ImportProjectButton>
             </div>

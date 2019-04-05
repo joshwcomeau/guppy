@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Spring, animated } from 'react-spring';
 
-import { COLORS } from '../../constants';
+import { GRADIENTS } from '../../constants';
 
 type Props = {
   size: number,
@@ -27,7 +27,7 @@ const springSettings = {
 
 class CircularOutline extends Component<Props> {
   static defaultProps = {
-    colors: [COLORS.purple[500], COLORS.violet[500]],
+    colors: GRADIENTS.primary,
     strokeWidth: 2,
   };
 

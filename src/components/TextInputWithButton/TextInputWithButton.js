@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { moreHorizontal } from 'react-icons-kit/feather/moreHorizontal';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import TextInput from '../TextInput';
 import HoverableOutlineButton from '../HoverableOutlineButton';
@@ -51,7 +51,7 @@ class TextInputWithButton extends PureComponent<Props> {
 }
 
 const Wrapper = styled.div`
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
 `;
 
 const ButtonPositionAdjuster = styled.div`

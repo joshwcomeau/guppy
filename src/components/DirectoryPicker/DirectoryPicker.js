@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { folderPlus } from 'react-icons-kit/feather/folderPlus';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 import TextButton from '../TextButton';
 import TextInput from '../TextInput';
@@ -74,7 +74,7 @@ class DirectoryPicker extends PureComponent<Props> {
 }
 
 const Wrapper = styled.div`
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
 `;
 
 const ButtonPositionAdjuster = styled.div`
@@ -82,20 +82,20 @@ const ButtonPositionAdjuster = styled.div`
 `;
 
 const DirectoryButton = styled(TextButton)`
-  color: ${COLORS.gray[600]};
+  color: ${COLORS.lightText};
   text-decoration: none;
 
   &:after {
     content: '';
     display: block;
     padding-top: 6px;
-    border-bottom: 2px solid ${COLORS.gray[600]};
+    border-bottom: 2px solid ${COLORS.lightText};
   }
 
   &:hover:after {
     content: '';
     display: block;
-    border-bottom: 2px solid ${COLORS.purple[700]};
+    border-bottom: 2px solid ${RAW_COLORS.purple[700]};
   }
 `;
 
@@ -105,14 +105,14 @@ const IconWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid ${COLORS.gray[400]};
+  border: 2px solid ${RAW_COLORS.gray[400]};
   border-radius: 50%;
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
   cursor: pointer;
 
   &:hover {
-    color: ${COLORS.purple[500]};
-    border-color: ${COLORS.purple[500]};
+    color: ${RAW_COLORS.purple[500]};
+    border-color: ${RAW_COLORS.purple[500]};
   }
 `;
 
