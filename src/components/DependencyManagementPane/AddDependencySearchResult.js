@@ -81,7 +81,7 @@ export const getColorForDownloadNumber = (num: number) => {
   if (num < 5000) {
     return COLORS.error;
   } else if (num < 50000) {
-    return COLORS.lightSuccess;
+    return COLORS.lightWarning;
   } else {
     return COLORS.success;
   }

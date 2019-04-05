@@ -7,7 +7,7 @@ import AddProjectButton from './AddProjectButton';
 import SidebarProjectIcon from './SidebarProjectIcon';
 import IntroductionBlurb from './IntroductionBlurb';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 const createProps = props => ({
   selectedProjectId: null,
@@ -25,7 +25,7 @@ const testProject = {
   name: 'Test Project',
   type: 'nextjs',
   icon: 'nextjs-project-icon',
-  color: COLORS.red['500'],
+  color: RAW_COLORS.red[500],
   createdAt: 0,
   dependencies: [],
   tasks: [],
