@@ -13,7 +13,7 @@ class Wrapper extends Component<Props> {
     const { children } = this.props;
     return (
       <OuterWrapper>
-        <InnerWrapper> {children} </InnerWrapper>{' '}
+        <InnerWrapper>{children}</InnerWrapper>
       </OuterWrapper>
     );
   }
