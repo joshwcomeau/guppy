@@ -36,20 +36,30 @@ const SidebarProjectIcon = ({
   // For projects with an icon, we want to render a selectable image, with
   // that icon. For imported projects with no icon, we instead want to render
   // a circle with the first letter of that project name.
-  return iconSrc ? (
-    <SelectableImage src={iconSrc} {...sharedProps} />
-  ) : (
-    <SelectableItem {...sharedProps}>
-      {status => (
-        <ProjectNameIcon style={{ backgroundColor: color }}>
-          {name.slice(0, 1).toUpperCase()}
-        </ProjectNameIcon>
+  return (
+    <Wrapper>
+      {iconSrc ? (
+        <SelectableImage src={iconSrc} {...sharedProps} />
+      ) : (
+        <SelectableItem {...sharedProps}>
+          {status => (
+            <ProjectNameIcon style={{ backgroundColor: color }}>
+              {name.slice(0, 1).toUpperCase()}
+            </ProjectNameIcon>
+          )}
+        </SelectableItem>
       )}
-    </SelectableItem>
+    </Wrapper>
   );
 };
 
-const ProjectNameIcon = styled.div`
+const Wrapper = styled.div`
+  img {
+    pointer-events: none;
+  }
+`;
+
+export const ProjectNameIcon = styled.div`
   position: relative;
   width: 100%;
   height: 100%;

@@ -22,3 +22,7 @@
 [options]
 
 [strict]
+
+[untyped]
+# React-beautiful-dnd contains a typing error --> ignore it
+.*/node_modules/react-beautiful-dnd/.*
