@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { changeDefaultProjectPath } from '../../actions';
 import { getDefaultProjectPath } from '../../reducers/app-settings.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import TextButton from '../TextButton';
 
@@ -80,13 +80,13 @@ const MainText = styled.div`
   text-align: left;
   margin: -20px 0 30px 5px;
   font-size: 15px;
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
 `;
 
 export const DirectoryButton = styled(TextButton)`
   font-family: 'Fira Mono';
   font-size: 12px;
-  color: ${COLORS.gray[600]};
+  color: ${RAW_COLORS.gray[600]};
   text-decoration: none;
 `;
 

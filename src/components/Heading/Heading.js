@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 type Props = {
   size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge',
@@ -37,7 +37,7 @@ const HeadingXSmall = styled.h6`
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  color: ${COLORS.gray[800]};
+  color: ${RAW_COLORS.gray[800]};
 `;
 
 const HeadingSmall = HeadingXSmall.withComponent('h3').extend`

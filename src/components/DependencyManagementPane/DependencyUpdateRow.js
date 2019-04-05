@@ -6,7 +6,7 @@ import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
 
 import * as actions from '../../actions';
-import { COLORS } from '../../constants';
+import { COLORS, GRADIENTS } from '../../constants';
 
 import { getOnlineState } from '../../reducers/app-status.reducer';
 
@@ -58,9 +58,7 @@ class DependencyUpdateRow extends Component<Props> {
         <IconBase
           icon={check}
           size={24}
-          style={{
-            color: COLORS.green[500],
-          }}
+          style={{ color: COLORS.lightSuccess }}
         />
         <Spacer size={6} />
         Up-to-date
@@ -68,15 +66,17 @@ class DependencyUpdateRow extends Component<Props> {
     ) : (
       <FillButton
         size="small"
-        colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-        style={{
-          width: 80,
-        }}
+        colors={GRADIENTS.success}
+        style={{ width: 80 }}
         onClick={() =>
           updateDependency(projectId, dependency.name, latestVersion)
         }
       >
-        {isUpdating ? <Spinner size={16} color={COLORS.white} /> : 'Update'}
+        {isUpdating ? (
+          <Spinner size={16} color={COLORS.textOnBackground} />
+        ) : (
+          'Update'
+        )}
       </FillButton>
     );
   }
@@ -120,7 +120,7 @@ const UpdateCol = styled.div`
 
 // eslint-disable-next-line no-unexpected-multiline
 const VersionLabel = styled(Label)`
-  color: ${COLORS.gray[600]};
+  color: ${COLORS.lightText};
 `;
 
 const VersionNum = styled.div`
@@ -136,7 +136,7 @@ const UpToDate = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 15px;
-  color: ${COLORS.green[700]};
+  color: ${COLORS.success};
   font-weight: 500;
 `;
 

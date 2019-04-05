@@ -65,7 +65,7 @@ const Wrapper = styled.div`
   display: flex;
   position: relative;
   z-index: 1;
-  background: ${COLORS.gray[50]};
+  background: ${COLORS.background};
 
   animation: ${fadeIn} 500ms ease-in;
 `;

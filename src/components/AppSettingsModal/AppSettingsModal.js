@@ -8,7 +8,7 @@ import { remote } from 'electron';
 
 import * as actions from '../../actions';
 import { getDefaultProjectPath } from '../../reducers/app-settings.reducer';
-import { COLORS } from '../../constants';
+import { GRADIENTS } from '../../constants';
 import { setNested } from '../../utils';
 
 import Modal from '../Modal';
@@ -94,7 +94,7 @@ export class AppSettingsModal extends PureComponent<Props, State> {
             {/* // todo: Refactor to map over settings so this renders dynamically -
                          needs additional info on state e.g. component for rendering + props
                          -> For now it's OK to hard code as we're only having three
-                            settings 
+                            settings
             */}
             <SectionTitle>General</SectionTitle>
             <PixelShifter x={5} reason="Slightly intend in section">
@@ -144,10 +144,7 @@ export class AppSettingsModal extends PureComponent<Props, State> {
             </PixelShifter>
             <Spacer size={10} />
             <Actions>
-              <FillButton
-                size="large"
-                colors={[COLORS.green[700], COLORS.lightGreen[500]]}
-              >
+              <FillButton size="large" colors={GRADIENTS.success}>
                 Save
               </FillButton>
             </Actions>

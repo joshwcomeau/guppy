@@ -28,7 +28,7 @@ const SidebarProjectIcon = ({
 }: Props) => {
   const sharedProps = {
     size,
-    colors: [COLORS.white],
+    colors: [COLORS.lightBackground],
     status: isSelected ? 'highlighted' : 'faded',
     onClick: handleSelect,
   };
@@ -57,7 +57,7 @@ const ProjectNameIcon = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 24px;
-  color: ${COLORS.white};
+  color: ${COLORS.textOnBackground};
   border-radius: 50%;
 `;
 

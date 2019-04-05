@@ -11,7 +11,7 @@ import {
 } from '../../reducers/app-status.reducer';
 
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
-import { COLORS, Z_INDICES } from '../../constants';
+import { RAW_COLORS, COLORS, Z_INDICES } from '../../constants';
 import { ellipsify } from '../../utils';
 
 type Props = {
@@ -89,7 +89,7 @@ class LoadingScreen extends PureComponent<Props, State> {
 
 const Backdrop = styled.div`
   align-items: center;
-  background: ${COLORS.transparentWhite[300]};
+  background: ${RAW_COLORS.transparentWhite[300]};
   display: ${props => (props.isVisible ? 'flex' : 'none')};
   height: 100vh;
   justify-content: center;
@@ -115,7 +115,7 @@ const InfoWrapper = styled.div`
 `;
 
 const InfoText = styled.div`
-  color: ${COLORS.black};
+  color: ${RAW_COLORS.black};
   padding: 0;
 `;
 

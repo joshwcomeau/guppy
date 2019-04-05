@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import Heading from '../Heading';
 import Spacer from '../Spacer';
@@ -17,7 +17,7 @@ class DependencyInstalling extends Component<Props> {
   render() {
     const { name, queued } = this.props;
     const stylizedName = (
-      <span style={{ color: COLORS.purple[500] }}>{name}</span>
+      <span style={{ color: RAW_COLORS.purple[500] }}>{name}</span>
     );
 
     return (

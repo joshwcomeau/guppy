@@ -9,7 +9,7 @@ import projectConfigs from '../config/project-types';
 import { processLogger } from './process-logger.service';
 import { substituteConfigVariables } from './config-variables.service';
 
-import { COLORS } from '../constants';
+import { RAW_COLORS } from '../constants';
 
 import {
   formatCommandForPlatform,
@@ -185,14 +185,14 @@ export const getProjectNameSlug = (projectName: string) =>
 
 // Exported so that getColorForProject can be tested
 export const possibleProjectColors = [
-  COLORS.hotPink[700],
-  COLORS.pink[700],
-  COLORS.red[700],
-  COLORS.orange[700],
-  COLORS.green[700],
-  COLORS.teal[700],
-  COLORS.violet[700],
-  COLORS.purple[700],
+  RAW_COLORS.hotPink[700],
+  RAW_COLORS.pink[700],
+  RAW_COLORS.red[700],
+  RAW_COLORS.orange[700],
+  RAW_COLORS.green[700],
+  RAW_COLORS.teal[700],
+  RAW_COLORS.violet[700],
+  RAW_COLORS.purple[700],
 ];
 
 export const getColorForProject = (projectName: string) => {

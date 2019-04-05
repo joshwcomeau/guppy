@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 type Props = {
   isFocused?: boolean,
@@ -19,11 +19,11 @@ const TextInput = ({ isFocused, hasError, children, ...delegated }: Props) => (
 
 const getBorderColor = (props: Props) => {
   if (props.hasError) {
-    return COLORS.pink[500];
+    return COLORS.error;
   } else if (props.isFocused) {
-    return COLORS.purple[700];
+    return RAW_COLORS.purple[700];
   } else {
-    return COLORS.gray[700];
+    return RAW_COLORS.gray[700];
   }
 };
 
@@ -43,7 +43,7 @@ const InputElem = styled.input`
   font-size: 21px;
 
   &::placeholder {
-    color: ${COLORS.gray[300]};
+    color: ${RAW_COLORS.gray[300]};
   }
 `;
 

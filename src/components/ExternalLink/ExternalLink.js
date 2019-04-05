@@ -16,8 +16,8 @@ type Props = {
 
 class ExternalLink extends Component<Props> {
   static defaultProps = {
-    color: COLORS.blue[700],
-    hoverColor: COLORS.blue[500],
+    color: COLORS.link,
+    hoverColor: COLORS.lightLink,
     display: 'inline-block',
   };
 

@@ -9,7 +9,7 @@ import ExternalLink from '../../ExternalLink';
 import CodesandboxLogo from '../../CodesandboxLogo';
 import StrokeButton from '../../Button/StrokeButton';
 
-import { COLORS } from '../../../constants';
+import { RAW_COLORS, COLORS } from '../../../constants';
 
 type Props = {
   updateStarter: (string, boolean) => void,
@@ -115,7 +115,7 @@ class SelectStarterList extends PureComponent<Props> {
               <ShowMoreWrapper>
                 <StrokeButton
                   size="small"
-                  strokeColors={[COLORS.gray[200], COLORS.gray[500]]}
+                  strokeColors={[RAW_COLORS.gray[200], RAW_COLORS.gray[500]]}
                   onClick={handleShowMore}
                 >
                   Show more...
@@ -137,7 +137,7 @@ const Description = styled.p`
 `;
 
 const SelectionInfo = styled.div`
-  background: ${COLORS.gray[200]};
+  background: ${RAW_COLORS.gray[200]};
   border-radius: 5px;
   padding: 5px;
   ${({ visible }) => !visible && 'display: none;'};
@@ -145,7 +145,7 @@ const SelectionInfo = styled.div`
 
 const ScrollContainer = styled(Scrollbars)`
   min-height: 120px;
-  border: 1px solid ${COLORS.gray[400]};
+  border: 1px solid ${RAW_COLORS.gray[400]};
   border-radius: 4px;
 `;
 
@@ -167,7 +167,8 @@ export const StarterItemHeading = styled.div`
   cursor: pointer;
   border-radius: 6px;
   border: 2px solid
-    ${props => (props.selected ? COLORS.purple[500] : COLORS.gray[200])};
+    ${props =>
+      props.selected ? RAW_COLORS.purple[500] : RAW_COLORS.gray[200]};
   padding: 2px 5px;
   font-size 15px;
   font-weight: bold;

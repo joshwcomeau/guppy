@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 
-import { COLORS } from '../../constants';
+import { COLORS, GRADIENTS } from '../../constants';
 
 import ButtonBase from './ButtonBase';
 
@@ -30,8 +30,8 @@ export const wrapColorsInGradient = (colors?: Array<string> | string) => {
 
 class FillButton extends Component<Props> {
   static defaultProps = {
-    colors: [COLORS.purple[500], COLORS.violet[500]],
-    textColor: COLORS.white,
+    colors: GRADIENTS.primary,
+    textColor: COLORS.textOnBackground,
   };
 
   render() {

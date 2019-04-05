@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 import * as actions from '../../actions';
-import { COLORS } from '../../constants';
+import { COLORS, GRADIENTS } from '../../constants';
 
 import { FillButton } from '../Button';
 import Spinner from '../Spinner';
@@ -70,7 +70,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
     return (
       <FillButton
         size="small"
-        colors={[COLORS.pink[300], COLORS.red[500]]}
+        colors={GRADIENTS.error}
         onClick={this.handleClick}
       >
         {dependencyStatus === 'deleting' ? (
@@ -78,7 +78,7 @@ class DeleteDependencyButton extends PureComponent<Props> {
             y={2}
             reason="visually center the spinner within the button"
           >
-            <Spinner size={18} color={COLORS.white} />
+            <Spinner size={18} color={COLORS.textOnBackground} />
           </PixelShifter>
         ) : (
           DEPENDENCY_DELETE_COPY[dependencyStatus]

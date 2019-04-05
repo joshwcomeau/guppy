@@ -6,7 +6,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Z_INDICES, COLORS } from '../../constants';
+import { RAW_COLORS, Z_INDICES, COLORS } from '../../constants';
 
 import * as actions from '../../actions';
 import { getOnlineState } from '../../reducers/app-status.reducer';
@@ -61,16 +61,16 @@ const InfoBar = styled.div`
   left: 0;
   top: 0;
   z-index: ${Z_INDICES.infoBanner};
-  background-color: ${COLORS.transparentWhite[100]};
+  background-color: ${RAW_COLORS.transparentWhite[100]};
   padding: 16px;
   align-content: center;
-  box-shadow: 0px 2px 2px 0px ${COLORS.transparentBlack[900]};
+  box-shadow: 0px 2px 2px 0px ${RAW_COLORS.transparentBlack[900]};
 `;
 
 const SVG = styled.svg`
   width: 16px;
   height: 16px;
-  fill: ${COLORS.red[500]};
+  fill: ${RAW_COLORS.red[500]};
   margin: 2px 8px;
 `;
 
