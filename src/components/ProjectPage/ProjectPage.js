@@ -8,7 +8,7 @@ import { packageIcon } from 'react-icons-kit/feather/packageIcon';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDependenciesLoadingStatus } from '../../reducers/dependencies.reducer';
-import { RAW_COLORS, COLORS } from '../../constants';
+import { RAW_COLORS, COLORS, GRADIENTS } from '../../constants';
 import * as actions from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
@@ -123,7 +123,7 @@ export class ProjectPage extends PureComponent<Props> {
           <InstallWrapper>
             <FillButton
               size="large"
-              colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+              colors={GRADIENTS.success}
               onClick={() => reinstallDependencies(project.id)}
             >
               Install Dependencies
@@ -211,7 +211,7 @@ const DependencyMissingIcon = styled(IconBase).attrs({
   icon: packageIcon,
   size: 100,
 })`
-  color: ${COLORS.gray[300]};
+  color: ${RAW_COLORS.gray[300]};
   padding: 30px;
 `;
 

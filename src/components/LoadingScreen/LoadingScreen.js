@@ -115,7 +115,7 @@ const InfoWrapper = styled.div`
 `;
 
 const InfoText = styled.div`
-  color: ${COLORS.black};
+  color: ${RAW_COLORS.black};
   padding: 0;
 `;
 

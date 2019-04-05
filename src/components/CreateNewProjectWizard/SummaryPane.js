@@ -2,7 +2,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 import Paragraph from '../Paragraph';
 import FadeIn from '../FadeIn';
@@ -207,8 +207,8 @@ class SummaryPane extends PureComponent<Props> {
               <Paragraph>
                 For a better overview you can also have a look at the{' '}
                 <ExternalLink
-                  color={COLORS.white}
-                  hoverColor={COLORS.white}
+                  color={RAW_COLORS.white}
+                  hoverColor={RAW_COLORS.white}
                   href="https://www.gatsbyjs.org/starters/"
                 >
                   Gatsby starters library
