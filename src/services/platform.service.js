@@ -3,7 +3,6 @@ import * as childProcess from 'child_process';
 import * as os from 'os';
 import * as path from 'path';
 import { remote } from 'electron';
-import shellPath from 'shell-path';
 
 import { PACKAGE_MANAGER } from '../config/app';
 
@@ -94,15 +93,14 @@ export const initializePath = () => {
       }
     );
 
-    // This is basically `fix-path` but we are adding it to window instead
-    window.process.env.PATH =
-      shellPath.sync() ||
-      [
-        './node_modules/.bin',
-        '/.nodebrew/current/bin',
-        '/usr/local/bin',
-        process.env.PATH,
-      ].join(':');
+    // Spawning an interactive shell catches anything exported from dotfiles
+    const fixedPathFromInteractiveShell = childProcess
+      .execFileSync(window.process.env.SHELL, ['-i', '-c', 'echo $PATH'])
+      .toString()
+      .trim();
+
+    window.process.env.PATH = fixedPathFromInteractiveShell;
+
     resolve();
   });
 };
