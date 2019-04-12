@@ -204,8 +204,8 @@ class ApplicationMenu extends Component<Props> {
             submenu: languageCodes.map(langCode => ({
               label: languageCaptions[langCode],
               click: () => changeLanguage(langCode),
-              type: language === langCode ? 'checkbox' : 'normal',
-              checked: language === langCode,
+              type: language.startsWith(langCode) ? 'checkbox' : 'normal',
+              checked: language.startsWith(langCode),
             })),
           },
           {
@@ -237,8 +237,8 @@ class ApplicationMenu extends Component<Props> {
             submenu: languageCodes.map(langCode => ({
               label: languageCaptions[langCode],
               click: () => changeLanguage(langCode),
-              type: language === langCode ? 'checkbox' : 'normal',
-              checked: language === langCode,
+              type: language.startsWith(langCode) ? 'checkbox' : 'normal',
+              checked: language.startsWith(langCode),
             })),
           },
           {

@@ -5,4 +5,6 @@ module.exports = {
   PACKAGE_MANAGER: 'yarn',
   // Enable logging, if enabled all terminal responses are visible in the console (useful for debugging)
   LOGGING: false,
+  // Enable usage of window.navigator.language - disabled until we're having more translations
+  USE_NAVIGATOR_LANGUAGE: false,
 };

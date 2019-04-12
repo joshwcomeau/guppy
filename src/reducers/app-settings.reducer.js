@@ -18,12 +18,14 @@ import {
   SAVE_APP_SETTINGS_START,
   CHANGE_DEFAULT_PROJECT_PATH,
   CHANGE_LANGUAGE,
+  RESET_ALL_STATE,
 } from '../actions';
 import produce from 'immer';
 import * as os from 'os';
 import * as path from 'path';
 
 import { windowsHomeDir, isWin } from '../services/platform.service';
+import { USE_NAVIGATOR_LANGUAGE } from '../config/app';
 
 import type { Action } from 'redux';
 import type { AppSettings } from '../types';
@@ -39,7 +41,7 @@ export const initialState: AppSettings = {
         ? path.join(homedir, 'guppy-projects-dev')
         : path.join(homedir, 'guppy-projects'),
     defaultProjectType: 'create-react-app',
-    language: 'en',
+    language: USE_NAVIGATOR_LANGUAGE ? window.navigator.language : 'en',
   },
   privacy: {
     enableUsageTracking: true,
@@ -62,6 +64,9 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
       return produce(state, draftState => {
         draftState.general.language = action.language;
       });
+
+    case RESET_ALL_STATE:
+      return initialState;
 
     default:
       return state;
