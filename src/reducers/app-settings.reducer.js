@@ -17,6 +17,7 @@
 import {
   SAVE_APP_SETTINGS_START,
   CHANGE_DEFAULT_PROJECT_PATH,
+  CHANGE_LANGUAGE,
 } from '../actions';
 import produce from 'immer';
 import * as os from 'os';
@@ -38,6 +39,7 @@ export const initialState: AppSettings = {
         ? path.join(homedir, 'guppy-projects-dev')
         : path.join(homedir, 'guppy-projects'),
     defaultProjectType: 'create-react-app',
+    language: 'en',
   },
   privacy: {
     enableUsageTracking: true,
@@ -54,6 +56,11 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
     case CHANGE_DEFAULT_PROJECT_PATH:
       return produce(state, draftState => {
         draftState.general.defaultProjectPath = action.defaultProjectPath;
+      });
+
+    case CHANGE_LANGUAGE:
+      return produce(state, draftState => {
+        draftState.general.language = action.language;
       });
 
     default:
@@ -73,3 +80,5 @@ export const getDefaultProjectType = (state: any) =>
   state.appSettings.general.defaultProjectType;
 
 export const getPrivacySettings = (state: any) => state.appSettings.privacy;
+
+export const getLangauge = (state: any) => state.appSettings.general.language;

@@ -23,11 +23,21 @@ import {
 } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getOnlineState } from '../../reducers/app-status.reducer';
+import { getLangauge } from './../../reducers/app-settings.reducer';
 
 import type { Project, Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
 const { app, process, Menu } = remote;
+
+// todo: find a better place for this constant
+const languageCaptions = {
+  en: 'English',
+  de: 'German',
+  ch: 'Chinese',
+};
+
+const languageCodes = ['en', 'de', 'ch'];
 
 type Props = {
   projects: Array<Project>,
@@ -57,7 +67,8 @@ class ApplicationMenu extends Component<Props> {
   componentDidUpdate(prevProps) {
     if (
       this.props.selectedProject !== prevProps.selectedProject ||
-      this.props.isOnline !== prevProps.isOnline
+      this.props.isOnline !== prevProps.isOnline ||
+      this.props.language !== prevProps.language
     ) {
       this.buildMenu(this.props);
     }
@@ -82,6 +93,8 @@ class ApplicationMenu extends Component<Props> {
       projects,
       reinstallDependencies,
       isOnline,
+      changeLanguage,
+      language,
     } = props;
 
     const template = [
@@ -102,6 +115,16 @@ class ApplicationMenu extends Component<Props> {
             click: showImportExistingProjectPrompt,
             accelerator: 'CmdOrCtrl+I',
             enabled: isOnline,
+          },
+          {
+            id: 'language',
+            label: isMac ? 'Language' : '&Language',
+            submenu: languageCodes.map(langCode => ({
+              label: languageCaptions[langCode],
+              click: () => changeLanguage(langCode),
+              type: language === langCode ? 'checkbox' : 'normal',
+              checked: language === langCode,
+            })),
           },
         ],
       },
@@ -322,6 +345,7 @@ const mapStateToProps = state => {
     devServerTask,
     projects,
     isOnline: getOnlineState(state),
+    language: getLangauge(state),
   };
 };
 
@@ -335,6 +359,7 @@ const mapDispatchToProps = {
   showAppSettings: actions.showAppSettings,
   selectProject: actions.selectProject,
   reinstallDependencies: actions.reinstallDependenciesStart,
+  changeLanguage: actions.changeLanguage,
 };
 
 export default connect(
