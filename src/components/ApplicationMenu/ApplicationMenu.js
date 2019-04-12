@@ -44,6 +44,7 @@ type Props = {
   selectedProject: ?Project,
   devServerTask: ?Task,
   isOnline: boolean,
+  language: string,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   showImportExistingProjectPrompt: Dispatch<
     typeof actions.showImportExistingProjectPrompt
@@ -55,6 +56,7 @@ type Props = {
   showAppSettings: Dispatch<typeof actions.showAppSettings>,
   selectProject: Dispatch<typeof actions.selectProject>,
   reinstallDependencies: Dispatch<typeof actions.reinstallDependenciesStart>,
+  changeLanguage: Dispatch<typeof actions.changeLanguage>,
 };
 
 class ApplicationMenu extends Component<Props> {
