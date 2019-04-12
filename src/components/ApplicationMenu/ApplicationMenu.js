@@ -116,6 +116,7 @@ class ApplicationMenu extends Component<Props> {
             accelerator: 'CmdOrCtrl+I',
             enabled: isOnline,
           },
+          { type: 'separator' },
           {
             id: 'language',
             label: isMac ? 'Language' : '&Language',
