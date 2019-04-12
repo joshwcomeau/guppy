@@ -118,17 +118,6 @@ class ApplicationMenu extends Component<Props> {
             accelerator: 'CmdOrCtrl+I',
             enabled: isOnline,
           },
-          { type: 'separator' },
-          {
-            id: 'language',
-            label: isMac ? 'Language' : '&Language',
-            submenu: languageCodes.map(langCode => ({
-              label: languageCaptions[langCode],
-              click: () => changeLanguage(langCode),
-              type: language === langCode ? 'checkbox' : 'normal',
-              checked: language === langCode,
-            })),
-          },
         ],
       },
       {
@@ -206,12 +195,27 @@ class ApplicationMenu extends Component<Props> {
 
     // Add preferences menu item for Linux/Windows
     if (!isMac) {
-      template[0].submenu.push({
-        // Linux & Windows only
-        label: '&Preferences...',
-        click: showAppSettings,
-        accelerator: 'CmdOrCtrl+,',
-      });
+      template[0].submenu.push(
+        ...[
+          { type: 'separator' },
+          {
+            id: 'language',
+            label: isMac ? 'Language' : '&Language',
+            submenu: languageCodes.map(langCode => ({
+              label: languageCaptions[langCode],
+              click: () => changeLanguage(langCode),
+              type: language === langCode ? 'checkbox' : 'normal',
+              checked: language === langCode,
+            })),
+          },
+          {
+            // Linux & Windows only
+            label: '&Preferences...',
+            click: showAppSettings,
+            accelerator: 'CmdOrCtrl+,',
+          },
+        ]
+      );
     }
 
     // MacOS menus start with the app name (Guppy) and offer some standard
@@ -226,6 +230,17 @@ class ApplicationMenu extends Component<Props> {
           { role: 'hide' },
           { role: 'hideothers' },
           { role: 'unhide' },
+          { type: 'separator' },
+          {
+            id: 'language',
+            label: isMac ? 'Language' : '&Language',
+            submenu: languageCodes.map(langCode => ({
+              label: languageCaptions[langCode],
+              click: () => changeLanguage(langCode),
+              type: language === langCode ? 'checkbox' : 'normal',
+              checked: language === langCode,
+            })),
+          },
           {
             label: 'Preferences...',
             click: showAppSettings,
