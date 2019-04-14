@@ -33,8 +33,8 @@ const { app, process, Menu } = remote;
 // todo: find a better place for this constant
 const languageCaptions = {
   en: 'English',
-  de: 'German',
-  zh: 'Chinese',
+  de: 'Deutsch', // German
+  zh: '中文', // Chinese
 };
 
 const languageCodes = ['en', 'de', 'zh'];
