@@ -34,10 +34,10 @@ const { app, process, Menu } = remote;
 const languageCaptions = {
   en: 'English',
   de: 'German',
-  ch: 'Chinese',
+  zh: 'Chinese',
 };
 
-const languageCodes = ['en', 'de', 'ch'];
+const languageCodes = ['en', 'de', 'zh'];
 
 type Props = {
   projects: Array<Project>,
