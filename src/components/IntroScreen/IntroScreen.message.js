@@ -22,8 +22,8 @@ const messages = {
     },
     or: {
       id: 'introScreen.actions.or',
-      defaultMessage: 'Or,',
-      description: 'Text for "Or,"',
+      defaultMessage: 'Or, ',
+      description: 'Text for "Or, "',
     },
   },
 };

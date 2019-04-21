@@ -1,0 +1,6 @@
+{
+  "introScreen.header.appName": "Guppy",
+  "introScreen.actions.create": "Create a new web application",
+  "introScreen.actions.import": "import an existing project",
+  "introScreen.actions.or": "Or, "
+}
