@@ -1,0 +1,8 @@
+{
+  "dependencyManagementPane.deleteDependencyButton.delete.idle": "Delete",
+  "dependencyManagementPane.deleteDependencyButton.delete.queuedDelete": "Queued for Delete…",
+  "dependencyManagementPane.deleteDependencyButton.dialog.title": "Are you sure?",
+  "dependencyManagementPane.deleteDependencyButton.dialog.message": "Are you sure you want to delete this dependency?",
+  "dependencyManagementPane.deleteDependencyButton.dialog.yes": "Yeah",
+  "dependencyManagementPane.deleteDependencyButton.dialog.no": "Nope"
+}

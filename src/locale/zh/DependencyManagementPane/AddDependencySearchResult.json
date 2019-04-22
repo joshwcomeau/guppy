@@ -1,0 +1,13 @@
+{
+  "dependencyManagementPane.addDependencySearchResult.action.idle": "已安装",
+  "dependencyManagementPane.addDependencySearchResult.action.installing": "正在安装...",
+  "dependencyManagementPane.addDependencySearchResult.action.updating": "正在更新...",
+  "dependencyManagementPane.addDependencySearchResult.action.deleting": "正在删除...",
+  "dependencyManagementPane.addDependencySearchResult.action.queuedInstall": "等待安装",
+  "dependencyManagementPane.addDependencySearchResult.action.queuedUpdate": "等待更新",
+  "dependencyManagementPane.addDependencySearchResult.action.queuedDelete": "等待删除",
+  "dependencyManagementPane.addDependencySearchResult.result.installed": "已安装",
+  "dependencyManagementPane.addDependencySearchResult.result.addToProject": "添加至项目",
+  "dependencyManagementPane.addDependencySearchResult.result.downloadsAMonth": "月下载量",
+  "dependencyManagementPane.addDependencySearchResult.result.published": "发布于 "
+}

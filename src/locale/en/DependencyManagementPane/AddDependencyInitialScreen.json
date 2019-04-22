@@ -1,0 +1,4 @@
+{
+  "dependencyManagementPane.addDependencyInitialScreen.instruction.searchPackage": "You can use the input above to search the Node Package Manager (NPM) registry for packages that have been published.",
+  "dependencyManagementPane.addDependencyInitialScreen.instruction.howToSearch": "Search by package name, description, keyword, or author."
+}

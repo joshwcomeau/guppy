@@ -1,0 +1,6 @@
+{
+  "dependencyManagementPane.dependencyManagementPane.main.title": "依赖",
+  "dependencyManagementPane.dependencyManagementPane.main.dependency": "依赖",
+  "dependencyManagementPane.dependencyManagementPane.main.addNew": "添加新的",
+  "dependencyManagementPane.dependencyManagementPane.error.noDependency": "看起来所有依赖都被删除了。抱歉我们暂时无法处理这种情况 :("
+}
