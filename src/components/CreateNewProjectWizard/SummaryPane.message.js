@@ -57,7 +57,7 @@ const messages = {
       description: 'Comment for Vanilla React',
     },
     reactLearn: {
-      id: 'createNewProjectWizard.summaryPane.projectType.reactIntro',
+      id: 'createNewProjectWizard.summaryPane.projectType.reactLearn',
       defaultMessage: 'Learn more about create-react-app.',
       description: 'Text for Learn Vanilla React',
     },
@@ -76,7 +76,7 @@ const messages = {
       description: 'Comment for Gatsby',
     },
     gatsbyLearn: {
-      id: 'createNewProjectWizard.summaryPane.projectType.gatsbyIntro',
+      id: 'createNewProjectWizard.summaryPane.projectType.gatsbyLearn',
       defaultMessage: 'Learn more about Gatsby.',
       description: 'Text for Learn Gatsby',
     },
@@ -96,7 +96,7 @@ const messages = {
       description: 'Comment for Next.js',
     },
     nextjsLearn: {
-      id: 'createNewProjectWizard.summaryPane.projectType.nextjsIntro',
+      id: 'createNewProjectWizard.summaryPane.projectType.nextjsLearn',
       defaultMessage: 'Learn more about Next.js.',
       description: 'Text for Learn Next.js',
     },

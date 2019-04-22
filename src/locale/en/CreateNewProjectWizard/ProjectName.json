@@ -1,0 +1,6 @@
+{
+  "createNewProjectWizard.projectName.main.title": "Project Name",
+  "createNewProjectWizard.projectName.main.placeholder": "Your Amazing Project Name",
+  "createNewProjectWizard.mainPane.main.randomize": "Generate a random code-name",
+  "createNewProjectWizard.mainPane.main.repeated": "Sorry, a project with this name already exists."
+}

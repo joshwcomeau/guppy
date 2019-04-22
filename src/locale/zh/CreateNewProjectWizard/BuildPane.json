@@ -1,0 +1,10 @@
+{
+  "createNewProjectWizard.buildPane.step.installingCliTool": "安装构建工具",
+  "createNewProjectWizard.buildPane.step.creatingProjectDirectory": "创建项目目录",
+  "createNewProjectWizard.buildPane.step.installingDependencies": "安装依赖",
+  "createNewProjectWizard.buildPane.step.guppification": "项目信息持久化",
+  "createNewProjectWizard.buildPane.step.takeAWhile": "您可能需要稍等一会...",
+  "createNewProjectWizard.buildPane.main.created": "项目创建成功！",
+  "createNewProjectWizard.buildPane.main.building": "构建项目...",
+  "createNewProjectWizard.buildPane.error.insufficientData": "构建项目所需数据不足。更多信息请查看控制台"
+}
