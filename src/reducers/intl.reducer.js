@@ -3,7 +3,6 @@ import { CHANGE_LANGUAGE, RESET_ALL_STATE } from '../actions';
 import produce from 'immer';
 
 import type { Action } from 'redux';
-import type { AppSettings } from '../types';
 import { USE_NAVIGATOR_LANGUAGE } from '../config/app';
 
 import IntroScreenEn from '../locale/en/IntroScreen.json';
@@ -22,12 +21,19 @@ const initialLocale = USE_NAVIGATOR_LANGUAGE
   ? window.navigator.language.slice(0, 2)
   : 'en';
 
-export const initialState: AppSettings = {
+type State = {
+  locale: string,
+  messages: {
+    [messageId: string]: string,
+  },
+};
+
+export const initialState = {
   locale: initialLocale,
   messages: messages[initialLocale] || messages['en'],
 };
 
-export default (state: AppSettings = initialState, action: Action = {}) => {
+export default (state: State = initialState, action: Action = {}) => {
   switch (action.type) {
     case CHANGE_LANGUAGE:
       return produce(state, draftState => {

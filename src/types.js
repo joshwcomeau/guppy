@@ -134,7 +134,6 @@ export type AppSettings = {
   general: {
     defaultProjectPath: string,
     defaultProjectType: ProjectType,
-    language: string,
   },
   privacy: {
     enableUsageTracking: boolean,
