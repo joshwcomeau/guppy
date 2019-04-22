@@ -2,6 +2,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
@@ -11,6 +12,7 @@ import { StrokeButton } from '../Button';
 import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
+import messages from './IntroScreen.message';
 
 import type { Dispatch } from '../../actions/types';
 
@@ -29,18 +31,20 @@ class IntroScreen extends Component<Props> {
           <Header>
             <Logo size="large" />
 
-            <AppName>Guppy</AppName>
+            <AppName>
+              <FormattedMessage {...messages.header.appName} />
+            </AppName>
           </Header>
 
           <Actions>
             <StrokeButton size="large" onClick={() => createNewProjectStart()}>
-              Create a new web application
+              <FormattedMessage {...messages.actions.create} />
             </StrokeButton>
             <Spacer size={40} />
             <div>
-              Or,{' '}
+              <FormattedMessage {...messages.actions.or} />
               <ImportProjectButton color={COLORS.link}>
-                import an existing project
+                <FormattedMessage {...messages.actions.import} />
               </ImportProjectButton>
             </div>
           </Actions>
@@ -85,4 +89,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { createNewProjectStart: actions.createNewProjectStart }
-)(IntroScreen);
+)(injectIntl(IntroScreen));

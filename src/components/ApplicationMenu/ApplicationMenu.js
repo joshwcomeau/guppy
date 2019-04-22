@@ -24,7 +24,7 @@ import {
 } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getOnlineState } from '../../reducers/app-status.reducer';
-import { getLangauge } from './../../reducers/app-settings.reducer';
+import { getLanguage } from './../../reducers/intl.reducer';
 
 import type { Project, Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
@@ -355,7 +355,7 @@ const mapStateToProps = state => {
     devServerTask,
     projects,
     isOnline: getOnlineState(state),
-    language: getLangauge(state),
+    language: getLanguage(state),
   };
 };
 

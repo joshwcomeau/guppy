@@ -2,6 +2,7 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { IntlProvider } from 'react-intl-redux';
 
 import configureStore from './store';
 
@@ -21,12 +22,14 @@ if (!root) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <NodeProvider>
-      <Fragment>
-        <App />
-        <DevTools />
-      </Fragment>
-    </NodeProvider>
+    <IntlProvider>
+      <NodeProvider>
+        <Fragment>
+          <App />
+          <DevTools />
+        </Fragment>
+      </NodeProvider>
+    </IntlProvider>
   </Provider>,
   root
 );

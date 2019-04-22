@@ -63,6 +63,7 @@
     "react-beautiful-dnd": "10.1.1",
     "react-custom-scrollbars": "4.2.1",
     "react-intl": "^2.8.0",
+    "react-intl-redux": "^2.1.0",
     "rimraf": "2.6.2",
     "yarn": "1.12.3"
   },

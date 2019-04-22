@@ -2,6 +2,7 @@
 import { combineReducers } from 'redux';
 
 import appSettings from './app-settings.reducer';
+import intl from './intl.reducer';
 import appLoaded from './app-loaded.reducer';
 import appStatus from './app-status.reducer';
 import projects from './projects.reducer';
@@ -14,6 +15,7 @@ import queue from './queue.reducer';
 
 export default combineReducers({
   appSettings,
+  intl,
   appLoaded,
   appStatus,
   projects,

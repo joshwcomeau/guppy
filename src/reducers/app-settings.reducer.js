@@ -17,7 +17,6 @@
 import {
   SAVE_APP_SETTINGS_START,
   CHANGE_DEFAULT_PROJECT_PATH,
-  CHANGE_LANGUAGE,
   RESET_ALL_STATE,
 } from '../actions';
 import produce from 'immer';
@@ -60,11 +59,6 @@ export default (state: AppSettings = initialState, action: Action = {}) => {
         draftState.general.defaultProjectPath = action.defaultProjectPath;
       });
 
-    case CHANGE_LANGUAGE:
-      return produce(state, draftState => {
-        draftState.general.language = action.language;
-      });
-
     case RESET_ALL_STATE:
       return initialState;
 
@@ -85,5 +79,3 @@ export const getDefaultProjectType = (state: any) =>
   state.appSettings.general.defaultProjectType;
 
 export const getPrivacySettings = (state: any) => state.appSettings.privacy;
-
-export const getLangauge = (state: any) => state.appSettings.general.language;
