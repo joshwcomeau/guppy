@@ -29,17 +29,20 @@ type State = {
 };
 
 class Initialization extends PureComponent<Props, State> {
+  _isMounted = false;
   state = {
     wasSuccessfullyInitialized: false,
   };
 
   componentDidMount() {
+    this._isMounted = true;
     initializePath()
       .then(getNodeJsVersion)
       .then(nodeVersion => {
-        this.setState({
-          wasSuccessfullyInitialized: !!nodeVersion,
-        });
+        this._isMounted &&
+          this.setState({
+            wasSuccessfullyInitialized: !!nodeVersion,
+          });
 
         logger.logEvent('load-application', {
           node_version: nodeVersion,
@@ -69,6 +72,10 @@ class Initialization extends PureComponent<Props, State> {
           }
         }
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   appWillClose = () => {
