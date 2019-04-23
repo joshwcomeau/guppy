@@ -1,0 +1,13 @@
+{
+	"initialization.mount.nodeMissing": "缺少Node",
+	"initialization.mount.installNode": "看起来似乎Node.js没有被安装。使用Guppy需要Node。\n如果你点击 \"OK\"，您会被定向到下载并安装Node的说明.",
+	"initialization.close.confirmForceQuit": "有任务正在进行。您真的想退出吗？\n\n",
+	"initialization.close.abort": "放弃",
+	"initialization.close.proceed": "是的，继续 (不安全)",
+	"initialization.action.install": "安装中",
+	"initialization.action.uninstall": "卸载中",
+	"initialization.action.task": "任务",
+	"initialization.action.tasks": "任务",
+	"initialization.action.queued": "队列中",
+	"initialization.action.tasksInProject": "项目中的任务 "
+}

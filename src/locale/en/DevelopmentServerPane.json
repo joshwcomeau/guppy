@@ -1,0 +1,7 @@
+{
+	"developmentServerPane.main.viewDoc": "View Documentation",
+	"developmentServerPane.main.noTask": "This project does not appear to have a development server task",
+	"developmentServerPane.main.description": "Runs a local development server that updates whenever you make changes to the files.",
+	"developmentServerPane.main.title": "Development Server",
+	"developmentServerPane.serverLogs.title" : "Server Logs"
+}

@@ -1,0 +1,13 @@
+{
+	"initialization.mount.nodeMissing": "Node missing",
+	"initialization.mount.installNode": "It looks like Node.js isn't installed. Node is required to use Guppy.\nWhen you click \"OK\", you'll be directed to instructions to download and install Node.",
+	"initialization.close.confirmForceQuit": "There are active tasks. Do you really want to quit?\n\n",
+	"initialization.close.abort": "Abort",
+	"initialization.close.proceed": "Yes, proceed (UNSAFE)",
+	"initialization.action.install": "Installing",
+	"initialization.action.uninstall": "Uninstalling",
+	"initialization.action.task": "task",
+	"initialization.action.tasks": "tasks",
+	"initialization.action.queued": "Queued",
+	"initialization.action.tasksInProject": "Tasks in project "
+}

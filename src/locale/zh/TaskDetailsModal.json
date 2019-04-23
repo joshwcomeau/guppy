@@ -1,0 +1,10 @@
+{
+	"taskDetailsModal.status.taskIs": "任务 ",
+	"taskDetailsModal.status.task": "任务 ",
+	"taskDetailsModal.status.success": "成功完成",
+	"taskDetailsModal.status.running": "运行中",
+	"taskDetailsModal.status.failed": "失败",
+	"taskDetailsModal.status.idle": "闲置中",
+	"taskDetailsModal.timeStamp.lastRun": "最后一次运行： ",
+	"taskDetailsModal.content.output": "输出"
+}
