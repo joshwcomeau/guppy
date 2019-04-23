@@ -12,9 +12,10 @@ import { StrokeButton } from '../Button';
 import ImportProjectButton from '../ImportProjectButton';
 import Spacer from '../Spacer';
 import Logo from '../Logo';
-import messages from './IntroScreen.message';
 
 import type { Dispatch } from '../../actions/types';
+
+import messages from './IntroScreen.message';
 
 type Props = {
   shouldHideContent: boolean,
