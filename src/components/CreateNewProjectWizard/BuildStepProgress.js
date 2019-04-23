@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 import Spinner from '../Spinner';
 import { COLORS } from '../../constants';
@@ -59,11 +60,15 @@ class BuildStepProgress extends PureComponent<Props, State> {
           {status === 'done' && <Checkmark size={32} icon={check} />}
         </IconWrapper>
         <ChildWrapper>
-          <MainCopy>{step.copy}</MainCopy>
+          <MainCopy>
+            <FormattedMessage {...step.copy} />
+          </MainCopy>
           {step.additionalCopy &&
             shouldShowAdditionalCopy && (
               <FadeIn>
-                <AdditionalCopy>{step.additionalCopy}</AdditionalCopy>
+                <AdditionalCopy>
+                  <FormattedMessage {...step.additionalCopy} />
+                </AdditionalCopy>
               </FadeIn>
             )}
         </ChildWrapper>
@@ -112,4 +117,4 @@ const AdditionalCopy = styled.div`
   font-size: 14px;
 `;
 
-export default BuildStepProgress;
+export default injectIntl(BuildStepProgress);

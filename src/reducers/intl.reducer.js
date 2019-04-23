@@ -7,13 +7,17 @@ import { USE_NAVIGATOR_LANGUAGE } from '../config/app';
 
 import IntroScreenEn from '../locale/en/IntroScreen.json';
 import IntroScreenZh from '../locale/zh/IntroScreen.json';
+import CreateNewProjectWizardBuildPaneEn from '../locale/en/CreateNewProjectWizard/BuildPane.json';
+import CreateNewProjectWizardBuildPaneZh from '../locale/zh/CreateNewProjectWizard/BuildPane.json';
 
 const messages = {
   en: {
     ...IntroScreenEn,
+    ...CreateNewProjectWizardBuildPaneEn,
   },
   zh: {
     ...IntroScreenZh,
+    ...CreateNewProjectWizardBuildPaneZh,
   },
 };
 

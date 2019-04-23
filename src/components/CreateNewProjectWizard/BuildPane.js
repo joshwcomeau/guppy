@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 import { COLORS, RAW_COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
@@ -15,19 +16,21 @@ import BuildStepProgress from './BuildStepProgress';
 import type { BuildStep, Status } from './types';
 import type { ProjectType, ProjectInternal } from '../../types';
 
+import messages from './BuildPane.message';
+
 const BUILD_STEPS = {
   installingCliTool: {
-    copy: 'Installing build tool',
+    copy: messages.step.installingCliTool,
   },
   creatingProjectDirectory: {
-    copy: 'Creating project directory',
+    copy: messages.step.creatingProjectDirectory,
   },
   installingDependencies: {
-    copy: 'Installing dependencies',
-    additionalCopy: 'This step can take a while...',
+    copy: messages.step.installingDependencies,
+    additionalCopy: messages.step.takeAWhile,
   },
   guppification: {
-    copy: 'Persisting project info',
+    copy: messages.step.guppification,
   },
 };
 
@@ -52,7 +55,7 @@ type State = {
 class BuildPane extends PureComponent<Props, State> {
   timeoutId: ?number;
   state = {
-    currentBuildStep: BUILD_STEPS[0],
+    currentBuildStep: BUILD_STEP_KEYS[0],
     isCompleted: false,
     runInstaller: false,
   };
@@ -165,11 +168,13 @@ class BuildPane extends PureComponent<Props, State> {
           <FinishedInnerWrapper>
             <IconBase size={128} icon={check} />
             <Spacer size={20} />
-            Project Created!
+            <FormattedMessage {...messages.main.created} />
           </FinishedInnerWrapper>
         </Finished>
 
-        <Title>Building Project...</Title>
+        <Title>
+          <FormattedMessage {...messages.main.building} />
+        </Title>
 
         <WhimsicalWrapper>
           {/*
@@ -283,4 +288,4 @@ const FinishedInnerWrapper = styled.div`
   text-align: center;
 `;
 
-export default BuildPane;
+export default injectIntl(BuildPane);
