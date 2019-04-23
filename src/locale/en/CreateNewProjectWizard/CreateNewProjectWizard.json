@@ -1,0 +1,8 @@
+{
+  "createNewProjectWizard.createNewProjectWizard.dialogFolderExists.title": "Project directory exists",
+  "createNewProjectWizard.createNewProjectWizard.dialogFolderExists.message": "Looks like there's already a project with that name. Did you mean to import it instead?",
+  "createNewProjectWizard.createNewProjectWizard.dialogFolderExists.buttonText": "OK",
+  "createNewProjectWizard.createNewProjectWizard.starterNotFoundError.starter": "Starter ",
+  "createNewProjectWizard.createNewProjectWizard.starterNotFoundError.notFound": " not found",
+  "createNewProjectWizard.createNewProjectWizard.starterNotFoundError.recheck": "Please check your starter url or use the starter selection to pick a starter."
+}

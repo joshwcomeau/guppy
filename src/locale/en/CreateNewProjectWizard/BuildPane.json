@@ -1,0 +1,10 @@
+{
+  "createNewProjectWizard.buildPane.step.installingCliTool": "Installing build tool",
+  "createNewProjectWizard.buildPane.step.creatingProjectDirectory": "Creating project directory",
+  "createNewProjectWizard.buildPane.step.installingDependencies": "Installing dependencies",
+  "createNewProjectWizard.buildPane.step.guppification": "Persisting project info",
+  "createNewProjectWizard.buildPane.step.takeAWhile": "This step can take a while...",
+  "createNewProjectWizard.buildPane.main.created": "Project Created!",
+  "createNewProjectWizard.buildPane.main.building": "Building Project...",
+  "createNewProjectWizard.buildPane.error.insufficientData": "Tried to build project with insufficient data. See console for more info"
+}

@@ -1,0 +1,7 @@
+{
+	"developmentServerPane.main.viewDoc": "查看文档",
+	"developmentServerPane.main.noTask": "这个项目似乎没有开发服务器相关的任务",
+	"developmentServerPane.main.description": "运行一个在你改变文件时随时更新的本地开发服务器。",
+	"developmentServerPane.main.title": "开发服务器",
+	"developmentServerPane.serverLogs.title" : "服务器日志"
+}

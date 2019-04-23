@@ -1,0 +1,8 @@
+{
+  "createNewProjectWizard.createNewProjectWizard.dialogFolderExists.title": "项目目录已存在",
+  "createNewProjectWizard.createNewProjectWizard.dialogFolderExists.message": "已存在一个同名项目。是否需要直接导入？",
+  "createNewProjectWizard.createNewProjectWizard.dialogFolderExists.buttonText": "确认",
+  "createNewProjectWizard.createNewProjectWizard.starterNotFoundError.starter": "初始器 ",
+  "createNewProjectWizard.createNewProjectWizard.starterNotFoundError.notFound": " 不存在",
+  "createNewProjectWizard.createNewProjectWizard.starterNotFoundError.recheck": "请核对初始器链接或在菜单中选择一个初始器"
+}

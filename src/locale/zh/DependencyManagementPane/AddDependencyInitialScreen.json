@@ -1,0 +1,4 @@
+{
+  "dependencyManagementPane.addDependencyInitialScreen.instruction.searchPackage": "您可以使用以上输入框在Node包管理工具NPM中搜索已发布的包。",
+  "dependencyManagementPane.addDependencyInitialScreen.instruction.howToSearch": "通过包名称、描述、关键词或作者来搜索。"
+}

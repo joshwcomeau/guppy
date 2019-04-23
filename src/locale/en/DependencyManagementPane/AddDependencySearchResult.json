@@ -1,0 +1,13 @@
+{
+  "dependencyManagementPane.addDependencySearchResult.action.idle": "Installed",
+  "dependencyManagementPane.addDependencySearchResult.action.installing": "Installing…",
+  "dependencyManagementPane.addDependencySearchResult.action.updating": "Updating…",
+  "dependencyManagementPane.addDependencySearchResult.action.deleting": "Deleting…",
+  "dependencyManagementPane.addDependencySearchResult.action.queuedInstall": "Queued for Install",
+  "dependencyManagementPane.addDependencySearchResult.action.queuedUpdate": "Queued for Update",
+  "dependencyManagementPane.addDependencySearchResult.action.queuedDelete": "Queued for Delete",
+  "dependencyManagementPane.addDependencySearchResult.result.installed": "Installed",
+  "dependencyManagementPane.addDependencySearchResult.result.addToProject": "Add To Project",
+  "dependencyManagementPane.addDependencySearchResult.result.downloadsAMonth": "downloads a month",
+  "dependencyManagementPane.addDependencySearchResult.result.published": "Published "
+}

@@ -1,0 +1,10 @@
+{
+	"taskDetailsModal.status.taskIs": "Task is ",
+	"taskDetailsModal.status.task": "Task ",
+	"taskDetailsModal.status.success": "completed successfully",
+	"taskDetailsModal.status.running": "running",
+	"taskDetailsModal.status.failed": "failed",
+	"taskDetailsModal.status.idle": "idle",
+	"taskDetailsModal.timeStamp.lastRun": "Last run: ",
+	"taskDetailsModal.content.output": "Output"
+}

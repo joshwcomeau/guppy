@@ -8,6 +8,7 @@ import { shell, remote } from 'electron';
 
 import * as actions from '../../actions';
 import { GUPPY_REPO_URL } from '../../constants';
+import { LANGUAGE_CODES, LANGUAGE_CAPTIONS } from '../../locale/constants';
 import { IN_APP_FEEDBACK_URL } from '../../config/app';
 import {
   isMac,
@@ -23,21 +24,12 @@ import {
 } from '../../reducers/projects.reducer';
 import { getDevServerTaskForProjectId } from '../../reducers/tasks.reducer';
 import { getOnlineState } from '../../reducers/app-status.reducer';
-import { getLangauge } from './../../reducers/app-settings.reducer';
+import { getLanguage } from './../../reducers/intl.reducer';
 
 import type { Project, Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
 
 const { app, process, Menu } = remote;
-
-// todo: find a better place for this constant
-const languageCaptions = {
-  en: 'English',
-  de: 'German',
-  ch: 'Chinese',
-};
-
-const languageCodes = ['en', 'de', 'ch'];
 
 type Props = {
   projects: Array<Project>,
@@ -201,8 +193,8 @@ class ApplicationMenu extends Component<Props> {
           {
             id: 'language',
             label: isMac ? 'Language' : '&Language',
-            submenu: languageCodes.map(langCode => ({
-              label: languageCaptions[langCode],
+            submenu: LANGUAGE_CODES.map(langCode => ({
+              label: LANGUAGE_CAPTIONS[langCode],
               click: () => changeLanguage(langCode),
               type: language.startsWith(langCode) ? 'checkbox' : 'normal',
               checked: language.startsWith(langCode),
@@ -234,8 +226,8 @@ class ApplicationMenu extends Component<Props> {
           {
             id: 'language',
             label: isMac ? 'Language' : '&Language',
-            submenu: languageCodes.map(langCode => ({
-              label: languageCaptions[langCode],
+            submenu: LANGUAGE_CODES.map(langCode => ({
+              label: LANGUAGE_CAPTIONS[langCode],
               click: () => changeLanguage(langCode),
               type: language.startsWith(langCode) ? 'checkbox' : 'normal',
               checked: language.startsWith(langCode),
@@ -363,7 +355,7 @@ const mapStateToProps = state => {
     devServerTask,
     projects,
     isOnline: getOnlineState(state),
-    language: getLangauge(state),
+    language: getLanguage(state),
   };
 };
 

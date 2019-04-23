@@ -1,0 +1,8 @@
+{
+  "dependencyManagementPane.deleteDependencyButton.delete.idle": "删除",
+  "dependencyManagementPane.deleteDependencyButton.delete.queuedDelete": "等待删除...",
+  "dependencyManagementPane.deleteDependencyButton.dialog.title": "是否确定删除？",
+  "dependencyManagementPane.deleteDependencyButton.dialog.message": "您是否确定要删除此依赖？",
+  "dependencyManagementPane.deleteDependencyButton.dialog.yes": "确认",
+  "dependencyManagementPane.deleteDependencyButton.dialog.no": "取消"
+}

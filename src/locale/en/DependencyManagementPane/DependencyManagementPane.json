@@ -1,0 +1,6 @@
+{
+  "dependencyManagementPane.dependencyManagementPane.main.title": "Dependencies",
+  "dependencyManagementPane.dependencyManagementPane.main.dependency": "Dependency",
+  "dependencyManagementPane.dependencyManagementPane.main.addNew": "Add New",
+  "dependencyManagementPane.dependencyManagementPane.error.noDependency": "Looks like all the dependencies were deleted. Sorry, we aren't set up to handle this case yet :("
+}

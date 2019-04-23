@@ -1,0 +1,7 @@
+{
+	"projectPage.fail.ohNo": "哦不！",
+	"projectPage.fail.freshClone": "这有可能是因为您刚刚从Github上clone了项目。为了在Guppy中运行脚本，现在您需要安装它们",
+	"projectPage.fail.install": "安装依赖",
+	"projectPage.fail.missing": " 看起来您缺少一些项目依赖",
+	"projectPage.main.openInEditor": "在编辑器中打开"
+}

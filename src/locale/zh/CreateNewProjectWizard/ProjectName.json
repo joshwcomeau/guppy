@@ -1,0 +1,6 @@
+{
+  "createNewProjectWizard.projectName.main.title": "项目名称",
+  "createNewProjectWizard.projectName.main.placeholder": "请输入项目名称",
+  "createNewProjectWizard.mainPane.main.randomize": "随机生成项目名称",
+  "createNewProjectWizard.mainPane.main.repeated": "对不起，已存在一个同名项目"
+}
