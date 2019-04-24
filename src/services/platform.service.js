@@ -72,46 +72,36 @@ export const getBaseProjectEnvironment = (
   };
 };
 
-// HACK: With electron-builder, we're having some issues on mac finding Node.
-// This is because for some reason, the PATH is not updated properly :(
-// 'fix-path' is supposed to do this for us, but it doesn't work, for unknown
-// reasons.
+// HACK: With electron-builder, we're having some issues on Mac finding Node.
+// GUI apps on macOS (aka not launched from terminal) don't inherit environment variables
+// defined in dotfiles, so need to fix the path.
 export const initializePath = () => {
   return new Promise<void>(resolve => {
     if (!isMac) {
       return resolve();
     }
 
-    // Check if we need to fix the Path (Mac only)
+    // Check if Node is found
     childProcess.exec(
       'which node',
       { env: window.process.env },
       (_, nodePath) => {
         if (nodePath) {
-          // Node found
+          // If it is, no need to fix path
           return resolve();
-        }
-
-        // For users with a standard Node installation, node will be in
-        // /usr/local/bin
-        // For users using NVM, the path to Node will be added to `.bashrc`.
-        // Add both to the PATH.
-        try {
-          childProcess.exec(
-            'source ~/.bashrc && echo $PATH',
-            (err, updatedPath) => {
-              if (updatedPath) {
-                window.process.env.PATH = `/usr/local/bin:${updatedPath}`;
-              }
-
-              resolve();
-            }
-          );
-        } catch (e) {
-          resolve(e);
         }
       }
     );
+
+    // Spawning an interactive shell catches anything exported from dotfiles
+    const fixedPathFromInteractiveShell = childProcess
+      .execFileSync(window.process.env.SHELL, ['-i', '-c', 'echo $PATH'])
+      .toString()
+      .trim();
+
+    window.process.env.PATH = fixedPathFromInteractiveShell;
+
+    resolve();
   });
 };
 

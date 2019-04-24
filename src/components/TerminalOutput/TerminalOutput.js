@@ -16,7 +16,7 @@ import xtermCss from 'xterm/dist/xterm.css';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import * as actions from '../../actions';
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 import { FillButton } from '../Button';
 import Heading from '../Heading';
@@ -185,7 +185,7 @@ class TerminalOutput extends PureComponent<Props, State> {
           >
             <FillButton
               size="xsmall"
-              colors={[COLORS.pink[300], COLORS.red[500]]}
+              colors={[RAW_COLORS.pink[300], RAW_COLORS.red[500]]}
               onClick={this.handleClear}
             >
               Clear

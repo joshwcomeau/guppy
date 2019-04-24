@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 import Label from '../Label';
 
@@ -45,11 +45,11 @@ class FormField extends PureComponent<Props> {
 
 const getTextColor = (props: Props) => {
   if (props.hasError) {
-    return COLORS.pink[500];
+    return COLORS.lightError;
   } else if (props.isFocused) {
-    return COLORS.purple[700];
+    return RAW_COLORS.purple[700];
   } else {
-    return COLORS.gray[500];
+    return RAW_COLORS.gray[500];
   }
 };
 

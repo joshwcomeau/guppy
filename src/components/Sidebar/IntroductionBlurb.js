@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { cornerUpLeft } from 'react-icons-kit/feather/cornerUpLeft';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import Paragraph from '../Paragraph';
 import Spacer from '../Spacer';
@@ -54,7 +54,7 @@ const Wrapper = styled.div.attrs({
   right: 0;
   width: 450px;
   padding-left: 56px;
-  color: ${COLORS.gray[800]};
+  color: ${RAW_COLORS.gray[800]};
   will-change: transform;
 `;
 
@@ -69,7 +69,7 @@ const Heading = styled.h2`
 
 const Em = styled.em`
   font-style: italic;
-  color: ${COLORS.purple[500]};
+  color: ${RAW_COLORS.purple[500]};
 `;
 
 export default IntroductionBlurb;

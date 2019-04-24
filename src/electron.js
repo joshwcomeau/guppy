@@ -8,7 +8,6 @@ const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 const path = require('path');
 const url = require('url');
-const fixPath = require('fix-path');
 const chalkRaw = require('chalk');
 
 const killProcessId = require('./services/kill-process-id.service');
@@ -30,12 +29,8 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-// In production, we need to use `fixPath` to let Guppy use NPM.
-// For reasons unknown, the opposite is true in development; adding this breaks
-// everything.
 if (process.env.NODE_ENV !== 'development') {
   icon256Path = '../build/256x256.png';
-  fixPath();
 }
 
 // Keep a global reference of the window object, if you don't, the window will

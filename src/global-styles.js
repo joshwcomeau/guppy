@@ -13,10 +13,10 @@ injectGlobal`
   select,
   option {
     /* This is important for MacOS Mojave's dark mode */
-    color: ${COLORS.gray[900]};
+    color: ${COLORS.text};
   }
 
   body {
-    background: ${COLORS.gray[50]};
+    background: ${COLORS.background};
   }
 `;

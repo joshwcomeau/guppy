@@ -43,7 +43,7 @@ describe('killProcessId', () => {
     const psTree = await import('ps-tree');
 
     await killProcessId(id);
-    expect(psTree).toBeCalledWith(id, expect.any(Function));
+    expect(psTree).toHaveBeenCalledWith(id, expect.any(Function));
     expect(childProcess.spawnSync).toHaveBeenCalledWith('kill', [
       '-9',
       id,
@@ -63,7 +63,7 @@ describe('killProcessId', () => {
     const killProcessId = await import('./kill-process-id.service');
 
     killProcessId(id);
-    expect(errorMock).toBeCalledWith(
+    expect(errorMock).toHaveBeenCalledWith(
       expect.stringMatching(/could not/i),
       errorText
     );

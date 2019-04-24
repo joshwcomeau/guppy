@@ -6,7 +6,7 @@ import { u1F44C as successIcon } from 'react-icons-kit/noto_emoji_regular/u1F44C
 import { u1F31B as idleIcon } from 'react-icons-kit/noto_emoji_regular/u1F31B';
 import { u274C as failIcon } from 'react-icons-kit/noto_emoji_regular/u274C';
 
-import { COLORS, BREAKPOINTS } from '../../constants';
+import { RAW_COLORS, COLORS, BREAKPOINTS } from '../../constants';
 import { capitalize } from '../../utils';
 
 import Card from '../Card';
@@ -91,7 +91,7 @@ const getIconForStatus = (status: TaskStatus) => {
         <IconBase
           size={21}
           icon={successIcon}
-          style={{ color: COLORS.green[700] }}
+          style={{ color: COLORS.success }}
         />
       );
     case 'failed':
@@ -99,7 +99,7 @@ const getIconForStatus = (status: TaskStatus) => {
         <IconBase
           size={18}
           icon={failIcon}
-          style={{ color: COLORS.red[500] }}
+          style={{ color: RAW_COLORS.red[500] }}
         />
       );
     default:
@@ -107,7 +107,7 @@ const getIconForStatus = (status: TaskStatus) => {
         <IconBase
           size={21}
           icon={idleIcon}
-          style={{ color: COLORS.gray[400], transform: 'translateY(-2px)' }}
+          style={{ color: RAW_COLORS.gray[400], transform: 'translateY(-2px)' }}
         />
       );
   }
@@ -139,13 +139,13 @@ const NameColumn = Column.extend`
 
 const TaskName = styled.span`
   font-weight: 500;
-  color: ${COLORS.gray[900]};
+  color: ${COLORS.text};
 `;
 
 const TaskDescription = styled.span`
   font-weight: 400;
   margin-left: 15px;
-  color: ${COLORS.gray[500]};
+  color: ${RAW_COLORS.gray[500]};
 
   @media ${BREAKPOINTS.sm} {
     display: none;

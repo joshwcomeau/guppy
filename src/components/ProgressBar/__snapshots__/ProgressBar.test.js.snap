@@ -11,7 +11,11 @@ exports[`ProgressBar component should render with 0% 1`] = `
         "tension": 32,
       }
     }
-    from={Object {}}
+    from={
+      Object {
+        "progress": 0,
+      }
+    }
     hold={false}
     immediate={false}
     impl={[Function]}
@@ -40,7 +44,11 @@ exports[`ProgressBar component should render with 50% 1`] = `
         "tension": 32,
       }
     }
-    from={Object {}}
+    from={
+      Object {
+        "progress": 0,
+      }
+    }
     hold={false}
     immediate={false}
     impl={[Function]}
@@ -69,7 +77,11 @@ exports[`ProgressBar component should render with 100% 1`] = `
         "tension": 32,
       }
     }
-    from={Object {}}
+    from={
+      Object {
+        "progress": 0,
+      }
+    }
     hold={false}
     immediate={false}
     impl={[Function]}

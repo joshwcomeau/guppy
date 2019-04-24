@@ -28,6 +28,7 @@ export const CHANGE_PROJECT_HOME_PATH = 'CHANGE_PROJECT_HOME_PATH';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const DISMISS_SIDEBAR_INTRO = 'DISMISS_SIDEBAR_INTRO';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
+export const REARRANGE_PROJECTS_IN_SIDEBAR = 'REARRANGE_PROJECTS_IN_SIDEBAR';
 export const RUN_TASK = 'RUN_TASK';
 export const ATTACH_TASK_METADATA = 'ATTACH_TASK_METADATA';
 export const ABORT_TASK = 'ABORT_TASK';
@@ -174,6 +175,15 @@ export const dismissSidebarIntro = () => ({
 export const selectProject = (projectId: string) => ({
   type: SELECT_PROJECT,
   projectId,
+});
+
+export const rearrangeProjectsInSidebar = (
+  originalIndex: number,
+  newIndex: number
+) => ({
+  type: REARRANGE_PROJECTS_IN_SIDEBAR,
+  originalIndex,
+  newIndex,
 });
 
 export const runTask = (task: Task, timestamp: Date) => ({

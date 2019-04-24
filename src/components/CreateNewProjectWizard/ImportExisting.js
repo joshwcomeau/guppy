@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { folderPlus } from 'react-icons-kit/feather/folderPlus';
 
-import { COLORS } from '../../constants';
+import { COLORS, RAW_COLORS } from '../../constants';
 
 import ImportProjectButton from '../ImportProjectButton';
 
@@ -29,7 +29,7 @@ export const ImportExisting = ({ isOnboarding }: Props) => {
       </ImportProjectButton>
       <MainText>
         Already have a project you'd like to manage with Guppy?{' '}
-        <ImportProjectButton color={COLORS.white}>
+        <ImportProjectButton color={COLORS.textOnBackground}>
           Import it instead
         </ImportProjectButton>.
       </MainText>
@@ -51,14 +51,14 @@ const IconWrapper = styled.div`
   align-items: center;
   border: 2px solid rgba(255, 255, 255, 0.75);
   border-radius: 50%;
-  color: ${COLORS.transparentWhite[300]};
+  color: ${RAW_COLORS.transparentWhite[300]};
 `;
 
 const MainText = styled.div`
   flex: 1;
   text-align: left;
   margin-left: 10px;
-  color: ${COLORS.transparentWhite[300]};
+  color: ${RAW_COLORS.transparentWhite[300]};
 `;
 
 const mapStateToProps = state => ({

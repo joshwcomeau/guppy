@@ -3,7 +3,7 @@ import React, { Fragment, Component } from 'react';
 import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import Showcase from '../../../.storybook/components/Showcase';
 import { StrokeButton } from '../Button';
@@ -81,12 +81,12 @@ storiesOf('ProgressBar', module).add(
               height={16}
               progress={progress}
               colors={[
-                COLORS.red[500],
-                COLORS.orange[500],
-                COLORS.lime[500],
-                COLORS.teal[500],
-                COLORS.blue[700],
-                COLORS.purple[500],
+                RAW_COLORS.red[500],
+                RAW_COLORS.orange[500],
+                RAW_COLORS.lime[500],
+                RAW_COLORS.teal[500],
+                RAW_COLORS.blue[700],
+                RAW_COLORS.purple[500],
               ]}
             />
           )}

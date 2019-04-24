@@ -1,13 +1,15 @@
 /* eslint-disable no-unexpected-multiline */
 // @flow
 import React, { PureComponent, Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Spring, animated, config } from 'react-spring';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { COLORS, Z_INDICES } from '../../constants';
+import { RAW_COLORS, Z_INDICES } from '../../constants';
 import * as actions from '../../actions';
 import {
   getProjectsArray,
@@ -27,15 +29,17 @@ import IntroductionBlurb from './IntroductionBlurb';
 import type { Project } from '../../types';
 import type { Dispatch } from '../../actions/types';
 import type { State as OnboardingStatus } from '../../reducers/onboarding-status.reducer';
+import type { Responders } from 'react-beautiful-dnd';
 
 type Props = {
   projects: Array<Project>,
   selectedProjectId: ?string,
   onboardingStatus: OnboardingStatus,
   isVisible: boolean,
+  isOnline: boolean,
   createNewProjectStart: Dispatch<typeof actions.createNewProjectStart>,
   selectProject: Dispatch<typeof actions.selectProject>,
-  isOnline: boolean,
+  rearrangeProjects: Dispatch<typeof actions.rearrangeProjectsInSidebar>,
 };
 
 type State = {
@@ -64,6 +68,15 @@ const INTRO_SEQUENCE_STEPS = [
   'first-project-fall-in',
   'add-projects-fade-in',
 ];
+
+// Creating a portal to get around an issue with position fixed and transform property
+// which creates a weird offset while dragging
+// Ref https://github.com/atlassian/react-beautiful-dnd/issues/499
+let portal: HTMLElement = document.createElement('div');
+portal.id = 'sidebarDndPortal';
+if (document.body) {
+  document.body.appendChild(portal);
+}
 
 // TODO: this component re-renders whenever _anything_ with a project changes
 // (like adding a log to a task). It might be prudent to add a selector that
@@ -112,6 +125,15 @@ export class Sidebar extends PureComponent<Props, State> {
     }
   }
 
+  onDragEnd = (result: Responders.onDragEnd) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    this.props.rearrangeProjects(result.source.index, result.destination.index);
+  };
+
   render() {
     const {
       projects,
@@ -129,6 +151,7 @@ export class Sidebar extends PureComponent<Props, State> {
     );
 
     const finishedOnboarding = onboardingStatus === 'done';
+
     return (
       <Spring
         to={{
@@ -141,67 +164,84 @@ export class Sidebar extends PureComponent<Props, State> {
         {interpolated => (
           <Fragment>
             <Wrapper offset={`${interpolated.sidebarOffsetPercentage}%`}>
-              <ScrollbarOnlyVertical
-                autoHide
-                renderThumbVertical={({ style, ...props }) => (
-                  // Info: Styled-components not working here yet
-                  //       --> PR 286 @ react-custom-scrollbars will fix this
-                  <div
-                    {...props}
-                    style={{
-                      ...style,
-                      background: COLORS.transparentWhite[700],
-                      borderRadius: '6px',
-                    }}
-                    className="thumb-vertical"
-                  />
-                )}
-                renderTrackHorizontal={props => (
-                  <div
-                    {...props}
-                    style={{
-                      display: 'none',
-                    }}
-                  />
-                )}
-              >
-                <IntroductionBlurb
-                  isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
-                />
-                <Projects offset={`${interpolated.firstProjectPosition}px`}>
-                  {projects.map(project => (
-                    <Fragment key={project.id}>
-                      <Tooltip
-                        title={project.name}
-                        position="right"
-                        transitionFlip={false}
-                      >
-                        <SidebarProjectIcon
-                          size={SIDEBAR_ICON_SIZE}
-                          id={project.id}
-                          name={project.name}
-                          color={project.color}
-                          iconSrc={project.icon}
-                          isSelected={
-                            finishedOnboarding &&
-                            project.id === selectedProjectId
-                          }
-                          handleSelect={() => selectProject(project.id)}
-                        />
-                      </Tooltip>
-                      <Spacer size={18} />
-                    </Fragment>
-                  ))}
-                  <AddProjectButton
-                    size={SIDEBAR_ICON_SIZE}
-                    onClick={createNewProjectStart}
-                    isVisible={
-                      finishedOnboarding || introSequenceStepIndex >= 2
-                    }
-                    isOnline={isOnline}
-                  />
-                </Projects>
-              </ScrollbarOnlyVertical>
+              <IntroductionBlurb
+                isVisible={!finishedOnboarding && introSequenceStepIndex >= 1}
+              />
+              <DragDropContext onDragEnd={this.onDragEnd}>
+                <Scrollbars autoHide>
+                  <Droppable droppableId="droppable">
+                    {provided => (
+                      <div ref={provided.innerRef}>
+                        <Projects
+                          offset={`${interpolated.firstProjectPosition}px`}
+                        >
+                          {projects.map((project, index) => (
+                            <Draggable
+                              key={project.id}
+                              draggableId={project.id}
+                              index={index}
+                              disableInteractiveElementBlocking
+                              isDragDisabled={projects.length === 1}
+                            >
+                              {(providedInn, snapshot) => {
+                                const child = (
+                                  <div
+                                    ref={providedInn.innerRef}
+                                    {...providedInn.draggableProps}
+                                    {...providedInn.dragHandleProps}
+                                    style={{
+                                      userSelect: 'none',
+                                      ...providedInn.draggableProps.style,
+                                    }}
+                                  >
+                                    <Fragment key={project.id}>
+                                      <Tooltip
+                                        title={project.name}
+                                        position="right"
+                                      >
+                                        <SidebarProjectIcon
+                                          size={SIDEBAR_ICON_SIZE}
+                                          id={project.id}
+                                          name={project.name}
+                                          color={project.color}
+                                          iconSrc={project.icon}
+                                          isSelected={
+                                            finishedOnboarding &&
+                                            project.id === selectedProjectId
+                                          }
+                                          handleSelect={() =>
+                                            selectProject(project.id)
+                                          }
+                                        />
+                                      </Tooltip>
+                                      <Spacer size={18} />
+                                    </Fragment>
+                                  </div>
+                                );
+
+                                // If it's not dragging, just return the child
+                                if (!snapshot.isDragging) return child;
+
+                                // if dragging - put the item in a portal
+                                return ReactDOM.createPortal(child, portal);
+                              }}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                          <AddProjectButton
+                            size={SIDEBAR_ICON_SIZE}
+                            onClick={createNewProjectStart}
+                            isVisible={
+                              finishedOnboarding || introSequenceStepIndex >= 2
+                            }
+                            isOnline={isOnline}
+                          />
+                        </Projects>
+                      </div>
+                    )}
+                  </Droppable>
+                </Scrollbars>
+              </DragDropContext>
             </Wrapper>
             {isVisible && <SidebarSpacer />}
           </Fragment>
@@ -225,8 +265,8 @@ const Wrapper = animated(styled.nav.attrs({
   padding-left: ${SIDEBAR_OVERFLOW}px;
   background-image: linear-gradient(
     85deg,
-    ${COLORS.blue[900]},
-    ${COLORS.blue[700]}
+    ${RAW_COLORS.blue[900]},
+    ${RAW_COLORS.blue[700]}
   );
   will-change: transform;
   height: 100vh;
@@ -236,13 +276,6 @@ const SidebarSpacer = styled.div`
   position: relative;
   height: 100vh;
   width: ${SIDEBAR_WIDTH}px;
-`;
-
-const ScrollbarOnlyVertical = styled(Scrollbars)`
-  // hide overflow-x so left/right scrolling is disabled
-  > div:first-child {
-    overflow-x: hidden !important;
-  }
 `;
 
 const Projects = styled.div.attrs({
@@ -267,6 +300,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   createNewProjectStart: actions.createNewProjectStart,
   selectProject: actions.selectProject,
+  rearrangeProjects: actions.rearrangeProjectsInSidebar,
 };
 
 export default connect(

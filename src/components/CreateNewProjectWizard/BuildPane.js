@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { check } from 'react-icons-kit/feather/check';
 
-import { COLORS } from '../../constants';
+import { COLORS, RAW_COLORS } from '../../constants';
 import createProject from '../../services/create-project.service';
 import { replaceProjectStarterStringWithUrl } from './helpers';
 
@@ -220,11 +220,11 @@ const Wrapper = styled.div`
   height: 100%;
   background-image: linear-gradient(
     45deg,
-    ${COLORS.blue[900]},
-    ${COLORS.blue[800]}
+    ${RAW_COLORS.blue[900]},
+    ${RAW_COLORS.blue[800]}
   );
-  border: 4px solid ${COLORS.white};
-  color: ${COLORS.white};
+  border: 4px solid ${COLORS.textOnBackground};
+  color: ${COLORS.textOnBackground};
   box-shadow: 0px 6px 60px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 0;
   user-select: none;
@@ -260,11 +260,11 @@ const Finished = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  border: 4px solid ${COLORS.white};
+  border: 4px solid ${COLORS.textOnBackground};
   background-image: linear-gradient(
     45deg,
-    ${COLORS.teal[500]},
-    ${COLORS.lightGreen[700]}
+    ${RAW_COLORS.teal[500]},
+    ${RAW_COLORS.lightGreen[700]}
   );
   font-size: 32px;
   font-weight: 600;
