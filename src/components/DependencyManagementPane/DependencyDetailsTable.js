@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import { COLORS, GUPPY_REPO_URL } from '../../constants';
+import { COLORS, GUPPY_REPO_URL, RAW_COLORS } from '../../constants';
 
 import ExternalLink from '../ExternalLink';
 import Label from '../Label';
@@ -102,7 +102,7 @@ class DependencyDetailsTable extends Component<Props> {
             <LastCell>
               <Label
                 style={{
-                  color: COLORS.pink[500],
+                  color: RAW_COLORS.pink[500],
                 }}
               >
                 Danger Zone
@@ -133,15 +133,15 @@ const Cell = styled.td`
 
   &:first-of-type {
     width: 150px;
-    color: ${COLORS.gray[600]};
+    color: ${COLORS.lightText};
   }
 `;
 
 const DependencyLocationLabel = styled.span`
   background-color: ${props =>
-    props.isDevDependency ? COLORS.orange[700] : COLORS.blue[700]};
+    props.isDevDependency ? COLORS.warning : COLORS.link};
   border-radius: 4px;
-  color: ${COLORS.white};
+  color: ${RAW_COLORS.white};
   font-size: 14px;
   padding: 5px 10px;
 `;

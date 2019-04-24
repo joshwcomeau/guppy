@@ -13,7 +13,7 @@ import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
 } from '../../reducers/projects.reducer';
-import { COLORS } from '../../constants';
+import { COLORS, GRADIENTS, RAW_COLORS } from '../../constants';
 
 import Divider from '../Divider';
 import Spacer from '../Spacer';
@@ -98,7 +98,7 @@ export class AddDependencySearchResult extends PureComponent<Props> {
           <IconBase
             icon={check}
             size={24}
-            style={{ color: COLORS.green[500] }}
+            style={{ color: RAW_COLORS.green[500] }}
           />
           <Spacer size={6} />
           Installed
@@ -119,7 +119,7 @@ export class AddDependencySearchResult extends PureComponent<Props> {
     return (
       <StrokeButton
         size="small"
-        strokeColors={[COLORS.green[700], COLORS.lightGreen[500]]}
+        strokeColors={GRADIENTS.success}
         textColor={COLORS.green[700]}
         onClick={() => addDependency(projectId, hit.name, hit.version)}
       >
@@ -193,11 +193,11 @@ const Name = styled.span`
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  color: ${COLORS.blue[700]};
+  color: ${COLORS.link};
 `;
 
 const Version = styled.span`
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
   font-weight: 400;
   font-size: 20px;
 `;
@@ -206,7 +206,7 @@ export const StatsRow = styled.div`
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: ${COLORS.gray[500]};
+  color: ${RAW_COLORS.gray[500]};
 `;
 
 const StatsItemElem = styled.span`
@@ -231,7 +231,7 @@ const NoActionAvailable = styled.div`
   align-items: center;
   width: 135px;
   font-size: 15px;
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
 `;
 
 // TODO: I should be able to reuse the existing button component with
@@ -242,7 +242,7 @@ const SearchResultGlobalStyle = createGlobalStyle`
     margin-top: 45px;
     margin-left: 50%;
     background: transparent;
-    border: 2px solid ${COLORS.blue[700]};
+    border: 2px solid ${RAW_COLORS.blue[700]};
     border-radius: 60px;
     font-size: 18px;
     transform: translateX(-50%);
