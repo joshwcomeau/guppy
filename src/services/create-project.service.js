@@ -4,12 +4,12 @@ import random from 'random-seed';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as uuid from 'uuid/v1';
+import uuid from 'uuid/v1';
 import projectConfigs from '../config/project-types';
 import { processLogger } from './process-logger.service';
 import { substituteConfigVariables } from './config-variables.service';
 
-import { COLORS } from '../constants';
+import { RAW_COLORS } from '../constants';
 
 import {
   formatCommandForPlatform,
@@ -23,7 +23,9 @@ import type { ProjectType, ProjectInternal } from '../types';
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
 // to be created every time.
-const DISABLE = false;
+export const DISABLE = {
+  status: false, // change status to true here to enable fakeProject
+};
 
 type ProjectInfo = {
   projectName: string,
@@ -62,7 +64,7 @@ export default (
   onError: (err: string) => void,
   onComplete: (packageJson: ProjectInternal) => void
 ) => {
-  if (DISABLE) {
+  if (DISABLE.status) {
     onComplete(FAKE_CRA_PROJECT);
     return;
   }
@@ -183,14 +185,14 @@ export const getProjectNameSlug = (projectName: string) =>
 
 // Exported so that getColorForProject can be tested
 export const possibleProjectColors = [
-  COLORS.hotPink[700],
-  COLORS.pink[700],
-  COLORS.red[700],
-  COLORS.orange[700],
-  COLORS.green[700],
-  COLORS.teal[700],
-  COLORS.violet[700],
-  COLORS.purple[700],
+  RAW_COLORS.hotPink[700],
+  RAW_COLORS.pink[700],
+  RAW_COLORS.red[700],
+  RAW_COLORS.orange[700],
+  RAW_COLORS.green[700],
+  RAW_COLORS.teal[700],
+  RAW_COLORS.violet[700],
+  RAW_COLORS.purple[700],
 ];
 
 export const getColorForProject = (projectName: string) => {

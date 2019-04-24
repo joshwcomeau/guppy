@@ -16,6 +16,12 @@ exports[`AddDependencySearchProvider component should render SearchBox 1`] = `
   }
 >
   <AlgoliaConfigure(UnknownComponent)
+    analyticsTags={
+      Array [
+        "guppy",
+        "guppy-search",
+      ]
+    }
     attributesToRetrieve={
       Array [
         "name",

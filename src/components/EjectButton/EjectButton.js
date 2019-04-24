@@ -4,8 +4,6 @@ import IconBase from 'react-icons-kit';
 import { ic_eject as ejectIcon } from 'react-icons-kit/md/ic_eject';
 import { remote } from 'electron';
 
-import { COLORS } from '../../constants';
-
 import BigClickableButton from '../BigClickableButton';
 
 const { dialog } = remote;
@@ -47,7 +45,6 @@ class EjectButton extends PureComponent<Props> {
       <BigClickableButton
         width={40}
         height={34}
-        colors={[COLORS.purple[500], COLORS.blue[700]]}
         isOn={isRunning}
         onClick={() =>
           dialog.showMessageBox(dialogOptions, dialogCallback.bind(this))

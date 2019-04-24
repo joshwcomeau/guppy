@@ -5,7 +5,7 @@ import IconBase from 'react-icons-kit';
 import { u1F4C3 as billIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C3';
 import { x as xIcon } from 'react-icons-kit/feather/x';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import ExternalLink from '../ExternalLink';
 import Spacer from '../Spacer';
@@ -23,7 +23,7 @@ class License extends Component<Props> {
       <Wrapper>
         {withIcon && (
           <Fragment>
-            <IconWrapper color={license ? 'inherit' : COLORS.red[500]}>
+            <IconWrapper color={license ? 'inherit' : RAW_COLORS.red[500]}>
               <IconBase icon={license ? billIcon : xIcon} size={24} />
             </IconWrapper>
             <Spacer size={6} />

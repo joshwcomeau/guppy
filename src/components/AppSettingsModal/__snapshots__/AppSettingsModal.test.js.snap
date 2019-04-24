@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppSettingsModal component should render 1`] = `
+<Modal
+  isVisible={true}
+  onDismiss={[MockFunction]}
+  width={750}
+>
+  <ModalHeader
+    theme="standard"
+    title="Preferences"
+  />
+  <styled.section>
+    <form
+      onSubmit={[Function]}
+    >
+      <Styled(Heading)>
+        General
+      </Styled(Heading)>
+      <PixelShifter
+        reason="Slightly intend in section"
+        x={5}
+      >
+        <FormField
+          focusOnClick={false}
+          label="Default Project Path"
+          spacing={30}
+        >
+          <styled.div
+            size={5}
+          />
+          <DirectoryPicker
+            inputEditable={true}
+            isFocused={true}
+            onFocus={[Function]}
+            onSelect={[Function]}
+            path="user/guppy"
+            pathToSelectMessage="Select the directory"
+          />
+        </FormField>
+        <FormField
+          isFocused={false}
+          label="Default Project Type"
+          spacing={30}
+        >
+          <ProjectTypeSelection
+            onProjectTypeSelect={[Function]}
+            projectType="create-react-app"
+          />
+        </FormField>
+      </PixelShifter>
+      <Styled(Heading)>
+        Privacy
+      </Styled(Heading)>
+      <PixelShifter
+        reason="Slightly intend in section"
+        x={5}
+      >
+        <FormField
+          focusOnClick={false}
+          isFocused={false}
+          label="Enable anonymous usage tracking"
+          spacing={30}
+        >
+          <Toggle
+            isToggled={true}
+            onToggle={[Function]}
+            padding={2}
+            size={32}
+          />
+        </FormField>
+      </PixelShifter>
+      <styled.div
+        size={10}
+      />
+      <styled.div>
+        <FillButton
+          colors={
+            Array [
+              "#00C853",
+              "#69db0d",
+            ]
+          }
+          size="large"
+          textColor="#FFF"
+        >
+          Save
+        </FillButton>
+      </styled.div>
+    </form>
+  </styled.section>
+</Modal>
+`;

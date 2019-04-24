@@ -91,12 +91,12 @@ class File extends PureComponent<Props> {
                 L0,28
               `}
             stroke="none"
-            fill={COLORS.white}
+            fill={COLORS.lightBackground}
           />
           <polygon
             points="15,0 15,5 20,5"
             stroke="none"
-            fill={COLORS.white}
+            fill={COLORS.lightBackground}
             filter="url(#file-corner)"
           />
         </svg>

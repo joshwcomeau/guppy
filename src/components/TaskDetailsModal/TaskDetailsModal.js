@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 
 import * as actions from '../../actions';
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 import { capitalize } from '../../utils';
 import {
   getTaskByProjectIdAndTaskName,
@@ -66,7 +66,7 @@ class TaskDetailsModal extends PureComponent<Props> {
         return (
           <PrimaryStatusText>
             Task is{' '}
-            <strong style={{ color: COLORS.orange[500] }}>running</strong>...
+            <strong style={{ color: COLORS.lightWarning }}>running</strong>...
           </PrimaryStatusText>
         );
 
@@ -74,7 +74,7 @@ class TaskDetailsModal extends PureComponent<Props> {
         return (
           <PrimaryStatusText>
             Task{' '}
-            <strong style={{ color: COLORS.green[700] }}>
+            <strong style={{ color: COLORS.success }}>
               completed successfully
             </strong>.
           </PrimaryStatusText>
@@ -210,7 +210,7 @@ const MainContent = styled.section`
 
 const Description = styled.div`
   font-size: 21px;
-  color: ${COLORS.gray[500]};
+  color: ${RAW_COLORS.gray[500]};
 `;
 
 const Status = styled.div`
@@ -227,14 +227,14 @@ const PrimaryStatusText = styled.div`
 `;
 
 const LastRunText = styled.div`
-  color: ${COLORS.gray[400]};
+  color: ${RAW_COLORS.gray[400]};
   font-size: 16px;
 `;
 
 const HorizontalRule = styled.div`
   height: 0px;
   margin-top: 25px;
-  border-bottom: 1px solid ${COLORS.gray[200]};
+  border-bottom: 1px solid ${RAW_COLORS.gray[200]};
 `;
 
 const mapStateToProps = (state, ownProps) => {

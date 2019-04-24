@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 import PixelShifter from '../PixelShifter';
 import Heading from '../Heading';
@@ -24,8 +24,8 @@ class ModalHeader extends Component<Props> {
 
     const colors =
       theme === 'standard'
-        ? [COLORS.gray[100], COLORS.gray[100]]
-        : [COLORS.blue[700], COLORS.teal[500]];
+        ? [RAW_COLORS.gray[100], RAW_COLORS.gray[100]]
+        : [RAW_COLORS.blue[700], RAW_COLORS.teal[500]];
 
     return (
       <Wrapper colors={colors}>
@@ -37,7 +37,10 @@ class ModalHeader extends Component<Props> {
             >
               <Heading
                 style={{
-                  color: theme === 'standard' ? COLORS.gray[900] : COLORS.white,
+                  color:
+                    theme === 'standard'
+                      ? COLORS.text
+                      : COLORS.textOnBackground,
                 }}
               >
                 {title}

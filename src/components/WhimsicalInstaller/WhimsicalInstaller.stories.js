@@ -3,7 +3,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import WhimsicalInstaller from './WhimsicalInstaller';
 
@@ -32,5 +32,5 @@ storiesOf('WhimsicalInstaller', module)
 const Wrapper = styled.div`
   width: ${props => props.width}px;
   height: ${props => props.height}px;
-  background: ${COLORS.blue[700]};
+  background: ${RAW_COLORS.blue[700]};
 `;

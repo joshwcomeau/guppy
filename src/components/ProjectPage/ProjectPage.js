@@ -8,7 +8,7 @@ import { packageIcon } from 'react-icons-kit/feather/packageIcon';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getDependenciesLoadingStatus } from '../../reducers/dependencies.reducer';
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS, GRADIENTS } from '../../constants';
 import * as actions from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
@@ -123,7 +123,7 @@ export class ProjectPage extends PureComponent<Props> {
           <InstallWrapper>
             <FillButton
               size="large"
-              colors={[COLORS.green[700], COLORS.lightGreen[500]]}
+              colors={GRADIENTS.success}
               onClick={() => reinstallDependencies(project.id)}
             >
               Install Dependencies
@@ -147,7 +147,10 @@ export class ProjectPage extends PureComponent<Props> {
               reason="Align left edge of title with the modules on page"
             >
               <Tooltip title={path} position="bottom">
-                <Heading size="xlarge" style={{ color: COLORS.purple[500] }}>
+                <Heading
+                  size="xlarge"
+                  style={{ color: RAW_COLORS.purple[500] }}
+                >
                   {project.name}
                 </Heading>
               </Tooltip>
@@ -157,9 +160,9 @@ export class ProjectPage extends PureComponent<Props> {
 
           <ProjectActionBar>
             <FillButton
-              colors={COLORS.gray[200]}
-              hoverColors={COLORS.gray[300]}
-              textColor={COLORS.gray[900]}
+              colors={RAW_COLORS.gray[200]}
+              hoverColors={RAW_COLORS.gray[300]}
+              textColor={COLORS.text}
               size="small"
               onClick={this.openFolder}
             >
@@ -167,9 +170,9 @@ export class ProjectPage extends PureComponent<Props> {
             </FillButton>
             <Spacer size={15} />
             <FillButton
-              colors={COLORS.gray[200]}
-              hoverColors={COLORS.gray[300]}
-              textColor={COLORS.gray[900]}
+              colors={RAW_COLORS.gray[200]}
+              hoverColors={RAW_COLORS.gray[300]}
+              textColor={COLORS.text}
               size="small"
               onClick={this.openIDE}
             >
@@ -208,7 +211,7 @@ const DependencyMissingIcon = styled(IconBase).attrs({
   icon: packageIcon,
   size: 100,
 })`
-  color: ${COLORS.gray[300]};
+  color: ${RAW_COLORS.gray[300]};
   padding: 30px;
 `;
 

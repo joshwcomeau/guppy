@@ -5,7 +5,7 @@ import { Spring, animated, interpolate } from 'react-spring';
 import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { settings } from 'react-icons-kit/feather/settings';
-import { COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 import * as actions from '../../actions';
 
@@ -29,8 +29,8 @@ type State = {
 class SettingsButton extends Component<Props, State> {
   static defaultProps = {
     size: 36,
-    color: COLORS.gray[400],
-    hoverColor: COLORS.purple[500],
+    color: RAW_COLORS.gray[400],
+    hoverColor: RAW_COLORS.purple[500],
     settingsFor: 'project',
   };
 

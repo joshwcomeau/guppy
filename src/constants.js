@@ -1,7 +1,7 @@
 // @flow
 import packageJson from '../package.json';
 
-export const COLORS = {
+export const RAW_COLORS = {
   hotPink: {
     '500': '#F50057',
     '700': '#C51162',
@@ -107,6 +107,39 @@ export const COLORS = {
   },
   white: '#FFF',
   black: '#000',
+};
+
+export const COLORS = {
+  background: RAW_COLORS.gray[50],
+  lightBackground: RAW_COLORS.white,
+
+  text: RAW_COLORS.gray[900],
+  textOnBackground: RAW_COLORS.white,
+  lightText: RAW_COLORS.gray[600],
+
+  link: RAW_COLORS.blue[700],
+  lightLink: RAW_COLORS.blue[500],
+
+  success: RAW_COLORS.green[700],
+  lightSuccess: RAW_COLORS.green[500],
+
+  error: RAW_COLORS.pink[700],
+  lightError: RAW_COLORS.pink[500],
+
+  warning: RAW_COLORS.orange[700],
+  lightWarning: RAW_COLORS.orange[500],
+};
+
+export const GRADIENTS = {
+  success: [COLORS.success, RAW_COLORS.lightGreen[500]],
+  error: [RAW_COLORS.pink[300], RAW_COLORS.red[500]],
+  primary: [RAW_COLORS.purple[500], RAW_COLORS.violet[500]],
+  darkPrimary: [RAW_COLORS.purple[500], RAW_COLORS.blue[700]],
+  progress: [
+    RAW_COLORS.blue[700],
+    RAW_COLORS.teal[500],
+    RAW_COLORS.lightGreen[500],
+  ],
 };
 
 export const BREAKPOINT_SIZES = {
