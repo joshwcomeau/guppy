@@ -47,7 +47,7 @@ const SearchBoxGlobalStyle = createGlobalStyle`
     background: transparent;
     border: none;
     border-bottom: 2px solid rgba(255, 255, 255, 0.75);
-    color: ${COLORS.white};
+    color: ${COLORS.lightBackground};
     border-radius: 0px;
     outline: none;
     font-size: 21px;
@@ -57,7 +57,7 @@ const SearchBoxGlobalStyle = createGlobalStyle`
     }
 
     &:focus {
-      border-bottom: 2px solid ${COLORS.white};
+      border-bottom: 2px solid ${COLORS.lightBackground};
 
     }
   }

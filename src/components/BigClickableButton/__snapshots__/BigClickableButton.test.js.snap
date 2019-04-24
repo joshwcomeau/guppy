@@ -19,12 +19,12 @@ exports[`BigClickableButton component should render pressed 1`] = `
   color: #FFF;
   font-size: 18px;
   border: none;
-  background: linear-gradient(45deg,#2142ff,#3f6cff);
+  background: linear-gradient(45deg,#651fff,#304FFE);
   outline: none;
 }
 
 <styled.button
-  background="linear-gradient(45deg, #2142ff, #3f6cff)"
+  background="linear-gradient(45deg, #651fff, #304FFE)"
   height={64}
   onMouseDown={[Function]}
   onMouseLeave={[Function]}
@@ -32,7 +32,7 @@ exports[`BigClickableButton component should render pressed 1`] = `
   width={64}
 >
   <StyledComponent
-    background="linear-gradient(45deg, #2142ff, #3f6cff)"
+    background="linear-gradient(45deg, #651fff, #304FFE)"
     forwardedComponent={
       Object {
         "$$typeof": Symbol(react.forward_ref),
@@ -192,7 +192,7 @@ exports[`BigClickableButton component should render pressed 2`] = `
                       L 72,72
                       L 6,72
                     "
-              fill="rgb(0, 30, 202)"
+              fill="rgb(63, 0, 200)"
             />
             <path
               d="
@@ -201,7 +201,7 @@ exports[`BigClickableButton component should render pressed 2`] = `
                       L 72,72
                       L 64, 64
                     "
-              fill="rgb(0, 52, 223)"
+              fill="rgb(1, 33, 210)"
             />
           </svg>
         </StyledComponent>
@@ -230,12 +230,12 @@ exports[`BigClickableButton component should render released 1`] = `
   color: #FFF;
   font-size: 18px;
   border: none;
-  background: linear-gradient(45deg,#2142ff,#3f6cff);
+  background: linear-gradient(45deg,#651fff,#304FFE);
   outline: none;
 }
 
 <styled.button
-  background="linear-gradient(45deg, #2142ff, #3f6cff)"
+  background="linear-gradient(45deg, #651fff, #304FFE)"
   height={64}
   onMouseDown={[Function]}
   onMouseLeave={[Function]}
@@ -243,7 +243,7 @@ exports[`BigClickableButton component should render released 1`] = `
   width={64}
 >
   <StyledComponent
-    background="linear-gradient(45deg, #2142ff, #3f6cff)"
+    background="linear-gradient(45deg, #651fff, #304FFE)"
     forwardedComponent={
       Object {
         "$$typeof": Symbol(react.forward_ref),
@@ -403,7 +403,7 @@ exports[`BigClickableButton component should render released 2`] = `
                       L 72,72
                       L 6,72
                     "
-              fill="rgb(0, 30, 202)"
+              fill="rgb(63, 0, 200)"
             />
             <path
               d="
@@ -412,7 +412,7 @@ exports[`BigClickableButton component should render released 2`] = `
                       L 72,72
                       L 64, 64
                     "
-              fill="rgb(0, 52, 223)"
+              fill="rgb(1, 33, 210)"
             />
           </svg>
         </StyledComponent>

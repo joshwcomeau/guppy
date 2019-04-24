@@ -7,7 +7,7 @@ import { plus } from 'react-icons-kit/feather/plus';
 
 import { getSelectedProject } from '../../reducers/projects.reducer';
 import { getOnlineState } from '../../reducers/app-status.reducer';
-import { COLORS, GUPPY_REPO_URL, RAW_COLORS } from '../../constants';
+import { RAW_COLORS, COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import Module from '../Module';
 import AddDependencyModal from './AddDependencyModal';
@@ -117,7 +117,10 @@ export class DependencyManagementPane extends PureComponent<Props, State> {
       dependency.status.match(/^queued-/)
     ) {
       return (
-        <Spinner size={20} color={isSelected ? COLORS.white : undefined} />
+        <Spinner
+          size={20}
+          color={isSelected ? COLORS.textOnBackground : undefined}
+        />
       );
     }
 
@@ -203,7 +206,8 @@ export class DependencyManagementPane extends PureComponent<Props, State> {
                 isOnline={this.props.isOnline}
                 onClick={this.openAddNewDependencyModal}
               >
-                <IconBase icon={plus} size={20} /> <Spacer size={6} />
+                <IconBase icon={plus} size={20} />
+                <Spacer size={6} />
                 Add New
                 <OnlyOn
                   size="mdMin"
@@ -265,7 +269,7 @@ export const DependencyButton = styled.button`
           RAW_COLORS.blue[500]
         })`
       : RAW_COLORS.gray[100]};
-  color: ${props => (props.isSelected ? RAW_COLORS.white : COLORS.text)};
+  color: ${props => (props.isSelected ? COLORS.textOnBackground : COLORS.text)};
   border-radius: 4px;
   border-bottom: ${props =>
     props.isSelected
@@ -323,7 +327,7 @@ export const AddDependencyButton = styled.button`
   pointer-events: ${props => (props.isOnline ? 'auto' : 'none')};
   &:hover {
     border: 2px dashed ${RAW_COLORS.gray[400]};
-    color: ${RAW_COLORS.gray[600]};
+    color: ${COLORS.text};
   }
 `;
 

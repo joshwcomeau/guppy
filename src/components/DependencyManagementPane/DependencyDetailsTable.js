@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import { COLORS, GUPPY_REPO_URL, RAW_COLORS } from '../../constants';
+import { RAW_COLORS, COLORS, GUPPY_REPO_URL } from '../../constants';
 
 import ExternalLink from '../ExternalLink';
 import Label from '../Label';
@@ -60,7 +60,7 @@ class DependencyDetailsTable extends Component<Props> {
           </tr>
           <tr>
             <Cell>
-              <Label> Last Published </Label>
+              <Label>Last Published</Label>
             </Cell>
             <Cell>
               {lastUpdatedAt ? (
@@ -74,7 +74,7 @@ class DependencyDetailsTable extends Component<Props> {
           </tr>
           <tr>
             <Cell>
-              <Label> License </Label>
+              <Label>License</Label>
             </Cell>
             <Cell>
               <License license={dependency.license} />
@@ -82,13 +82,13 @@ class DependencyDetailsTable extends Component<Props> {
           </tr>
           <tr>
             <Cell>
-              <Label> Resources </Label>
+              <Label>Resources</Label>
             </Cell>
             <Cell>
-              <ExternalLink href={packageHref}> NPM </ExternalLink>
+              <ExternalLink href={packageHref}>NPM</ExternalLink>
               {githubHref && <Middot />}
               {githubHref && (
-                <ExternalLink href={githubHref}> GitHub </ExternalLink>
+                <ExternalLink href={githubHref}>GitHub</ExternalLink>
               )}
               {dependency.homepage && <Middot />}
               {dependency.homepage && (
@@ -100,13 +100,7 @@ class DependencyDetailsTable extends Component<Props> {
           </tr>
           <tr>
             <LastCell>
-              <Label
-                style={{
-                  color: RAW_COLORS.pink[500],
-                }}
-              >
-                Danger Zone
-              </Label>
+              <Label style={{ color: COLORS.lightError }}>Danger Zone</Label>
             </LastCell>
             <LastCell>
               <DeleteDependencyButton
@@ -133,15 +127,15 @@ const Cell = styled.td`
 
   &:first-of-type {
     width: 150px;
-    color: ${COLORS.lightText};
+    color: ${RAW_COLORS.gray[600]};
   }
 `;
 
 const DependencyLocationLabel = styled.span`
   background-color: ${props =>
-    props.isDevDependency ? COLORS.warning : COLORS.link};
+    props.isDevDependency ? COLORS.warning : RAW_COLORS.blue[700]};
   border-radius: 4px;
-  color: ${RAW_COLORS.white};
+  color: ${COLORS.textOnBackground};
   font-size: 14px;
   padding: 5px 10px;
 `;

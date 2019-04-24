@@ -13,7 +13,7 @@ import {
   getSelectedProjectId,
   getDependencyMapForSelectedProject,
 } from '../../reducers/projects.reducer';
-import { COLORS, GRADIENTS, RAW_COLORS } from '../../constants';
+import { RAW_COLORS, COLORS, GRADIENTS } from '../../constants';
 
 import Divider from '../Divider';
 import Spacer from '../Spacer';
@@ -79,11 +79,11 @@ export const StatsItem = ({
 
 export const getColorForDownloadNumber = (num: number) => {
   if (num < 5000) {
-    return COLORS.pink[700];
+    return COLORS.error;
   } else if (num < 50000) {
-    return COLORS.orange[500];
+    return COLORS.lightWarning;
   } else {
-    return COLORS.green[700];
+    return COLORS.success;
   }
 };
 
@@ -98,7 +98,7 @@ export class AddDependencySearchResult extends PureComponent<Props> {
           <IconBase
             icon={check}
             size={24}
-            style={{ color: RAW_COLORS.green[500] }}
+            style={{ color: COLORS.lightSuccess }}
           />
           <Spacer size={6} />
           Installed
@@ -120,7 +120,7 @@ export class AddDependencySearchResult extends PureComponent<Props> {
       <StrokeButton
         size="small"
         strokeColors={GRADIENTS.success}
-        textColor={COLORS.green[700]}
+        textColor={COLORS.success}
         onClick={() => addDependency(projectId, hit.name, hit.version)}
       >
         Add To Project
@@ -242,7 +242,7 @@ const SearchResultGlobalStyle = createGlobalStyle`
     margin-top: 45px;
     margin-left: 50%;
     background: transparent;
-    border: 2px solid ${RAW_COLORS.blue[700]};
+    border: 2px solid ${COLORS.link};
     border-radius: 60px;
     font-size: 18px;
     transform: translateX(-50%);
