@@ -5,13 +5,13 @@ exports[`ProjectPage component Rendering should render project page (done) 1`] =
   <Connect(DevelopmentServerPane)
     leftSideWidth={300}
   />
-  <styled.div
+  <ForwardRef
     size={30}
   />
   <Connect(TaskRunnerPane)
     leftSideWidth={200}
   />
-  <styled.div
+  <ForwardRef
     size={30}
   />
   <Connect(DependencyManagementPane) />
@@ -19,23 +19,23 @@ exports[`ProjectPage component Rendering should render project page (done) 1`] =
 `;
 
 exports[`ProjectPage component Rendering should render project page (fail) 1`] = `
-<styled.div>
-  <styled.div>
-    <Styled(Icon) />
-  </styled.div>
-  <styled.div>
+<ForwardRef>
+  <ForwardRef>
+    <ForwardRef />
+  </ForwardRef>
+  <ForwardRef>
     <strong>
       Oh no!
     </strong>
      Looks like your project dependencies are missing.
-  </styled.div>
-  <styled.div>
+  </ForwardRef>
+  <ForwardRef>
     This can happen if you've freshly cloned a project from GitHub. In order to run scripts in Guppy, you'll need to install them now.
-  </styled.div>
-  <styled.div
+  </ForwardRef>
+  <ForwardRef
     size={30}
   />
-  <Styled(styled.div)>
+  <ForwardRef>
     <FillButton
       colors={
         Array [
@@ -49,8 +49,8 @@ exports[`ProjectPage component Rendering should render project page (fail) 1`] =
     >
       Install Dependencies
     </FillButton>
-  </Styled(styled.div)>
-</styled.div>
+  </ForwardRef>
+</ForwardRef>
 `;
 
 exports[`ProjectPage component Rendering should render project page (loading) 1`] = `
@@ -58,11 +58,11 @@ exports[`ProjectPage component Rendering should render project page (loading) 1`
   delay={100}
   reason="Don't show spinner if we're really fast."
 >
-  <Styled(styled.div)>
+  <ForwardRef>
     <Spinner
       size={50}
     />
-  </Styled(styled.div)>
+  </ForwardRef>
 </MountAfter>
 `;
 

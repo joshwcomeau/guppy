@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FillButton component should render button filled 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -21,33 +21,30 @@ exports[`FillButton component should render button filled 1`] = `
   cursor: pointer;
   outline: none;
   white-space: nowrap;
+  padding: 0px 20px;
+  height: 38px;
+  border-radius: 19px;
+  font-size: 16px;
 }
 
-.c1:hover {
+.c0:hover {
   background: linear-gradient( 45deg, #651fff,#D500F9 );
 }
 
-.c1:disabled {
+.c0:disabled {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
   cursor: initial;
 }
 
-.c1:not(:disabled):active {
+.c0:not(:disabled):active {
   -webkit-transform-origin: center center;
   -ms-transform-origin: center center;
   transform-origin: center center;
   -webkit-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
-}
-
-.c0 {
-  padding: 0px 20px;
-  height: 38px;
-  border-radius: 19px;
-  font-size: 16px;
 }
 
 <ButtonBase
@@ -75,13 +72,81 @@ exports[`FillButton component should render button filled 1`] = `
   )"
     textColor="#FFF"
   >
-    <styled.button
+    <StyledComponent
       activeSplat={true}
       background="linear-gradient(
     45deg,
     #651fff,#D500F9
   )"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bxivhb",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 19px;
+  font-size: 16px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-bxivhb",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       hoverBackground="linear-gradient(
     45deg,
     #651fff,#D500F9
@@ -89,9 +154,9 @@ exports[`FillButton component should render button filled 1`] = `
       textColor="#FFF"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;

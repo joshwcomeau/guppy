@@ -19,7 +19,7 @@ exports[`ProjectConfigurationModal component Rendering should render 1`] = `
         label="Project name"
         spacing={30}
       >
-        <TextInput
+        <ForwardRef
           autoFocus={true}
           isFocused={true}
           onChange={[Function]}
@@ -82,7 +82,7 @@ exports[`ProjectConfigurationModal component Rendering should render with active
         label="Project name"
         spacing={30}
       >
-        <TextInput
+        <ForwardRef
           autoFocus={true}
           isFocused={true}
           onChange={[Function]}

@@ -43,11 +43,44 @@ exports[`DependencyManagement component Rendering should render list addon for R
 <styled.span
   isSelected={false}
 >
-  <span
-    className="c0"
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-cmTdod",
+          "isStatic": false,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  padding-left: 10px;
+  font-size: 16px;
+  color: ",
+            [Function],
+            "};
+",
+          ],
+        },
+        "displayName": "styled.span",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-cmTdod",
+        "target": "span",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
+    isSelected={false}
   >
-    16.0.0
-  </span>
+    <span
+      className="c0"
+    >
+      16.0.0
+    </span>
+  </StyledComponent>
 </styled.span>
 `;
 
@@ -61,16 +94,49 @@ exports[`DependencyManagement component Rendering should render list addon for R
 <styled.span
   isSelected={true}
 >
-  <span
-    className="c0"
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-cmTdod",
+          "isStatic": false,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  padding-left: 10px;
+  font-size: 16px;
+  color: ",
+            [Function],
+            "};
+",
+          ],
+        },
+        "displayName": "styled.span",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-cmTdod",
+        "target": "span",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
+    isSelected={true}
   >
-    16.0.0
-  </span>
+    <span
+      className="c0"
+    >
+      16.0.0
+    </span>
+  </StyledComponent>
 </styled.span>
 `;
 
 exports[`DependencyManagement component Rendering should render main content for selected dependency (default) 1`] = `
-<styled.div>
+<Styled(styled.div)>
   <DependencyDetails
     dependency={
       Object {
@@ -82,14 +148,14 @@ exports[`DependencyManagement component Rendering should render main content for
     }
     projectId="projectId"
   />
-</styled.div>
+</Styled(styled.div)>
 `;
 
 exports[`DependencyManagement component Rendering should render main content for selected dependency (installing) 1`] = `
-<styled.div>
+<Styled(styled.div)>
   <DependencyInstalling
     name="React"
     queued={false}
   />
-</styled.div>
+</Styled(styled.div)>
 `;

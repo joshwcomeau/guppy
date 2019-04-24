@@ -31,14 +31,66 @@ exports[`BigClickableButton component should render pressed 1`] = `
   onMouseUp={[Function]}
   width={64}
 >
-  <button
-    className="c0"
+  <StyledComponent
+    background="linear-gradient(45deg, #2142ff, #3f6cff)"
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-htpNat",
+          "isStatic": false,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  width: ",
+            [Function],
+            "px;
+  height: ",
+            [Function],
+            "px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: ",
+            "#FFF",
+            ";
+  font-size: 18px;
+
+  border: none;
+  background: ",
+            [Function],
+            ";
+  outline: none; /* TODO: Better a11y story :/ */
+",
+          ],
+        },
+        "displayName": "styled.button",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-htpNat",
+        "target": "button",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
     height={64}
     onMouseDown={[Function]}
     onMouseLeave={[Function]}
     onMouseUp={[Function]}
     width={64}
-  />
+  >
+    <button
+      className="c0"
+      height={64}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      width={64}
+    />
+  </StyledComponent>
 </styled.button>
 `;
 
@@ -51,20 +103,40 @@ exports[`BigClickableButton component should render pressed 2`] = `
 }
 
 <styled.div>
-  <div
-    className="c0"
-  >
-    <styled.svg
-      height={72}
-      style={
-        Object {
-          "display": "block",
-        }
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-bxivhb",
+          "isStatic": true,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+",
+          ],
+        },
+        "displayName": "styled.div",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-bxivhb",
+        "target": "div",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
       }
-      width={72}
+    }
+    forwardedRef={null}
+  >
+    <div
+      className="c0"
     >
-      <svg
-        className=""
+      <styled.svg
         height={72}
         style={
           Object {
@@ -73,27 +145,69 @@ exports[`BigClickableButton component should render pressed 2`] = `
         }
         width={72}
       >
-        <path
-          d="
+        <StyledComponent
+          forwardedComponent={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "attrs": Array [],
+              "componentStyle": ComponentStyle {
+                "componentId": "sc-ifAKCX",
+                "isStatic": true,
+                "lastClassName": "cFlEyZ",
+                "rules": Array [],
+              },
+              "displayName": "styled.svg",
+              "foldedComponentIds": Array [],
+              "render": [Function],
+              "styledComponentId": "sc-ifAKCX",
+              "target": "svg",
+              "toString": [Function],
+              "warnTooManyClasses": [Function],
+              "withComponent": [Function],
+            }
+          }
+          forwardedRef={null}
+          height={72}
+          style={
+            Object {
+              "display": "block",
+            }
+          }
+          width={72}
+        >
+          <svg
+            className=""
+            height={72}
+            style={
+              Object {
+                "display": "block",
+              }
+            }
+            width={72}
+          >
+            <path
+              d="
                       M 0,64
                       L 64,64
                       L 72,72
                       L 6,72
                     "
-          fill="rgb(0, 30, 202)"
-        />
-        <path
-          d="
+              fill="rgb(0, 30, 202)"
+            />
+            <path
+              d="
                       M 64,0
                       L 72,6
                       L 72,72
                       L 64, 64
                     "
-          fill="rgb(0, 52, 223)"
-        />
-      </svg>
-    </styled.svg>
-  </div>
+              fill="rgb(0, 52, 223)"
+            />
+          </svg>
+        </StyledComponent>
+      </styled.svg>
+    </div>
+  </StyledComponent>
 </styled.div>
 `;
 
@@ -128,14 +242,66 @@ exports[`BigClickableButton component should render released 1`] = `
   onMouseUp={[Function]}
   width={64}
 >
-  <button
-    className="c0"
+  <StyledComponent
+    background="linear-gradient(45deg, #2142ff, #3f6cff)"
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-htpNat",
+          "isStatic": false,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  width: ",
+            [Function],
+            "px;
+  height: ",
+            [Function],
+            "px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: ",
+            "#FFF",
+            ";
+  font-size: 18px;
+
+  border: none;
+  background: ",
+            [Function],
+            ";
+  outline: none; /* TODO: Better a11y story :/ */
+",
+          ],
+        },
+        "displayName": "styled.button",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-htpNat",
+        "target": "button",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
     height={64}
     onMouseDown={[Function]}
     onMouseLeave={[Function]}
     onMouseUp={[Function]}
     width={64}
-  />
+  >
+    <button
+      className="c0"
+      height={64}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      width={64}
+    />
+  </StyledComponent>
 </styled.button>
 `;
 
@@ -148,20 +314,40 @@ exports[`BigClickableButton component should render released 2`] = `
 }
 
 <styled.div>
-  <div
-    className="c0"
-  >
-    <styled.svg
-      height={72}
-      style={
-        Object {
-          "display": "block",
-        }
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-bxivhb",
+          "isStatic": true,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+",
+          ],
+        },
+        "displayName": "styled.div",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-bxivhb",
+        "target": "div",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
       }
-      width={72}
+    }
+    forwardedRef={null}
+  >
+    <div
+      className="c0"
     >
-      <svg
-        className=""
+      <styled.svg
         height={72}
         style={
           Object {
@@ -170,26 +356,68 @@ exports[`BigClickableButton component should render released 2`] = `
         }
         width={72}
       >
-        <path
-          d="
+        <StyledComponent
+          forwardedComponent={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "attrs": Array [],
+              "componentStyle": ComponentStyle {
+                "componentId": "sc-ifAKCX",
+                "isStatic": true,
+                "lastClassName": "cFlEyZ",
+                "rules": Array [],
+              },
+              "displayName": "styled.svg",
+              "foldedComponentIds": Array [],
+              "render": [Function],
+              "styledComponentId": "sc-ifAKCX",
+              "target": "svg",
+              "toString": [Function],
+              "warnTooManyClasses": [Function],
+              "withComponent": [Function],
+            }
+          }
+          forwardedRef={null}
+          height={72}
+          style={
+            Object {
+              "display": "block",
+            }
+          }
+          width={72}
+        >
+          <svg
+            className=""
+            height={72}
+            style={
+              Object {
+                "display": "block",
+              }
+            }
+            width={72}
+          >
+            <path
+              d="
                       M 0,64
                       L 64,64
                       L 72,72
                       L 6,72
                     "
-          fill="rgb(0, 30, 202)"
-        />
-        <path
-          d="
+              fill="rgb(0, 30, 202)"
+            />
+            <path
+              d="
                       M 64,0
                       L 72,6
                       L 72,72
                       L 64, 64
                     "
-          fill="rgb(0, 52, 223)"
-        />
-      </svg>
-    </styled.svg>
-  </div>
+              fill="rgb(0, 52, 223)"
+            />
+          </svg>
+        </StyledComponent>
+      </styled.svg>
+    </div>
+  </StyledComponent>
 </styled.div>
 `;

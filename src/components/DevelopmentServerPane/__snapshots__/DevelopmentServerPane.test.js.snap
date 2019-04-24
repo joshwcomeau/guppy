@@ -17,7 +17,7 @@ exports[`DevelopmentServerPane component Rendering should render 1`] = `
     display="inline"
     size="mdMin"
   >
-    <styled.div>
+    <Styled(styled.div)>
       <styled.div>
         <styled.div>
           Runs a local development server that updates whenever you make changes to the files.
@@ -48,13 +48,13 @@ exports[`DevelopmentServerPane component Rendering should render 1`] = `
           title="Server Logs"
         />
       </styled.div>
-    </styled.div>
+    </Styled(styled.div)>
   </OnlyOn>
   <OnlyOn
     display="inline"
     size="sm"
   >
-    <styled.div>
+    <Styled(styled.div)>
       <styled.div>
         <styled.div>
           <styled.div>
@@ -86,7 +86,7 @@ exports[`DevelopmentServerPane component Rendering should render 1`] = `
           }
         />
       </styled.div>
-    </styled.div>
+    </Styled(styled.div)>
   </OnlyOn>
 </Pane>
 `;

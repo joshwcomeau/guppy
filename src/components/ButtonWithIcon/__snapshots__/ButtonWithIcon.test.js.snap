@@ -37,16 +37,84 @@ exports[`ButtonWithIcon component should render button with icon 1`] = `
 }
 
 <styled.div>
-  <div
-    className="c0"
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-htoDjs",
+          "isStatic": true,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 10px 0 32px;
+",
+          ],
+        },
+        "displayName": "styled.div",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-htoDjs",
+        "target": "div",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
   >
-    <styled.div>
-      <div
-        className="c1"
-      >
-        <svg />
-      </div>
-    </styled.div>
-  </div>
+    <div
+      className="c0"
+    >
+      <styled.div>
+        <StyledComponent
+          forwardedComponent={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "attrs": Array [],
+              "componentStyle": ComponentStyle {
+                "componentId": "sc-dnqmqq",
+                "isStatic": true,
+                "lastClassName": "c1",
+                "rules": Array [
+                  "
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+",
+                ],
+              },
+              "displayName": "styled.div",
+              "foldedComponentIds": Array [],
+              "render": [Function],
+              "styledComponentId": "sc-dnqmqq",
+              "target": "div",
+              "toString": [Function],
+              "warnTooManyClasses": [Function],
+              "withComponent": [Function],
+            }
+          }
+          forwardedRef={null}
+        >
+          <div
+            className="c1"
+          >
+            <svg />
+          </div>
+        </StyledComponent>
+      </styled.div>
+    </div>
+  </StyledComponent>
 </styled.div>
 `;

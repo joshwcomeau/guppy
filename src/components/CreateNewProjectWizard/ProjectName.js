@@ -159,6 +159,10 @@ class ProjectName extends PureComponent<Props, State> {
     }
   };
 
+  // Note:
+  // setRef is needed for unit testing that's why we're not inlining it in JSX
+  setRef = (node: HTMLElement) => (this.node = node);
+
   render() {
     const {
       name,
@@ -178,7 +182,7 @@ class ProjectName extends PureComponent<Props, State> {
         spacing={15}
       >
         <TextInput
-          ref={node => (this.node = node)}
+          ref={this.setRef}
           type="text"
           value={randomizedOverrideName || name}
           isFocused={isFocused}
