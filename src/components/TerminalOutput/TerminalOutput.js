@@ -109,14 +109,6 @@ class TerminalOutput extends PureComponent<Props, State> {
         }
       }
     }
-
-    // if (
-    //   prevProps.width !== this.props.width ||
-    //   prevProps.height !== this.props.height
-    // ) {
-    //   console.log('size changed', this.props.width);
-    //   this.handleResize();
-    // }
   }
 
   componentWillUnmount() {

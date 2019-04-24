@@ -98,7 +98,6 @@ export class ProjectPage extends PureComponent<Props> {
       done: (
         <Fragment>
           <DevelopmentServerPane leftSideWidth={300} />
-
           <Spacer size={30} />
           <TaskRunnerPane leftSideWidth={200} />
           <Spacer size={30} />
@@ -138,6 +137,9 @@ export class ProjectPage extends PureComponent<Props> {
     const { project } = this.props;
     const { path } = project;
 
+    if (!project) {
+      return null;
+    }
     return (
       <FadeIn>
         <MainContentWrapper>
