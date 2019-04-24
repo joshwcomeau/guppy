@@ -161,7 +161,7 @@ class ProjectName extends PureComponent<Props, State> {
 
   // Note:
   // setRef is needed for unit testing that's why we're not inlining it in JSX
-  setRef = (node: HTMLElement) => (this.node = node);
+  setRef = (node: ?HTMLElement) => (this.node = node);
 
   render() {
     const {
