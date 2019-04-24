@@ -67,8 +67,8 @@ class TerminalOutput extends PureComponent<Props, State> {
     });
 
     this.xterm.setOption('theme', {
-      background: COLORS.blue[900],
-      foreground: COLORS.white,
+      background: RAW_COLORS.blue[900],
+      foreground: COLORS.textOnBackground,
     });
 
     this.xterm.open(this.termWrapperRef);
