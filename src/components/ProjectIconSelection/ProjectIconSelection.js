@@ -46,7 +46,7 @@ class ProjectIconSelection extends Component<Props> {
               status={
                 selectedIcon === null
                   ? 'default'
-                  : selectedIcon === src
+                  : selectedIcon.includes(src)
                     ? 'highlighted'
                     : 'faded'
               }
