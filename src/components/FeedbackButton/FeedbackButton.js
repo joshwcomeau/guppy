@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
-import IconBase from 'react-icons-kit';
+import Icon from 'react-icons-kit';
 import { messageSquare } from 'react-icons-kit/feather/messageSquare';
 import { Spring, animated, interpolate } from 'react-spring';
 import { shell } from 'electron';
@@ -94,9 +94,7 @@ class FeedbackButton extends PureComponent<Props, State> {
                 Feedback
               </Text>
             </SliderWrapper>
-            <Icon
-              size={size}
-              icon={messageSquare}
+            <IconWrapper
               style={{
                 transform: interpolate(
                   [interpolated.hovered],
@@ -105,7 +103,9 @@ class FeedbackButton extends PureComponent<Props, State> {
               }}
               color={!!isHovered ? hoverColor : color}
               onMouseEnter={this.handleMouseEnter}
-            />
+            >
+              <Icon size={size} icon={messageSquare} />
+            </IconWrapper>
           </Wrapper>
         )}
       </Spring>
@@ -151,7 +151,10 @@ const Text = animated(styled.div`
   line-height: 50px;
 `);
 
-const Icon = animated(styled(IconBase)`
+const IconWrapper = styled(animated.div)`
+  display: flex;
+  align-content: center;
+  justify-content: center;
   width: 50px;
   height: 50px;
   background: ${RAW_COLORS.white};
@@ -159,6 +162,6 @@ const Icon = animated(styled(IconBase)`
   border-radius: 50% 50%;
   border: 2px solid ${RAW_COLORS.gray[200]};
   cursor: pointer;
-`);
+`;
 
 export default FeedbackButton;
