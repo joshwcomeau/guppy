@@ -108,13 +108,13 @@ class Modal extends PureComponent<Props, State> {
                 {interpolated => (
                   <Wrapper
                     opacity={interpolated.opacity}
-                    clickable={!inTransit}
+                    clickable={(!inTransit).toString()}
                   >
                     <Backdrop onClick={onDismiss} />
                     <PaneWrapper
                       width={width}
                       height={height}
-                      translateY={interpolated.translateY}
+                      translatey={interpolated.translateY}
                     >
                       {outdatedChildren || children}
                     </PaneWrapper>
@@ -129,7 +129,7 @@ class Modal extends PureComponent<Props, State> {
   }
 }
 
-const Wrapper = animated(styled.div.attrs(props => ({
+const Wrapper = styled(animated.div).attrs(props => ({
   style: {
     opacity: props.opacity,
     pointerEvents: props.clickable ? 'auto' : 'none',
@@ -150,7 +150,7 @@ const Wrapper = animated(styled.div.attrs(props => ({
     scrollable.
   */
   overflow: auto;
-`);
+`;
 
 const Backdrop = styled.div`
   position: absolute;
@@ -162,11 +162,11 @@ const Backdrop = styled.div`
   background: rgba(230, 230, 230, 0.8);
 `;
 
-const PaneWrapper = animated(styled.div.attrs(props => ({
+const PaneWrapper = styled(animated.div).attrs(props => ({
   style: {
     width: props.width,
     height: props.height,
-    transform: `translateY(${props.translateY}px)`,
+    transform: props.translatey.interpolate(y => `translateY(${y}px)`),
   },
 }))`
   position: relative;
@@ -177,6 +177,6 @@ const PaneWrapper = animated(styled.div.attrs(props => ({
   border-radius: 8px;
   background: ${COLORS.lightBackground};
   will-change: transform;
-`);
+`;
 
 export default Modal;
