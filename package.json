@@ -24,7 +24,6 @@
     "start": "cross-env NODE_ENV=development npm run start:react",
     "start:react": "cross-env BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
-    "build:docz": "docz build",
     "dist": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -c.extraMetadata.main=build/electron.js",
     "dist:all": "cross-env GENERATE_SOURCEMAP=false npm run build && electron-builder -mwl -c.extraMetadata.main=build/electron.js",
     "publish": "yarn dist --publish always",
@@ -41,8 +40,8 @@
     "prepush": "yarn run flow",
     "build-storybook": "build-storybook -c .storybook -o storybook-static",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "docz": "docz dev",
-    "build-docz": "docz build"
+    "docz:dev": "docz dev",
+    "docz:build": "docz build"
   },
   "lint-staged": {
     "linters": {

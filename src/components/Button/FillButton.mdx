@@ -5,7 +5,7 @@ menu: Reusable Components
 
 import { Playground, Props } from 'docz'
 
-import { COLORS } from '../../constants'
+import { RAW_COLORS } from '../../constants'
 import FillButton from './FillButton'
 
 # FillButton
@@ -49,19 +49,19 @@ import FillButton from './FillButton'
 ## Colors
 
 <Playground>
-  <FillButton colors={[COLORS.green[500], COLORS.green[500]]}>
+  <FillButton colors={[RAW_COLORS.green[500], RAW_COLORS.green[500]]}>
     Solid green
   </FillButton>
 </Playground>
 
 <Playground>
-  <FillButton colors={[COLORS.orange[500], COLORS.pink[300]]}>
+  <FillButton colors={[RAW_COLORS.orange[500], RAW_COLORS.pink[300]]}>
     Orange to pink
   </FillButton>
 </Playground>
 
 <Playground>
-  <FillButton colors={[COLORS.teal[700], COLORS.lime[500]]}>
+  <FillButton colors={[RAW_COLORS.teal[700], RAW_COLORS.lime[500]]}>
     Teal to lime
   </FillButton>
 </Playground>
