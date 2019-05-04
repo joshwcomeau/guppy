@@ -5,7 +5,7 @@ import IconBase from 'react-icons-kit';
 import { u2753 as questionMarkIcon } from 'react-icons-kit/noto_emoji_regular/u2753';
 import { shell } from 'electron';
 
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 type Props = {
   size?: number,
@@ -32,13 +32,13 @@ const Help = styled.button`
   align-items: center;
   border: none;
   border-radius: 50%;
-  color: ${COLORS.white};
-  background: ${COLORS.gray[500]};
+  color: ${COLORS.textOnBackground};
+  background: ${RAW_COLORS.gray[500]};
   padding: 0;
   cursor: pointer;
 
   &:hover {
-    background: ${COLORS.blue[700]};
+    background: ${COLORS.link};
   }
 `;
 

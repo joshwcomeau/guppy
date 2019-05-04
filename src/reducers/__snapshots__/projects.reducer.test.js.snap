@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Selectors should getProjectById 1`] = `
+Object {
+  "color": "black",
+  "createdAt": 12345,
+  "dependencies": Array [
+    Object {
+      "first-dep": Object {},
+      "second-dep": Object {},
+    },
+    Object {
+      "first-dep": Object {},
+      "second-dep": Object {},
+    },
+  ],
+  "icon": "http://example.com/link/to/pic",
+  "id": "test-id",
+  "name": "test",
+  "path": "project-path/",
+  "tasks": Array [],
+  "type": "create-react-app",
+}
+`;
+
+exports[`Selectors should getProjectsArray 1`] = `
+Array [
+  Object {
+    "color": "black",
+    "createdAt": 12345,
+    "dependencies": Array [
+      Object {},
+      Object {},
+    ],
+    "icon": "http://example.com/link/to/pic",
+    "id": "foo",
+    "name": "Foo",
+    "path": undefined,
+    "tasks": Array [],
+    "type": "create-react-app",
+  },
+  Object {
+    "color": "black",
+    "createdAt": 12345,
+    "dependencies": Array [
+      Object {},
+      Object {},
+    ],
+    "icon": "http://example.com/link/to/pic",
+    "id": "bar",
+    "name": "Bar",
+    "path": undefined,
+    "tasks": Array [],
+    "type": "create-react-app",
+  },
+]
+`;

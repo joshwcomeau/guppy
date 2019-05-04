@@ -7,7 +7,7 @@ import { Spring, animated, interpolate } from 'react-spring';
 import { shell } from 'electron';
 
 import { IN_APP_FEEDBACK_URL } from '../../config/app';
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 type Props = {
   size: number,
@@ -22,8 +22,8 @@ type State = {
 class FeedbackButton extends PureComponent<Props, State> {
   static defaultProps = {
     size: 28,
-    color: COLORS.gray[600],
-    hoverColor: COLORS.purple[500],
+    color: COLORS.lightText,
+    hoverColor: RAW_COLORS.purple[500],
   };
 
   state = {
@@ -128,7 +128,7 @@ const SliderBox = animated(styled.div`
   right: -25px;
   width: 1px; /* small width so it hides behind wrapper - not 0 because we need something to scale*/
   height: 50px;
-  background: ${COLORS.gray[200]};
+  background: ${RAW_COLORS.gray[200]};
   z-index: -1;
   transform-origin: center right;
 `);
@@ -154,10 +154,10 @@ const Text = animated(styled.div`
 const Icon = animated(styled(IconBase)`
   width: 50px;
   height: 50px;
-  background: ${COLORS.white};
+  background: ${RAW_COLORS.white};
   color: ${props => props.color};
   border-radius: 50% 50%;
-  border: 2px solid ${COLORS.gray[200]};
+  border: 2px solid ${RAW_COLORS.gray[200]};
   cursor: pointer;
 `);
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
-import { COLORS } from '../../constants';
+import { RAW_COLORS, COLORS } from '../../constants';
 
 import { FillButton } from '../Button';
 import Heading from '../Heading';
@@ -80,7 +80,7 @@ class TerminalOutput extends PureComponent<Props> {
           >
             <FillButton
               size="xsmall"
-              colors={[COLORS.pink[300], COLORS.red[500]]}
+              colors={[RAW_COLORS.pink[300], RAW_COLORS.red[500]]}
               onClick={this.handleClear}
             >
               Clear
@@ -123,8 +123,8 @@ const Wrapper = styled.div`
   height: ${props => props.height}px;
   overflow: auto;
   padding: 15px;
-  color: ${COLORS.white};
-  background-color: ${COLORS.blue[900]};
+  color: ${COLORS.textOnBackground};
+  background-color: ${RAW_COLORS.blue[900]};
   border-radius: 4px;
   font-family: 'Fira Mono', monospace;
   font-size: 13px;

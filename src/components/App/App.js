@@ -2,6 +2,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
@@ -41,7 +42,13 @@ class App extends PureComponent<Props> {
                 <LoadingScreen />
                 <Sidebar />
                 <MainContent disableScroll={modalVisible}>
-                  {selectedProjectId ? <ProjectPage /> : <IntroScreen />}
+                  {selectedProjectId ? (
+                    <Scrollbars>
+                      <ProjectPage />
+                    </Scrollbars>
+                  ) : (
+                    <IntroScreen />
+                  )}
                 </MainContent>
               </Wrapper>
               <CreateNewProjectWizard />
@@ -65,7 +72,7 @@ const Wrapper = styled.div`
   display: flex;
   position: relative;
   z-index: 1;
-  background: ${COLORS.gray[50]};
+  background: ${COLORS.background};
 
   animation: ${fadeIn} 500ms ease-in;
 `;

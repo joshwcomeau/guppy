@@ -8,7 +8,6 @@ const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 const path = require('path');
 const url = require('url');
-const fixPath = require('fix-path');
 const chalkRaw = require('chalk');
 
 const killProcessId = require('./services/kill-process-id.service');
@@ -30,12 +29,8 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-// In production, we need to use `fixPath` to let Guppy use NPM.
-// For reasons unknown, the opposite is true in development; adding this breaks
-// everything.
 if (process.env.NODE_ENV !== 'development') {
   icon256Path = '../build/256x256.png';
-  fixPath();
 }
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -146,6 +141,8 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  attachIpcMainListeners(ipcMain);
 }
 
 // This method will be called when Electron has finished
@@ -170,41 +167,52 @@ app.on('activate', function() {
   }
 });
 
-ipcMain.on('addProcessId', (event, processId) => {
-  processIds.push(processId);
-});
+function attachIpcMainListeners(ipcMainHandle, notifyCallback) {
+  // Notify is used for testing the ipc calls
+  const notify = (evt, data) => {
+    if (notifyCallback) notifyCallback(evt, data);
+  };
 
-ipcMain.on('removeProcessId', (event, processId) => {
-  processIds = processIds.filter(id => id !== processId);
-});
+  ipcMainHandle.on('addProcessId', (event, processId) => {
+    processIds.push(processId);
+    notify('addProcessId', processIds);
+  });
 
-ipcMain.on('killAllRunningProcesses', event => {
-  if (processIds.length) {
-    event.preventDefault();
-    killAllRunningProcesses();
-  }
-  app.quit();
-});
+  ipcMainHandle.on('removeProcessId', (event, processId) => {
+    processIds = processIds.filter(id => id !== processId);
+    notify('removeProcessId', processIds);
+  });
 
-ipcMain.on('triggerClose', (e, proceed) => {
-  if (!proceed) {
-    // user aborted
-    emitAppWillClose = true; // reset flag
-    return;
-  }
+  ipcMainHandle.on('killAllRunningProcesses', async event => {
+    if (processIds.length) {
+      await killAllRunningProcesses();
+    }
+    app.quit();
+    notify('killAllRunningProcesses', processIds);
+  });
 
-  mainWindow.close();
-});
+  ipcMainHandle.on('triggerClose', (e, proceed) => {
+    if (!proceed) {
+      // user aborted
+      emitAppWillClose = true; // reset flag
+      return;
+    }
 
-const killAllRunningProcesses = () => {
+    mainWindow.close();
+  });
+}
+
+const killAllRunningProcesses = async () => {
   try {
-    processIds.forEach(processId => {
-      killProcessId(processId);
+    await Promise.all(
+      processIds.map(processId => {
+        // Remove the parent or any children PIDs from the list of tracked
+        // IDs, since they're killed now.
+        processIds = processIds.filter(id => id !== processId);
 
-      // Remove the parent or any children PIDs from the list of tracked
-      // IDs, since they're killed now.
-      processIds = processIds.filter(id => id !== processId);
-    });
+        return killProcessId(processId);
+      })
+    );
   } catch (err) {
     console.error('Got error when trying to kill children', err);
   }
@@ -271,4 +279,9 @@ const manageApplicationLocation = () => {
       }
     );
   }
+};
+
+// exports used for unit tests
+module.exports = {
+  attachIpcMainListeners,
 };

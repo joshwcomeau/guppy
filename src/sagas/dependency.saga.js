@@ -186,6 +186,13 @@ export function* handleLoadDependencyInfoFromDiskStart({
 }
 
 // helpers
+function filterYarnInstallMessages(message: string) {
+  // only get [1/4] ... messages and strip warnings (warnings are logged before [1/4])
+  // would be nice if we could show the warnings separately later - for now stripping is OK.
+  const matches = /\[.*/.exec(message);
+  return matches && matches[0];
+}
+
 export function* watchInstallMessages(channel: any): any {
   let output;
   try {
@@ -193,7 +200,9 @@ export function* watchInstallMessages(channel: any): any {
       output = yield take(channel);
       if (!output.hasOwnProperty('exit')) {
         // Not the final message
-        yield put(setStatusText(output.data));
+        const installMsg =
+          output.data && filterYarnInstallMessages(output.data);
+        yield put(setStatusText(installMsg));
       } else {
         // Yield exit code and complete stdout
         yield output;

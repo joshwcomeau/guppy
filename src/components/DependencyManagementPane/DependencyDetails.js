@@ -2,7 +2,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { COLORS, RAW_COLORS } from '../../constants';
 
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
@@ -65,11 +65,11 @@ const Header = styled.header`
   position: relative;
   background-image: linear-gradient(
     45deg,
-    ${COLORS.blue[700]},
-    ${COLORS.violet[700]}
+    ${RAW_COLORS.blue[700]},
+    ${RAW_COLORS.violet[700]}
   );
   border-radius: 8px 8px 0 0;
-  color: ${COLORS.white};
+  color: ${COLORS.textOnBackground};
 `;
 
 const HeaderText = styled.div`
@@ -77,20 +77,20 @@ const HeaderText = styled.div`
 `;
 
 const Name = styled(Heading)`
-  color: ${COLORS.white};
+  color: ${COLORS.textOnBackground};
 `;
 
 const Description = styled.div`
   font-size: 20px;
   font-weight: 400;
-  color: ${COLORS.transparentWhite[300]};
+  color: ${RAW_COLORS.transparentWhite[300]};
   -webkit-font-smoothing: antialiased;
 `;
 
 const VersionsWrapper = styled.div`
   padding: 15px;
   height: 72px;
-  background: ${COLORS.gray[100]};
+  background: ${RAW_COLORS.gray[100]};
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 `;
 

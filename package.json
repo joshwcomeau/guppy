@@ -31,8 +31,8 @@
     "publish:all": "yarn dist:all --publish always",
     "test": "node scripts/test.js --maxWorkers=2 --env=node",
     "test:dev": "yarn test --verbose=false",
-    "coverage": "yarn test --coverage",
-    "report-coverage": "yarn coverage && codecov",
+    "test:coverage": "yarn test --coverage",
+    "test:report-coverage": "yarn test:coverage && codecov",
     "flow": "flow",
     "lint": "eslint src/**/*.js src/**/*.snap config/**/*.js",
     "prettier": "prettier --write",
@@ -53,20 +53,17 @@
       ]
     }
   },
-  "resolutions": {
-    "ansi-styles": "^3.2.0"
-  },
   "dependencies": {
     "create-react-app": "1.5.2",
     "electron-debug": "2.0.0",
     "electron-devtools-installer": "2.2.4",
     "electron-store": "2.0.0",
     "electron-updater": "3.1.2",
-    "fix-path": "2.1.0",
     "fuse.js": "3.3.0",
     "gatsby-cli": "1.1.58",
     "js-yaml": "3.12.0",
     "ps-tree": "1.2.0",
+    "react-beautiful-dnd": "10.1.1",
     "react-custom-scrollbars": "4.2.1",
     "rimraf": "2.6.2",
     "yarn": "1.12.3"
@@ -100,7 +97,8 @@
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",
     "electron": "4.0.0",
-    "electron-builder": "20.28.4",
+    "electron-builder": "20.31.3",
+    "electron-ipc-mock": "0.0.3",
     "electron-log": "2.2.17",
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "1.8.0",
@@ -130,7 +128,7 @@
     "jest-styled-components": "6.2.2",
     "jsdom": "13.0.0",
     "jsdom-global": "3.0.2",
-    "lint-staged": "7.2.0",
+    "lint-staged": "7.3.0",
     "loader-utils": "1.1.0",
     "lolex": "3.0.0",
     "mixpanel-browser": "2.22.4",

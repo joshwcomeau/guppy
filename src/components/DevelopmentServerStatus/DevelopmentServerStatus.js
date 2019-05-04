@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import IconBase from 'react-icons-kit';
 import { externalLink } from 'react-icons-kit/feather/externalLink';
 
-import { COLORS, BREAKPOINTS } from '../../constants';
+import { RAW_COLORS, COLORS, BREAKPOINTS } from '../../constants';
 import { capitalize } from '../../utils';
 
 import ExternalLink from '../ExternalLink';
@@ -34,8 +34,8 @@ const DevelopmentServerStatus = ({ status, port }: Props) => {
         <StatusCaption>
           {isRunning && (
             <ExternalLink
-              color={COLORS.gray[700]}
-              hoverColor={COLORS.gray[900]}
+              color={RAW_COLORS.gray[700]}
+              hoverColor={COLORS.text}
               href={serverUrl}
             >
               <IconLinkContents>
@@ -63,7 +63,7 @@ const getLabel = (status: TaskStatus) => {
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  border: 2px solid ${COLORS.gray[200]};
+  border: 2px solid ${RAW_COLORS.gray[200]};
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 24px;
@@ -107,7 +107,7 @@ const Status = styled.div`
   font-weight: 600;
   letter-spacing: -1px;
   -webkit-font-smoothing: antialiased;
-  color: ${COLORS.gray[900]};
+  color: ${COLORS.text};
   line-height: 28px;
 `;
 
