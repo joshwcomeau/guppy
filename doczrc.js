@@ -1,5 +1,5 @@
 // @flow
-import { COLORS } from './src/constants';
+import { RAW_COLORS } from './src/constants';
 import { css } from 'docz-plugin-css';
 
 export default {
@@ -9,7 +9,7 @@ export default {
   theme: 'docz-theme-default',
   themeConfig: {
     colors: {
-      primary: COLORS.blue[700],
+      primary: RAW_COLORS.blue[700],
     },
   },
   plugins: [css()],

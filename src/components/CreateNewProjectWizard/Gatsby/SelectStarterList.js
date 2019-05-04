@@ -9,7 +9,7 @@ import ExternalLink from '../../ExternalLink';
 import CodesandboxLogo from '../../CodesandboxLogo';
 import StrokeButton from '../../Button/StrokeButton';
 
-import { RAW_COLORS, COLORS } from '../../../constants';
+import { RAW_COLORS } from '../../../constants';
 
 type Props = {
   updateStarter: (string, boolean) => void,
