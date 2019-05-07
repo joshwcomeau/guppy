@@ -135,12 +135,15 @@ const OuterWrapper = styled.div`
   padding-bottom: ${props => props.thickness}px;
 `;
 
-export const Wrapper = animated(styled.div`
+export const Wrapper = styled(animated.div).attrs(({ offset }) => ({
+  style: {
+    transform: offset.interpolate(o => `translate(${o}px, ${o}px)`),
+  },
+}))`
   position: relative;
   width: ${props => props.width}px;
   height: ${props => props.height}px;
-  transform: ${props => `translate(${props.offset}px, ${props.offset}px)`};
-`);
+`;
 
 export const Button = styled.button`
   width: ${props => props.width}px;
