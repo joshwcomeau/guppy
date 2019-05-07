@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { RAW_COLORS, COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 type Props = {
   size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge',

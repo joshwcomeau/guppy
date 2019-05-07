@@ -10,15 +10,6 @@ type Props = {
   children?: React$Node,
 };
 
-const TextInput = forwardRef<Props, Wrapper>(
-  ({ isFocused, hasError, children, ...delegated }: Props, ref) => (
-    <Wrapper ref={ref} isFocused={isFocused} hasError={hasError}>
-      <InputElem {...delegated} />
-      {children}
-    </Wrapper>
-  )
-);
-
 const getBorderColor = (props: Props) => {
   if (props.hasError) {
     return COLORS.error;
@@ -31,10 +22,18 @@ const getBorderColor = (props: Props) => {
 
 const Wrapper = styled.div`
   width: 100%;
-
   display: flex;
   border-bottom: 2px solid ${getBorderColor};
 `;
+
+const TextInput = forwardRef<Props, Wrapper>(
+  ({ isFocused, hasError, children, ...delegated }: Props, ref) => (
+    <Wrapper ref={ref} isFocused={isFocused} hasError={hasError}>
+      <InputElem {...delegated} />
+      {children}
+    </Wrapper>
+  )
+);
 
 const InputElem = styled.input`
   flex: 1;
