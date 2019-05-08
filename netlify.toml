@@ -1,5 +1,5 @@
 [build]
-  command = 'yarn build-docz'
+  command = 'yarn docz:build'
   publish = '.docz/dist'
 
 [[redirects]]
