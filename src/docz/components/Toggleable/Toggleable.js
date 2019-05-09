@@ -10,6 +10,7 @@ type Props = {
   children: (isShown: boolean) => React$Node,
 };
 
+// This component is currently only being used with Docz
 const Toggleable = ({ size, background = '#EEE', children }: Props) => (
   <ToggleState>
     {({ on, toggle }) => (

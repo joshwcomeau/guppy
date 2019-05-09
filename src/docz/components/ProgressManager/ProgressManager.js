@@ -5,6 +5,7 @@ import { StrokeButton } from '../../../components/Button';
 type Props = { children: (data: any) => React$Node };
 type State = { progress: number };
 
+// This component is currently only being used with Docz
 class ProgressManager extends Component<Props, State> {
   state = {
     progress: 0.5,
