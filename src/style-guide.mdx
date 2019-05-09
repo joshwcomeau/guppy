@@ -11,6 +11,40 @@ This documentation will help new developers see how Guppy components can be used
 
 Happy contributing!
 
-## Usage
+## Development
 
-In development, run `yarn docz:dev` to start the Docz development server.
+Run `yarn docz:dev` to start the Docz development server.
+
+Example .mdx structure:
+
+```
+---
+name: ComponentName
+menu: Reusable Components
+---
+
+import { Playground, Props } from 'docz';
+import ComponentName from './ComponentName';
+
+# ComponentName
+
+<Props of={ComponentName} />
+
+## Basic usage
+
+### Default
+<Playground>
+  <ComponentName />
+</Playground>
+```
+
+The .mdx file should live right next to its component.
+
+```
+- Component
+  - Component.js
+  - Component.mdx
+  - index.js
+```
+
+Please see [getting started](https://www.docz.site/docs/getting-started) for more info!

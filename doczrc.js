@@ -26,6 +26,9 @@ export default {
         p, a, h1, h2, h3, h4, table {
           line-height: 1.6;
         }
+        .bXQPyO, .iCcihC {
+          align-items: center;
+        }
       `,
     },
   },
