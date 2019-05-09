@@ -1,0 +1,64 @@
+---
+name: ProgressBar
+menu: Reusable Components
+---
+
+import { Playground, Props } from 'docz';
+import ProgressBar from './ProgressBar';
+import ProgressManager from '../../docz/components/ProgressManager';
+import { RAW_COLORS } from '../../constants';
+
+# ProgressBar
+
+<Props of={ProgressBar} />
+
+### Empty
+<Playground>
+  <ProgressBar progress={0} />
+</Playground>
+
+### Half full
+<Playground>
+  <ProgressBar progress={0.5} />
+</Playground>
+
+### Full
+<Playground>
+  <ProgressBar progress={1} />
+</Playground>
+
+### Dynamic
+<Playground>
+  <ProgressManager>
+    {({ progress }) => <ProgressBar progress={progress} />}
+  </ProgressManager>
+</Playground>
+
+### Dynamic (tighter)
+<Playground>
+  <ProgressManager>
+    {({ progress }) => (
+      <ProgressBar progress={progress} stiffness={170} damping={16} />
+    )}
+  </ProgressManager>
+</Playground>
+
+### Dynamic (tall + rainbow)
+<Playground>
+  <ProgressManager>
+    {({ progress }) => (
+      <ProgressBar
+        height={16}
+        progress={progress}
+        colors={[
+          RAW_COLORS.red[500],
+          RAW_COLORS.orange[500],
+          RAW_COLORS.lime[500],
+          RAW_COLORS.teal[500],
+          RAW_COLORS.blue[700],
+          RAW_COLORS.purple[500],
+        ]}
+      />
+    )}
+  </ProgressManager>
+</Playground>
