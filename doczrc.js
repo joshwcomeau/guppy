@@ -6,8 +6,13 @@ export default {
   title: 'Guppy',
   description: 'A friendly application manager and task runner for React.js',
   src: './src',
+  public: './public',
   theme: 'docz-theme-default',
   themeConfig: {
+    logo: {
+      src: '/public/icon.png',
+      width: 70,
+    },
     colors: {
       primary: RAW_COLORS.blue[700],
     },
