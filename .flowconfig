@@ -18,6 +18,7 @@
 [lints]
 
 [options]
+server.max_workers=1
 
 [strict]
 
