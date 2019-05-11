@@ -5,16 +5,24 @@ menu: Reusable Components
 
 import { Playground, Props } from 'docz';
 import ProjectIconSelection from './ProjectIconSelection';
+import IconSelector from '../../docz/components/IconSelector';
 
 # ProjectIconSelection
 
 <Props of={ProjectIconSelection} />
 
-### Image selected
+### Update the selected icon on click
 <Playground>
-  <ProjectIconSelection
-    selectedIcon="/static/img/icon_blueorange.174c0078.jpg"
-  />
+  <IconSelector selected='/static/img/icon_blueorange.174c0078.jpg'>
+    {
+      (updateProjectIcon, selectedIcon) => (
+        <ProjectIconSelection
+          selectedIcon={selectedIcon}
+          onSelectIcon={updateProjectIcon}
+        />
+      )
+    }
+  </ IconSelector>
 </Playground>
 
 ### All available icons by not passing a value to limitTo prop (max default number is 21)
