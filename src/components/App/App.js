@@ -19,6 +19,7 @@ import Initialization from '../Initialization';
 import LoadingScreen from '../LoadingScreen';
 import FeedbackButton from '../FeedbackButton';
 import OnlineChecker from '../OnlineChecker';
+import { isMac } from '../../services/platform.service';
 
 import type { Project } from '../../types';
 
@@ -36,7 +37,7 @@ class App extends PureComponent<Props> {
           wasSuccessfullyInitialized && (
             <Fragment>
               <OnlineChecker />
-              <Titlebar />
+              {isMac && <Titlebar />}
               <Wrapper>
                 <ApplicationMenu />
                 <LoadingScreen />
