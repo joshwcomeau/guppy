@@ -7,7 +7,7 @@ import Heading from '../Heading';
 import reactIconSrc from '../../assets/images/react-icon.svg';
 import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
 import nextjsIconSrc from '../../assets/images/nextjs_small.png';
-import { ProjectType } from '../../types';
+import type { ProjectType } from '../../types';
 
 const TitleIcon = styled.img`
   display: inline-block;
@@ -47,7 +47,15 @@ const TypeIcon = ({ type }: { type: ProjectType }) => {
   }
 };
 
-const ProjectTitle = ({ tooltip, title, projectType }) => {
+const ProjectTitle = ({
+  tooltip,
+  title,
+  projectType,
+}: {
+  tooltip: string,
+  title: string,
+  projectType: ProjectType,
+}) => {
   return (
     <TitleWrapper>
       <Tooltip title={tooltip} position="bottom">
