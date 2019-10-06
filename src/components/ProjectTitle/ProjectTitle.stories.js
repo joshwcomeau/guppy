@@ -34,11 +34,7 @@ storiesOf('ProjectTitle', module).add(
         />
       </Showcase>
       <Showcase label="Without icon">
-        <ProjectTitle
-          projectType=""
-          title="Test Title"
-          tooltip="z:/some/path"
-        />
+        <ProjectTitle title="Test Title" tooltip="z:/some/path" />
       </Showcase>
     </Fragment>
   ))

@@ -54,7 +54,7 @@ const ProjectTitle = ({
 }: {
   tooltip: string,
   title: string,
-  projectType: ProjectType,
+  projectType?: ProjectType,
 }) => {
   return (
     <TitleWrapper>
@@ -64,9 +64,11 @@ const ProjectTitle = ({
         </Heading>
       </Tooltip>
 
-      <Tooltip title={`A ${projectType} project`} position="bottom">
-        {projectType && <TypeIcon type={projectType} />}
-      </Tooltip>
+      {projectType && (
+        <Tooltip title={`A ${projectType} project`} position="bottom">
+          {projectType && <TypeIcon type={projectType} />}
+        </Tooltip>
+      )}
     </TitleWrapper>
   );
 };

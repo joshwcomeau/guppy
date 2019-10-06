@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import { Tooltip } from 'react-tippy';
 import IconBase from 'react-icons-kit';
