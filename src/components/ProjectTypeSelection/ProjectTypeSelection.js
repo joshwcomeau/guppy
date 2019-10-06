@@ -2,10 +2,7 @@
 import React, { Fragment, PureComponent } from 'react';
 import styled from 'styled-components';
 
-import reactIconSrc from '../../assets/images/react-icon.svg';
-import gatsbyIconSrc from '../../assets/images/gatsby_small.png';
-import nextjsIconSrc from '../../assets/images/nextjs_small.png';
-
+import { GatsbyIcon, NextjsIcon, ReactIcon } from '../Icons';
 import ButtonWithIcon from '../ButtonWithIcon';
 import Spacer from '../Spacer';
 
@@ -44,21 +41,6 @@ class ProjectTypeSelection extends PureComponent<Props> {
   }
 }
 
-const ReactIcon = styled.img`
-  width: 32px;
-  height: 32px;
-`;
-
-const GatsbyIcon = styled.img`
-  width: 22px;
-  height: 22px;
-`;
-
-const NextjsIcon = styled.img`
-  width: 22px;
-  height: 22px;
-`;
-
 const ProjectTypeTogglesWrapper = styled.div`
   margin-top: 8px;
   margin-left: -8px;
@@ -67,17 +49,17 @@ const ProjectTypeTogglesWrapper = styled.div`
 const mapProjectTypeToComponent = [
   {
     type: 'create-react-app',
-    Component: <ReactIcon src={reactIconSrc} />,
+    Component: ReactIcon,
     caption: 'Vanilla React',
   },
   {
     type: 'gatsby',
-    Component: <GatsbyIcon src={gatsbyIconSrc} />,
+    Component: GatsbyIcon,
     caption: 'Gatsby',
   },
   {
     type: 'nextjs',
-    Component: <NextjsIcon src={nextjsIconSrc} />,
+    Component: NextjsIcon,
     caption: 'Next.js',
   },
 ];
