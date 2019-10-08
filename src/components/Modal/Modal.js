@@ -59,6 +59,10 @@ class Modal extends PureComponent<Props, State> {
     outdatedChildren: null,
   };
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyboardEvent, false);
+  }
+
   componentWillReceiveProps(nextProps: Props) {
     // When the modal is dismissed, we want to render the "stale" children for
     // a couple hundred milliseconds, until the modal has fully closed.
@@ -72,6 +76,12 @@ class Modal extends PureComponent<Props, State> {
       }
     }
   }
+
+  handleKeyboardEvent = (event: any) => {
+    if (event.keyCode === 27) {
+      this.props.onDismiss();
+    }
+  };
 
   render() {
     const { isVisible, width, height, onDismiss, children } = this.props;
