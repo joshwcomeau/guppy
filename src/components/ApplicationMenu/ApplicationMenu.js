@@ -55,6 +55,7 @@ class ApplicationMenu extends Component<Props> {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(prevProps)
     if (
       this.props.selectedProject !== prevProps.selectedProject ||
       this.props.isOnline !== prevProps.isOnline
