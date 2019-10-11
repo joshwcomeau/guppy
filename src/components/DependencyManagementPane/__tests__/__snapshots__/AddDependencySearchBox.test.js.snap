@@ -2,6 +2,7 @@
 
 exports[`AddDependencySearchBox component should render SearchBox 1`] = `
 <styled.div>
+  <GlobalStyleComponent />
   <AlgoliaSearchBox(Translatable(SearchBox))
     autoFocus={true}
     placeholder="eg. redux, react-router..."

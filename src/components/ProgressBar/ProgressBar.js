@@ -54,22 +54,24 @@ export const Wrapper = styled.div`
   width: 100%;
 `;
 
-const ProgressGradient = animated(styled.div.attrs({
-  style: props => ({
-    clipPath: `polygon(
+const ProgressGradient = styled(animated.div).attrs(({ progress }) => ({
+  style: {
+    clipPath: progress.interpolate(
+      p => `polygon(
       0% 0%,
-      ${props.progress * 100}% 0%,
-      ${props.progress * 100}% 100%,
+      ${p * 100}% 0%,
+      ${p * 100}% 100%,
       0% 100%
-    `,
-  }),
-})`
+    `
+    ),
+  },
+}))`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: linear-gradient(to right, ${props => props.colors.join(', ')});
-`);
+`;
 
 export default ProgressBar;

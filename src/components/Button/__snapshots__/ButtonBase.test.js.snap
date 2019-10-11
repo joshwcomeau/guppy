@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ButtonBase component Button with size prop should render button for large size 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -21,28 +21,25 @@ exports[`ButtonBase component Button with size prop should render button for lar
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-}
-
-.c1:disabled {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
-  opacity: 0.75;
-  cursor: initial;
-}
-
-.c1:not(:disabled):active {
-  -webkit-transform-origin: center center;
-  -ms-transform-origin: center center;
-  transform-origin: center center;
-}
-
-.c0 {
   padding: 0 32px;
   height: 48px;
   border-radius: 24px;
   font-size: 24px;
 }
 
+.c0:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c0:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
 <ButtonBase
   background="#eaeaea"
   size="large"
@@ -52,21 +49,89 @@ exports[`ButtonBase component Button with size prop should render button for lar
     background="#eaeaea"
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-ifAKCX",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 24px;
+  font-size: 24px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-ifAKCX",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;
 
 exports[`ButtonBase component Button with size prop should render button for large size with-out padding 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -86,28 +151,25 @@ exports[`ButtonBase component Button with size prop should render button for lar
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-}
-
-.c1:disabled {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
-  opacity: 0.75;
-  cursor: initial;
-}
-
-.c1:not(:disabled):active {
-  -webkit-transform-origin: center center;
-  -ms-transform-origin: center center;
-  transform-origin: center center;
-}
-
-.c0 {
   padding: 0px;
   height: auto;
   border-radius: 24px;
   font-size: 24px;
 }
 
+.c0:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c0:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
 <ButtonBase
   background="#eaeaea"
   noPadding={true}
@@ -119,22 +181,90 @@ exports[`ButtonBase component Button with size prop should render button for lar
     noPadding={true}
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-ifAKCX",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 24px;
+  font-size: 24px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-ifAKCX",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       noPadding={true}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;
 
 exports[`ButtonBase component Button with size prop should render button for medium size 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -154,28 +284,25 @@ exports[`ButtonBase component Button with size prop should render button for med
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-}
-
-.c1:disabled {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
-  opacity: 0.75;
-  cursor: initial;
-}
-
-.c1:not(:disabled):active {
-  -webkit-transform-origin: center center;
-  -ms-transform-origin: center center;
-  transform-origin: center center;
-}
-
-.c0 {
   padding: 0px 20px;
   height: 38px;
   border-radius: 19px;
   font-size: 16px;
 }
 
+.c0:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c0:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
 <ButtonBase
   background="#eaeaea"
   size="medium"
@@ -185,21 +312,89 @@ exports[`ButtonBase component Button with size prop should render button for med
     background="#eaeaea"
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bxivhb",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 19px;
+  font-size: 16px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-bxivhb",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;
 
 exports[`ButtonBase component Button with size prop should render button for medium size with-out padding 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -219,28 +414,25 @@ exports[`ButtonBase component Button with size prop should render button for med
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-}
-
-.c1:disabled {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
-  opacity: 0.75;
-  cursor: initial;
-}
-
-.c1:not(:disabled):active {
-  -webkit-transform-origin: center center;
-  -ms-transform-origin: center center;
-  transform-origin: center center;
-}
-
-.c0 {
   padding: 0px;
   height: auto;
   border-radius: 19px;
   font-size: 16px;
 }
 
+.c0:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c0:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
 <ButtonBase
   background="#eaeaea"
   noPadding={true}
@@ -252,22 +444,90 @@ exports[`ButtonBase component Button with size prop should render button for med
     noPadding={true}
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bxivhb",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 19px;
+  font-size: 16px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-bxivhb",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       noPadding={true}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;
 
 exports[`ButtonBase component Button with size prop should render button for small size 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -287,28 +547,25 @@ exports[`ButtonBase component Button with size prop should render button for sma
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-}
-
-.c1:disabled {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
-  opacity: 0.75;
-  cursor: initial;
-}
-
-.c1:not(:disabled):active {
-  -webkit-transform-origin: center center;
-  -ms-transform-origin: center center;
-  transform-origin: center center;
-}
-
-.c0 {
   padding: 0px 14px;
   height: 30px;
   border-radius: 17px;
   font-size: 14px;
 }
 
+.c0:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c0:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
 <ButtonBase
   background="#eaeaea"
   size="small"
@@ -318,21 +575,89 @@ exports[`ButtonBase component Button with size prop should render button for sma
     background="#eaeaea"
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-htpNat",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 17px;
+  font-size: 14px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-htpNat",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;
 
 exports[`ButtonBase component Button with size prop should render button for small size with-out padding 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -352,28 +677,25 @@ exports[`ButtonBase component Button with size prop should render button for sma
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-}
-
-.c1:disabled {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
-  opacity: 0.75;
-  cursor: initial;
-}
-
-.c1:not(:disabled):active {
-  -webkit-transform-origin: center center;
-  -ms-transform-origin: center center;
-  transform-origin: center center;
-}
-
-.c0 {
   padding: 0px;
   height: auto;
   border-radius: 17px;
   font-size: 14px;
 }
 
+.c0:disabled {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.75;
+  cursor: initial;
+}
+
+.c0:not(:disabled):active {
+  -webkit-transform-origin: center center;
+  -ms-transform-origin: center center;
+  transform-origin: center center;
+}
+
 <ButtonBase
   background="#eaeaea"
   noPadding={true}
@@ -385,22 +707,90 @@ exports[`ButtonBase component Button with size prop should render button for sma
     noPadding={true}
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-htpNat",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 17px;
+  font-size: 14px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-htpNat",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       noPadding={true}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;
 
 exports[`ButtonBase component Button with size prop should render button for xsmall size 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -420,26 +810,23 @@ exports[`ButtonBase component Button with size prop should render button for xsm
   cursor: pointer;
   outline: none;
   white-space: nowrap;
+  padding: 0px 12px;
+  height: 22px;
+  border-radius: 15px;
+  font-size: 12px;
 }
 
-.c1:disabled {
+.c0:disabled {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
   cursor: initial;
 }
 
-.c1:not(:disabled):active {
+.c0:not(:disabled):active {
   -webkit-transform-origin: center center;
   -ms-transform-origin: center center;
   transform-origin: center center;
-}
-
-.c0 {
-  padding: 0px 12px;
-  height: 22px;
-  border-radius: 15px;
-  font-size: 12px;
 }
 
 <ButtonBase
@@ -451,21 +838,89 @@ exports[`ButtonBase component Button with size prop should render button for xsm
     background="#eaeaea"
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bwzfXH",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 15px;
+  font-size: 12px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-bwzfXH",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;
 
 exports[`ButtonBase component Button with size prop should render button for xsmall size with-out padding 1`] = `
-.c1 {
+.c0 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -485,26 +940,23 @@ exports[`ButtonBase component Button with size prop should render button for xsm
   cursor: pointer;
   outline: none;
   white-space: nowrap;
+  padding: 0px;
+  height: auto;
+  border-radius: 15px;
+  font-size: 12px;
 }
 
-.c1:disabled {
+.c0:disabled {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
   cursor: initial;
 }
 
-.c1:not(:disabled):active {
+.c0:not(:disabled):active {
   -webkit-transform-origin: center center;
   -ms-transform-origin: center center;
   transform-origin: center center;
-}
-
-.c0 {
-  padding: 0px;
-  height: auto;
-  border-radius: 15px;
-  font-size: 12px;
 }
 
 <ButtonBase
@@ -518,16 +970,84 @@ exports[`ButtonBase component Button with size prop should render button for xsm
     noPadding={true}
     textColor="#111111"
   >
-    <styled.button
+    <StyledComponent
       background="#eaeaea"
-      className="c0"
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bwzfXH",
+            "isStatic": false,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+              [Function],
+              ";
+  color: ",
+              [Function],
+              ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+              [Function],
+              ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+              [Function],
+              ";
+  }
+",
+              "
+  padding: ",
+              [Function],
+              ";
+  height: ",
+              [Function],
+              ";
+  border-radius: 15px;
+  font-size: 12px;
+",
+            ],
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-bwzfXH",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
       noPadding={true}
       textColor="#111111"
     >
       <button
-        className="c0 c1"
+        className="c0"
       />
-    </styled.button>
+    </StyledComponent>
   </Styled(styled.button)>
 </ButtonBase>
 `;

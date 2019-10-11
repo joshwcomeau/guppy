@@ -146,6 +146,7 @@ class MainPane extends PureComponent<Props> {
     } = this.props;
 
     const { lastIndex, steps } = this.renderConditionalSteps(currentStepIndex);
+
     return (
       <Fragment>
         <Spring
@@ -158,7 +159,7 @@ class MainPane extends PureComponent<Props> {
           native
         >
           {({ offset }) => (
-            <Wrapper translateY={offset}>
+            <Wrapper translate={offset}>
               <ProjectName
                 name={projectName}
                 isFocused={activeField === 'projectName'}
@@ -191,14 +192,14 @@ class MainPane extends PureComponent<Props> {
   }
 }
 
-const Wrapper = animated(styled.div.attrs({
-  style: props => ({
-    transform: `translateY(${props.translateY}px)`,
-  }),
-})`
+const Wrapper = styled(animated.div).attrs(({ translate }) => ({
+  style: {
+    transform: translate.interpolate(y => `translateY(${y}px)`),
+  },
+}))`
   height: 75vh;
   will-change: transform;
-`);
+`;
 
 const SubmitButtonWrapper = styled.div`
   text-align: center;

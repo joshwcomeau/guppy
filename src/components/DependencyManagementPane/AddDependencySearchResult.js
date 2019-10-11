@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import styled, { injectGlobal } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import moment from 'moment';
 import IconBase from 'react-icons-kit';
 import { u1F4C8 as barGraphIcon } from 'react-icons-kit/noto_emoji_regular/u1F4C8';
@@ -137,6 +137,7 @@ export class AddDependencySearchResult extends PureComponent<Props> {
 
     return (
       <Wrapper>
+        <SearchResultGlobalStyle />
         <Header>
           <Title>
             <ExternalLink display="inline" href={npmLink}>
@@ -235,7 +236,7 @@ const NoActionAvailable = styled.div`
 
 // TODO: I should be able to reuse the existing button component with
 // `connectInfiniteHits`
-injectGlobal`
+const SearchResultGlobalStyle = createGlobalStyle`
   .ais-InfiniteHits-loadMore {
     padding: 10px 30px;
     margin-top: 45px;

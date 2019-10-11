@@ -25,9 +25,66 @@ exports[`StrokeButton component should render background (active) 1`] = `
   isActive={true}
   isVisible={true}
 >
-  <div
-    className="c0"
-  />
+  <StyledComponent
+    colors={
+      Array [
+        "#651fff",
+        "#D500F9",
+      ]
+    }
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-gzVnrw",
+          "isStatic": false,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  position: absolute;
+  z-index: 0;
+  top: ",
+            [Function],
+            "px;
+  left: ",
+            [Function],
+            "px;
+  right: ",
+            [Function],
+            "px;
+  bottom: ",
+            [Function],
+            "px;
+  border-radius: 100px;
+  background: linear-gradient(25deg, ",
+            [Function],
+            ");
+  opacity: ",
+            [Function],
+            ";
+  transition: opacity 350ms;
+",
+          ],
+        },
+        "displayName": "styled.div",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-gzVnrw",
+        "target": "div",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
+    isActive={true}
+    isVisible={true}
+  >
+    <div
+      className="c0"
+    />
+  </StyledComponent>
 </styled.div>
 `;
 
@@ -56,14 +113,71 @@ exports[`StrokeButton component should render background (inactive) 1`] = `
   isActive={false}
   isVisible={true}
 >
-  <div
-    className="c0"
-  />
+  <StyledComponent
+    colors={
+      Array [
+        "#651fff",
+        "#D500F9",
+      ]
+    }
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-gzVnrw",
+          "isStatic": false,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  position: absolute;
+  z-index: 0;
+  top: ",
+            [Function],
+            "px;
+  left: ",
+            [Function],
+            "px;
+  right: ",
+            [Function],
+            "px;
+  bottom: ",
+            [Function],
+            "px;
+  border-radius: 100px;
+  background: linear-gradient(25deg, ",
+            [Function],
+            ");
+  opacity: ",
+            [Function],
+            ";
+  transition: opacity 350ms;
+",
+          ],
+        },
+        "displayName": "styled.div",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-gzVnrw",
+        "target": "div",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
+    isActive={false}
+    isVisible={true}
+  >
+    <div
+      className="c0"
+    />
+  </StyledComponent>
 </styled.div>
 `;
 
 exports[`StrokeButton component should render foreground (active) 1`] = `
-.c2 {
+.c1 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -83,26 +197,23 @@ exports[`StrokeButton component should render foreground (active) 1`] = `
   cursor: pointer;
   outline: none;
   white-space: nowrap;
+  padding: 0px 20px;
+  height: 38px;
+  border-radius: 19px;
+  font-size: 16px;
 }
 
-.c2:disabled {
+.c1:disabled {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
   cursor: initial;
 }
 
-.c2:not(:disabled):active {
+.c1:not(:disabled):active {
   -webkit-transform-origin: center center;
   -ms-transform-origin: center center;
   transform-origin: center center;
-}
-
-.c1 {
-  padding: 0px 20px;
-  height: 38px;
-  border-radius: 19px;
-  font-size: 16px;
 }
 
 .c0 {
@@ -112,43 +223,141 @@ exports[`StrokeButton component should render foreground (active) 1`] = `
 }
 
 <styled.span>
-  <span
-    className="c0"
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-bZQynM",
+          "isStatic": true,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  display: block;
+  position: relative;
+  z-index: 1;
+",
+          ],
+        },
+        "displayName": "styled.span",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-bZQynM",
+        "target": "span",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
   >
-    <ButtonBase
-      background="#FFF"
-      size="medium"
-      textColor="#111111"
+    <span
+      className="c0"
     >
-      <Styled(styled.button)
+      <ButtonBase
         background="#FFF"
+        size="medium"
         textColor="#111111"
       >
-        <styled.button
+        <Styled(styled.button)
           background="#FFF"
-          className="c1"
           textColor="#111111"
         >
-          <button
-            className="c1 c2"
-          >
-            <span
-              style={
-                Object {
-                  "display": "block",
-                }
+          <StyledComponent
+            background="#FFF"
+            forwardedComponent={
+              Object {
+                "$$typeof": Symbol(react.forward_ref),
+                "attrs": Array [],
+                "componentStyle": ComponentStyle {
+                  "componentId": "sc-bxivhb",
+                  "isStatic": false,
+                  "lastClassName": "c1",
+                  "rules": Array [
+                    "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+                    [Function],
+                    ";
+  color: ",
+                    [Function],
+                    ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+                    [Function],
+                    ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+                    [Function],
+                    ";
+  }
+",
+                    "
+  padding: ",
+                    [Function],
+                    ";
+  height: ",
+                    [Function],
+                    ";
+  border-radius: 19px;
+  font-size: 16px;
+",
+                  ],
+                },
+                "displayName": "Styled(styled.button)",
+                "foldedComponentIds": Array [
+                  "sc-bdVaJa",
+                ],
+                "render": [Function],
+                "styledComponentId": "sc-bxivhb",
+                "target": "button",
+                "toString": [Function],
+                "warnTooManyClasses": [Function],
+                "withComponent": [Function],
               }
-            />
-          </button>
-        </styled.button>
-      </Styled(styled.button)>
-    </ButtonBase>
-  </span>
+            }
+            forwardedRef={null}
+            textColor="#111111"
+          >
+            <button
+              className="c1"
+            >
+              <span
+                style={
+                  Object {
+                    "display": "block",
+                  }
+                }
+              />
+            </button>
+          </StyledComponent>
+        </Styled(styled.button)>
+      </ButtonBase>
+    </span>
+  </StyledComponent>
 </styled.span>
 `;
 
 exports[`StrokeButton component should render foreground (inactive) 1`] = `
-.c2 {
+.c1 {
   position: relative;
   border: 0;
   display: -webkit-inline-box;
@@ -168,26 +377,23 @@ exports[`StrokeButton component should render foreground (inactive) 1`] = `
   cursor: pointer;
   outline: none;
   white-space: nowrap;
+  padding: 0px 20px;
+  height: 38px;
+  border-radius: 19px;
+  font-size: 16px;
 }
 
-.c2:disabled {
+.c1:disabled {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   opacity: 0.75;
   cursor: initial;
 }
 
-.c2:not(:disabled):active {
+.c1:not(:disabled):active {
   -webkit-transform-origin: center center;
   -ms-transform-origin: center center;
   transform-origin: center center;
-}
-
-.c1 {
-  padding: 0px 20px;
-  height: 38px;
-  border-radius: 19px;
-  font-size: 16px;
 }
 
 .c0 {
@@ -197,37 +403,135 @@ exports[`StrokeButton component should render foreground (inactive) 1`] = `
 }
 
 <styled.span>
-  <span
-    className="c0"
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-bZQynM",
+          "isStatic": true,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  display: block;
+  position: relative;
+  z-index: 1;
+",
+          ],
+        },
+        "displayName": "styled.span",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-bZQynM",
+        "target": "span",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
   >
-    <ButtonBase
-      background="#FFF"
-      size="medium"
-      textColor="#111111"
+    <span
+      className="c0"
     >
-      <Styled(styled.button)
+      <ButtonBase
         background="#FFF"
+        size="medium"
         textColor="#111111"
       >
-        <styled.button
+        <Styled(styled.button)
           background="#FFF"
-          className="c1"
           textColor="#111111"
         >
-          <button
-            className="c1 c2"
-          >
-            <span
-              style={
-                Object {
-                  "display": "block",
-                }
+          <StyledComponent
+            background="#FFF"
+            forwardedComponent={
+              Object {
+                "$$typeof": Symbol(react.forward_ref),
+                "attrs": Array [],
+                "componentStyle": ComponentStyle {
+                  "componentId": "sc-bxivhb",
+                  "isStatic": false,
+                  "lastClassName": "c1",
+                  "rules": Array [
+                    "
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: ",
+                    [Function],
+                    ";
+  color: ",
+                    [Function],
+                    ";
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: ",
+                    [Function],
+                    ";
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    opacity: 0.75;
+    cursor: initial;
+  }
+
+  &:not(:disabled):active {
+    transform-origin: center center;
+    transform: ",
+                    [Function],
+                    ";
+  }
+",
+                    "
+  padding: ",
+                    [Function],
+                    ";
+  height: ",
+                    [Function],
+                    ";
+  border-radius: 19px;
+  font-size: 16px;
+",
+                  ],
+                },
+                "displayName": "Styled(styled.button)",
+                "foldedComponentIds": Array [
+                  "sc-bdVaJa",
+                ],
+                "render": [Function],
+                "styledComponentId": "sc-bxivhb",
+                "target": "button",
+                "toString": [Function],
+                "warnTooManyClasses": [Function],
+                "withComponent": [Function],
               }
-            />
-          </button>
-        </styled.button>
-      </Styled(styled.button)>
-    </ButtonBase>
-  </span>
+            }
+            forwardedRef={null}
+            textColor="#111111"
+          >
+            <button
+              className="c1"
+            >
+              <span
+                style={
+                  Object {
+                    "display": "block",
+                  }
+                }
+              />
+            </button>
+          </StyledComponent>
+        </Styled(styled.button)>
+      </ButtonBase>
+    </span>
+  </StyledComponent>
 </styled.span>
 `;

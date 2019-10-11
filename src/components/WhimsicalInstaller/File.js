@@ -110,16 +110,16 @@ const isGrabbable = (status: FileStatus) =>
 
 const WIDTH_RATIO = 20 / 28;
 
-const Wrapper = styled.div.attrs({
-  style: props => ({
+const Wrapper = styled.div.attrs(props => ({
+  style: {
     transform: `
       translate(
         ${props.x - (props.size * WIDTH_RATIO) / 2}px,
         ${props.y - props.size / 2}px
       )
       rotate(${props.rotation}deg)`,
-  }),
-})`
+  },
+}))`
   position: absolute;
   top: 0;
   left: 0;

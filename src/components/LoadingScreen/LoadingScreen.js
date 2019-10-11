@@ -11,7 +11,7 @@ import {
 } from '../../reducers/app-status.reducer';
 
 import guppyLoaderSrc from '../../assets/images/guppy-loader.gif';
-import { RAW_COLORS, COLORS, Z_INDICES } from '../../constants';
+import { RAW_COLORS, Z_INDICES } from '../../constants';
 import { ellipsify } from '../../utils';
 
 type Props = {

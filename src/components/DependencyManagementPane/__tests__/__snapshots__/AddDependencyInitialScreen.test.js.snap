@@ -9,13 +9,50 @@ Array [
   color: #666666;
 }
 
-<styled.div>
-    <div
-      className="c0"
+<Styled(styled.div)>
+    <StyledComponent
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-htpNat",
+            "isStatic": true,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+",
+              "
+  font-size: 1.4rem;
+  color: ",
+              "#666666",
+              ";
+",
+            ],
+          },
+          "displayName": "Styled(styled.div)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-htpNat",
+          "target": "div",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
     >
-      You can use the input above to search the Node Package Manager (NPM) registry for packages that have been published.
-    </div>
-  </styled.div>,
+      <div
+        className="c0"
+      >
+        You can use the input above to search the Node Package Manager (NPM) registry for packages that have been published.
+      </div>
+    </StyledComponent>
+  </Styled(styled.div)>,
   .c0 {
   font-size: 1.25rem;
   margin-bottom: 1.5rem;
@@ -23,13 +60,50 @@ Array [
   color: #666666;
 }
 
-<styled.div>
-    <div
-      className="c0"
+<Styled(styled.div)>
+    <StyledComponent
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-htpNat",
+            "isStatic": true,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+",
+              "
+  font-size: 1.4rem;
+  color: ",
+              "#666666",
+              ";
+",
+            ],
+          },
+          "displayName": "Styled(styled.div)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-htpNat",
+          "target": "div",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
     >
-      Search by package name, description, keyword, or author.
-    </div>
-  </styled.div>,
+      <div
+        className="c0"
+      >
+        Search by package name, description, keyword, or author.
+      </div>
+    </StyledComponent>
+  </Styled(styled.div)>,
 ]
 `;
 
@@ -70,29 +144,48 @@ exports[`AddDependencyInitialScreen component should render powered by Algolia l
 }
 
 <styled.div>
-  <div
-    className="c0"
+  <StyledComponent
+    forwardedComponent={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-ifAKCX",
+          "isStatic": true,
+          "lastClassName": "c0",
+          "rules": Array [
+            "
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+",
+          ],
+        },
+        "displayName": "styled.div",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-ifAKCX",
+        "target": "div",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      }
+    }
+    forwardedRef={null}
   >
-    <ExternalLink
-      color="#304FFE"
-      display="inline-block"
-      hoverColor="#3f6cff"
-      href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
+    <div
+      className="c0"
     >
-      <styled.a
+      <ExternalLink
         color="#304FFE"
+        display="inline-block"
         hoverColor="#3f6cff"
         href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
-        onClick={[Function]}
-        style={
-          Object {
-            "display": "inline-block",
-          }
-        }
       >
-        <a
-          className="c1"
+        <styled.a
           color="#304FFE"
+          hoverColor="#3f6cff"
           href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
           onClick={[Function]}
           style={
@@ -101,16 +194,109 @@ exports[`AddDependencyInitialScreen component should render powered by Algolia l
             }
           }
         >
-          <styled.div>
-            <div
-              className="c2"
+          <StyledComponent
+            color="#304FFE"
+            forwardedComponent={
+              Object {
+                "$$typeof": Symbol(react.forward_ref),
+                "attrs": Array [],
+                "componentStyle": ComponentStyle {
+                  "componentId": "sc-bwzfXH",
+                  "isStatic": false,
+                  "lastClassName": "c1",
+                  "rules": Array [
+                    "
+  position: relative;
+  text-decoration: none;
+  color: ",
+                    [Function],
+                    ";
+
+  &:hover {
+    color: ",
+                    [Function],
+                    ";
+  }
+",
+                  ],
+                },
+                "displayName": "styled.a",
+                "foldedComponentIds": Array [],
+                "render": [Function],
+                "styledComponentId": "sc-bwzfXH",
+                "target": "a",
+                "toString": [Function],
+                "warnTooManyClasses": [Function],
+                "withComponent": [Function],
+              }
+            }
+            forwardedRef={null}
+            hoverColor="#3f6cff"
+            href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
+            onClick={[Function]}
+            style={
+              Object {
+                "display": "inline-block",
+              }
+            }
+          >
+            <a
+              className="c1"
+              color="#304FFE"
+              href="https://www.algolia.com/?utm_source=guppy&utm_medium=website&utm_content=localhost&utm_campaign=poweredby"
+              onClick={[Function]}
+              style={
+                Object {
+                  "display": "inline-block",
+                }
+              }
             >
-              <svg />
-            </div>
-          </styled.div>
-        </a>
-      </styled.a>
-    </ExternalLink>
-  </div>
+              <styled.div>
+                <StyledComponent
+                  forwardedComponent={
+                    Object {
+                      "$$typeof": Symbol(react.forward_ref),
+                      "attrs": Array [],
+                      "componentStyle": ComponentStyle {
+                        "componentId": "sc-EHOje",
+                        "isStatic": true,
+                        "lastClassName": "c2",
+                        "rules": Array [
+                          "
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ",
+                          "#666666",
+                          ";
+",
+                        ],
+                      },
+                      "displayName": "styled.div",
+                      "foldedComponentIds": Array [],
+                      "render": [Function],
+                      "styledComponentId": "sc-EHOje",
+                      "target": "div",
+                      "toString": [Function],
+                      "warnTooManyClasses": [Function],
+                      "withComponent": [Function],
+                    }
+                  }
+                  forwardedRef={null}
+                >
+                  <div
+                    className="c2"
+                  >
+                    <svg />
+                  </div>
+                </StyledComponent>
+              </styled.div>
+            </a>
+          </StyledComponent>
+        </styled.a>
+      </ExternalLink>
+    </div>
+  </StyledComponent>
 </styled.div>
 `;

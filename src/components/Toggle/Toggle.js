@@ -47,9 +47,8 @@ class Toggle extends PureComponent<Props> {
             <Ball
               size={size}
               translate={interpolated.translate}
-              stretch={interpolate(
-                [interpolated.stretch],
-                stretch => 1 + (stretchAddition - Math.abs(stretch))
+              stretch={interpolated.stretch.interpolate(
+                s => 1 + (stretchAddition - Math.abs(s))
               )}
             />
           )}
@@ -114,14 +113,14 @@ const Pulsing = styled.div`
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 `;
 
-const Ball = animated(styled.div.attrs({
-  style: props => ({
-    transform: `
-      translateX(${props.translate}%)
-      scaleX(${props.stretch})
-    `,
-  }),
-})`
+const Ball = styled(animated.div).attrs(({ translate, stretch }) => ({
+  style: {
+    transform: interpolate(
+      [translate, stretch],
+      (tX, sX) => `translateX(${tX}%) scaleX(${sX})`
+    ),
+  },
+}))`
   position: relative;
   z-index: 2;
   width: ${props => props.size}px;
@@ -131,6 +130,6 @@ const Ball = animated(styled.div.attrs({
 
   transform-origin: center center;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
-`);
+`;
 
 export default Toggle;

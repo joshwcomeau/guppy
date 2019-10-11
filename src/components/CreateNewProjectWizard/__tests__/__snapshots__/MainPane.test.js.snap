@@ -4,7 +4,7 @@ exports[`MainPane component Rendering should render step projectIcon 1`] = `
 Object {
   "lastIndex": 3,
   "steps": Array [
-    <styled.div>
+    <ForwardRef>
       <FormField
         isFocused={false}
         label="Project Type"
@@ -15,8 +15,8 @@ Object {
           projectType="gatsby"
         />
       </FormField>
-    </styled.div>,
-    <styled.div>
+    </ForwardRef>,
+    <ForwardRef>
       <FormField
         focusOnClick={false}
         isFocused={true}
@@ -30,7 +30,7 @@ Object {
           selectedIcon="an-icon"
         />
       </FormField>
-    </styled.div>,
+    </ForwardRef>,
   ],
 }
 `;
@@ -46,7 +46,7 @@ exports[`MainPane component Rendering should render step projectStarter 1`] = `
 Object {
   "lastIndex": 3,
   "steps": Array [
-    <styled.div>
+    <ForwardRef>
       <FormField
         isFocused={false}
         label="Project Type"
@@ -57,8 +57,8 @@ Object {
           projectType="gatsby"
         />
       </FormField>
-    </styled.div>,
-    <styled.div>
+    </ForwardRef>,
+    <ForwardRef>
       <FormField
         focusOnClick={false}
         isFocused={false}
@@ -72,8 +72,8 @@ Object {
           selectedIcon="an-icon"
         />
       </FormField>
-    </styled.div>,
-    <styled.div>
+    </ForwardRef>,
+    <ForwardRef>
       <FormField
         isFocused={true}
         label="Project Starter"
@@ -86,7 +86,7 @@ Object {
           projectStarter={null}
         />
       </FormField>
-    </styled.div>,
+    </ForwardRef>,
   ],
 }
 `;
@@ -95,7 +95,7 @@ exports[`MainPane component Rendering should render step projectType 1`] = `
 Object {
   "lastIndex": 3,
   "steps": Array [
-    <styled.div>
+    <ForwardRef>
       <FormField
         isFocused={true}
         label="Project Type"
@@ -106,7 +106,7 @@ Object {
           projectType="gatsby"
         />
       </FormField>
-    </styled.div>,
+    </ForwardRef>,
   ],
 }
 `;

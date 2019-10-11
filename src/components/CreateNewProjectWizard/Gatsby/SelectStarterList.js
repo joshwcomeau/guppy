@@ -9,7 +9,7 @@ import ExternalLink from '../../ExternalLink';
 import CodesandboxLogo from '../../CodesandboxLogo';
 import StrokeButton from '../../Button/StrokeButton';
 
-import { RAW_COLORS, COLORS } from '../../../constants';
+import { RAW_COLORS } from '../../../constants';
 
 type Props = {
   updateStarter: (string, boolean) => void,
@@ -73,7 +73,7 @@ class SelectStarterList extends PureComponent<Props> {
 
     return (
       <MainContent isVisible={isVisible}>
-        <ScrollContainer innerRef={node => (this.node = node)}>
+        <ScrollContainer ref={node => (this.node = node)}>
           <StarterList>
             {starters.map((starter, index) => (
               <StarterItem key={index}>

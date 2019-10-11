@@ -113,7 +113,7 @@ const getIconForStatus = (status: TaskStatus) => {
   }
 };
 
-const TaskCard = Card.extend`
+const TaskCard = styled(Card)`
   display: flex;
   margin-bottom: 10px;
   padding: 12px 24px;
@@ -130,7 +130,7 @@ const Column = styled.div`
   }
 `;
 
-const NameColumn = Column.extend`
+const NameColumn = styled(Column)`
   flex: 1;
   font-size: 20px;
   -webkit-font-smoothing: antialiased;
@@ -152,7 +152,7 @@ const TaskDescription = styled.span`
   }
 `;
 
-const StatusColumn = Column.extend`
+const StatusColumn = styled(Column)`
   width: 150px;
   display: flex;
   align-items: center;
@@ -164,14 +164,14 @@ const TaskStatusLabel = styled.span`
   margin-left: 8px;
 `;
 
-const LinkColumn = Column.extend`
+const LinkColumn = styled(Column)`
   width: 115px;
   padding-left: 2px;
   display: flex;
   align-items: center;
 `;
 
-const ActionsColumn = Column.extend`
+const ActionsColumn = styled(Column)`
   width: 70px;
   display: flex;
   justify-content: flex-end;

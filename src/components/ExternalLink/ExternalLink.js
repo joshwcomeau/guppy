@@ -12,6 +12,7 @@ type Props = {
   hoverColor?: string,
   showUnderline?: boolean,
   display: string,
+  className?: string,
 };
 
 class ExternalLink extends Component<Props> {
@@ -29,11 +30,19 @@ class ExternalLink extends Component<Props> {
   };
 
   render() {
-    const { href, color, hoverColor, children, display } = this.props;
+    const {
+      href,
+      color,
+      hoverColor,
+      children,
+      display,
+      className,
+    } = this.props;
 
     return (
       <Anchor
         style={{ display }}
+        className={className}
         href={href}
         color={color}
         hoverColor={hoverColor}

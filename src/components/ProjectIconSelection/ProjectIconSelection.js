@@ -44,11 +44,11 @@ class ProjectIconSelection extends Component<Props> {
               size={DEFAULT_ICON_SIZE}
               onClick={ev => this.props.onSelectIcon(src, ev)}
               status={
-                selectedIcon === null
-                  ? 'default'
-                  : selectedIcon === src
+                selectedIcon
+                  ? selectedIcon.includes(src)
                     ? 'highlighted'
                     : 'faded'
+                  : 'default'
               }
             />
           </SelectableImageWrapper>

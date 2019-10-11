@@ -39,7 +39,7 @@ type State = {
 class WhimsicalInstaller extends PureComponent<Props, State> {
   tickId: ?number;
   generationLoopId: ?number;
-  wrapperNode: HTMLElement;
+  wrapperNode: ?HTMLElement;
   wrapperBoundingBox: ClientRect;
   lastCoordinate: Point;
 
@@ -67,7 +67,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
   }
 
   toggleRunning = () => {
-    if (this.props.isRunning) {
+    if (this.props.isRunning && this.wrapperNode) {
       this.wrapperBoundingBox = this.wrapperNode.getBoundingClientRect();
 
       this.fileGenerationLoop();
@@ -586,7 +586,7 @@ class WhimsicalInstaller extends PureComponent<Props, State> {
     const filesArray = Object.keys(files).map(fileId => files[fileId]);
 
     return (
-      <Wrapper width={width} innerRef={node => (this.wrapperNode = node)}>
+      <Wrapper width={width} ref={node => (this.wrapperNode = node)}>
         <PlanetContainer size={height}>
           <Earth size={height * 0.4} />
         </PlanetContainer>

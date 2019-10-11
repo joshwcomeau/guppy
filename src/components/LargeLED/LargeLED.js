@@ -90,8 +90,8 @@ const fadeInOut = keyframes`
   100% { opacity: 0.25 }
 `;
 
-const LED = styled.div.attrs({
-  style: props => ({
+const LED = styled.div.attrs(props => ({
+  style: {
     backgroundImage: `
       radial-gradient(
         farthest-corner at 10px 5px,
@@ -103,8 +103,8 @@ const LED = styled.div.attrs({
       inset 1px 1px 5px ${props.colors.shadowLight},
       inset -3px -3px 10px -2px ${props.colors.shadowDark}
     `,
-  }),
-})`
+  },
+}))`
   display: inline-block;
   position: relative;
   width: ${props => props.size}px;
@@ -124,8 +124,8 @@ const OutlineSvg = styled.svg`
   overflow: visible;
 `;
 
-const Pulser = styled.div.attrs({
-  style: props => ({
+const Pulser = styled.div.attrs(props => ({
+  style: {
     backgroundImage: `
       radial-gradient(
         farthest-corner at 10px 5px,
@@ -133,8 +133,8 @@ const Pulser = styled.div.attrs({
         ${props.colors.pulseBase} 100%
       )
     `,
-  }),
-})`
+  },
+}))`
   position: absolute;
   z-index: 1;
   top: 0;

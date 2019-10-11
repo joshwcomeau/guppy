@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { RAW_COLORS, COLORS } from '../../constants';
+import { RAW_COLORS } from '../../constants';
 
 type Props = {
   size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge',
@@ -20,14 +20,14 @@ class Heading extends Component<Props> {
       case 'xsmall':
         return <HeadingXSmall {...delegated} />;
       case 'small':
-        return <HeadingSmall {...delegated} />;
+        return <HeadingSmall as="h3" {...delegated} />;
       case 'medium':
       default:
-        return <HeadingMedium {...delegated} />;
+        return <HeadingMedium as="h3" {...delegated} />;
       case 'large':
-        return <HeadingLarge {...delegated} />;
+        return <HeadingLarge as="h1" {...delegated} />;
       case 'xlarge':
-        return <HeadingXLarge {...delegated} />;
+        return <HeadingXLarge as="h1" {...delegated} />;
     }
   }
 }
@@ -40,21 +40,21 @@ const HeadingXSmall = styled.h6`
   color: ${RAW_COLORS.gray[800]};
 `;
 
-const HeadingSmall = HeadingXSmall.withComponent('h3').extend`
+const HeadingSmall = styled(HeadingXSmall)`
   font-size: 26px;
 `;
 
-const HeadingMedium = HeadingSmall.withComponent('h3').extend`
+const HeadingMedium = styled(HeadingSmall)`
   font-size: 32px;
   letter-spacing: -0.5px;
 `;
 
-const HeadingLarge = HeadingSmall.withComponent('h1').extend`
+const HeadingLarge = styled(HeadingSmall)`
   font-size: 42px;
   letter-spacing: -1px;
 `;
 
-const HeadingXLarge = HeadingSmall.withComponent('h1').extend`
+const HeadingXLarge = styled(HeadingSmall)`
   font-size: 60px;
   letter-spacing: -2px;
 `;
