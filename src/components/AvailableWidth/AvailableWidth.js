@@ -23,6 +23,7 @@ class AvailableWidth extends Component<Props, State> {
   observer: ResizeObserver;
 
   componentDidMount() {
+    console.log('test')
     const { containerElem } = this;
 
     // We ought to always have the element, but Flow doesn't believe me.
