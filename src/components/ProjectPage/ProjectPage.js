@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import { Tooltip } from 'react-tippy';
 import IconBase from 'react-icons-kit';
@@ -24,6 +25,7 @@ import Paragraph from '../Paragraph';
 import MountAfter from '../MountAfter';
 import Spinner from '../Spinner';
 import Card from '../Card';
+import ProjectTitle from '../ProjectTitle';
 
 import {
   openProjectInEditor,
@@ -32,7 +34,6 @@ import {
 import { getCopyForOpeningFolder } from '../../services/platform.service';
 
 import type { Project } from '../../types';
-import type { Dispatch } from '../../actions/types';
 
 type Props = {
   project: Project,
@@ -146,14 +147,11 @@ export class ProjectPage extends PureComponent<Props> {
               x={-2}
               reason="Align left edge of title with the modules on page"
             >
-              <Tooltip title={path} position="bottom">
-                <Heading
-                  size="xlarge"
-                  style={{ color: RAW_COLORS.purple[500] }}
-                >
-                  {project.name}
-                </Heading>
-              </Tooltip>
+              <ProjectTitle
+                tooltip={path}
+                title={project.name}
+                projectType={project.type}
+              />
             </PixelShifter>
             <SettingsButton />
           </FlexRow>
