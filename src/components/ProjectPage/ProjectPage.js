@@ -3,7 +3,6 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
-import { Tooltip } from 'react-tippy';
 import IconBase from 'react-icons-kit';
 import { packageIcon } from 'react-icons-kit/feather/packageIcon';
 
@@ -13,7 +12,6 @@ import { RAW_COLORS, COLORS, GRADIENTS } from '../../constants';
 import * as actions from '../../actions';
 
 import MainContentWrapper from '../MainContentWrapper';
-import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
 import Spacer from '../Spacer';
 import { FillButton } from '../Button';

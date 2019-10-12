@@ -6,7 +6,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { RAW_COLORS, Z_INDICES, COLORS } from '../../constants';
+import { RAW_COLORS, Z_INDICES } from '../../constants';
 
 import * as actions from '../../actions';
 import { getOnlineState } from '../../reducers/app-status.reducer';
