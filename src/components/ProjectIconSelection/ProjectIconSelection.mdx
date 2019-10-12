@@ -1,0 +1,52 @@
+---
+name: ProjectIconSelection
+menu: Reusable Components
+---
+
+import { Playground, Props } from 'docz';
+import ProjectIconSelection from './ProjectIconSelection';
+import IconSelector from '../../docz/components/IconSelector';
+
+# ProjectIconSelection
+
+<Props of={ProjectIconSelection} />
+
+### Update the selected icon on click
+<Playground>
+  <IconSelector selected='/static/img/icon_blueorange.174c0078.jpg'>
+    {
+      (updateProjectIcon, selectedIcon) => (
+        <ProjectIconSelection
+          selectedIcon={selectedIcon}
+          onSelectIcon={updateProjectIcon}
+        />
+      )
+    }
+  </ IconSelector>
+</Playground>
+
+### All available icons by not passing a value to limitTo prop (max default number is 21)
+<Playground>
+  <ProjectIconSelection
+    selectedIcon={null}
+    randomize={false}
+  />
+</Playground>
+
+### Show a limited number of icons
+<Playground>
+  <ProjectIconSelection
+    selectedIcon={null}
+    randomize={true}
+    limitTo={10}
+  />
+</Playground>
+
+### Show a random subset of icons
+<Playground>
+  <ProjectIconSelection
+    selectedIcon={null}
+    randomize={true}
+    limitTo={5}
+  />
+</Playground>

@@ -1,0 +1,86 @@
+---
+name: StrokeButton
+menu: Reusable Components
+---
+
+import { Playground, Props } from 'docz';
+import { Toggle as ToggleState } from 'react-powerplug';
+
+import { RAW_COLORS } from '../../constants';
+import StrokeButton from './StrokeButton';
+
+# StrokeButton
+
+<Props of={StrokeButton} />
+
+## Basic usage
+
+<Playground>
+  <StrokeButton>Default</StrokeButton>
+</Playground>
+
+## Sizes
+
+<Playground>
+  <StrokeButton size="xsmall">
+    Extra-small button
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton size="small">
+    Small button
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton size="medium">
+    Medium button
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton size="large">
+    Large button
+  </StrokeButton>
+</Playground>
+
+## Colors
+
+<Playground>
+  <StrokeButton strokeColors={[RAW_COLORS.green[500], RAW_COLORS.green[500]]}>
+    Solid green
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton strokeColors={[RAW_COLORS.orange[500], RAW_COLORS.pink[300]]}>
+    Orange to pink
+  </StrokeButton>
+</Playground>
+
+<Playground>
+  <StrokeButton strokeColors={[RAW_COLORS.teal[700], RAW_COLORS.lime[500]]}>
+    Teal to lime
+  </StrokeButton>
+</Playground>
+
+## Disabled
+
+<Playground>
+  <StrokeButton disabled>
+    StrokeButton
+  </StrokeButton>
+</Playground>
+
+## Toggleable
+
+<Playground>
+  <ToggleState>
+    {({ on, toggle }) => (
+      <StrokeButton showStroke={on} onClick={toggle}>
+        Toggle me!
+      </StrokeButton>
+    )}
+  </ToggleState>
+</Playground>

@@ -1,0 +1,73 @@
+---
+name: FillButton
+menu: Reusable Components
+---
+
+import { Playground, Props } from 'docz';
+
+import { RAW_COLORS } from '../../constants';
+import FillButton from './FillButton';
+
+# FillButton
+
+<Props of={FillButton} />
+
+## Basic usage
+
+<Playground>
+  <FillButton>Default</FillButton>
+</Playground>
+
+## Sizes
+
+<Playground>
+  <FillButton size="xsmall">
+    Extra-small button
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton size="small">
+    Small button
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton size="medium">
+    Medium button
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton size="large">
+    Large button
+  </FillButton>
+</Playground>
+
+## Colors
+
+<Playground>
+  <FillButton colors={[RAW_COLORS.green[500], RAW_COLORS.green[500]]}>
+    Solid green
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton colors={[RAW_COLORS.orange[500], RAW_COLORS.pink[300]]}>
+    Orange to pink
+  </FillButton>
+</Playground>
+
+<Playground>
+  <FillButton colors={[RAW_COLORS.teal[700], RAW_COLORS.lime[500]]}>
+    Teal to lime
+  </FillButton>
+</Playground>
+
+## Disabled
+
+<Playground>
+  <FillButton disabled>
+  FillButton
+  </FillButton>
+</Playground>

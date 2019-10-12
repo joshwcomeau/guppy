@@ -25,8 +25,9 @@ yarn-error.log*
 # because we use yarn.lock
 package-lock.json
 
-# storybook
+# Storybook and Docz
 /storybook-static
+/.docz
 
 # coverage
 coverage*

@@ -308,7 +308,7 @@ export const contrastingColor = (
 export const setNested = <T: {}>(obj: T, path: string, value: any): T => {
   const pList = path.split('.');
   const key = pList.pop();
-  const pointer = pList.reduce((accumulator, currentValue) => {
+  const pointer = pList.reduce((accumulator: {}, currentValue) => {
     if (accumulator[currentValue] === undefined) accumulator[currentValue] = {};
     return accumulator[currentValue];
   }, obj);

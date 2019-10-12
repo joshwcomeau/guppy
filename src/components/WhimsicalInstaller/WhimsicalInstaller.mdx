@@ -1,0 +1,45 @@
+---
+name: WhimsicalInstaller
+menu: Components
+---
+
+import { Playground, Props } from 'docz';
+import { RAW_COLORS } from '../../constants';
+import Earth from '../Earth';
+import WhimsicalInstaller from './WhimsicalInstaller';
+
+# WhimsicalInstaller
+
+<Props of={WhimsicalInstaller} />
+
+## Current Usage
+
+We're currently using WhimsicalInstaller in [`BuildPane`](https://github.com/joshwcomeau/guppy/blob/master/src/components/CreateNewProjectWizard/BuildPane.js).
+
+<Playground
+  style={{
+    backgroundColor: RAW_COLORS.blue[800],
+    height: 140,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <WhimsicalInstaller isRunning width={420} />
+</Playground>
+
+## Sub-components
+
+### Earth
+
+<Playground
+  style={{
+    backgroundColor: RAW_COLORS.blue[800],
+    height: 140,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <Earth />
+</Playground>

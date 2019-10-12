@@ -13,13 +13,12 @@
 # Maybe related to https://github.com/styled-components/styled-components/issues/302
 .*/node_modules/styled-components/**/*.js
 
-[include]
-
 [libs]
 
 [lints]
 
 [options]
+server.max_workers=4
 
 [strict]
 

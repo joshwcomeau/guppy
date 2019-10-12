@@ -1,0 +1,50 @@
+---
+name: Guppy Style Guide
+route: '/'
+---
+
+# Guppy Style Guide
+
+Hello! 👋 Welcome to our style guide.
+
+This documentation will help new developers see how Guppy components can be used. In addition to common components such as Buttons, Inputs, etc, you will also find components that are functional rather than visual (e.g. `MountAfter`). We hope this helps developers get up and running quickly with Guppy development.
+
+Happy contributing!
+
+## Development
+
+Run `yarn docz:dev` to start the Docz development server.
+
+Example .mdx structure:
+
+```
+---
+name: ComponentName
+menu: Reusable Components
+---
+
+import { Playground, Props } from 'docz';
+import ComponentName from './ComponentName';
+
+# ComponentName
+
+<Props of={ComponentName} />
+
+## Basic usage
+
+### Default
+<Playground>
+  <ComponentName />
+</Playground>
+```
+
+The .mdx file should live right next to its component.
+
+```
+- Component
+  - Component.js
+  - Component.mdx
+  - index.js
+```
+
+Please see [getting started](https://www.docz.site/docs/getting-started) for more info!

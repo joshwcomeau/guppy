@@ -1,0 +1,44 @@
+---
+name: Planet
+menu: Components
+---
+
+import { Playground, Props } from 'docz';
+import Planet from './Planet';
+import Earth from '../Earth';
+
+# Planet
+
+<Props of={Planet} />
+
+### Basic
+<Playground>
+  <div
+    style={{
+      width: '500px',
+      height: '500px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      background: 'rgb(26, 17, 81)',
+    }}
+  >
+    <Planet atmosphere={0.25} background="linear-gradient(0deg, red, yellow)" />
+  </div>
+</Playground>
+
+### Earth
+<Playground>
+  <div
+    style={{
+      width: '500px',
+      height: '500px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      background: 'rgb(26, 17, 81)',
+    }}
+  >
+    <Earth size={(500 / 2) * 0.4} />
+  </div>
+</Playground>

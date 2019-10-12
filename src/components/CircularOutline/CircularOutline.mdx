@@ -1,0 +1,65 @@
+---
+name: CircularOutline
+menu: Reusable Components
+---
+
+import { Playground, Props } from 'docz';
+import CircularOutline from './CircularOutline';
+import Toggleable from '../../docz/components/Toggleable';
+
+# CircularOutline
+
+<Props of={CircularOutline} />
+
+## Basic usage
+
+### Default
+<Playground>
+  <Toggleable size={40}>
+    {isShown => <CircularOutline size={40} isShown={isShown} />}
+  </Toggleable>
+</Playground>
+
+### Larger
+<Playground>
+  <Toggleable size={70}>
+    {isShown => (
+      <CircularOutline size={70} strokeWidth={4} isShown={isShown} />
+    )}
+  </Toggleable>
+</Playground>
+
+### Single color
+<Playground>
+  <Toggleable size={40} background="#555">
+    {isShown => (
+      <CircularOutline colors={['yellow']} size={40} isShown={isShown} />
+    )}
+  </Toggleable>
+</Playground>
+
+### Two colors
+<Playground>
+  <Toggleable size={40} background="#555">
+    {isShown => (
+      <CircularOutline
+        colors={['yellow', 'hotpink']}
+        size={40}
+        isShown={isShown}
+      />
+    )}
+  </Toggleable>
+</Playground>
+
+### Three colors
+<Playground>
+  <Toggleable size={40} background="#555">
+    {isShown => (
+      <CircularOutline
+        colors={['yellow', 'hotpink', 'purple']}
+        size={40}
+        isShown={isShown}
+      />
+    )}
+  </Toggleable>
+</Playground>
