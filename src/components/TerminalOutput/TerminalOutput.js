@@ -1,20 +1,30 @@
 // @flow
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
+import { shell } from 'electron';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import * as path from 'path';
+import * as os from 'os';
+import styled, { css } from 'styled-components';
+import { Terminal } from 'xterm';
+import ResizeObserver from 'react-resize-observer';
 
+import * as webLinks from 'xterm/lib/addons/webLinks/webLinks';
+import * as fit from 'xterm/lib/addons/fit/fit';
+import * as localLinks from './localLinksAddon.js';
+
+import xtermCss from 'xterm/dist/xterm.css';
+
+import { getSelectedProject } from '../../reducers/projects.reducer';
 import * as actions from '../../actions';
 import { RAW_COLORS, COLORS } from '../../constants';
 
 import { FillButton } from '../Button';
 import Heading from '../Heading';
 import PixelShifter from '../PixelShifter';
+import { openProjectInEditor } from '../../services/shell.service';
 
 import type { Task } from '../../types';
 import type { Dispatch } from '../../actions/types';
-
-var Convert = require('ansi-to-html');
-var convert = new Convert();
 
 type Props = {
   width?: number,
@@ -22,36 +32,108 @@ type Props = {
   title: string,
   task: Task,
   clearConsole: Dispatch<typeof actions.clearConsole>,
+  projectPath: string,
 };
 
-class TerminalOutput extends PureComponent<Props> {
+type State = {
+  logs: any,
+};
+
+class TerminalOutput extends PureComponent<Props, State> {
   static defaultProps = {
     width: '100%',
     height: 200,
   };
 
-  node: ?HTMLElement;
+  state = {
+    logs: [],
+  };
+
+  xterm: Terminal;
+  termWrapperRef: ?HTMLElement = null;
+  renderedLogs: any = {}; // used to avoid clearing & only add new lines
+  resizeTimeout: TimeoutID;
 
   componentDidMount() {
-    this.scrollToBottom();
+    Terminal.applyAddon(webLinks);
+    Terminal.applyAddon(localLinks);
+    Terminal.applyAddon(fit);
+
+    this.xterm = new Terminal({
+      convertEol: true,
+      fontFamily: `'Fira Mono', monospace`,
+      fontSize: 15,
+      rendererType: 'dom', // default is canvas
+    });
+
+    this.xterm.setOption('theme', {
+      background: RAW_COLORS.blue[900],
+      foreground: COLORS.textOnBackground,
+    });
+
+    this.xterm.open(this.termWrapperRef);
+    this.xterm.fit();
+
+    // Init addons
+    this.xterm.webLinksInit.call(this.xterm, (evt, uri) => {
+      shell.openExternal(uri);
+    });
+    this.xterm.localLinksInit.call(
+      this.xterm,
+      (evt, uri) => {
+        const { projectPath } = this.props;
+        openProjectInEditor(path.resolve(projectPath, uri));
+      },
+      {
+        platform: os.platform(),
+      }
+    );
   }
 
-  componentDidUpdate() {
-    this.scrollToBottom();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.task.logs !== this.state.logs) {
+      if (this.state.logs.length === 0) {
+        this.xterm.clear();
+      }
+      for (const log of this.state.logs) {
+        /*
+        We need to track what we have added to xterm - feels hacky but it's working.
+        `this.xterm.clear()` and re-render everything caused screen flicker that's why I decided to not use it.
+        Todo: Check if there is a react-xterm wrapper that is not using xterm.clear or 
+              create a wrapper component that can render the logs array (with-out flicker).
+        */
+        if (!this.renderedLogs[log.id]) {
+          this.writeln(log.text);
+          this.xterm.scrollToBottom();
+          this.renderedLogs[log.id] = true;
+        }
+      }
+    }
   }
 
-  scrollToBottom = () => {
-    // TODO: can element.scrollIntoView(false) be used instead?
-    if (!this.node) {
-      return;
+  componentWillUnmount() {
+    if (this.xterm) {
+      this.xterm.destroy();
+      this.xterm = null;
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.task) {
+      if (nextProps.task.logs !== prevState.logs) {
+        return {
+          logs: nextProps.task.logs,
+        };
+      }
+      if (nextProps.task.logs.length === 0) {
+        return {
+          logs: [],
+        };
+      }
     }
 
-    const scrollHeight = this.node.scrollHeight;
-    const height = this.node.clientHeight;
-    const maxScrollTop = scrollHeight - height;
-
-    this.node.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
-  };
+    return null;
+  }
 
   handleClear = () => {
     const { task, clearConsole } = this.props;
@@ -60,14 +142,37 @@ class TerminalOutput extends PureComponent<Props> {
       return;
     }
 
+    this.renderedLogs = {};
+
     clearConsole(task);
   };
 
+  handleResize = evt => {
+    if (!this.xterm) return;
+
+    if (this.resizeTimeout) {
+      return;
+    }
+
+    this.resizeTimeout = setTimeout(() => {
+      delete this.resizeTimeout;
+      this.xterm.fit();
+    }, 0);
+  };
+
+  write(data: any) {
+    this.xterm && this.xterm.write(data);
+  }
+
+  writeln(data: any) {
+    this.xterm && this.xterm.writeln(data);
+  }
+
   render() {
-    const { width, height, title, task } = this.props;
+    const { width, height, title } = this.props;
 
     return (
-      <Fragment>
+      <Wrapper>
         <Header>
           <Heading size="xsmall">{title}</Heading>
           <PixelShifter
@@ -87,28 +192,20 @@ class TerminalOutput extends PureComponent<Props> {
             </FillButton>
           </PixelShifter>
         </Header>
-        <Wrapper
+        <XtermContainer
           width={width}
           height={height}
-          innerRef={node => (this.node = node)}
-        >
-          <TableWrapper height={height}>
-            <LogWrapper>
-              {task.logs.map(log => (
-                <LogRow
-                  key={log.id}
-                  dangerouslySetInnerHTML={{
-                    __html: convert.toHtml(log.text),
-                  }}
-                />
-              ))}
-            </LogWrapper>
-          </TableWrapper>
-        </Wrapper>
-      </Fragment>
+          innerRef={node => (this.termWrapperRef = node)}
+        />
+        <ResizeObserver onResize={this.handleResize} />
+      </Wrapper>
     );
   }
 }
+
+const Wrapper = styled.div`
+  ${css(xtermCss)};
+`;
 
 const Header = styled.header`
   display: flex;
@@ -117,42 +214,35 @@ const Header = styled.header`
   height: 50px;
 `;
 
-const Wrapper = styled.div`
+const XtermContainer = styled.div`
   width: ${props =>
     typeof props.width === 'number' ? `${props.width}px` : props.width};
   height: ${props => props.height}px;
-  overflow: auto;
-  padding: 15px;
-  color: ${COLORS.textOnBackground};
-  background-color: ${RAW_COLORS.blue[900]};
-  border-radius: 4px;
-  font-family: 'Fira Mono', monospace;
-  font-size: 13px;
+
+  .terminal {
+    /* Colors set with js-API as xterm.js is using style on element */
+    padding: 15px;
+  }
+
+  .xterm .xterm-viewport {
+    border-radius: 4px;
+    overflow-y: hidden;
+  }
 `;
 
-// NOTE: I have a loooot of nested elements here, to try and align things
-// to the bottom. Flexbox doesn't play nicely with overflow: scroll :/
-// There's almost certainly a better way to do this, just haven't spent time.
-const TableWrapper = styled.div`
-  display: table;
-  width: 100%;
-  height: 100%;
-`;
+const mapStateToProps = state => {
+  if (state === null) {
+    return;
+  }
 
-const LogWrapper = styled.div`
-  display: table-cell;
-  vertical-align: bottom;
-  width: 100%;
-  height: 100%;
-`;
+  const project = getSelectedProject(state);
 
-const LogRow = styled.div`
-  min-height: 0;
-  margin-top: 10px;
-  white-space: pre;
-`;
+  return {
+    projectPath: project && project.path,
+  };
+};
 
 export default connect(
-  null,
+  mapStateToProps,
   { clearConsole: actions.clearConsole }
 )(TerminalOutput);

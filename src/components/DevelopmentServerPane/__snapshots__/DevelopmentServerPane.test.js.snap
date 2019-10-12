@@ -13,80 +13,11 @@ exports[`DevelopmentServerPane component Rendering should render 1`] = `
   }
   title="Development Server"
 >
-  <OnlyOn
-    display="inline"
-    size="mdMin"
+  <MediaQuery
+    query="(min-width: 901px)"
+    values={Object {}}
   >
-    <styled.div>
-      <styled.div>
-        <styled.div>
-          Runs a local development server that updates whenever you make changes to the files.
-        </styled.div>
-        <DevelopmentServerStatus
-          status="idle"
-        />
-        <styled.div>
-          <ExternalLink
-            color="#304FFE"
-            display="inline-block"
-            hoverColor="#3f6cff"
-            href="https://github.com/facebook/create-react-app#user-guide"
-          >
-            View Documentation
-          </ExternalLink>
-        </styled.div>
-      </styled.div>
-      <styled.div>
-        <Connect(TerminalOutput)
-          height={300}
-          task={
-            Object {
-              "name": "start",
-              "status": "idle",
-            }
-          }
-          title="Server Logs"
-        />
-      </styled.div>
-    </styled.div>
-  </OnlyOn>
-  <OnlyOn
-    display="inline"
-    size="sm"
-  >
-    <styled.div>
-      <styled.div>
-        <styled.div>
-          <styled.div>
-            Runs a local development server that updates whenever you make changes to the files.
-          </styled.div>
-          <styled.div
-            size={10}
-          />
-          <styled.div>
-            <ExternalLink
-              color="#304FFE"
-              display="inline-block"
-              hoverColor="#3f6cff"
-              href="https://github.com/facebook/create-react-app#user-guide"
-            >
-              View Documentation
-            </ExternalLink>
-          </styled.div>
-        </styled.div>
-      </styled.div>
-      <styled.div>
-        <Connect(TerminalOutput)
-          height={300}
-          task={
-            Object {
-              "name": "start",
-              "status": "idle",
-            }
-          }
-        />
-      </styled.div>
-    </styled.div>
-  </OnlyOn>
+    <Component />
+  </MediaQuery>
 </Pane>
 `;

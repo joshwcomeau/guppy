@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import MediaQuery from 'react-responsive';
 
 import * as actions from '../../actions';
 import { getSelectedProject } from '../../reducers/projects.reducer';
@@ -15,7 +16,6 @@ import Toggle from '../Toggle';
 import Spacer from '../Spacer';
 import TerminalOutput from '../TerminalOutput';
 import ExternalLink from '../ExternalLink';
-import OnlyOn from '../OnlyOn';
 import DevelopmentServerStatus from '../DevelopmentServerStatus';
 
 import type { Project, Task } from '../../types';
@@ -77,6 +77,12 @@ export class DevelopmentServerPane extends PureComponent<Props> {
       </DocumentationLink>
     );
 
+    const terminal = (
+      <TerminalWrapper>
+        <TerminalOutput height={300} title="Server Logs" task={task} />
+      </TerminalWrapper>
+    );
+
     return (
       <Module
         title="Development Server"
@@ -85,33 +91,34 @@ export class DevelopmentServerPane extends PureComponent<Props> {
           <Toggle isToggled={isRunning} onToggle={this.handleToggle} />
         }
       >
-        <OnlyOn size="mdMin">
-          <Wrapper>
-            <InfoWrapper>
-              {description}
-              <DevelopmentServerStatus status={task.status} port={task.port} />
-              {docLink}
-            </InfoWrapper>
-            <TerminalWrapper>
-              <TerminalOutput height={300} title="Server Logs" task={task} />
-            </TerminalWrapper>
-          </Wrapper>
-        </OnlyOn>
-
-        <OnlyOn size="sm">
-          <Wrapper>
-            <InfoWrapper>
-              <SmallInfoWrapper>
-                {description}
-                <Spacer size={10} />
-                {docLink}
-              </SmallInfoWrapper>
-            </InfoWrapper>
-            <TerminalWrapper>
-              <TerminalOutput height={300} task={task} />
-            </TerminalWrapper>
-          </Wrapper>
-        </OnlyOn>
+        <MediaQuery query={BREAKPOINTS['mdMin']}>
+          {matches =>
+            matches ? (
+              <Wrapper>
+                <InfoWrapper>
+                  {description}
+                  <DevelopmentServerStatus
+                    status={task.status}
+                    port={task.port}
+                  />
+                  {docLink}
+                </InfoWrapper>
+                {terminal}
+              </Wrapper>
+            ) : (
+              <Wrapper>
+                <InfoWrapper>
+                  <SmallInfoWrapper>
+                    {description}
+                    <Spacer size={10} />
+                    {docLink}
+                  </SmallInfoWrapper>
+                </InfoWrapper>
+                {terminal}
+              </Wrapper>
+            )
+          }
+        </MediaQuery>
       </Module>
     );
   }
@@ -119,7 +126,6 @@ export class DevelopmentServerPane extends PureComponent<Props> {
 
 const Wrapper = Card.extend`
   display: flex;
-
   @media ${BREAKPOINTS.sm} {
     flex-direction: column;
   }
@@ -129,11 +135,9 @@ const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   @media ${BREAKPOINTS.sm} {
     flex-direction: row;
   }
-
   @media ${BREAKPOINTS.mdMin} {
     flex: 6;
   }
