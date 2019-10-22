@@ -22,19 +22,19 @@ class DetectActive extends Component<Props, State> {
   };
 
   handleMouseDown = (ev: SyntheticEvent<*>) => {
-    this.setState({ isActive: true });
+    this.setState(state => ({ ...state, isActive: true }));
   };
 
   handleMouseUp = (ev: SyntheticEvent<*>) => {
-    this.setState({ isActive: false });
+    this.setState(state => ({ ...state, isActive: false }));
   };
 
   handleMouseOver = (ev: SyntheticEvent<*>) => {
-    this.setState({ isHovered: true });
+    this.setState(state => ({ ...state, isHovered: true }));
   };
 
   handleMouseLeave = (ev: SyntheticEvent<*>) => {
-    this.setState({ isActive: false, isHovered: false });
+    this.setState(state => ({ ...state, isActive: false, isHovered: false }));
   };
 
   render() {
