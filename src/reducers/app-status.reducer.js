@@ -8,6 +8,8 @@ import {
   SET_STATUS_TEXT,
   RESET_STATUS_TEXT,
   SET_ONLINE_STATUS,
+  SET_INFO_BAR_STRING,
+  SET_INCORRECT_NODE,
 } from '../actions';
 
 import type { Action } from '../actions/types';
@@ -16,12 +18,15 @@ type State = {
   blockingActionActive: boolean,
   statusText: string,
   onlineStatus: boolean,
+  infoBarString: ?String,
 };
 
 export const initialState = {
   blockingActionActive: false,
   statusText: 'Please wait...',
   onlineStatus: navigator.onLine,
+  infoBarString: null,
+  incorrectNode: false,
 };
 
 export default (state: State = initialState, action: Action = {}) => {
@@ -63,6 +68,19 @@ export default (state: State = initialState, action: Action = {}) => {
         ...state,
         onlineStatus: action.onlineStatus,
       };
+
+    case SET_INFO_BAR_STRING:
+      return {
+        ...state,
+        infoBarString: action.infoBarString,
+      };
+
+    case SET_INCORRECT_NODE:
+      return {
+        ...state,
+        incorrectNode: action.incorrectNode,
+      };
+
     default:
       return initialState;
   }
@@ -81,3 +99,8 @@ export const getReinstallingActive = (state: any) =>
   state.appStatus.reinstallingActive;
 
 export const getOnlineState = (state: any) => state.appStatus.onlineStatus;
+
+export const getInfoBarState = (state: any) => state.appStatus.infoBarString;
+
+export const getIncorrectNodeState = (state: any) =>
+  state.appStatus.incorrectNode;

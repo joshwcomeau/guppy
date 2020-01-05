@@ -10,7 +10,10 @@ import {
   getDefaultProjectPath,
 } from '../../reducers/app-settings.reducer';
 import { getById } from '../../reducers/projects.reducer';
-import { getOnlineState } from '../../reducers/app-status.reducer';
+import {
+  getOnlineState,
+  getIncorrectNodeState,
+} from '../../reducers/app-status.reducer';
 import { getOnboardingCompleted } from '../../reducers/onboarding-status.reducer';
 import { getProjectNameSlug } from '../../services/create-project.service';
 import { checkIfProjectExists } from '../../services/create-project.service';
@@ -73,7 +76,10 @@ type Props = {
   addProject: Dispatch<typeof actions.addProject>,
   createNewProjectCancel: Dispatch<typeof actions.createNewProjectCancel>,
   createNewProjectFinish: Dispatch<typeof actions.createNewProjectFinish>,
+  setInfoBarString: Dispatch<typeof actions.setInfoBarString>,
+  setIncorrectNode: Dispatch<typeof actions.setIncorrectNode>,
   isOnline: boolean,
+  incorrectNode: boolean,
 };
 
 type State = {
@@ -188,6 +194,16 @@ export class CreateNewProjectWizard extends PureComponent<Props, State> {
     }
   };
 
+  handleIncorrectNodeVersion = (str: ?string) => {
+    const { setInfoBarString, setIncorrectNode } = this.props;
+    setInfoBarString(str);
+    if (str) {
+      setIncorrectNode(true);
+    } else {
+      setIncorrectNode(false);
+    }
+  };
+
   handleSubmit = () => {
     const currentStepIndex = FORM_STEPS.indexOf(this.state.currentStep);
     const nextStep = FORM_STEPS[currentStepIndex + 1];
@@ -254,6 +270,7 @@ export class CreateNewProjectWizard extends PureComponent<Props, State> {
       createNewProjectCancel,
       projectHomePath,
       isOnline,
+      incorrectNode,
     } = this.props;
     const {
       projectName,
@@ -305,6 +322,8 @@ export class CreateNewProjectWizard extends PureComponent<Props, State> {
                   hasBeenSubmitted={status !== 'filling-in-form'}
                   isProjectNameTaken={isProjectNameTaken}
                   isOnline={isOnline}
+                  incorrectNode={incorrectNode}
+                  handleIncorrectNodeVersion={this.handleIncorrectNodeVersion}
                 />
               }
               backface={
@@ -330,12 +349,15 @@ const mapStateToProps = state => ({
   isOnboardingCompleted: getOnboardingCompleted(state),
   settings: getAppSettings(state),
   isOnline: getOnlineState(state),
+  incorrectNode: getIncorrectNodeState(state),
 });
 
 const mapDispatchToProps = {
   addProject: actions.addProject,
   createNewProjectCancel: actions.createNewProjectCancel,
   createNewProjectFinish: actions.createNewProjectFinish,
+  setInfoBarString: actions.setInfoBarString,
+  setIncorrectNode: actions.setIncorrectNode,
 };
 
 export default connect(
