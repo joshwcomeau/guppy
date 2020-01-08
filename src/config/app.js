@@ -4,5 +4,5 @@ module.exports = {
   IN_APP_FEEDBACK_URL: 'https://guppy.nolt.io',
   PACKAGE_MANAGER: 'yarn',
   // Enable logging, if enabled all terminal responses are visible in the console (useful for debugging)
-  LOGGING: true,
+  LOGGING: false,
 };

@@ -194,7 +194,7 @@ export class CreateNewProjectWizard extends PureComponent<Props, State> {
     }
   };
 
-  handleIncorrectNodeVersion = (str: ?string) => {
+  handleIncorrectNodeVersion = (str: string | null) => {
     const { setInfoBarString, setIncorrectNode } = this.props;
     setInfoBarString(str);
     if (str) {

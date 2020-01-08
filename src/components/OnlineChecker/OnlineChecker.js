@@ -26,13 +26,17 @@ class OnlineChecker extends React.PureComponent<Props> {
     window.addEventListener('offline', this.check);
   }
 
+  handleInfoBarString = (str: string | null) => {
+    this.props.setInfoBarString(str);
+  };
+
   check = () => {
-    const { setOnlineStatus, setInfoBarString } = this.props;
+    const { setOnlineStatus } = this.props;
     setOnlineStatus(navigator.onLine);
-    if (!navigator.onLine) {
-      setInfoBarString(OFFLINE_STRING);
+    if (navigator.onLine) {
+      this.handleInfoBarString(null);
     } else {
-      setInfoBarString(null);
+      this.handleInfoBarString(OFFLINE_STRING);
     }
   };
 

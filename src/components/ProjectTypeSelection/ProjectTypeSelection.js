@@ -10,7 +10,7 @@ import type { ProjectType } from '../../types';
 type Props = {
   projectType: ?ProjectType,
   onProjectTypeSelect: (projectType: ProjectType) => void,
-  handleIncorrectNodeVersion: (str: ?string) => void,
+  handleIncorrectNodeVersion: (str: string | null) => void,
 };
 
 const INCORRECT_NODE_STRING =

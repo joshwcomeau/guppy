@@ -98,7 +98,7 @@ export const setOnlineStatus = (onlineStatus: boolean) => ({
   onlineStatus,
 });
 
-export const setInfoBarString = (string: ?string) => ({
+export const setInfoBarString = (string: string | null) => ({
   type: SET_INFO_BAR_STRING,
   infoBarString: string,
 });

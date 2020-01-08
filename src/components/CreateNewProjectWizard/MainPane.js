@@ -31,7 +31,7 @@ type Props = {
   handleSubmit: () => Promise<any> | void,
   isOnline: boolean,
   incorrectNode: boolean,
-  handleIncorrectNodeVersion: (str: ?string) => void,
+  handleIncorrectNodeVersion: (str: string | null) => void,
 };
 
 class MainPane extends PureComponent<Props> {
