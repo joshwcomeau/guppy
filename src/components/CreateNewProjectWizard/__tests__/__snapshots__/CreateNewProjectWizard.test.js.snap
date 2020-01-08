@@ -32,6 +32,7 @@ exports[`CreateNewProjectWizard component should render TwoPaneModal 1`] = `
         activeField="projectName"
         currentStepIndex={0}
         focusField={[Function]}
+        handleIncorrectNodeVersion={[Function]}
         handleSubmit={[Function]}
         hasBeenSubmitted={false}
         isProjectNameTaken={false}

@@ -6,6 +6,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 import { COLORS } from '../../constants';
 import { getSelectedProjectId } from '../../reducers/projects.reducer';
+import { getInfoBarState } from '../../reducers/app-status.reducer';
 
 import IntroScreen from '../IntroScreen';
 import Sidebar from '../Sidebar';
@@ -19,6 +20,7 @@ import Initialization from '../Initialization';
 import LoadingScreen from '../LoadingScreen';
 import FeedbackButton from '../FeedbackButton';
 import OnlineChecker from '../OnlineChecker';
+import InfoBar from '../InfoBar';
 import { isMac } from '../../services/platform.service';
 
 import type { Project } from '../../types';
@@ -26,17 +28,19 @@ import type { Project } from '../../types';
 type Props = {
   selectedProjectId: ?Project,
   modalVisible: boolean,
+  infoBarString: ?string,
 };
 
 class App extends PureComponent<Props> {
   render() {
-    const { selectedProjectId, modalVisible } = this.props;
+    const { selectedProjectId, modalVisible, infoBarString } = this.props;
     return (
       <Initialization>
         {wasSuccessfullyInitialized =>
           wasSuccessfullyInitialized && (
             <Fragment>
               <OnlineChecker />
+              {infoBarString && <InfoBar>{infoBarString}</InfoBar>}
               {isMac && <Titlebar />}
               <Wrapper>
                 <ApplicationMenu />
@@ -93,6 +97,7 @@ const MainContent = styled.div`
 const mapStateToProps = state => ({
   selectedProjectId: getSelectedProjectId(state),
   modalVisible: !!state.modal,
+  infoBarString: getInfoBarState(state),
 });
 
 export default connect(mapStateToProps)(App);

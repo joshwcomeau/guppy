@@ -30,6 +30,8 @@ type Props = {
   focusField: (field: ?Field) => void,
   handleSubmit: () => Promise<any> | void,
   isOnline: boolean,
+  incorrectNode: boolean,
+  handleIncorrectNodeVersion: (str: string | null) => void,
 };
 
 class MainPane extends PureComponent<Props> {
@@ -67,7 +69,12 @@ class MainPane extends PureComponent<Props> {
   }
 
   renderConditionalSteps(currentStepIndex: number) {
-    const { activeField, projectType, projectIcon } = this.props;
+    const {
+      activeField,
+      projectType,
+      projectIcon,
+      handleIncorrectNodeVersion,
+    } = this.props;
     const steps: Array<?React$Node> = [];
     let lastIndex = 2;
 
@@ -89,6 +96,7 @@ class MainPane extends PureComponent<Props> {
               onProjectTypeSelect={selectedProjectType =>
                 this.updateProjectType(selectedProjectType)
               }
+              handleIncorrectNodeVersion={handleIncorrectNodeVersion}
             />
           </FormField>
         </FadeIn>
@@ -143,6 +151,7 @@ class MainPane extends PureComponent<Props> {
       isProjectNameTaken,
       handleSubmit,
       isOnline,
+      incorrectNode,
     } = this.props;
 
     const { lastIndex, steps } = this.renderConditionalSteps(currentStepIndex);
@@ -178,6 +187,7 @@ class MainPane extends PureComponent<Props> {
             isDisabled={
               isProjectNameTaken ||
               !projectName ||
+              incorrectNode ||
               this.isSubmitDisabled(currentStepIndex, lastIndex)
             }
             isOnline={isOnline}

@@ -123,6 +123,7 @@ export class AppSettingsModal extends PureComponent<Props, State> {
                       projectType
                     );
                   }}
+                  handleIncorrectNodeVersion={() => console.log('write func')}
                 />
               </FormField>
             </PixelShifter>

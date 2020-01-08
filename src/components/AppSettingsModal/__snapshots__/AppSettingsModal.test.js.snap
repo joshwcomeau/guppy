@@ -44,6 +44,7 @@ exports[`AppSettingsModal component should render 1`] = `
           spacing={30}
         >
           <ProjectTypeSelection
+            handleIncorrectNodeVersion={[Function]}
             onProjectTypeSelect={[Function]}
             projectType="create-react-app"
           />
