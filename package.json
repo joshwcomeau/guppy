@@ -127,7 +127,7 @@
     "lolex": "3.0.0",
     "mixpanel-browser": "2.22.4",
     "moment": "2.22.2",
-    "node-fetch": "2.3.0",
+    "node-fetch": "2.6.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.10",
     "prettier": "1.13.7",
